@@ -89,7 +89,6 @@ export default function MechanicalScoreboardNumber({
                 {displayValue}
             </span>
             {suffix ? <span className="mechanical-scoreboard__suffix">{suffix}</span> : null}
-            <span className="sr-only">{`${displayValue}${suffix}`}</span>
         </span>
     );
 }
