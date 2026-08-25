@@ -1,0 +1,328 @@
+/* Ported from uts/public/css/talent/global.css — `.sidebar-new` */
+
+.sidebar-new-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: var(--rgb-dark-50);
+    z-index: 999;
+}
+
+.sidebar-new {
+    width: 27.5rem;
+    height: 100vh;
+    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    border-radius: 24px 0 0 24px;
+    background: var(--white);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    animation: sidebar-new-slidein 0.3s forwards;
+    font-family: "Rubik", sans-serif;
+}
+
+.sidebar-new .sidebar-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    padding: 1.75rem 1.75rem 1.75rem 2.25rem;
+}
+
+.sidebar-new .close-menu {
+    align-self: flex-end;
+}
+
+.sidebar-new .close-menu svg {
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+}
+
+.sidebar-new .user-box {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.sidebar-new .user-box figure {
+    position: relative;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    margin: 0;
+}
+
+.sidebar-new .user-box figure img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--happpy-brand);
+    object-fit: cover;
+}
+
+.sidebar-new .user-box figure:hover .editBox {
+    display: flex;
+}
+
+.sidebar-new .user-box figure .editBox {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 100%;
+    width: 100%;
+    height: 100%;
+    background-color: var(--happpy-brand);
+}
+
+.sidebar-new .user-box figure .editBox .filewrap {
+    position: relative;
+    width: 2rem !important;
+    height: 2rem;
+    border-radius: 16px;
+    background: var(--happpy-mint-bg);
+    box-shadow: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar-new .user-box figure .editBox .filewrap input {
+    all: unset;
+    z-index: 0;
+    background: var(--happpy-brand) !important;
+    position: relative;
+    outline: none;
+    border: none;
+    opacity: 0;
+}
+
+.sidebar-new .user-box figure .editBox .filewrap > label {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: url(/images/talent/edit.svg) no-repeat 0.59375rem center;
+    cursor: pointer;
+}
+
+.sidebar-new .user-box .right-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+    flex: 1;
+    min-width: 0;
+}
+
+.sidebar-new .user-box .right-side .loader-line {
+    width: 100%;
+    height: 2rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar-new .user-box .right-side .loader-line::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(
+        110deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0) 40%,
+        rgba(255, 255, 255, 0.5) 50%,
+        rgba(255, 255, 255, 0) 60%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: sidebar-new-gradient-animation 1.4s linear infinite;
+}
+
+.sidebar-new .user-box .right-side h6 {
+    font-size: 1.375rem;
+    font-weight: 600;
+    line-height: 100%;
+    color: var(--primary-black);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.sidebar-new .user-box .right-side h6 .edit-btn {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--happpy-mint-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    flex-shrink: 0;
+}
+
+.sidebar-new .user-box .right-side h6 .edit-btn svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.sidebar-new .user-box .right-side h6 .edit-btn:hover {
+    background: var(--happpy-brand);
+}
+
+.sidebar-new .user-box .right-side .edit-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.sidebar-new .user-box .right-side .edit-form .error-text {
+    color: #ed0000;
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 0.9375rem;
+    margin: 0;
+}
+
+.sidebar-new .user-box .right-side .name-edit-container {
+    position: relative;
+    width: 100%;
+}
+
+.sidebar-new .user-box .right-side .name-edit-container input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.5rem 4rem 0.5rem 0.75rem;
+    border: 1px solid #e4e2dc;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    line-height: 1.0625rem;
+    color: var(--happpy-ink-strong);
+    background: var(--happpy-white);
+}
+
+.sidebar-new .user-box .right-side .name-edit-container input:focus,
+.sidebar-new .user-box .right-side .name-edit-container input:focus-visible {
+    outline: none;
+    border-color: var(--happpy-ink);
+    box-shadow: 0 0 0 3px rgba(35, 31, 32, 0.08);
+}
+
+.sidebar-new .user-box .right-side .name-edit-container button {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    height: calc(100% - 8px);
+    background: var(--happpy-brand);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 100%;
+    color: var(--primary-black);
+    padding: 0.25rem 0.5625rem;
+    border-radius: 8px;
+    border: none;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.sidebar-new .user-box .right-side p {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 100%;
+    color: var(--text-gray);
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.sidebar-new .menu-divider {
+    width: 100%;
+    border: none;
+    border-top: 1px solid var(--text-field-outline);
+    margin-bottom: 1.25rem;
+}
+
+.sidebar-new .menu-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    height: 100%;
+}
+
+.sidebar-new .menu-list {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.sidebar-new .menu-list .menu-link-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-radius: 8px;
+}
+
+.sidebar-new .menu-list .menu-link-btn span {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 100%;
+    color: #6a6969;
+}
+
+@keyframes sidebar-new-slidein {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes sidebar-new-gradient-animation {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .sidebar-new {
+        width: 100%;
+        border-radius: 0;
+    }
+}

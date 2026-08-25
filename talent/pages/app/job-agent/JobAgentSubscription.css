@@ -1,0 +1,535 @@
+/* AgentJ Subscription — editorial layout (hero + trial strip + segmented billing panel) */
+
+/* Initial fetch: small centered spinner — no full-screen Loader / no global Redux overlay */
+.job-agent-dashboard .jad-subscription-fetch-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 2.5rem 1.25rem;
+    min-height: 11rem;
+    max-width: 22rem;
+    margin: 0 auto;
+}
+
+.job-agent-dashboard .jad-subscription-fetch-state__spinner {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 3px solid rgba(157, 250, 213, 0.2);
+    border-top-color: var(--happpy-brand);
+    animation: jad-subscription-spin 0.65s linear infinite;
+}
+
+@keyframes jad-subscription-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.job-agent-dashboard .jad-subscription-fetch-state__text {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--jad-on-surface-variant, #5c5c5c);
+}
+
+/* Undo OutreachAgent.css `.outreach-container { background: var(--happpy-slate-50); min-height: 100vh }` inside job-agent shell */
+.job-agent-dashboard .outreach-container.job-agent-subscription-page {
+    background: transparent;
+    min-height: 0;
+}
+
+.job-agent-dashboard .job-agent-subscription-page {
+    max-width: min(40rem, 100%);
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    min-width: 0;
+}
+
+/*
+ * TailorPaymentScreen defaults to ~1291px in resume-editor.css — use fluid width + a wide max so
+ * promos aren’t clipped, but keep horizontal padding so the block isn’t glued to the main edges.
+ */
+.job-agent-dashboard .outreach-container.job-agent-subscription-page.job-agent-subscription-page--tailor-pay {
+    max-width: min(72rem, 100%);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+.job-agent-dashboard .jad-sub-tailor-pay {
+    margin-top: 0.25rem;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: visible;
+}
+
+/*
+ * Subscription embed: TailorPaymentScreen uses `jad-sub-tailor-payment-root` instead of
+ * `tailor-resume-payment-screen` so public/css/talent/resume-editor.css does not apply the modal shell.
+ */
+.job-agent-dashboard .jad-sub-tailor-pay .jad-sub-tailor-payment-root {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    position: static;
+    box-sizing: border-box;
+}
+
+.job-agent-dashboard .jad-sub-tailor-pay .jad-sub-tailor-payment-root .modal-body-pricing {
+    max-width: 100%;
+    min-width: 0;
+}
+
+.jad-sub-tailor-payment-root .jad-sub-plan-grid {
+    overflow: visible;
+    padding-top: 18px;
+}
+
+/* "Best value" badge sits above card edge — give cards breathing room so main overflow-x doesn’t clip */
+.job-agent-dashboard .jad-sub-tailor-pay .plan-card {
+    overflow: visible;
+}
+
+.job-agent-dashboard .jad-sub-tailor-pay .modal-body-pricing .body {
+    overflow-x: visible;
+}
+
+/* ——— Main stack ——— */
+
+
+/* Hero */
+.job-agent-dashboard .jad-sub-hero {
+    padding: 0.5rem 0 0.25rem;
+    border-bottom: 1px solid var(--jad-outline-variant, #e8e4dc);
+}
+
+.job-agent-dashboard .jad-sub-hero__eyebrow {
+    margin: 0 0 0.35rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--jad-on-surface-variant, #5c5c5c);
+}
+
+.job-agent-dashboard .jad-sub-hero__title {
+    font-family: 'Manrope', 'Montserrat', system-ui, sans-serif;
+    font-size: clamp(1.35rem, 3.2vw, 1.65rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    color: var(--jad-on-surface, var(--happpy-on-brand));
+    margin: 0 0 0.5rem;
+}
+
+.job-agent-dashboard .jad-sub-hero__lede {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--jad-on-surface-variant, #5c5c5c);
+    max-width: 32rem;
+}
+
+/* Current plan status */
+.job-agent-dashboard .jad-sub-current {
+    border-radius: 0.875rem;
+    border: 1px solid var(--jad-yellow-border, rgba(255, 218, 48, 0.55));
+    background: linear-gradient(135deg, var(--happpy-white) 0%, var(--jad-primary-container, #fff8dc) 100%);
+    padding: 0.9rem 1rem 1rem;
+    box-shadow: 0 2px 10px rgba(35, 35, 35, 0.06);
+}
+
+.job-agent-dashboard .jad-sub-current--expired {
+    border-color: rgba(220, 38, 38, 0.35);
+    background: linear-gradient(135deg, #fffbfb 0%, var(--happpy-danger-soft) 100%);
+    width: 25rem;
+}
+
+.job-agent-dashboard .jad-sub-current__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.job-agent-dashboard .jad-sub-current__title {
+    margin: 0 0 0.2rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--jad-on-surface-variant, #5c5c5c);
+}
+
+.job-agent-dashboard .jad-sub-current__plan-name {
+    margin: 0;
+    font-family: 'Manrope', 'Montserrat', system-ui, sans-serif;
+    font-size: 1.125rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--jad-on-surface, var(--happpy-on-brand));
+}
+
+.job-agent-dashboard .jad-sub-current__pill {
+    flex-shrink: 0;
+    font-size: 0.625rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.55rem;
+    border-radius: 9999px;
+    background: var(--jad-emerald-600, #15803d);
+    color: var(--happpy-white);
+}
+
+.job-agent-dashboard .jad-sub-current__pill--bad {
+    background: #b91c1c;
+}
+
+.job-agent-dashboard .jad-sub-current__date {
+    margin: 0.65rem 0 0;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--jad-on-surface-variant, #5c5c5c);
+}
+
+.job-agent-dashboard .jad-sub-current__date time {
+    font-weight: 600;
+    color: var(--jad-on-surface, var(--happpy-on-brand));
+}
+
+.job-agent-dashboard .jad-sub-current--expired .jad-sub-current__date {
+    color: #7f1d1d;
+}
+
+.job-agent-dashboard .jad-sub-current--expired .jad-sub-current__date time {
+    color: #991b1b;
+}
+
+/* Free trial — horizontal band, not a card grid */
+.job-agent-dashboard .jad-sub-trial {
+    border-radius: 0.875rem;
+    border: 1px solid var(--jad-yellow-border, rgba(255, 218, 48, 0.5));
+    background: linear-gradient(135deg, var(--jad-surface, var(--happpy-white)) 0%, var(--jad-primary-container, #fff8dc) 55%, var(--jad-surface-container-low, #fffef9) 100%);
+    box-shadow: 0 2px 12px rgba(35, 35, 35, 0.06);
+    overflow: hidden;
+}
+
+.job-agent-dashboard .jad-sub-trial__inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem 1.5rem;
+    align-items: start;
+    padding: 1.1rem 1.15rem 1.2rem;
+}
+
+.job-agent-dashboard .jad-sub-trial__title {
+    font-family: 'Manrope', 'Montserrat', system-ui, sans-serif;
+    font-size: 1.0625rem;
+    font-weight: 800;
+    margin: 0 0 0.25rem;
+    color: var(--jad-on-surface, var(--happpy-on-brand));
+}
+
+.job-agent-dashboard .jad-sub-trial__meta {
+    margin: 0 0 0.65rem;
+    font-size: 0.8125rem;
+    color: var(--jad-slate-500, #737373);
+}
+
+.job-agent-dashboard .jad-sub-trial__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.4rem;
+}
+
+.job-agent-dashboard .jad-sub-trial__list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--jad-on-surface-variant, #5c5c5c);
+}
+
+.job-agent-dashboard .jad-sub-trial__list .jad-sub-check {
+    margin-top: 2px;
+    flex-shrink: 0;
+    color: var(--jad-emerald-600, #15803d);
+}
+
+.job-agent-dashboard .jad-sub-trial__action {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    min-width: min(12rem, 100%);
+    padding-top: 0.15rem;
+}
+
+.job-agent-dashboard .jad-sub-trial__price {
+    margin: 0;
+    text-align: right;
+}
+
+.job-agent-dashboard .jad-sub-trial__price-num {
+    display: block;
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--jad-brand-black, var(--happpy-on-brand));
+    line-height: 1.1;
+}
+
+.job-agent-dashboard .jad-sub-trial__price-note {
+    font-size: 0.75rem;
+    color: var(--jad-on-surface-variant, #5c5c5c);
+}
+
+/* Billing section */
+.job-agent-dashboard .jad-sub-billing__head {
+    margin-bottom: 0.65rem;
+}
+
+.job-agent-dashboard .jad-sub-billing__title {
+    font-family: 'Manrope', 'Montserrat', system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    margin: 0 0 0.2rem;
+    color: var(--jad-on-surface, var(--happpy-on-brand));
+}
+
+.job-agent-dashboard .jad-sub-billing__hint {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--jad-on-surface-variant, #5c5c5c);
+}
+
+/* Segmented control */
+.job-agent-dashboard .jad-sub-segment {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.job-agent-dashboard .jad-sub-segment__btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 0.65rem;
+    border: 1px solid var(--jad-outline-variant, #e8e4dc);
+    background: var(--jad-surface, var(--happpy-white));
+    cursor: pointer;
+    text-align: left;
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.job-agent-dashboard .jad-sub-segment__btn:hover {
+    border-color: var(--jad-yellow-border, rgba(255, 218, 48, 0.55));
+}
+
+.job-agent-dashboard .jad-sub-segment__btn.is-active {
+    border-color: var(--jad-brand-yellow, var(--happpy-legacy-yellow));
+    background: linear-gradient(180deg, var(--happpy-white) 0%, var(--jad-primary-container, var(--happpy-legacy-yellow-container)) 100%);
+    box-shadow: 0 4px 14px rgba(255, 218, 48, 0.2);
+}
+
+.job-agent-dashboard .jad-sub-segment__label {
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: var(--jad-on-surface, var(--happpy-on-brand));
+}
+
+.job-agent-dashboard .jad-sub-segment__badge {
+    font-size: 0.625rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--jad-brand-black, var(--happpy-on-brand));
+    background: var(--jad-brand-yellow, var(--happpy-legacy-yellow));
+    padding: 0.15rem 0.4rem;
+    border-radius: 9999px;
+    align-self: flex-start;
+}
+
+.job-agent-dashboard .jad-sub-segment__sub {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--jad-on-surface-variant, #5c5c5c);
+}
+
+/* Single detail panel */
+.job-agent-dashboard .jad-sub-panel {
+    border-radius: 0.875rem;
+    border: 1px solid var(--jad-outline-variant, #e8e4dc);
+    background: var(--jad-surface, var(--happpy-white));
+    padding: 1.1rem 1.15rem 1.2rem;
+    box-shadow: 0 1px 3px rgba(35, 35, 35, 0.05);
+}
+
+.job-agent-dashboard .jad-sub-panel__priceblock {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--jad-outline-variant, #e8e4dc);
+}
+
+.job-agent-dashboard .jad-sub-panel__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem 0.5rem;
+}
+
+.job-agent-dashboard .jad-sub-panel__strike {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: line-through;
+    color: var(--jad-slate-500, #737373);
+}
+
+.job-agent-dashboard .jad-sub-panel__amount {
+    font-size: 1.85rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--jad-brand-black, var(--happpy-on-brand));
+    line-height: 1;
+}
+
+.job-agent-dashboard .jad-sub-panel__period {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--jad-on-surface-variant, #5c5c5c);
+}
+
+.job-agent-dashboard .jad-sub-panel__billnote {
+    margin: 0.45rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--jad-on-surface-variant, #5c5c5c);
+}
+
+.job-agent-dashboard .jad-sub-panel__tagline {
+    margin: 0.35rem 0 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--jad-on-surface, var(--happpy-on-brand));
+}
+
+.job-agent-dashboard .jad-sub-panel__features {
+    margin: 0 0 1.1rem;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.job-agent-dashboard .jad-sub-panel__features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--jad-on-surface-variant, #5c5c5c);
+}
+
+.job-agent-dashboard .jad-sub-panel__features .jad-sub-check {
+    margin-top: 2px;
+    flex-shrink: 0;
+    color: var(--jad-emerald-600, #15803d);
+}
+
+.job-agent-dashboard .jad-sub-panel__features strong {
+    color: var(--jad-brand-black, var(--happpy-on-brand));
+    font-weight: 700;
+}
+
+/* Trust / risk reversal under primary CTA */
+.job-agent-dashboard .jad-sub-trust {
+    margin: 0.65rem 0 0;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--jad-on-surface-variant, #5c5c5c);
+    text-align: center;
+}
+
+/* Buttons */
+.job-agent-dashboard .jad-sub-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.65rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+}
+
+.job-agent-dashboard .jad-sub-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.job-agent-dashboard .jad-sub-btn--primary {
+    background: var(--jad-brand-yellow, var(--happpy-legacy-yellow));
+    color: var(--jad-brand-black, var(--happpy-on-brand));
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.job-agent-dashboard .jad-sub-btn--primary:hover:not(:disabled) {
+    background: var(--jad-yellow-dim, var(--happpy-legacy-yellow-deep));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 218, 48, 0.35);
+}
+
+.job-agent-dashboard .jad-sub-btn--secondary {
+    background: var(--jad-surface, var(--happpy-white));
+    color: var(--jad-brand-black, var(--happpy-on-brand));
+    border: 1px solid var(--jad-yellow-border, rgba(255, 218, 48, 0.55));
+    box-shadow: 0 1px 2px rgba(35, 35, 35, 0.05);
+}
+
+.job-agent-dashboard .jad-sub-btn--secondary:hover:not(:disabled) {
+    background: var(--jad-primary-container, var(--happpy-legacy-yellow-container));
+    border-color: var(--jad-brand-yellow, var(--happpy-legacy-yellow));
+}
+
+@media (max-width: 639px) {
+    .job-agent-dashboard .jad-sub-trial__inner {
+        grid-template-columns: 1fr;
+    }
+
+    .job-agent-dashboard .jad-sub-trial__action {
+        align-items: stretch;
+        padding-top: 0;
+        border-top: 1px solid var(--jad-yellow-border, rgba(255, 218, 48, 0.35));
+        padding-top: 1rem;
+    }
+
+    .job-agent-dashboard .jad-sub-trial__price {
+        text-align: left;
+    }
+}

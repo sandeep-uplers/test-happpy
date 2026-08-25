@@ -1,0 +1,318 @@
+/* Standalone job board (JobsBoard.js) — scoped so it can sit inside any page. */
+
+.jobs-board {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: inherit;
+    color: var(--happpy-ink);
+}
+
+.jobs-board__header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.jobs-board__title {
+    font-size: 32px;
+    line-height: 1.2;
+    font-weight: 700;
+    margin: 0 0 8px;
+}
+
+.jobs-board__subtitle {
+    margin: 0;
+    font-size: 15px;
+    color: var(--happpy-ink-muted);
+}
+
+/* Filters */
+
+/* One react-select per filter; the menus themselves live in a body portal (see SELECT_STYLES in
+   JobsBoard.js), so nothing here needs to worry about overflow or z-index. */
+.jobs-board__filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.jobs-board__filter {
+    min-width: 0;
+    text-align: left;
+}
+
+.jobs-board__filter-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--happpy-ink-muted);
+}
+
+/* Phone-only: the media query below turns this on and the filter grid off by default. */
+.jobs-board__filters-toggle {
+    display: none;
+}
+
+.jobs-board__filters-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    margin-left: 6px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #ffc700;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 700;
+}
+
+.jobs-board__chevron {
+    margin-left: auto;
+    transition: transform 0.15s ease;
+}
+
+.jobs-board__chevron--up {
+    transform: rotate(180deg);
+}
+
+.jobs-board__chips {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.jobs-board__clear-all {
+    border: none;
+    background: none;
+    padding: 6px 4px;
+    font-size: 13px;
+    color: var(--happpy-ink-muted);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.jobs-board__count {
+    text-align: center;
+    font-size: 13px;
+    color: var(--happpy-ink-muted);
+    margin-bottom: 20px;
+}
+
+/* Results */
+
+.jobs-board__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.jobs-board__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    border: 1px solid #ececec;
+    border-radius: 14px;
+    background: var(--happpy-white);
+    color: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.jobs-board__card:hover {
+    border-color: #d5d5d5;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+}
+
+.jobs-board__card--skeleton {
+    min-height: 168px;
+    background: linear-gradient(90deg, #f4f4f4 25%, #ececec 37%, #f4f4f4 63%);
+    background-size: 400% 100%;
+    animation: jobs-board-shimmer 1.4s ease infinite;
+    pointer-events: none;
+}
+
+@keyframes jobs-board-shimmer {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+}
+
+.jobs-board__card-head {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.jobs-board__card-logo {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.jobs-board__card-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.jobs-board__card-heading h3 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    line-height: 1.35;
+    font-weight: 600;
+}
+
+.jobs-board__card-heading span {
+    font-size: 13px;
+    color: var(--happpy-ink-muted);
+}
+
+.jobs-board__card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+    color: #4a4a4a;
+}
+
+.jobs-board__card-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.jobs-board__card-skills span {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #f4f4f4;
+    font-size: 12px;
+    color: #4a4a4a;
+}
+
+.jobs-board__card-actions {
+    display: flex;
+    margin-top: auto;
+    padding-top: 4px;
+}
+
+/* Sits above anything the host page paints over the card, so the only action always takes the click. */
+.jobs-board__card-run {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+    width: 100%;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 999px;
+    background: var(--happpy-ink);
+    color: var(--happpy-white);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.jobs-board__card-run:hover:not(:disabled) {
+    opacity: 0.88;
+}
+
+.jobs-board__card-run:disabled {
+    background: #f0f0f0;
+    color: var(--happpy-ink-muted);
+    cursor: default;
+}
+
+.jobs-board__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 48px 16px;
+    text-align: center;
+    color: var(--happpy-ink-muted);
+}
+
+.jobs-board__empty img {
+    max-width: 220px;
+}
+
+.jobs-board__empty button,
+.jobs-board__more button {
+    padding: 10px 20px;
+    border: 1px solid var(--happpy-ink);
+    border-radius: 999px;
+    background: var(--happpy-white);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.jobs-board__more {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.jobs-board__more button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+@media screen and (max-width: 767px) {
+    .jobs-board__title {
+        font-size: 24px;
+    }
+
+    .jobs-board__subtitle {
+        font-size: 14px;
+    }
+
+    .jobs-board__filters-toggle {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 44px;
+        margin-bottom: 12px;
+        padding: 10px 14px;
+        border: 1px solid #e2e2e2;
+        border-radius: 10px;
+        background: var(--happpy-white);
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--happpy-ink);
+        cursor: pointer;
+    }
+
+    .jobs-board__filters {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 12px;
+        padding: 14px;
+        border: 1px solid #ececec;
+        border-radius: 12px;
+        background: #fafafa;
+    }
+
+    .jobs-board__filters--collapsed {
+        display: none;
+    }
+
+    .jobs-board__chips {
+        margin-bottom: 12px;
+    }
+
+    .jobs-board__grid {
+        grid-template-columns: 1fr;
+    }
+}

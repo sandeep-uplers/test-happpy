@@ -1,0 +1,175 @@
+/**
+ * Step 1 (connect accounts) — AgentJ / Rozi overrides.
+ * Parent configure page uses `.outreach-configure--jad`; this shell adds step chrome.
+ */
+
+.outreach-step--jad {
+    --jad-brand-yellow: var(--happpy-legacy-yellow);
+    --jad-brand-black: var(--happpy-on-brand);
+    --jad-yellow-dim: var(--happpy-legacy-yellow-deep);
+    --jad-yellow-soft: var(--happpy-legacy-yellow-soft);
+    --jad-yellow-border: rgba(255, 218, 48, 0.45);
+    --jad-on-surface: var(--happpy-on-brand);
+    --jad-on-surface-variant: #5c5c5c;
+    --jad-outline-variant: #e8e4dc;
+    width: 100%;
+    min-width: 0;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    font-family: 'Rubik', 'Inter', system-ui, sans-serif;
+}
+
+@media (min-width: 640px) {
+    .outreach-step--jad {
+        padding: 0 1.5rem;
+    }
+}
+
+/* Back link — solid yellow (replaces purple gradient) */
+.outreach-step--jad .step-back-to-overview-link {
+    background: linear-gradient(135deg, var(--jad-brand-yellow) 0%, var(--jad-yellow-dim) 100%);
+    color: var(--jad-brand-black);
+    box-shadow: 0 2px 8px rgba(255, 218, 48, 0.45);
+    border: 1px solid var(--jad-yellow-border);
+    font-weight: 700;
+}
+
+.outreach-step--jad .step-back-to-overview-link:hover {
+    color: var(--jad-brand-black);
+    background: linear-gradient(135deg, var(--jad-yellow-dim) 0%, #c9a915 100%);
+    box-shadow: 0 4px 14px rgba(255, 218, 48, 0.5);
+    transform: translateY(-1px);
+}
+
+.outreach-step--jad .step-back-to-overview-link:active {
+    box-shadow: 0 2px 6px rgba(255, 218, 48, 0.35);
+}
+
+.outreach-step--jad .step-back-to-overview-link svg {
+    color: var(--jad-brand-black);
+}
+
+/* Step indicator */
+.outreach-step--jad .step-number {
+    background: #f1f0eb;
+    color: var(--jad-on-surface-variant);
+    border-color: var(--jad-outline-variant);
+    border-width: 2px;
+}
+
+.outreach-step--jad .step-number.active {
+    background: linear-gradient(135deg, var(--jad-brand-yellow) 0%, var(--jad-yellow-dim) 100%);
+    color: var(--jad-brand-black);
+    border-color: var(--jad-yellow-dim);
+    box-shadow: 0 0 0 4px rgba(255, 218, 48, 0.2);
+}
+
+.outreach-step--jad .step-number.completed {
+    background: linear-gradient(135deg, var(--happpy-success) 0%, var(--happpy-success-strong) 100%);
+    color: var(--happpy-white);
+    border-color: var(--happpy-success-strong);
+}
+
+.outreach-step--jad .step-line {
+    background: var(--jad-outline-variant);
+}
+
+.outreach-step--jad .step-line.completed {
+    background: linear-gradient(90deg, var(--happpy-success), var(--happpy-success-strong));
+}
+
+/* Title + lede */
+.outreach-step--jad .step-header h2 {
+    font-family: 'Manrope', 'Montserrat', system-ui, sans-serif;
+    font-size: clamp(1.25rem, 3.5vw, 1.75rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--jad-on-surface);
+    line-height: 1.2;
+}
+
+.outreach-step--jad .step-header p {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--jad-on-surface-variant);
+    max-width: 36rem;
+    max-width: unset;
+}
+
+/* Bottom nav */
+.outreach-step--jad .step-navigation {
+    border-top: 1px solid var(--jad-outline-variant);
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    gap: 0.75rem;
+}
+
+.outreach-step--jad .step-navigation .primaryBtn {
+    min-height: 2.75rem;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    border-radius: 0.625rem;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Back (usually disabled on step 1) */
+.outreach-step--jad .step-navigation .primaryBtn:disabled {
+    background: var(--happpy-gray-100);
+    color: var(--happpy-gray-400);
+    border: 1px solid var(--jad-outline-variant);
+    opacity: 0.85;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Next = yellow CTA */
+.outreach-step--jad .step-navigation .primaryBtn:not(:disabled) {
+    background: var(--jad-brand-yellow);
+    color: var(--jad-brand-black);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.outreach-step--jad .step-navigation .primaryBtn:not(:disabled):hover {
+    background: var(--jad-yellow-dim);
+    box-shadow: 0 4px 14px rgba(255, 218, 48, 0.35);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
+    .outreach-step--jad .step-header-row .step-header h2 {
+        font-size: 1.125rem;
+    }
+
+    .outreach-step--jad .step-indicator {
+        gap: 8px;
+    }
+
+    .outreach-step--jad .step-line {
+        width: 48px;
+    }
+
+    .outreach-step--jad .step-number {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+}
+
+/* Happpy Agent minimal setup — single primary CTA */
+.outreach-step--jad .step-navigation--accounts-only {
+    justify-content: flex-end;
+}
+
+@media (min-width: 520px) {
+    .outreach-step--jad .step-navigation--accounts-only .primaryBtn:last-child {
+        min-width: 280px;
+    }
+}

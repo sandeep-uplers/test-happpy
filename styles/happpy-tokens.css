@@ -1,0 +1,155 @@
+/*
+ * Happpy global colour palette.
+ *
+ * Every value here is the colour that already shipped in the ATS stylesheets —
+ * this file names and groups them, it does not recolour anything. The counts in
+ * the comments are how many times each literal appeared across the ported CSS
+ * before extraction.
+ *
+ * Imported first in app/layout.js so the copied stylesheets can resolve it.
+ */
+
+:root {
+    /* ---------------------------------------------------------------
+     * Brand — teal / aqua
+     * #46eccd is the fill of the primary CTA, so it is the brand anchor.
+     * --happpy-brand-deep is the teal that stays readable on white
+     * (about 6:1), which is why links, borders and eyebrow text use it
+     * rather than the bright brand tone.
+     * --------------------------------------------------------------- */
+    --happpy-brand: #46eccd;            /* 17 */
+    --happpy-brand-mid: #2a9b9f;        /*  8 */
+    --happpy-brand-deep: #086d7e;       /* 20 */
+    --happpy-brand-dark: #175f5d;
+    --happpy-brand-alt: #059599;
+    --happpy-brand-muted: #6a7e82;      /*  9 */
+
+    /* Mint wash used by the hero mesh and banner surfaces */
+    --happpy-mint-bg: #e9ffff;
+    --happpy-mint-border: #adffd9;
+    --happpy-mint-banner: rgba(157, 250, 213, 0.08);
+
+    /* #46eccd is a light fill, so brand surfaces carry dark text */
+    --happpy-on-brand: #232323;         /* 22 */
+
+    /* ---------------------------------------------------------------
+     * Ink and surface
+     * --------------------------------------------------------------- */
+    --happpy-white: #ffffff;            /* 199 */
+    --happpy-black: #000000;            /*  24 */
+    --happpy-ink: #231f20;              /*  99 — body copy */
+    --happpy-ink-strong: #141414;       /*  13 */
+    --happpy-ink-muted: #6b6b6b;        /*  29 */
+
+    /* ---------------------------------------------------------------
+     * Slate ramp — cards, dividers, secondary text
+     * --------------------------------------------------------------- */
+    --happpy-slate-50: #f8fafc;         /* 47 */
+    --happpy-slate-100: #f1f5f9;        /* 20 */
+    --happpy-slate-200: #e2e8f0;        /* 67 */
+    --happpy-slate-300: #cbd5e1;        /* 18 */
+    --happpy-slate-400: #94a3b8;        /* 12 */
+    --happpy-slate-500: #64748b;        /* 54 */
+    --happpy-slate-600: #475569;        /* 16 */
+    --happpy-slate-800: #1e293b;        /* 41 */
+
+    /* ---------------------------------------------------------------
+     * Neutral gray ramp — a second, parallel neutral scale already in
+     * use alongside the slate ramp. Kept distinct so the extraction
+     * stays a no-op; worth consolidating with slate later.
+     * --------------------------------------------------------------- */
+    --happpy-gray-100: #f3f4f6;         /* 11 */
+    --happpy-gray-200: #e5e7eb;         /* 19 */
+    --happpy-gray-300: #d1d5db;         /* 11 */
+    --happpy-gray-400: #9ca3af;         /* 14 */
+    --happpy-gray-500: #6b7280;         /* 22 */
+    --happpy-gray-700: #374151;         /* 24 */
+    --happpy-gray-800: #1f2937;         /* 16 */
+
+    /* ---------------------------------------------------------------
+     * Status
+     * --------------------------------------------------------------- */
+    --happpy-success: #10b981;          /* 28 */
+    --happpy-success-strong: #059669;   /* 27 */
+    --happpy-success-deep: #047857;     /* 10 */
+    --happpy-success-darkest: #065f46;  /*  9 */
+    --happpy-success-soft: #d1fae5;     /*  9 */
+    --happpy-success-alt: #2c7a4b;      /* 15 */
+
+    --happpy-warning: #f59e0b;          /* 20 */
+    --happpy-warning-strong: #d97706;   /* 10 */
+    --happpy-warning-deep: #92400e;     /*  8 */
+
+    --happpy-danger: #ef4444;           /* 12 */
+    --happpy-danger-strong: #dc2626;    /*  9 */
+    --happpy-danger-soft: #fef2f2;      /*  8 */
+
+    /* ---------------------------------------------------------------
+     * Legacy indigo / violet — technical debt, not brand
+     * An indigo gradient pair from an earlier design that is still
+     * painted in a lot of places. Tokenised so the debt is visible and
+     * can be retired in one edit once a replacement is agreed.
+     * --------------------------------------------------------------- */
+    --happpy-legacy-indigo: #667eea;    /* 114 */
+    --happpy-legacy-violet: #764ba2;    /*  48 */
+    --happpy-legacy-indigo-alt: #6366f1;/*  10 */
+    --happpy-legacy-violet-alt: #8b5cf6;/*   8 */
+
+    /* ---------------------------------------------------------------
+     * Legacy yellow — dead code, deliberately NOT part of the palette
+     * These back the --happy-yellow-* variables defined on
+     * .happy-job-agent-landing. Nothing in the app renders the selectors
+     * that consume them, so they paint nothing today. They are kept only
+     * so the port stays byte-faithful, and are safe to delete together
+     * with that block.
+     * --------------------------------------------------------------- */
+    --happpy-legacy-yellow: #ffda30;
+    --happpy-legacy-yellow-deep: #e6c41a;
+    --happpy-legacy-yellow-soft: #fff9e6;
+    --happpy-legacy-yellow-container: #fff3b8;
+
+    /* ---------------------------------------------------------------
+     * Platform variables inherited from the ATS.
+     * In the Laravel app these came from public/css/talent/global.css,
+     * which the Blade template loaded on every page. The ported
+     * stylesheets reference them without a fallback, so they have to be
+     * declared here or those rules would compute to nothing. Only the
+     * four that are actually referenced are carried over — copying the
+     * whole platform sheet would drag in tens of thousands of lines of
+     * unrelated global CSS and risk changing the very layout we are
+     * trying to preserve.
+     * --------------------------------------------------------------- */
+    --primary-black: var(--happpy-ink);         /* was #231F20 */
+    --text-gray: var(--happpy-ink-muted);       /* was #6B6B6B */
+    --white: var(--happpy-white);               /* was #fff */
+    --text-field-outline: #e0e1e0;
+    --brandYellow: var(--happpy-legacy-yellow); /* was #ffda30 */
+    --bg-light-yellow: #fff8d6;
+    --bg-secondary: #f5f5f5;
+    --rgb-dark-50: rgba(0, 0, 0, 0.5);
+
+    /* ---------------------------------------------------------------
+     * Back-compatibility aliases.
+     * The ported stylesheets were written against these names, scoped to
+     * .happy-job-agent-landing. Re-declaring them at :root means rules
+     * that reference them outside that subtree still resolve, and no
+     * copied rule had to be rewritten.
+     * --------------------------------------------------------------- */
+    --happy-yellow: var(--happpy-legacy-yellow);
+    --happy-yellow-deep: var(--happpy-legacy-yellow-deep);
+    --happy-yellow-soft: var(--happpy-legacy-yellow-soft);
+    --happy-yellow-container: var(--happpy-legacy-yellow-container);
+    --happy-on-yellow: var(--happpy-on-brand);
+
+    --happy-purple: var(--happpy-legacy-yellow-deep);
+    --happy-purple-dark: #c9ae14;
+
+    --happy-ink: #1a1a1a;
+    --happy-muted: #5c5c5c;
+    --happy-bg: var(--happpy-white);
+    --happy-card: var(--happpy-white);
+    --happy-border: #ebe8dc;
+    --happy-footer: var(--happpy-white);
+    --happy-lavender: var(--happy-yellow-soft);
+    --happy-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

@@ -1,0 +1,1267 @@
+/*
+ * AgentJ Subscription — Figma redesign
+ *  - Design 1 (paid plan active): node-id 28501:48909 — "Your current plan"
+ *  - Design 2 (trial / expired / no plan): node-id 28515:53728 — "Choose a plan…"
+ *
+ * Tokens used (Figma):
+ *   Brand black     var(--happpy-ink)
+ *   Heading dark    var(--happpy-ink-strong)
+ *   Secondary       var(--happpy-ink-muted)
+ *   Brand yellow    var(--happpy-legacy-yellow) / #ffda32
+ *   Active blue     #20a4fc
+ *   Active pill bg  #ccffae
+ *   Save badge bg   #e9ffc5  / fg var(--happpy-success-alt)
+ *   Trial card bg   #e8e8e5
+ *   Page bg         #f9f8f4
+ */
+
+/* Initial fetch — small centered spinner (no full-screen overlay). */
+.job-agent-dashboard .jad-subscription-fetch-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 2.5rem 1.25rem;
+    min-height: 11rem;
+    max-width: 22rem;
+    margin: 0 auto;
+}
+
+.job-agent-dashboard .jad-subscription-fetch-state__spinner {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 3px solid rgba(157, 250, 213, 0.2);
+    border-top-color: var(--happpy-brand);
+    animation: jad-subscription-spin 0.65s linear infinite;
+}
+
+@keyframes jad-subscription-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.job-agent-dashboard .jad-subscription-fetch-state__text {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #5c5c5c;
+}
+
+/* Page shell — neutralise the OutreachAgent.css full-screen background and align with the
+   off-white #f9f8f4 surface from the Figma frame. */
+.job-agent-dashboard .outreach-container.job-agent-subscription-page {
+    background: transparent;
+    min-height: 0;
+}
+
+.job-agent-dashboard .outreach-container.job-agent-subscription-page.job-agent-subscription-page--tailor-pay {
+    max-width: min(72rem, 100%);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Mobile back — hidden on desktop; Figma 28973:13262 */
+.job-agent-dashboard .jad-sub-page-head {
+    display: block;
+}
+
+.job-agent-dashboard .jad-sub-back {
+    display: none;
+}
+
+.job-agent-dashboard .jad-sub-page-head .jad-sub-page-title {
+    margin: 0 0 2rem;
+}
+
+/* Referral redeem banner — Figma 1042:34744 */
+.job-agent-dashboard .jad-sub-referral-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+    width: 100%;
+    margin: 0 0 2rem;
+    padding: 8px;
+    box-sizing: border-box;
+    background: #E2FDF2;
+    border-radius: 12px;
+}
+
+.job-agent-dashboard .jad-sub-referral-banner__mascot {
+    width: 47px;
+    height: 40px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.job-agent-dashboard .jad-sub-referral-banner__text {
+    margin: 0;
+    font-family: 'Rubik', 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--happpy-ink);
+}
+
+.job-agent-dashboard .jad-subscription {
+    background: #f9f8f4;
+    border-radius: 24px;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Rubik', 'Inter', system-ui, sans-serif;
+}
+
+.job-agent-dashboard .jad-sub-page-title {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.25rem, 2.6vw, 1.5rem);
+    line-height: 1.2;
+    letter-spacing: -0.36px;
+    color: var(--happpy-ink-strong);
+    margin: 0 0 1.5rem;
+}
+
+.job-agent-dashboard .jad-sub-section-lede {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--happpy-ink-strong);
+    letter-spacing: -0.36px;
+    margin: 2rem 0 1.5rem;
+}
+
+.job-agent-dashboard .jad-sub-expired-note {
+    margin: -0.5rem 0 3rem;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 0.8125rem;
+    color: #b91c1c;
+    background: var(--happpy-danger-soft);
+    border: 1px solid rgba(220, 38, 38, 0.25);
+    padding: 0.6rem 0.85rem;
+    border-radius: 0.5rem;
+}
+
+/* ---------- Design 1: active paid plan ---------- */
+
+.job-agent-dashboard .jad-sub-current {
+    background: rgba(255, 255, 255, 0.99);
+    border: 1.5px solid transparent;
+    border-radius: 14px;
+    box-shadow: 1px 0 6px rgba(107, 107, 107, 0.12);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(var(--happpy-white), var(--happpy-white)) padding-box, linear-gradient(122.35deg, #20A4FC 11.09%,#FFDF2B 67.91%, var(--happpy-white) 96.68%) border-box;
+}
+
+.job-agent-dashboard .jad-sub-current__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.job-agent-dashboard .jad-sub-current__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.job-agent-dashboard .jad-sub-current__plan-name {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 1.125rem;
+    line-height: 1.3;
+    color: var(--happpy-ink);
+    margin: 0;
+}
+
+.job-agent-dashboard .jad-sub-current__date {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: var(--happpy-ink-muted);
+    margin: 0;
+}
+
+.job-agent-dashboard .jad-sub-current__date time {
+    font-weight: 500;
+    color: var(--happpy-ink-muted);
+}
+
+.job-agent-dashboard .jad-sub-current__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    background: #ccffae;
+    color: var(--happpy-success-alt);
+    border-radius: 20px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: capitalize;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.job-agent-dashboard .jad-sub-current__pill-check {
+    flex-shrink: 0;
+}
+
+/* Reference plan grid — smaller, read-only versions for the active-paid view. */
+.job-agent-dashboard .jad-sub-ref-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: stretch;
+}
+
+.job-agent-dashboard .jad-sub-ref-card {
+    position: relative;
+    background: var(--happpy-white);
+    border: 1px solid #ededed;
+    border-radius: 12px;
+    padding: 16px;
+    width: 228px;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+    max-width: 400px;
+}
+
+.job-agent-dashboard .jad-sub-ref-card--current {
+    border-color: #20a4fc;
+}
+
+.job-agent-dashboard .jad-sub-ref-card__ribbon {
+    position: absolute;
+    top: -10px;
+    right: 18px;
+    padding: 4px 8px;
+    background: #ECECE8;
+    color: var(--happpy-ink-muted);
+    border-radius: 10px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 1.2;
+    white-space: nowrap;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    img{
+        width: 12px;
+        height: 12px;
+        flex-shrink: 0;
+        filter: contrast(0.5);
+    }
+}
+
+.job-agent-dashboard .jad-sub-ref-card__head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.job-agent-dashboard .jad-sub-ref-card__title-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.job-agent-dashboard .jad-sub-ref-card__title {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    color: rgba(107, 107, 107, 0.60);
+    letter-spacing: -0.36px;
+}
+
+.job-agent-dashboard .jad-sub-ref-card__save-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: #e9ffc5;
+    color: var(--happpy-success-alt);
+    border-radius: 4px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.job-agent-dashboard .jad-sub-ref-card__save-badge--referral {
+    background: #e2fdf2;
+    color: var(--happpy-ink);
+    border-radius: 999px;
+    font-weight: 500;
+}
+
+.job-agent-dashboard .jad-sub-ref-card__price-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+}
+
+.job-agent-dashboard .jad-sub-ref-card__price-row--referral {
+    align-items: baseline;
+    gap: 8px;
+}
+
+.job-agent-dashboard .jad-sub-ref-card__price-original {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.2;
+    color: var(--happpy-ink-muted);
+    text-decoration: line-through;
+}
+
+.job-agent-dashboard .jad-sub-ref-card__price {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--happpy-ink-muted);
+    line-height: 1.1;
+}
+
+.job-agent-dashboard .jad-sub-ref-card__price-sub {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--happpy-ink-muted);
+    padding-bottom: 2px;
+}
+
+/* Plan-3 only — secondary line under the per-month price clarifying that the
+   user is committing to a 3-month bundle (the actual billed amount lives in
+   the price subtitle as "(₹2999)"). */
+.job-agent-dashboard .jad-sub-ref-card__price-commitment {
+    display: block;
+    margin-top: 4px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.4;
+    color: rgba(107, 107, 107, 0.80);
+}
+
+.job-agent-dashboard .jad-sub-ref-card__desc {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.45;
+    letter-spacing: -0.18px;
+    color: rgba(107, 107, 107, 0.8);
+}
+
+.job-agent-dashboard .jad-sub-ref-card__features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.job-agent-dashboard .jad-sub-ref-card__feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 1.35;
+    color: var(--happpy-ink);
+}
+
+.job-agent-dashboard .jad-sub-ref-card__check {
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: #6B8575;
+}
+
+/* ---------- Design 2: choose-a-plan ---------- */
+
+.job-agent-dashboard .jad-sub-plan-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    align-items: stretch;
+    /* Breathing room so the featured card's yellow ::before backdrop and the
+       floating "Most Popular" pill don't get clipped against the grid edges. */
+    padding: 18px 4px 12px;
+}
+
+.job-agent-dashboard .jad-sub-plan-card {
+    position: relative;
+    /* No max-width — the page container caps at 72rem, so a 400px ceiling per card
+       made 3*400 + 2*32 gap (1264px) wider than the available grid (~1032px) and
+       always orphaned the third card to a second row. Letting cards share the row
+       equally yields ~322px/each at desktop, which still reads well. */
+    flex: 1 1 0;
+    /* min-width: 0 lets each card shrink below intrinsic min-content if needed
+       (e.g. on a 1024-1199 viewport before the stack breakpoint kicks in). */
+    min-width: 0;
+    min-height: 412px;
+    background: var(--happpy-white);
+    border-radius: 12px;
+    z-index: 0;
+}
+
+.job-agent-dashboard .jad-sub-plan-card--trial {
+    background: #e8e8e5;
+    border: 1px solid #ededed;
+    color: var(--happpy-ink);
+}
+
+/* Featured (Hustle) — white foreground with a yellow back card peeking out
+   bottom-left, both bordered in Uplers-black. */
+.job-agent-dashboard .jad-sub-plan-card--featured {
+    background: transparent;
+    border: none;
+    margin: -14px 0 -6px;
+}
+
+.job-agent-dashboard .jad-sub-plan-card--featured::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    bottom: -4px;
+    left: -4px;
+    right: 4px;
+    background: var(--happpy-legacy-yellow);
+    border: 1px solid var(--happpy-ink);
+    border-radius: 12px;
+    z-index: -1;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__ribbon {
+    position: absolute;
+    top: -12px;
+    left: auto;
+    right: 16px;
+    transform: none;
+    padding: 3px 10px;
+    background: #ffda32;
+    color: var(--happpy-ink);
+    border-radius: 10px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__inner {
+    position: relative;
+    height: 100%;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: var(--happpy-white);
+    border-radius: 12px;
+    border: 1px solid #c9c4b5;
+    box-sizing: border-box;
+}
+
+.job-agent-dashboard .jad-sub-plan-card--featured .jad-sub-plan-card__inner {
+    border: 1px solid var(--happpy-ink);
+}
+
+/* Trial card has a flat grey treatment — its CTA is the disabled element
+   that signals "current plan", not the card itself. */
+.job-agent-dashboard .jad-sub-plan-card--trial .jad-sub-plan-card__inner {
+    background: #e8e8e5;
+    border-color: #ededed;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__title-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__title {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--happpy-ink);
+    letter-spacing: -0.36px;
+}
+
+.job-agent-dashboard .jad-sub-plan-card--featured .jad-sub-plan-card__title,
+.job-agent-dashboard .jad-sub-plan-card--trial .jad-sub-plan-card__title {
+    color: #666666;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__save-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: #e9ffc5;
+    color: var(--happpy-success-alt);
+    border-radius: 4px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__save-badge--referral {
+    background: #e2fdf2;
+    color: var(--happpy-ink);
+    border-radius: 999px;
+    font-weight: 500;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__price-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    flex-wrap: wrap;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__price-row--referral {
+    align-items: baseline;
+    gap: 8px;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__price-original {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.2;
+    color: var(--happpy-ink-muted);
+    text-decoration: line-through;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__price {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--happpy-ink);
+    line-height: 1.1;
+    letter-spacing: -0.36px;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__price-sub {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--happpy-ink-muted);
+    line-height: 1.5;
+    padding-bottom: 2px;
+}
+
+/* Plan-3 only — secondary line under the per-month price clarifying that the
+   user is committing to a 3-month bundle (the actual billed amount lives in
+   the price subtitle as "(₹2999)"). */
+.job-agent-dashboard .jad-sub-plan-card__price-commitment {
+    display: block;
+    margin-top: 4px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--happpy-ink-muted);
+    margin-bottom: -8px;
+}
+
+/* Black rounded-rect CTA — same treatment on every card; disabled current
+   plan flips to a muted grey-on-grey state below. */
+.job-agent-dashboard .jad-sub-plan-card__cta {
+    width: 100%;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: var(--happpy-ink);
+    color: var(--happpy-white);
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+        background 140ms ease,
+        color 140ms ease;
+    filter: drop-shadow(2px 4px 4px rgba(89, 155, 255, 0.16));
+}
+
+.job-agent-dashboard .jad-sub-plan-card__cta:hover:not(:disabled),
+.job-agent-dashboard .jad-sub-plan-card__cta:focus-visible:not(:disabled) {
+    background: #0d0c0d;
+    outline: none;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__cta--current,
+.job-agent-dashboard .jad-sub-plan-card__cta--current:hover {
+    background: rgba(186, 186, 186, 0.8);
+    color: rgba(35, 35, 35, 0.64);
+    cursor: default;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__cta:disabled:not(.jad-sub-plan-card__cta--current) {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__desc {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.45;
+    letter-spacing: -0.18px;
+    color: rgba(107, 107, 107, 0.8);
+}
+
+.job-agent-dashboard .jad-sub-plan-card__features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.job-agent-dashboard .jad-sub-plan-card__feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.35;
+    color: var(--happpy-ink);
+}
+
+.job-agent-dashboard .jad-sub-plan-card__check {
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: #1aa463;
+}
+
+/* Trial card desaturates feature copy slightly so it visually recedes vs the
+   featured Hustle card (matches the Figma's opacity-64 inner block). */
+.job-agent-dashboard .jad-sub-plan-card--trial .jad-sub-plan-card__feature,
+.job-agent-dashboard .jad-sub-plan-card--trial .jad-sub-plan-card__desc {
+    color: rgba(35, 31, 32, 0.78);
+}
+
+.job-agent-dashboard .jad-sub-plan-card--trial .jad-sub-plan-card__check {
+    color: #1aa463;
+    opacity: 0.78;
+}
+
+/* ---------- Embedded transactions table (JobAgentPayments) ---------- */
+
+.job-agent-dashboard .jad-sub-payments-section {
+    margin-top: clamp(1.25rem, 3vw, 2rem);
+}
+
+/* JobAgentPayments was designed as a standalone page, so it ships with its own
+   max-width + horizontal padding via .jad-jobs. Strip those when embedded so it
+   inherits the subscription page's own container width and gutter. */
+.job-agent-dashboard .jad-sub-payments-section .jad-jobs.jad-jobs--embedded {
+    max-width: 100%;
+    padding: 0;
+}
+
+/* Tighten the section header — when embedded, it doubles as a sub-section title
+   beneath the plan cards rather than a top-level page title. */
+.job-agent-dashboard .jad-sub-payments-section .jad-jobs.jad-jobs--embedded .jad-jobs__header {
+    margin-bottom: 0.85rem;
+}
+
+.job-agent-dashboard .jad-sub-payments-section .jad-jobs.jad-jobs--embedded .jad-jobs__title {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.125rem, 2.4vw, 1.375rem);
+    color: var(--happpy-ink-strong);
+    letter-spacing: -0.36px;
+    margin: 0 0 0.35rem;
+}
+
+.job-agent-dashboard .jad-sub-payments-section .jad-jobs.jad-jobs--embedded .jad-jobs__lead {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.8125rem;
+    color: var(--happpy-ink-muted);
+}
+
+/* Embedded subscription — mobile transaction cards (hidden on desktop) */
+.job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile {
+    display: none;
+}
+
+.job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-empty {
+    margin: 0;
+    padding: 1rem;
+    font-size: 0.8125rem;
+    color: var(--happpy-ink-muted);
+    text-align: center;
+}
+
+/* ---------- Responsive ---------- */
+
+/* Below ~1200px the 3-up grid starts to feel cramped — stack to a single
+   centered column instead. This avoids the "2 + 1 orphan" wrap that used to
+   appear on smaller laptops/tablets and keeps cards readable across the
+   full medium-viewport range. */
+@media (max-width: 1024px) {
+    .job-agent-dashboard .jad-sub-plan-grid {
+        flex-direction: column;
+        align-items: center;
+        gap: 28px;
+        padding: 18px 12px 12px;
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card {
+        width: 100%;
+        max-width: 480px;
+        flex: 0 0 auto;
+        min-height: 0;
+    }
+    .job-agent-dashboard .jad-sub-plan-card--featured {
+        margin: 0;
+    }
+}
+
+/* Figma 28973:13260 — mobile subscription (choose plan + transactions) */
+@media (max-width: 767px) {
+    .job-agent-dashboard .outreach-container.job-agent-subscription-page.job-agent-subscription-page--tailor-pay {
+        padding-inline: 4px;
+        margin-inline: -4px;
+    }
+
+    .job-agent-dashboard .jad-sub-page-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .job-agent-dashboard .jad-sub-back {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        margin: 0;
+        padding: 0;
+        border: 1px solid #e4e2dc;
+        border-radius: 50%;
+        background: var(--happpy-white);
+        color: var(--happpy-ink);
+        cursor: pointer;
+        transition:
+            background 140ms ease,
+            border-color 140ms ease;
+    }
+
+    .job-agent-dashboard .jad-sub-back:hover {
+        background: #f5f4f0;
+        border-color: #d8d4cc;
+    }
+
+    .job-agent-dashboard .jad-sub-back:focus-visible {
+        outline: 2px solid var(--happpy-legacy-yellow);
+        outline-offset: 2px;
+    }
+
+    .job-agent-dashboard .jad-sub-back .material-symbols-outlined {
+        font-size: 20px;
+    }
+
+    .job-agent-dashboard .jad-sub-page-head .jad-sub-page-title {
+        flex: 1 1 auto;
+        min-width: 0;
+        margin: 0;
+        font-family: 'Poppins', 'Montserrat', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 30px;
+        letter-spacing: 0;
+        color: var(--happpy-ink);
+    }
+
+    .job-agent-dashboard .jad-sub-referral-banner {
+        margin-bottom: 1rem;
+        min-height: 48px;
+        padding: 6px 0;
+    }
+
+    .job-agent-dashboard .jad-sub-referral-banner__text {
+        font-size: 12px;
+    }
+
+    .job-agent-dashboard .jad-subscription {
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+    }
+
+    .job-agent-dashboard .jad-sub-expired-note {
+        margin: -8px 0 16px;
+        font-size: 0.75rem;
+    }
+
+    .job-agent-dashboard .jad-sub-section-lede {
+        margin: 1.25rem 0 1rem;
+        font-size: 0.8125rem;
+    }
+
+    /* ---------- Active paid plan ---------- */
+    .job-agent-dashboard .jad-sub-current {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+
+    .job-agent-dashboard .jad-sub-current__row {
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .job-agent-dashboard .jad-sub-current__pill {
+        align-self: flex-start;
+    }
+
+    .job-agent-dashboard .jad-sub-ref-grid {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .job-agent-dashboard .jad-sub-ref-card {
+        width: 100%;
+        max-width: none;
+        flex: 1 1 100%;
+        border-radius: 12px;
+        border-color: var(--happpy-ink);
+    }
+
+    .job-agent-dashboard .jad-sub-ref-card__title {
+        font-size: 14px;
+        color: #666666;
+    }
+
+    .job-agent-dashboard .jad-sub-ref-card__price {
+        font-size: 21px;
+    }
+
+    .job-agent-dashboard .jad-sub-ref-card__price-sub {
+        font-size: 11px;
+    }
+
+    .job-agent-dashboard .jad-sub-ref-card__desc,
+    .job-agent-dashboard .jad-sub-ref-card__feature {
+        font-size: 10px;
+        gap: 4px;
+    }
+
+    .job-agent-dashboard .jad-sub-ref-card__features {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px 8px;
+        margin-top: -8px;
+    }
+
+    .job-agent-dashboard .jad-sub-ref-card__save-badge {
+        font-size: 9px;
+        padding: 2px 4px;
+    }
+
+    /* ---------- Choose plan — stacked cards ---------- */
+    .job-agent-dashboard .jad-subscription--choose .jad-sub-plan-grid {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+        padding: 8px 0 0;
+    }
+
+    .job-agent-dashboard .jad-subscription--choose .jad-sub-plan-card {
+        width: 100%;
+        max-width: none;
+        flex: 0 0 auto;
+        min-height: 0;
+        margin: 0;
+    }
+
+    .job-agent-dashboard
+        .jad-subscription--choose
+        .jad-sub-plan-card:not([aria-label='Hustle Plan']):not([aria-label='All In Plan']) {
+        order: 3;
+    }
+
+    /* Mobile featured treatment follows Figma — Hustle is highlighted */
+    .job-agent-dashboard
+        .jad-subscription--choose
+        .jad-sub-plan-card[aria-label='All In Plan'].jad-sub-plan-card--featured {
+        background: transparent;
+        border: none;
+    }
+
+
+    .job-agent-dashboard .jad-subscription--choose .jad-sub-plan-card[aria-label='Hustle Plan'] {
+        background: transparent;
+        border: none;
+        z-index: 0;
+    }
+
+    .job-agent-dashboard
+        .jad-subscription--choose
+        .jad-sub-plan-card[aria-label='Hustle Plan']
+        .jad-sub-plan-card__inner {
+        border: 1px solid var(--happpy-ink);
+        background: var(--happpy-white);
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card__ribbon {
+        top: -8px;
+        left: auto;
+        right: 12px;
+        transform: none;
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card__inner {
+        gap: 16px;
+        padding: 16px;
+        border-radius: 12px;
+        border-color: var(--happpy-ink);
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card__title {
+        font-size: 14px;
+        color: #666666;
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card__price {
+        font-size: 21px;
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card__price-sub {
+        font-size: 11px;
+        line-height: 1.2;
+        padding-bottom: 0;
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card__price-commitment {
+        font-size: 10px;
+        margin-bottom: 0;
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card__save-badge {
+        font-size: 9px;
+        padding: 2px 4px;
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card__cta {
+        padding: 10px 24px;
+        font-size: 12px;
+        border-radius: 8px;
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card__body {
+        gap: 8px;
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card__desc {
+        font-size: 10px;
+        line-height: 1.4;
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card__features {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px 8px;
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card__feature {
+        font-size: 10px;
+        gap: 4px;
+    }
+
+    .job-agent-dashboard .jad-sub-plan-card__check {
+        width: 12px;
+        height: 12px;
+    }
+
+    /* ---------- Embedded transactions (Figma 28973:13351 card list) ---------- */
+    .job-agent-dashboard .jad-sub-payments-section {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid #e4e2dc;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-jobs.jad-jobs--embedded .jad-jobs__header {
+        margin-bottom: 12px;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-jobs.jad-jobs--embedded .jad-jobs__title {
+        font-family: 'Rubik', sans-serif;
+        font-weight: 500;
+        font-size: 14px;
+        color: var(--happpy-ink);
+        letter-spacing: 0;
+        margin: 0 0 2px;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-jobs.jad-jobs--embedded .jad-jobs__lead {
+        font-size: 10px;
+        line-height: 1.6;
+        letter-spacing: -0.36px;
+        color: var(--happpy-ink-muted);
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-jobs__filter-meta {
+        display: none;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-jobs__table-wrap--desktop {
+        display: none;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile {
+        display: block;
+        background: var(--happpy-white);
+        border: 1px solid #eae7df;
+        border-radius: 16px;
+        padding: 16px;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-item {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-bottom: 13px;
+        margin-bottom: 12px;
+        border-bottom: 1px solid #e4e2dc;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-item:last-child {
+        padding-bottom: 0;
+        margin-bottom: 0;
+        border-bottom: none;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-top {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-index {
+        flex-shrink: 0;
+        width: 30px;
+        height: 30px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8f0fe;
+        border-radius: 6px;
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 21px;
+        letter-spacing: -0.1504px;
+        color: var(--happpy-ink);
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-summary {
+        flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-date-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-date {
+        font-family: 'Rubik', sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 1.25;
+        letter-spacing: -0.1504px;
+        color: var(--happpy-ink);
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-amount {
+        flex-shrink: 0;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 1.25;
+        letter-spacing: -0.1504px;
+        color: var(--happpy-ink);
+        white-space: nowrap;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-amount-curr {
+        font-family: 'Mooli', 'Montserrat', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        color: var(--happpy-ink-muted);
+        margin-right: 2px;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-meta {
+        margin: 0;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 500;
+        font-size: 10px;
+        line-height: 1.4;
+        color: var(--happpy-ink-muted);
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px;
+        padding-left: 38px;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-foot-label {
+        font-weight: 400;
+        color: var(--happpy-ink-muted);
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-service {
+        font-family: 'Rubik', sans-serif;
+        font-weight: 500;
+        font-size: 10px;
+        line-height: 1.35;
+        letter-spacing: -0.35px;
+        color: var(--happpy-ink);
+        display: flex;
+        align-items: center;
+        gap: 2px;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-dot {
+        font-family: 'Rubik', sans-serif;
+        font-weight: 900;
+        font-size: 10px;
+        line-height: 1;
+        color: var(--happpy-ink-muted);
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        font-family: 'Rubik', sans-serif;
+        font-size: 10px;
+        color: var(--happpy-ink-muted);
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-foot .jad-jobs__pill {
+        padding: 2px 4px;
+        border: none;
+        border-radius: 20px;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 600;
+        font-size: 9px;
+        line-height: 1.2;
+        text-transform: capitalize;
+        letter-spacing: 0;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-foot .jad-jobs__pill--success {
+        background: #ccffae;
+        color: var(--happpy-success-alt);
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-foot .jad-jobs__pill--queue {
+        background: #fff8dc;
+        color: #705d00;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-foot .jad-jobs__pill--error {
+        background: #fdecec;
+        color: #b91c1c;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-foot .jad-jobs__pill--muted {
+        background: #f0eeea;
+        color: var(--happpy-ink-muted);
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-payments__mobile-foot .jad-jobs__pill-icon {
+        display: none;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-jobs__pagination {
+        margin-top: 12px;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-jobs__pagination-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-jobs__pagination-spacer {
+        display: none;
+    }
+
+    .job-agent-dashboard .jad-sub-payments-section .jad-jobs__pagination-controls {
+        justify-content: space-between;
+        width: 100%;
+    }
+}

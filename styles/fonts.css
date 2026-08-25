@@ -1,0 +1,45 @@
+/*
+ * Font faces carried over from resources/views/talent/index.blade.php, where
+ * they were declared inline in a <style> block. The files themselves are copied
+ * into public/fonts/ rather than loaded from Google Fonts.
+ */
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('/fonts/Montserrat-Font.ttf') format('truetype');
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('/fonts/Montserrat-Italic.ttf') format('truetype');
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Rubik';
+    src: url('/fonts/Rubik.ttf') format('truetype');
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Rubik';
+    src: url('/fonts/Rubik-Italic.ttf') format('truetype');
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Telegraf';
+    src: url('/fonts/TelegrafUltraBold.otf') format('opentype');
+    font-display: swap;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+}

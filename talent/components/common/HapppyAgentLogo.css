@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
+
+.happpy-agent-logo {
+    --happpy-logo-text-size: 20px;
+
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 8px;
+    min-width: 0;
+    font-size: var(--happpy-logo-text-size);
+    color: var(--happpy-ink);
+    line-height: 1;
+    text-decoration: none;
+}
+
+.happpy-agent-logo--compact {
+    --happpy-logo-text-size: 16px;
+    gap: 6px;
+}
+
+.happpy-agent-logo__mark {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(1em + 16px);
+    height: calc(1em + 16px);
+    color: inherit;
+
+    @media screen and (max-width: 768px) {
+        width: calc(1em + 12px);
+        height: calc(1em + 12px);
+    }
+}
+
+.happpy-agent-logo__mark-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.happpy-agent-logo__wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1em;
+    font-weight: 600;
+    letter-spacing: 0;
+    white-space: nowrap;
+    line-height: 1.3;
+
+    @media screen and (max-width: 768px) {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .happpy-agent-logo:not(.happpy-agent-logo--compact) {
+        font-size: calc(var(--happpy-logo-text-size) * 0.8);
+    }
+}

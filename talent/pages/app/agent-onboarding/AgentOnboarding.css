@@ -1,0 +1,3293 @@
+/* =========================================================
+   Agent Onboarding Drawer
+   ---------------------------------------------------------
+   Right-side drawer that hosts the new onboarding flow.
+   Step 1: "Connect your accounts" (Gmail required + LinkedIn optional)
+
+   Design tokens (from Figma — RA x Client):
+     white               var(--happpy-white)
+     uplers black        var(--happpy-ink)
+     near-black          var(--happpy-ink-strong)
+     secondary text      var(--happpy-ink-muted)
+     muted text          #4F79A3
+     yellow CTA          var(--happpy-legacy-yellow)
+     yellow hover        #F6CB1A
+     required badge bg   #FFDF9B
+     optional badge bg   #F3ECDD
+     card border         #E4E2DC
+     divider             rgba(186,186,186,0.2)
+     warning bg          #FFF2F2
+     warning text        var(--happpy-ink-strong)
+   ========================================================= */
+
+/* ---------- React-modal portal / overlay ----------------- */
+
+.agent-onb-portal {
+    position: relative;
+    z-index: 1100;
+}
+
+.agent-onb-overlay {
+    font-family: "Rubik", sans-serif;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 20, 20, 0.45);
+    display: flex;
+    justify-content: flex-end;
+    align-items: stretch;
+    overflow: hidden;
+    opacity: 0;
+    animation: agentOnbOverlayIn 180ms ease-out forwards;
+    z-index: 1100;
+}
+
+@keyframes agentOnbOverlayIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* overflow + padding reset for landing page — see html.happy-job-agent-landing-active above */
+.agent-onb-body-open {
+    overflow: hidden;
+}
+
+/* ---------- Drawer container ----------------------------- */
+
+.agent-onb-drawer {
+    position: relative;
+    background: var(--happpy-white);
+    margin: 0 0 0 auto !important;
+    width: min(820px, 100vw);
+    max-width: min(820px, 100vw);
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -6px 0 24px rgba(20, 20, 20, 0.18);
+    outline: none;
+    transform: translateX(100%);
+    animation: agentOnbDrawerIn 240ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    overflow: hidden;
+    border-radius: 8px 0 0 8px !important;
+}
+
+@keyframes agentOnbDrawerIn {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes agentOnbDrawerInMobile {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+.agent-onb-close {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    z-index: 5;
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: transparent;
+    color: var(--happpy-ink);
+    border-radius: 999px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 120ms ease;
+
+    @media (max-width: 767px) {
+        top: 8px;
+        right: 8px;
+    }
+}
+
+.agent-onb-close:hover,
+.agent-onb-close:focus-visible {
+    background: #f1f1f1;
+    outline: none;
+}
+
+.agent-onb-close svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* ---------- Scrollable content area ---------------------- */
+
+.agent-onb-scroll {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 40px 48px 32px;
+    box-sizing: border-box;
+    background: var(--happpy-white);
+
+    &.step1 {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.agent-onb-scroll--profile {
+    padding-top: 24px;
+}
+
+.happy-public-profile-drawer__header--in-onboarding {
+    position: static;
+    padding: 0 0 24px;
+}
+
+.agent-onb-footer--profile {
+    justify-content: space-between;
+}
+
+.agent-onb-footer--profile .agent-onb-footer__cta {
+    margin-left: auto;
+}
+
+.agent-onb-footer--no-back {
+    justify-content: flex-end;
+}
+
+.agent-onb-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.agent-onb-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.18);
+    border-radius: 999px;
+}
+
+/* ---------- Step header (title + lede) ------------------- */
+
+.agent-onb-step-header {
+    text-align: center;
+    margin: 0 auto 2rem;
+    max-width: 640px;
+}
+
+.agent-onb-step-header__title--join {
+    font-weight: 800;
+    color: var(--happpy-ink);
+    margin-bottom: 4px;
+}
+
+.agent-onb-step-header__lede--join {
+    color: var(--happpy-ink);
+    max-width: 516px;
+    margin-inline: auto;
+}
+
+.agent-onb-step-header__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.agent-onb-step-header__meta-icon {
+    font-size: 11px;
+    line-height: 1;
+}
+
+.agent-onb-step-header__meta-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--happpy-brand-muted);
+    flex-shrink: 0;
+}
+
+.agent-onb-step-header__meta-item {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 1;
+    color: var(--happpy-brand-muted);
+    white-space: nowrap;
+}
+
+.agent-onb-step-header__meta-item:last-child {
+    font-weight: 500;
+}
+
+.agent-onb-step-header__title {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.4;
+    color: var(--happpy-ink-strong);
+    letter-spacing: -0.36px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px 8px;
+
+    .subtitle{
+        font-size: 0.875rem;
+        font-weight: 500;
+        position: relative;
+        padding-left: 8px;
+        
+        &::before{
+            content: '-';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+
+    @media (max-width: 767px) {
+        font-size: 20px;
+        flex-direction: column;
+
+        &.upgrade-title {
+            font-size: 16px;
+        }
+    }
+}
+
+.agent-onb-step-header__lede {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--happpy-ink-muted);
+    margin: 0;
+
+    @media (max-width: 767px) {
+        &.ext-overflow {
+            margin-inline: -6px;
+        }
+    }
+}
+
+.agent-onb-step-header__lede-strong {
+    font-weight: 600;
+    color: #505050;
+    border-bottom: 2px solid var(--happpy-brand);
+    padding-bottom: 1px;
+
+    @media (max-width: 767px) {
+        &.in-block {
+            display: inline-block;
+            width: fit-content;
+            margin-inline: auto;
+        }
+    }
+}
+
+h2 .agent-onb-step-header__lede-strong {
+    color: inherit;
+    font-weight: inherit;
+    border-bottom: 3px solid var(--happpy-brand);
+}
+
+/* ---------- Card row (Gmail + LinkedIn) ------------------ */
+
+.agent-onb-cards {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.agent-onb-card {
+    position: relative;
+    background: var(--happpy-white);
+    border: 1px solid #c9c4b5;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 347px;
+    padding: 20px 20px 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 1px 0 3px rgba(107, 107, 107, 0.12);
+    transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease,
+        background-color 180ms ease;
+}
+
+.agent-onb-card:not(.agent-onb-card--connected):hover {
+    border-color: #cfcdc7;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(17, 20, 24, 0.1);
+}
+
+/* Connected state — applies whenever an account on this card is linked. */
+.agent-onb-card--connected {
+    background: #f3fff7;
+    border-color: #aed1cc;
+    box-shadow: 2px 4px 4px rgba(129, 127, 127, 0.24);
+}
+
+.agent-onb-card--connected:hover {
+    border-color: #aed1cc;
+    transform: none;
+    box-shadow: 2px 4px 4px rgba(129, 127, 127, 0.24);
+}
+
+.agent-onb-card__badge {
+    position: absolute;
+    top: -11px;
+    left: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 10px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 1;
+    color: var(--happpy-ink-strong);
+    white-space: nowrap;
+}
+
+.agent-onb-card__badge--needed {
+    background: #cce6ff;
+    font-weight: 500;
+}
+
+.agent-onb-card__badge--needed .agent-onb-card__badge-dot {
+    color: var(--happpy-ink);
+}
+
+.agent-onb-card__badge--required {
+    background: #ffdf9b;
+    font-weight: 700;
+}
+
+.agent-onb-card__badge--optional {
+    background: #f3ecdd;
+}
+
+.agent-onb-card__badge--connected {
+    background: #c0ff9b;
+    color: var(--happpy-success-alt);
+    font-weight: 700;
+    padding-left: 6px;
+}
+
+.agent-onb-card__badge-dot {
+    color: #d23f3f;
+    font-weight: 700;
+}
+
+.agent-onb-card__badge-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: var(--happpy-success-alt);
+    color: var(--happpy-white);
+    font-family: 'Inter', 'Rubik', sans-serif;
+    font-weight: 800;
+    font-size: 9px;
+    line-height: 1;
+}
+
+.agent-onb-card__head {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.agent-onb-card__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.agent-onb-card__avatar--gmail {
+    background: #e4ede7;
+}
+
+.agent-onb-card__avatar--gmail svg {
+    width: 32px;
+    height: 32px;
+}
+
+.agent-onb-card__avatar--linkedin {
+    background: #0a66c2;
+    color: var(--happpy-white);
+    font-family: 'Inter', 'Rubik', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    letter-spacing: -0.5px;
+}
+
+.agent-onb-card__head-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.agent-onb-card__title {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.1;
+    color: var(--happpy-ink);
+    margin: 0;
+}
+
+.agent-onb-card__subtitle {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 1.3;
+    color: var(--happpy-brand-muted);
+    margin: 0;
+}
+
+.agent-onb-card__benefits {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1 1 auto;
+}
+
+.agent-onb-card__benefit {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.35;
+    color: var(--happpy-ink);
+}
+
+.agent-onb-card__footnote {
+    margin: -12px 0 0;
+    text-align: center;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 9px;
+    line-height: 1.3;
+    color: var(--happpy-ink-muted);
+}
+
+.agent-onb-card__benefit-icon {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    color: #1aa463;
+}
+
+.agent-onb-card__divider {
+    height: 1px;
+    background: transparent;
+    margin: -3px 0 -2px;
+}
+
+.agent-onb-card__actions {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 8px 0 0;
+}
+
+.agent-onb-card__cta {
+    font-family: "Telegraf", sans-serif !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 56px;
+    background: var(--happpy-brand);
+    color: var(--happpy-ink);
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 150ms ease, transform 150ms ease, filter 150ms ease;
+    gap: 8px;
+}
+
+.agent-onb-card__cta:hover:not(:disabled),
+.agent-onb-card__cta:focus-visible:not(:disabled) {
+    filter: brightness(0.95);
+    outline: none;
+}
+
+.agent-onb-card__cta:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.agent-onb-card__cta:disabled {
+    filter: grayscale(1);
+    color: rgba(35, 31, 32, 0.65);
+    cursor: not-allowed;
+
+    svg path{
+        stroke: rgba(35, 31, 32, 0.65);
+    }
+}
+
+.agent-onb-card__cta--disconnect {
+    background: var(--happpy-white);
+    border: 0.5px solid var(--happpy-ink);
+    color: var(--happpy-ink);
+}
+
+.agent-onb-card__cta--disconnect:hover:not(:disabled),
+.agent-onb-card__cta--disconnect:focus-visible:not(:disabled) {
+    background: rgba(35, 31, 32, 0.04);
+}
+
+.agent-onb-card__cta--disconnect:disabled {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(35, 31, 32, 0.4);
+    color: rgba(35, 31, 32, 0.45);
+    cursor: not-allowed;
+}
+
+/* ---------- Privacy reassurance block ------------------- */
+
+.agent-onb-privacy {
+    width: 100%;
+    margin-top: 12px;
+}
+
+.agent-onb-privacy__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 12px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3;
+    color: var(--happpy-ink-strong);
+    text-align: center;
+}
+
+.agent-onb-privacy__lock {
+    display: inline-flex;
+    color: var(--happpy-success-alt);
+    flex-shrink: 0;
+}
+
+.agent-onb-privacy__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.agent-onb-privacy__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.45;
+    color: rgba(35, 31, 32, 0.6);
+}
+
+.agent-onb-privacy__check {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--happpy-success-alt);
+}
+
+/* ---------- Trust badge strip --------------------------- */
+
+.agent-onb-trust-badges {
+    list-style: none;
+    margin: 0 auto 16px;
+    padding: 0;
+    max-width: 720px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px 0;
+}
+
+.agent-onb-trust-badges__item {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    color: var(--happpy-brand-deep);
+    text-transform: uppercase;
+}
+
+.agent-onb-trust-badges__item:not(:last-child)::after {
+    content: '·';
+    margin: 0 8px;
+    color: #b0b0b0;
+    font-weight: 400;
+}
+
+@media (max-width: 520px) {
+    .agent-onb-trust-badges {
+        gap: 8px 0;
+    }
+
+    .agent-onb-trust-badges__item {
+        font-size: 9px;
+    }
+
+    .agent-onb-trust-badges__item:not(:last-child)::after {
+        margin: 0 7px;
+    }
+}
+
+/* ---------- Gmail callback stat banner (Figma 1701:21916) -------- */
+
+.agent-onb-callback-banner {
+    margin: 0 0 1.5rem;
+    padding: 12px;
+    background: rgba(157, 250, 213, 0.3);
+    border: none;
+    border-radius: 8px;
+    color: var(--happpy-success-alt);
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+/* ---------- Trust badge strip (below cards) ------------- */
+
+.agent-onb-trust-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: -8px auto 1.25rem;
+    flex-wrap: wrap;
+}
+
+.agent-onb-trust-strip__google {
+    flex-shrink: 0;
+}
+
+.agent-onb-trust-strip__badges {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.agent-onb-trust-strip__badge {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 9px;
+    letter-spacing: 1.1px;
+    line-height: 1;
+    color: var(--happpy-brand-muted);
+    text-transform: uppercase;
+}
+
+.agent-onb-trust-strip__badge:not(:last-child)::after {
+    content: '·';
+    margin-left: 8px;
+    color: var(--happpy-brand-muted);
+    font-weight: 400;
+}
+
+/* ---------- Privacy details toggle ---------------------- */
+
+.agent-onb-privacy-toggle-wrap {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(236, 236, 236, 1);
+}
+
+.agent-onb-privacy-toggle {
+    display: inline-flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 12px;
+    margin: 0 auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    transition: opacity 150ms ease;
+}
+
+.agent-onb-privacy-toggle:hover,
+.agent-onb-privacy-toggle:focus-visible {
+    outline: none;
+    opacity: 0.88;
+}
+
+.agent-onb-privacy-toggle__mascot {
+    width: 39px;
+    height: 40px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.agent-onb-privacy-toggle__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1;
+    color: var(--happpy-ink-muted);
+    padding-bottom: 2px;
+    transition: color 200ms ease;
+}
+
+.agent-onb-privacy-toggle:hover .agent-onb-privacy-toggle__label,
+.agent-onb-privacy-toggle:focus-visible .agent-onb-privacy-toggle__label {
+    color: var(--happpy-ink);
+}
+
+.agent-onb-privacy-toggle__chevron {
+    flex-shrink: 0;
+    transition: transform 200ms ease;
+}
+
+.agent-onb-privacy-toggle__chevron--open {
+    transform: rotate(180deg);
+}
+
+.agent-onb-privacy-toggle-wrap .data-secure-container {
+    margin-top: 0;
+}
+
+/* ---------- Shared accordion panel (referral + privacy) ---- */
+
+.agent-onb-accordion-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 200ms ease;
+}
+
+.agent-onb-accordion-panel--open {
+    grid-template-rows: 1fr;
+}
+
+.agent-onb-accordion-panel__inner {
+    overflow: hidden;
+    min-height: 0;
+}
+
+.agent-onb-accordion-panel--open .agent-onb-accordion-panel__inner > * {
+    animation: agentOnbAccordionIn 200ms ease-out;
+}
+
+@keyframes agentOnbAccordionIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- Gmail connection reassurance (Figma 1463:20724) -------- */
+
+.agent-onb-gmail-assurance {
+    margin-top: 1rem;
+    padding: 8px;
+    background: #f1fffd;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+.agent-onb-gmail-assurance__header {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.agent-onb-gmail-assurance__mascot {
+    flex-shrink: 0;
+    width: 28px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.agent-onb-gmail-assurance__title {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: normal;
+    color: var(--happpy-brand-deep);
+}
+
+.agent-onb-gmail-assurance__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.agent-onb-gmail-assurance__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 0.75rem;
+    line-height: 1.214;
+    color: #4c4c4c;
+}
+
+.agent-onb-gmail-assurance__bullet {
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    margin-top: 4px;
+    border-radius: 50%;
+    background: var(--happpy-brand-deep);
+}
+
+.data-secure-container{
+    margin-top: 1rem;
+    padding: 12px;
+    background: #F9F8F4;
+    border-radius: 12px;
+}
+.data-secured-badges{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    strong{
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: var(--happpy-brand-deep);
+        font-size: 12px;
+        line-height: normal;
+    }
+    ul.agent-onb-trust-badges{
+        margin: 0;
+        color: var(--happpy-brand-muted);
+        font-weight: 600;
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        line-height: 1;
+
+        li{
+            color: inherit;
+        }
+    }
+}
+
+/* ---------- LinkedIn inline form ------------------------- */
+
+.agent-onb-li-form {
+    margin: 16px auto 0;
+    width: 100%;
+    max-width: 720px;
+    background: var(--happpy-white);
+    border: 1px solid #e4e2dc;
+    border-radius: 12px;
+    padding: 20px 22px;
+    box-sizing: border-box;
+    box-shadow: 0 2px 10px rgba(20, 20, 20, 0.06);
+    animation: agentOnbFadeIn 200ms ease-out;
+}
+
+@keyframes agentOnbFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.agent-onb-li-form__title {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--happpy-ink);
+    margin: 0 0 12px;
+}
+
+.agent-onb-li-form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.agent-onb-li-form__label {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    color: #4d5b53;
+}
+
+.agent-onb-li-form__input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #dee1e7;
+    border-radius: 8px;
+    background: var(--happpy-white);
+    font-family: 'Rubik', sans-serif;
+    font-size: 13px;
+    color: var(--happpy-ink);
+    box-sizing: border-box;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.agent-onb-li-form__input:focus {
+    outline: none;
+    border-color: var(--happpy-ink) !important;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12) !important;
+}
+
+.agent-onb-li-form__input--error {
+    border-color: #d23f3f;
+}
+
+.agent-onb-li-form__error {
+    font-family: 'Rubik', sans-serif;
+    font-size: 11px;
+    color: #d23f3f;
+    margin-top: 2px;
+}
+
+.agent-onb-li-form__alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.agent-onb-li-form__alert--error {
+    background: #fdecec;
+    color: #8a1f1f;
+}
+
+.agent-onb-li-form__alert--success {
+    background: #ecfaf2;
+    color: #145d3a;
+}
+
+.agent-onb-li-form__actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 4px;
+}
+
+.agent-onb-li-form__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+    transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.agent-onb-li-form__btn--primary {
+    background: #0a66c2;
+    color: var(--happpy-white);
+}
+
+.agent-onb-li-form__btn--primary:hover:not(:disabled) {
+    background: #08529c;
+}
+
+.agent-onb-li-form__btn--primary:disabled {
+    background: rgba(10, 102, 194, 0.5);
+    cursor: not-allowed;
+}
+
+.agent-onb-li-form__btn--secondary {
+    background: transparent;
+    color: var(--happpy-ink);
+    border: 1px solid #d6d6d6;
+}
+
+.agent-onb-li-form__btn--secondary:hover:not(:disabled) {
+    background: rgba(20, 20, 20, 0.04);
+}
+
+.agent-onb-li-form__hint {
+    font-family: 'Rubik', sans-serif;
+    font-size: 11px;
+    color: var(--happpy-ink-muted);
+    margin: 0 0 10px;
+    line-height: 1.4;
+}
+
+/* ---------- Sticky footer ------------------------------- */
+
+.agent-onb-footer {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 48px;
+    background: var(--happpy-white);
+    border-top: 1px solid rgba(186, 186, 186, 0.35);
+    box-shadow: 0 -2px 8px rgba(107, 107, 107, 0.08);
+    position: relative;
+    /* anchors the Step 2 coach-mark tooltip */
+
+    &.step1{
+        @media screen and (max-width: 767px) {
+            flex-direction: column;
+        }
+    }
+}
+
+.agent-onb-footer__warning {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    color: #4c4c4c;
+    white-space: normal;
+    line-height: 1.35;
+}
+
+.agent-onb-footer__warning-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    background: #e6faf3;
+    flex-shrink: 0;
+}
+
+.agent-onb-footer__warning--hidden {
+    visibility: hidden;
+}
+
+.agent-onb-footer__warning-dot {
+    color: #3fd23f;
+}
+
+.agent-onb-footer__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 999px;
+    background: var(--happpy-ink);
+    color: var(--happpy-white);
+    font-family: 'Telegraf', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    min-width: 220px;
+    transition: background 150ms ease, filter 150ms ease, transform 150ms ease;
+}
+
+.agent-onb-footer__cta:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.agent-onb-footer__cta:hover:not(:disabled),
+.agent-onb-footer__cta:focus-visible:not(:disabled) {
+    filter: brightness(0.95);
+    outline: none;
+}
+
+.agent-onb-footer__cta:disabled {
+    background: rgba(186, 186, 186, 0.25);
+    color: rgba(35, 35, 35, 0.35);
+    cursor: not-allowed;
+}
+
+.agent-onb-footer__cta svg {
+    flex-shrink: 0;
+}
+
+/* Dark CTA variant — used by Step 2 footer. */
+.agent-onb-footer__cta--dark {
+    background: var(--happpy-ink);
+    color: var(--happpy-white);
+}
+
+.agent-onb-footer__cta--dark:hover:not(:disabled),
+.agent-onb-footer__cta--dark:focus-visible:not(:disabled) {
+    background: #0d0c0d;
+    color: var(--happpy-white);
+}
+
+.agent-onb-footer__cta--dark:disabled {
+    background: rgba(35, 31, 32, 0.25);
+    color: rgba(255, 255, 255, 0.55);
+}
+
+/* Circular back-arrow button — Step 2 footer left side. */
+.agent-onb-footer__back {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: #F4F4F4;
+    border: none;
+    color: var(--happpy-ink);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.agent-onb-footer__back:hover,
+.agent-onb-footer__back:focus-visible {
+    background: rgba(35, 31, 32, 0.05);
+    outline: none;
+}
+
+.agent-onb-footer__back:active {
+    transform: translateY(1px);
+}
+
+.agent-onb-footer__back svg {
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   Step 2 — "Set up your outreach message"
+   ============================================================ */
+
+.agent-onb-tpl-wrap {
+    width: 100%;
+    max-width: 718px;
+    margin: 0 auto;
+}
+
+/* Bordered card that wraps the tabs + editor + info banner */
+.agent-onb-tpl-card {
+    background: var(--happpy-white);
+    border: 1px solid #c9c4b5;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tab strip header (Gmail / LinkedIn) */
+.agent-onb-tpl-card__tabs {
+    background: #e4e1dc;
+    padding: 4px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.agent-onb-tpl-card__tab {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 4px 8px;
+    color: var(--happpy-ink-strong);
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    transition: background 120ms ease, border-color 120ms ease, font-weight 0ms;
+}
+
+.agent-onb-tpl-card__tab:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.agent-onb-tpl-card__tab--active {
+    background: var(--happpy-white);
+    border-color: #a09b93;
+    font-weight: 600;
+}
+
+.agent-onb-tpl-card__tab--active:hover {
+    background: var(--happpy-white);
+}
+
+.agent-onb-tpl-card__tab-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.agent-onb-tpl-card__tab-icon svg,
+.agent-onb-tpl-card__tab-icon img {
+    width: 20px;
+    height: 20px;
+}
+
+.agent-onb-tpl-card__tab-lock {
+    margin-left: 4px;
+    color: var(--happpy-ink-muted);
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Chip row — "Use Template 1", "Use Template 2", "Write your own message" */
+.agent-onb-tpl-card__chips {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 14px 19px 4px;
+}
+
+.agent-onb-tpl-card__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--happpy-white);
+    border: 1px solid #dee1e7;
+    border-radius: 20px;
+    color: var(--happpy-ink);
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: -0.08px;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+}
+
+.agent-onb-tpl-card__chip:hover:not(:disabled) {
+    border-color: #b6bcc8;
+}
+
+.agent-onb-tpl-card__chip--active {
+    background: var(--happpy-mint-border);
+    border-color: var(--happpy-mint-border);
+    font-weight: 600;
+}
+
+.agent-onb-tpl-card__chip--active:hover {
+    background: var(--happpy-brand);
+    border-color: var(--happpy-brand);
+}
+
+.agent-onb-tpl-card__chip:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.agent-onb-tpl-card__chip-radio {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    border: 1.5px solid var(--happpy-ink-muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--happpy-white);
+    transition: border-color 120ms ease, background 120ms ease;
+}
+
+.agent-onb-tpl-card__chip--active .agent-onb-tpl-card__chip-radio {
+    border-color: var(--happpy-ink);
+    background: var(--happpy-white);
+}
+
+.agent-onb-tpl-card__chip--active .agent-onb-tpl-card__chip-radio::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--happpy-ink);
+}
+
+/* Form section under the chips */
+.agent-onb-tpl-card__form {
+    padding: 12px 19px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.agent-onb-tpl-card__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.agent-onb-tpl-card__label {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--happpy-ink-muted);
+    margin: 0;
+}
+
+.agent-onb-tpl-card__input {
+    width: 100%;
+    height: 31px;
+    padding: 6px 8px;
+    background: var(--happpy-white);
+    border: 1.5px solid #dee1e7;
+    border-radius: 8px;
+    color: var(--happpy-ink);
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    box-sizing: border-box;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.agent-onb-tpl-card__input::placeholder {
+    color: rgba(107, 107, 107, 0.6);
+}
+
+.agent-onb-tpl-card__input:focus {
+    outline: none;
+    border-color: var(--happpy-ink);
+    box-shadow: 0 0 0 3px rgba(35, 31, 32, 0.08);
+}
+
+.agent-onb-tpl-card__input--error {
+    border-color: #d23f3f;
+}
+
+/* Editor wrapper — overrides for TemplateEditor (react-simple-wysiwyg) */
+.agent-onb-tpl-card__editor {
+    border: 1.5px solid #dee1e7;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--happpy-white);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, outline-color 0.15s ease;
+}
+
+.agent-onb-tpl-card__editor:focus-within {
+    border-color: var(--happpy-ink);
+    box-shadow: 0 0 0 3px rgba(35, 31, 32, 0.08);
+}
+
+.agent-onb-tpl-card__editor--error {
+    border-color: #d23f3f;
+}
+
+.agent-onb-tpl-card__editor--error:focus-within {
+    border-color: #d23f3f;
+    box-shadow: 0 0 0 3px rgba(210, 63, 63, 0.08);
+}
+
+.agent-onb-tpl-card__editor .rsw-editor {
+    border: none;
+    border-radius: 8px;
+    background: var(--happpy-white);
+}
+
+.agent-onb-tpl-card__editor .rsw-toolbar {
+    background: #f2f2f3;
+    border-bottom: 1px solid #e4e1dc;
+}
+
+.agent-onb-tpl-card__editor .rsw-ce {
+    min-height: 240px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 8px 10px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 12px;
+    color: var(--happpy-ink);
+    line-height: 1.5;
+}
+
+.agent-onb-tpl-card__editor .rsw-ce:focus {
+    outline: none;
+}
+
+.agent-onb-tpl-card__error {
+    font-family: 'Rubik', sans-serif;
+    font-size: 11px;
+    color: #d23f3f;
+    margin: 4px 0 0;
+}
+
+/* Mint info banner at the bottom of the card */
+.agent-onb-tpl-card__banner {
+    margin: 8px 20px 48px;
+    background: #d6f4ef;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--happpy-ink);
+    width: fit-content;
+}
+
+.agent-onb-tpl-card__banner svg {
+    flex-shrink: 0;
+    color: var(--happpy-ink);
+}
+
+/* Locked LinkedIn tab body (when LinkedIn isn't connected) */
+.agent-onb-tpl-card__locked {
+    padding: 32px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+}
+
+.agent-onb-tpl-card__locked-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: #f4f4f4;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--happpy-ink-muted);
+}
+
+.agent-onb-tpl-card__locked-title {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--happpy-ink);
+    margin: 0;
+}
+
+.agent-onb-tpl-card__locked-lede {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--happpy-ink-muted);
+    margin: 0;
+    max-width: 360px;
+    line-height: 1.5;
+}
+
+.agent-onb-tpl-card__locked-action {
+    margin-top: 6px;
+    padding: 8px 18px;
+    background: transparent;
+    color: var(--happpy-ink);
+    border: 1px solid var(--happpy-ink);
+    border-radius: 999px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 120ms ease;
+}
+
+.agent-onb-tpl-card__locked-action:hover,
+.agent-onb-tpl-card__locked-action:focus-visible {
+    background: rgba(35, 31, 32, 0.05);
+    outline: none;
+}
+
+/* "Write your own message" coach-mark — anchored to the footer.
+   The bubble sits above the footer's top edge and the mascot dangles
+   down so its lower half overlaps the footer band. */
+.agent-onb-tpl-tooltip {
+    position: absolute;
+    right: 48px;
+    bottom: 100%;
+    /* let the mascot hang ~18px into the footer */
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    pointer-events: none;
+    z-index: 6;
+}
+
+.agent-onb-tpl-tooltip__inner {
+    pointer-events: auto;
+    position: relative;
+    background: var(--happpy-white);
+    border: 1px solid #e0e0fc;
+    border-radius: 8px;
+    padding: 8px;
+    max-width: 260px;
+    box-shadow: 2px 4px 4px rgba(129, 127, 127, 0.24);
+    margin-bottom: 22px;
+    /* lifts bubble so mascot's body hangs below it */
+}
+
+.agent-onb-tpl-tooltip__text {
+    display: block;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--happpy-brand-deep);
+    line-height: 1.4;
+}
+
+/* Right-pointing speech-bubble tail (border layer first, then white fill) */
+.agent-onb-tpl-tooltip__inner::before {
+    content: '';
+    position: absolute;
+    right: -13px;
+    top: 14px;
+    border: 6px solid transparent;
+    border-left-color: #e0e0fc;
+}
+
+.agent-onb-tpl-tooltip__close {
+    position: absolute;
+    top: -12px;
+    left: -14px;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: var(--happpy-white);
+    border: 0.5px solid #e0e0fc;
+    color: #5a5278;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 1px 0 3px rgba(107, 107, 107, 0.12);
+    padding: 0;
+    pointer-events: auto;
+}
+
+/* Expand hit target without growing the visible glyph further */
+.agent-onb-tpl-tooltip__close::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+}
+
+.agent-onb-tpl-tooltip__close:hover,
+.agent-onb-tpl-tooltip__close:focus-visible {
+    background: #f5f5fb;
+    outline: none;
+}
+
+.agent-onb-tpl-tooltip__close svg {
+    width: 11px;
+    height: 11px;
+}
+
+.agent-onb-tpl-tooltip__mascot {
+    width: 84px;
+    height: 84px;
+    margin-left: -2px;
+    display: block;
+    flex-shrink: 0;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Tiny inline saving indicator inside the tab strip */
+.agent-onb-tpl-card__saving {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 10px;
+    color: var(--happpy-ink-muted);
+}
+
+.agent-onb-tpl-card__tabs-wrap {
+    position: relative;
+}
+
+/* ============================================================
+   Step 3 — "Download Browser Extension"
+   ============================================================ */
+
+.agent-onb-ext-wrap {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Bordered card — gradient hero band on top, body underneath. */
+.agent-onb-ext-card {
+    width: 100%;
+    max-width: 368px;
+    background: var(--happpy-white);
+    border: 2px solid #e4e2dc;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 1px 0 6px rgba(107, 107, 107, 0.08);
+}
+
+/* Top gradient band hosting the Chrome + Brave glyphs. */
+.agent-onb-ext-card__hero {
+    height: 98px;
+    background: linear-gradient(154deg, #efeeff 26%, rgba(255, 234, 222, 0.94) 97%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.agent-onb-ext-card__browser {
+    width: 71px;
+    height: 71px;
+    flex-shrink: 0;
+    display: block;
+}
+
+.agent-onb-ext-card__body {
+    padding: 18px 20px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.agent-onb-ext-card__title {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.3;
+    color: var(--happpy-ink);
+    text-align: center;
+}
+
+/* "Agent" gets a heavier weight + a soft underline accent. */
+.agent-onb-ext-card__title-strong {
+    font-weight: 900;
+    position: relative;
+    display: inline-block;
+}
+
+.agent-onb-ext-card__title-strong::after {
+    content: '';
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    bottom: -3px;
+    height: 2px;
+    background: var(--happpy-legacy-yellow);
+    border-radius: 999px;
+}
+
+/* Pill row showing supported platforms. */
+.agent-onb-ext-card__platforms {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+/* Shared base for all 24px platform glyphs. */
+.agent-onb-ext-card__platform {
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Inter', 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    line-height: 1;
+    color: var(--happpy-white);
+    background: #f0f0f6;
+    overflow: hidden;
+}
+
+.agent-onb-ext-card__platform svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.agent-onb-ext-card__platform--naukri {
+    color: var(--happpy-white);
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.agent-onb-ext-card__platform--wellfound {
+    font-weight: 800;
+    font-size: 10px;
+    letter-spacing: -0.3px;
+}
+
+.agent-onb-ext-card__platform--indeed {
+    color: var(--happpy-white);
+    font-weight: 800;
+    font-size: 10px;
+    letter-spacing: -0.3px;
+    /* The trailing "deed" is visually hidden — the visible glyph is "in" only.
+       We render it so screen readers still announce the full brand name. */
+}
+
+.agent-onb-ext-card__platform--indeed>span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+}
+
+.agent-onb-ext-card__platforms-more {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 12px;
+    background: #f0f0f6;
+    border-radius: 13px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 10px;
+    color: var(--happpy-ink-muted);
+    white-space: nowrap;
+}
+
+/* Yellow CTA — matches the card-level CTA tokens from Step 1. */
+.agent-onb-ext-card__cta {
+    width: 100%;
+    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 56px;
+    background: var(--happpy-brand);
+    color: var(--happpy-ink);
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 140ms ease, transform 140ms ease;
+}
+
+.agent-onb-ext-card__cta:hover,
+.agent-onb-ext-card__cta:focus-visible {
+    filter: brightness(0.95);
+    color: var(--happpy-ink);
+    outline: none;
+    text-decoration: none;
+}
+
+.agent-onb-ext-card__cta:active {
+    transform: translateY(1px);
+}
+
+.agent-onb-ext-card__cta--done {
+    background: #c0ff9b;
+    color: var(--happpy-success-alt);
+}
+
+.agent-onb-ext-card__cta--done:hover,
+.agent-onb-ext-card__cta--done:focus-visible {
+    background: #b1f48a;
+    color: var(--happpy-success-alt);
+}
+
+/* "Prefer to paste job links manually?" helper line under the card. */
+.agent-onb-ext-manual-note {
+    margin: 4px 0 0;
+    text-align: center;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 10px;
+    color: var(--happpy-ink-muted);
+    line-height: 1.5;
+}
+
+.agent-onb-ext-manual-note__strong {
+    color: var(--happpy-ink-strong);
+    font-weight: 500;
+}
+
+/* "Already downloaded?" coach-mark — mirrors the Step 2 tooltip but
+   swaps the layout so the mascot sits to the LEFT of the bubble and
+   the bubble tail points back toward the mascot. */
+.agent-onb-ext-tooltip {
+    position: absolute;
+    right: 48px;
+    /* leaves room for the Next-step CTA */
+    bottom: 100%;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    pointer-events: none;
+    z-index: 6;
+}
+
+.agent-onb-ext-tooltip__mascot {
+    width: 80px;
+    height: 80px;
+    display: block;
+    flex-shrink: 0;
+    pointer-events: none;
+    user-select: none;
+    margin-bottom: 8px;
+}
+
+.agent-onb-ext-tooltip__bubble {
+    pointer-events: auto;
+    position: relative;
+    background: var(--happpy-white);
+    border: 1px solid #e0e0fc;
+    border-radius: 8px;
+    padding: 10px 12px;
+    max-width: 257px;
+    box-shadow: 2px 4px 4px rgba(129, 127, 127, 0.24);
+    margin-bottom: 8px;
+    /* lifts bubble so mascot's body hangs below it */
+}
+
+/* Left-pointing tail aimed at the mascot. */
+.agent-onb-ext-tooltip__bubble::before {
+    content: '';
+    position: absolute;
+    left: -13px;
+    top: 14px;
+    border: 6px solid transparent;
+    border-right-color: #e0e0fc;
+}
+
+.agent-onb-ext-tooltip__text {
+    display: block;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--happpy-brand-deep);
+    line-height: 1.4;
+}
+
+/* ============================================================
+   Step 4 — "Choose your outreach mode"
+   ============================================================ */
+
+.agent-onb-mode-grid {
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+/* Each card is a button so the whole surface is clickable (a11y bonus
+   over wrapping the content in <div onClick>). */
+.agent-onb-mode-card {
+    position: relative;
+    width: 100%;
+    max-width: 347px;
+    min-height: 247px;
+    padding: 20px 20px 38px;
+    background: var(--happpy-white);
+    border: 2px solid #e4e2dc !important;
+    border-radius: 12px;
+    box-shadow: 1px 0 6px rgba(107, 107, 107, 0.12);
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease,
+        background-color 160ms ease;
+}
+
+.agent-onb-blank-card {
+    width: 100%;
+    max-width: 347px;
+}
+
+.agent-onb-mode-card:hover:not(:disabled):not(.agent-onb-mode-card--locked) {
+    border-color: #cfcdc7;
+    transform: translateY(-1px);
+    box-shadow: 1px 2px 10px rgba(107, 107, 107, 0.16);
+}
+
+.agent-onb-mode-card--selected {
+    background: #f3fff7;
+    border-color: #aed1cc;
+    box-shadow: 2px 4px 4px rgba(129, 127, 127, 0.24);
+}
+
+.agent-onb-mode-card--selected.agent-onb-mode-card--auto {
+    border-color: #aed1cc;
+}
+
+.agent-onb-mode-card--selected:hover {
+    transform: none;
+    box-shadow: 2px 4px 4px rgba(129, 127, 127, 0.24);
+}
+
+/* Locked Manual card (free-trial users) — desaturate + dim the whole card
+   in one place instead of overriding each child color. The mascot tooltip
+   handles the "why is this locked?" explanation. */
+.agent-onb-mode-card--locked {
+    cursor: not-allowed;
+    filter: grayscale(0.7) opacity(0.65);
+    pointer-events: none;
+    /* swallow hover/active states */
+
+    .agent-onb-mode-card__icon--manual {
+        filter: grayscale(1) opacity(0.65);
+    }
+}
+
+.agent-onb-mode-card__badge {
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    padding: 4px 10px;
+    background: #c0ff9b;
+    color: var(--happpy-success-alt);
+    border-radius: 10px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* Top-right "selected" tick — outlined square that fills in when picked. */
+.agent-onb-mode-card__check {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: var(--happpy-white);
+    border: 1.5px solid #d6d6d6;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 120ms ease, background 120ms ease;
+}
+
+.agent-onb-mode-card__check--on {
+    border-color: var(--happpy-success-alt);
+}
+
+.agent-onb-mode-card__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 6px;
+    /* breathing room below the floating badge */
+}
+
+.agent-onb-mode-card__icon {
+    width: 48px;
+    height: 48px;
+    font-size: 48px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.agent-onb-mode-card__icon--auto {
+    color: #ffb800;
+}
+
+.agent-onb-mode-card__icon--manual {
+    color: var(--happpy-ink-muted);
+}
+
+.agent-onb-mode-card__head-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.agent-onb-mode-card__title {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--happpy-ink);
+}
+
+.agent-onb-mode-card__subtitle {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--happpy-ink-muted);
+}
+
+.agent-onb-mode-card__features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.agent-onb-mode-card__feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 1.35;
+    color: var(--happpy-ink);
+}
+
+.agent-onb-mode-card__feature-icon {
+    flex-shrink: 0;
+    width: 13px;
+    height: 13px;
+    margin-top: 1px;
+    color: #1aa463;
+}
+
+/* "Ideal for" highlight band — full-bleed across the bottom of the card.
+   The color follows the card state:
+     - selected      → green        #def8e6
+     - unselected    → yellow-cream #fff9dd
+     - locked        → grey          inherited via the parent's filter() */
+.nudge-container {
+    margin: auto -20px -38px;
+    padding: 16px 20px;
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 18px;
+        width: calc(100% - 36px);
+        height: 1px;
+        background: #e4e2dc;
+    }
+}
+
+.agent-onb-mode-card__ideal {
+    padding: 2px;
+    width: fit-content;
+    background: #fff9dd;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--happpy-ink-strong);
+}
+
+.agent-onb-mode-card--selected .agent-onb-mode-card__ideal {
+    background: #def8e6;
+    color: var(--happpy-ink-strong);
+}
+
+/* When the card is locked the parent already applies grayscale + opacity,
+   so the band quietly turns into a desaturated grey by inheritance. */
+
+/* Universal "1st-degree LinkedIn" disclaimer below the cards. Sits inside
+   the scroll area so it scrolls with the content on narrow viewports. */
+.agent-onb-mode-notice {
+    margin: 16px auto 0;
+    max-width: 720px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f5f7fb;
+    border: 1px solid rgba(69, 88, 115, 0.12);
+    border-radius: 6px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.45;
+    color: #455873;
+
+    @media (max-width: 767px) {
+        margin-top: 0;
+        padding: 6px;
+        gap: 4px;
+        font-size: 10px;
+    }
+}
+
+.agent-onb-mode-notice svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.agent-onb-mode-notice__strong {
+    color: var(--happpy-ink-strong);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* Mascot coach-mark — sits in-flow under the Manual card column instead of
+   floating over the footer. The wrapper matches the cards' grid width and
+   right-aligns the bubble so it visually attaches to the Manual card above.
+
+   Two variants:
+     - --upgrade: free-trial users (yellow CTA inside the bubble)
+     - --success: paid users (confirmation copy reflecting the current pick) */
+.agent-onb-mode-tooltip-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.agent-onb-mode-tooltip {
+    position: absolute;
+    left: -36px;
+    top: calc(100% - 4px);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+/* Success variant doesn't have a CTA — render the bubble slimmer + use
+   a softer border so it doesn't compete with the dark "Complete" pill. */
+.agent-onb-mode-tooltip--success .agent-onb-mode-tooltip__bubble {
+    border-color: #e0e0fc;
+    max-width: 245px;
+}
+
+.agent-onb-mode-tooltip--success .agent-onb-mode-tooltip__bubble::before {
+    border-right-color: #e0e0fc;
+}
+
+.agent-onb-mode-tooltip--success .agent-onb-mode-tooltip__text strong {
+    color: var(--happpy-success-alt);
+    font-weight: 700;
+}
+
+.agent-onb-mode-tooltip__mascot {
+    width: 80px;
+    height: 80px;
+    display: block;
+    flex-shrink: 0;
+    user-select: none;
+    margin-top: -32px;
+}
+
+.agent-onb-mode-tooltip__bubble {
+    position: relative;
+    background: var(--happpy-white);
+    border: 1px solid var(--happpy-brand-muted);
+    border-radius: 8px;
+    padding: 12px;
+    width: 286px;
+    max-width: 286px;
+    box-shadow: 2px 4px 4px rgba(129, 127, 127, 0.24);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.agent-onb-mode-tooltip__bubble::before {
+    content: '';
+    position: absolute;
+    left: -13px;
+    top: 16px;
+    border: 6px solid transparent;
+    border-right-color: var(--happpy-brand-muted);
+}
+
+.agent-onb-mode-tooltip__text {
+    display: block;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--happpy-brand-deep);
+    line-height: 1.45;
+}
+
+.agent-onb-mode-tooltip__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 8px 16px;
+    width: 100%;
+    border: none;
+    border-radius: 16px;
+    background: var(--happpy-brand-alt);
+    color: var(--happpy-white);
+    font-family: 'Telegraf', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 140ms ease;
+
+    svg *{
+        fill: var(--happpy-white);
+    }
+}
+
+.agent-onb-mode-tooltip__cta:hover,
+.agent-onb-mode-tooltip__cta:focus-visible {
+    background: var(--happpy-brand-deep);
+    outline: none;
+}
+
+/* Wider "Complete agent set up" pill — the copy is longer than "Next step". */
+.agent-onb-footer__cta--wide {
+    min-width: 258px;
+}
+
+/* ============================================================
+   Step 5 (side-step) — "Choose a plan that works best for you!"
+   ------------------------------------------------------------
+   Two card variants:
+     - default  → flat #f2f2f2 fill, used for Trial (disabled) + All In
+     - featured → white card with a yellow "shadow" card peeking out from
+                  the bottom-left (achieved with a ::before backdrop, no
+                  extra DOM). Hosts the "Most Popular" pill on its top edge.
+   ============================================================ */
+
+.agent-onb-plan-grid {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+    justify-content: center;
+    flex-wrap: wrap;
+    /* Breathing room so the featured card's yellow shadow + the floating
+       "Most Popular" pill don't get clipped against the grid edges. */
+    padding: 18px 0 12px;
+}
+
+.agent-onb-plan-card {
+    position: relative;
+    flex: 1 1 220px;
+    max-width: 228px;
+    min-height: 412px;
+    background: #f2f2f2;
+    border: 1px solid #ededed;
+    border-radius: 12px;
+    /* Establish a stacking context so the featured card's ::before
+       backdrop can sit safely behind the foreground content. */
+    z-index: 0;
+    border: none;
+}
+
+/* Featured (Hustle) — white foreground with a yellow back card peeking
+   out bottom-left, both bordered in Uplers-black. */
+.agent-onb-plan-card--featured {
+    background: var(--happpy-white);
+    border-color: var(--happpy-ink);
+}
+
+.agent-onb-plan-card--featured::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    bottom: -4px;
+    left: -4px;
+    right: 4px;
+    background: var(--happpy-legacy-yellow);
+    border: 1px solid var(--happpy-ink);
+    border-radius: 12px;
+    z-index: -1;
+}
+
+/* Trial card is disabled-looking by virtue of its CTA — the card itself
+   keeps the same flat-grey treatment as the All In card so nothing
+   "jumps out" except the featured one. */
+.agent-onb-plan-card--current {
+    background: #f2f2f2;
+}
+
+/* "Most Popular" pill sits straddling the top edge of the featured card. */
+.agent-onb-plan-card__ribbon {
+    position: absolute;
+    top: -10px;
+    right: 18px;
+    padding: 3px 10px;
+    background: #ffda32;
+    color: var(--happpy-ink);
+    border-radius: 10px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+/* Inner padding wrapper — keeps the ::before backdrop edge-to-edge while
+   the content respects 16px of inset. */
+.agent-onb-plan-card__inner {
+    position: relative;
+    height: 100%;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid black;
+
+}
+
+.agent-onb-plan-card__head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.agent-onb-plan-card__title-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.agent-onb-plan-card__title {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: -0.36px;
+    color: var(--happpy-ink);
+}
+
+/* Featured title sits in a quieter grey so the price gets the eye first. */
+.agent-onb-plan-card--featured .agent-onb-plan-card__title {
+    color: #666666;
+}
+
+.agent-onb-plan-card__save-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: #e9ffc5;
+    color: var(--happpy-success-alt);
+    border-radius: 4px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.agent-onb-plan-card__price-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    flex-wrap: wrap;
+}
+
+.agent-onb-plan-card__price {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--happpy-ink);
+    line-height: 1.1;
+    letter-spacing: -0.36px;
+}
+
+.agent-onb-plan-card__price-sub {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--happpy-ink-muted);
+    line-height: 1.5;
+    padding-bottom: 2px;
+}
+
+/* Black rounded-rect CTA — same treatment on every card; disabled current
+   plan flips to a muted grey-on-grey state below. */
+.agent-onb-plan-card__cta {
+    width: 100%;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: var(--happpy-ink);
+    color: var(--happpy-white);
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 140ms ease, color 140ms ease;
+}
+
+.agent-onb-plan-card__cta:hover:not(:disabled),
+.agent-onb-plan-card__cta:focus-visible:not(:disabled) {
+    background: #0d0c0d;
+    outline: none;
+}
+
+.agent-onb-plan-card__cta--current,
+.agent-onb-plan-card__cta--current:hover {
+    background: #e4e3e0;
+    color: rgba(35, 31, 32, 0.55);
+    cursor: default;
+}
+
+.agent-onb-plan-card__cta:disabled:not(.agent-onb-plan-card__cta--current) {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.agent-onb-plan-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.agent-onb-plan-card__desc {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.45;
+    letter-spacing: -0.18px;
+    color: rgba(107, 107, 107, 0.8);
+}
+
+.agent-onb-plan-card__features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.agent-onb-plan-card__feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.35;
+    color: var(--happpy-ink);
+}
+
+.agent-onb-plan-card__feature svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: #1aa463;
+}
+
+/* Step 5 footer only has a back button — no right-side CTA. */
+.agent-onb-footer__spacer {
+    flex: 1;
+}
+
+/* ---------- Responsive ---------------------------------- */
+
+@media (max-width: 767px) {
+    /* Footer owns safe-area; skip overlay pad to avoid double-shrinking sheet height */
+    .agent-onb-overlay {
+        justify-content: center;
+        align-items: flex-end;
+        padding-bottom: 0;
+    }
+
+    .agent-onb-drawer {
+        width: 100%;
+        max-width: 100%;
+        height: calc(100vh - 64px - env(safe-area-inset-top, 0px));
+        height: calc(100dvh - 64px - env(safe-area-inset-top, 0px));
+        max-height: calc(100vh - 64px - env(safe-area-inset-top, 0px));
+        max-height: calc(100dvh - 64px - env(safe-area-inset-top, 0px));
+        margin: 0 !important;
+        border-radius: 16px 16px 0 0 !important;
+        box-shadow: 0 -6px 24px rgba(20, 20, 20, 0.18);
+        transform: translateY(100%);
+        animation: agentOnbDrawerInMobile 240ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+        overflow-x: clip;
+
+        &:has(.agent-onb-footer .agent-onb-tpl-tooltip),
+        &:has(.agent-onb-footer .agent-onb-ext-tooltip) {
+            .agent-onb-scroll {
+                padding-bottom: 120px;
+            }
+        }
+
+        &:has(.agent-onb-li-form) .agent-onb-scroll {
+            padding-bottom: 96px;
+        }
+    }
+
+    .agent-onb-scroll {
+        padding: 40px 18px 56px;
+    }
+
+    .agent-onb-cards {
+        gap: 18px;
+    }
+
+    .agent-onb-card {
+        max-width: 100%;
+    }
+
+    .agent-onb-footer {
+        padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px));
+        border-radius: 12px 12px 0 0;
+    }
+
+    .agent-onb-footer__cta {
+        width: 100%;
+        min-width: 0;
+        min-height: 48px;
+    }
+
+    .agent-onb-footer__warning {
+        font-size: 12px;
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .agent-onb-footer__warning--hidden {
+        display: none;
+    }
+
+    /* Step 1 — LinkedIn form actions */
+    .agent-onb-li-form__actions {
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: stretch;
+        gap: 8px;
+    }
+
+    .agent-onb-li-form__btn {
+        flex: 1 1 100%;
+        min-height: 44px;
+        font-size: 13px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Template drawer tabs / chips */
+    .agent-onb-tpl-card__tabs {
+        flex-direction: row;
+        gap: 0;
+    }
+
+    .agent-onb-tpl-card__tab {
+        width: 100%;
+        min-height: 44px;
+        height: auto;
+        padding: 10px 8px;
+    }
+
+    .agent-onb-tpl-card__chips {
+        padding: 14px 14px 4px;
+    }
+
+    .agent-onb-tpl-card__chip {
+        min-height: 44px;
+        padding: 10px 14px;
+    }
+
+    .agent-onb-tpl-card__form {
+        padding: 12px 14px;
+    }
+
+    .agent-onb-tpl-card__banner {
+        position: sticky;
+        bottom: 0;
+        left: auto;
+        width: 100%;
+        max-width: 100%;
+        margin: 12px 0 0;
+        box-sizing: border-box;
+        justify-content: center;
+        z-index: 2;
+    }
+
+    .agent-onb-tpl-card__editor .rsw-toolbar {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap;
+    }
+
+    .agent-onb-tpl-tooltip {
+        right: 10px;
+        left: 10px;
+        max-width: calc(100% - 20px);
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .agent-onb-tpl-tooltip__inner {
+        max-width: min(230px, calc(100% - 24px));
+        padding: 10px 12px 10px 26px;
+    }
+
+    .agent-onb-tpl-tooltip__mascot {
+        width: 56px;
+        height: 56px;
+    }
+
+    /* Step 3 — Extension install coach-mark */
+    .agent-onb-ext-card {
+        max-width: 100%;
+    }
+
+    .agent-onb-ext-tooltip {
+        right: 10px;
+        left: 10px;
+        bottom: calc(100% + 4px);
+        max-width: calc(100% - 20px);
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .agent-onb-ext-tooltip__bubble {
+        width: 100%;
+        max-width: min(280px, calc(100% - 24px));
+        padding: 10px 12px;
+        box-sizing: border-box;
+    }
+
+    .agent-onb-ext-tooltip__bubble::before,
+    .agent-onb-ext-tooltip__bubble::after {
+        display: none;
+    }
+
+    .agent-onb-ext-tooltip__mascot {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 0;
+    }
+
+    /* Step 4 — Mode selection coach-mark in normal flow */
+    .agent-onb-mode-card {
+        max-width: 100%;
+    }
+
+    .agent-onb-blank-card:empty {
+        display: none;
+    }
+
+    .agent-onb-mode-grid:has(.agent-onb-blank-card) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    .agent-onb-mode-tooltip-wrap {
+        justify-content: center;
+        width: 100%;
+        display: flex;
+    }
+
+    .agent-onb-mode-tooltip {
+        position: relative;
+        left: 0;
+        top: 0;
+        max-width: 100%;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .agent-onb-mode-tooltip__bubble {
+        width: 100%;
+        max-width: min(280px, calc(100% - 24px));
+        padding: 10px 12px;
+        box-sizing: border-box;
+    }
+
+    .agent-onb-mode-tooltip__bubble::before,
+    .agent-onb-mode-tooltip__bubble::after {
+        display: none;
+    }
+
+    .agent-onb-mode-tooltip__mascot {
+        width: 56px;
+        height: 56px;
+        margin-top: 0;
+    }
+
+    .agent-onb-footer__cta--wide {
+        min-width: 0;
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 16px;
+    }
+
+    /* Step 5 — Upgrade plan (shared HappyPlanCards) */
+    .agent-onb-upgrade-plans .jad-sub-plan-grid {
+        gap: 20px;
+        padding: 0 0 16px;
+    }
+
+    .agent-onb-upgrade-plans .jad-sub-plan-card {
+        max-width: 100%;
+        flex: 0 0 auto;
+        min-height: 0;
+    }
+
+    .agent-onb-upgrade-plans .jad-sub-plan-card--featured {
+        margin: 0;
+    }
+}
+
+/* Step 5 — shared plan cards inside the onboarding drawer */
+.agent-onb-upgrade-plans .jad-subscription {
+    padding: 0;
+    background: transparent;
+}
+
+.agent-onb-upgrade-plans .jad-sub-plan-grid:has(.jad-sub-plan-card--landing-figma) {
+    max-width: none;
+    margin: 0;
+}
+
+/* Step 1 — referral link accordion (Figma 1797:2409) */
+.agent-onb-referral {
+    margin: 0 0 1.5rem;
+    width: 100%;
+}
+
+.agent-onb-referral-field {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: background-color 200ms ease;
+}
+
+.agent-onb-referral-field:not(.agent-onb-referral-field--open) {
+    background: rgba(186, 186, 186, 0.2);
+}
+
+.agent-onb-referral-field--open {
+    background: #f1f1f1;
+}
+
+.agent-onb-referral-field__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    transition: opacity 150ms ease;
+}
+
+.agent-onb-referral-field__toggle:hover,
+.agent-onb-referral-field__toggle:focus-visible {
+    outline: none;
+    opacity: 0.88;
+}
+
+.agent-onb-referral-field__label {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: normal;
+    letter-spacing: -0.0762px;
+    color: var(--happpy-ink);
+}
+
+.agent-onb-referral-field__chevron {
+    flex-shrink: 0;
+    transition: transform 200ms ease;
+}
+
+.agent-onb-referral-field__chevron--open {
+    transform: rotate(180deg);
+}
+
+.agent-onb-referral-field__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 12px 9px;
+}
+
+.agent-onb-referral-field__input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dee1e7;
+    border-radius: 7px;
+    background: var(--happpy-white);
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: normal;
+    color: var(--happpy-ink);
+    box-sizing: border-box;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.agent-onb-referral-field__input::placeholder {
+    color: rgba(107, 107, 107, 0.6);
+    font-weight: 600;
+}
+
+.agent-onb-referral-field__input:focus {
+    outline: none;
+    border-color: var(--happpy-ink);
+    box-shadow: 0 0 0 3px rgba(35, 31, 32, 0.08);
+}
+
+.agent-onb-referral-field__input--error {
+    border-color: #e53e3e;
+}
+
+.agent-onb-referral-field__input--error:focus {
+    border-color: #e53e3e;
+    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.12);
+}
+
+.agent-onb-referral-field__input--locked {
+    background: #e2fdf2;
+    border-color: var(--happpy-success-alt);
+}
+
+.agent-onb-referral-field__input:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.agent-onb-referral-field__status {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 11px;
+    line-height: normal;
+}
+
+.agent-onb-referral-field__status--verifying {
+    color: var(--happpy-ink-muted);
+}
+
+.agent-onb-referral-field__status--success {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--happpy-success-alt);
+    font-weight: 500;
+}
+
+.agent-onb-referral-field__status--success svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+.agent-onb-referral-field__status--success p {
+    margin: 0;
+}
+
+.agent-onb-referral-field__status--error {
+    color: #e53e3e;
+}
+
+@media screen and (max-width: 767px) {
+    .agent-onb-referral-field__label {
+        font-size: 10px;
+        white-space: normal;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .agent-onb-scroll.step1 .agent-onb-card,
+    .agent-onb-scroll.step1 .agent-onb-card__cta,
+    .agent-onb-scroll.step1 .agent-onb-referral-field,
+    .agent-onb-scroll.step1 .agent-onb-referral-field__chevron,
+    .agent-onb-scroll.step1 .agent-onb-accordion-panel,
+    .agent-onb-scroll.step1 .agent-onb-privacy-toggle,
+    .agent-onb-scroll.step1 .agent-onb-privacy-toggle__chevron,
+    .agent-onb-scroll.step1 .agent-onb-privacy-toggle__label,
+    .agent-onb-scroll.step1 .agent-onb-li-form,
+    .agent-onb-scroll.step1 .agent-onb-footer__cta {
+        transition: none !important;
+        animation: none !important;
+    }
+
+    .agent-onb-scroll.step1 .agent-onb-card:not(.agent-onb-card--connected):hover {
+        transform: none;
+    }
+
+    .agent-onb-scroll.step1 .agent-onb-card__cta:active:not(:disabled),
+    .agent-onb-scroll.step1 .agent-onb-footer__cta:active:not(:disabled) {
+        transform: none;
+    }
+}
+
+/* Referral trial-unlock celebration overlay (shown once on connect) */
+.agent-onb-referral-celebration-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+    background: rgba(15, 23, 42, 0.55);
+    overflow-y: auto;
+}
+
+@media (max-width: 767px) {
+    .agent-onb-referral-celebration-overlay {
+        align-items: flex-end;
+        padding: 0;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .agent-onb-referral-celebration {
+        max-width: 100%;
+        border-radius: 16px 16px 0 0;
+        max-height: calc(100dvh - 48px - env(safe-area-inset-top, 0px));
+        overflow-y: auto;
+    }
+}
+
+.agent-onb-referral-celebration {
+    width: 100%;
+    max-width: 520px;
+    background: var(--happpy-white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+}
+
+/* Referral trial unlocked — post-connect success (Figma: 747:44402) */
+.containSection--referral-trial-unlocked {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.jad-referral-trial-unlocked {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 1.5rem 2rem;
+    background: var(--happpy-white);
+    font-family: "Rubik", sans-serif;
+    box-sizing: border-box;
+}
+
+.jad-referral-trial-unlocked__close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--happpy-ink);
+    cursor: pointer;
+}
+
+.jad-referral-trial-unlocked__close:hover {
+    background: rgba(35, 31, 32, 0.06);
+}
+
+.jad-referral-trial-unlocked__close:focus-visible {
+    outline: 2px solid var(--happpy-brand-deep);
+    outline-offset: 2px;
+}
+
+.jad-referral-trial-unlocked__content {
+    width: 100%;
+    max-width: 28.125rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.jad-referral-trial-unlocked__hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.jad-referral-trial-unlocked__invited-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.375rem;
+    border-radius: 100px;
+    background: #e2fdf2;
+    color: var(--happpy-brand-deep);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.jad-referral-trial-unlocked__invited-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 0.875rem;
+    height: 0.875rem;
+    border-radius: 0.625rem;
+    background: var(--happpy-brand-deep);
+    color: var(--happpy-white);
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.jad-referral-trial-unlocked__mascot {
+    width: 5.875rem;
+    height: auto;
+}
+
+.jad-referral-trial-unlocked__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    text-align: center;
+}
+
+.jad-referral-trial-unlocked__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: normal;
+    color: var(--happpy-ink);
+    letter-spacing: -0.3589px;
+}
+
+.jad-referral-trial-unlocked__subtitle {
+    margin: 0;
+    max-width: 24.5rem;
+    font-size: 0.75rem;
+    line-height: normal;
+    color: var(--happpy-ink-muted);
+}
+
+.jad-referral-trial-unlocked__benefits {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.jad-referral-trial-unlocked__benefit {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.8125rem;
+    line-height: normal;
+    color: var(--happpy-ink);
+}
+
+.jad-referral-trial-unlocked__benefit-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: #e2fdf2;
+    color: var(--happpy-success-alt);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.jad-referral-trial-unlocked__trial-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 1rem 1.125rem;
+    border-radius: 1rem;
+    background: rgba(157, 250, 213, 0.3);
+}
+
+.jad-referral-trial-unlocked__trial-days {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 800;
+    line-height: normal;
+    color: var(--happpy-brand-deep);
+}
+
+.jad-referral-trial-unlocked__trial-label {
+    margin: 0;
+    font-size: 0.6875rem;
+    line-height: normal;
+    color: var(--happpy-ink);
+}
+
+.jad-referral-trial-unlocked__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 28.125rem;
+    min-height: 2.5rem;
+    padding: 0.625rem 2rem;
+    border: none;
+    border-radius: 3.5rem;
+    background: var(--happpy-ink);
+    color: var(--happpy-white);
+    font-size: 0.875rem;
+    font-weight: 800;
+    line-height: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+}
+
+.jad-referral-trial-unlocked__cta:hover {
+    background: #3a3536;
+}
+
+.jad-referral-trial-unlocked__cta:focus-visible {
+    outline: 2px solid var(--happpy-brand-deep);
+    outline-offset: 2px;
+}
+
+@media screen and (max-width: 480px) {
+    .jad-referral-trial-unlocked {
+        padding: 2.5rem 1rem 1.5rem;
+    }
+
+    .jad-referral-trial-unlocked__close {
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .jad-referral-trial-unlocked__title {
+        font-size: 1.25rem;
+    }
+}
