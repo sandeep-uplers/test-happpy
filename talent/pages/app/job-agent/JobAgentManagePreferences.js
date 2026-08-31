@@ -214,6 +214,8 @@ export default function JobAgentManagePreferences({
     const [interestedJobFunctionOptions, setInterestedJobFunctionOptions] = useState([])
     const lastAgentSkillInputValueRef = useRef('');
 
+    const [resumeData, setResumeData] = useState(null);
+
     const validate = ({ silent = false } = {}) => {
         let isValid = true;
         let newErrors = {}
@@ -1006,7 +1008,6 @@ export default function JobAgentManagePreferences({
     }
 
     const uploadResumeRef = useRef(null);
-    const [resumeData, setResumeData] = useState(null);
     const [resumeUploading, setResumeUploading] = useState(false);
     const [fileId, setFileId] = useState(null);
 

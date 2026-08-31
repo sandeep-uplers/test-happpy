@@ -27,11 +27,13 @@ cp .env.example .env.local   # then fill in the values
 npm run dev
 ```
 
-In the **UTS** Laravel app, set:
+In the **UTS** Laravel app, set to the same host you open in the browser (`localhost` and `127.0.0.1` are different origins):
 
 ```env
-HAPPPY_FRONTEND_URL=http://localhost:3000
+HAPPPY_FRONTEND_URL=http://127.0.0.1:3000
 ```
+
+The Happpy dev server binds to `127.0.0.1` by default — open **http://127.0.0.1:3000**, not `localhost:3000`, so OAuth callbacks and API calls stay on one origin.
 
 Start UTS on port 8001 (`php artisan serve --port=8001`) before running happpy.
 
@@ -39,10 +41,10 @@ Start UTS on port 8001 (`php artisan serve --port=8001`) before running happpy.
 
 | Variable | Example (local) | Purpose |
 | --- | --- | --- |
-| `NEXT_PUBLIC_APP_URL` | `http://localhost:3000` | Happpy frontend origin (browser API + OAuth popup entry) |
+| `NEXT_PUBLIC_APP_URL` | `http://127.0.0.1:3000` | Happpy frontend origin (browser API + OAuth popup entry) |
 | `UTS_API_BASE_URL` | `http://127.0.0.1:8001` | Server-only proxy target for `/api/*` |
 | `UTS_WEB_BASE_URL` | `http://127.0.0.1:8001` | Server-only target for `/auth/*` rewrites |
-| `HAPPPY_FRONTEND_URL` (UTS) | `http://localhost:3000` | Happpy origin — only when OAuth is started with `?happpy=1` |
+| `HAPPPY_FRONTEND_URL` (UTS) | `http://127.0.0.1:3000` | Happpy origin — only when OAuth is started with `?happpy=1` |
 
 Browser calls `{NEXT_PUBLIC_APP_URL}/api/...` same-origin; Next.js forwards to UTS. No CORS config is required on Laravel for API calls. Gmail OAuth uses Next.js rewrites for `/auth/*` and UTS redirects back to `/talent/gmail-connect/:token` on the happpy origin.
 
