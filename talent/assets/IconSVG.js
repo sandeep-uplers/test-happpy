@@ -2186,3 +2186,26 @@ export const RedirectIcon = ({ height = '1.0625rem', width = '1.0625rem' }) => (
         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
     </svg>
 )
+
+export const Clock = () => (
+    <svg width="1rem" height="1rem" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0.667969 2.66797V6.66797H4.66797" stroke="#6B6B6B" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M2.3413 9.99964C2.77356 11.2266 3.59286 12.2798 4.67574 13.0006C5.75862 13.7214 7.04642 14.0707 8.34511 13.996C9.6438 13.9212 10.883 13.4264 11.8761 12.5861C12.8691 11.7459 13.5621 10.6056 13.8508 9.33722C14.1394 8.06881 14.008 6.74094 13.4764 5.55371C12.9447 4.36647 12.0417 3.38417 10.9032 2.75482C9.76473 2.12546 8.45257 1.88315 7.16442 2.06438C5.87627 2.24562 4.68191 2.84059 3.7613 3.75964L0.667969 6.66631" stroke="#6B6B6B" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M8 6.10547V9.15915L10.0358 10.177" stroke="#6B6B6B" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+)
+
+export const EyeIconPreview = (props) => (
+    <svg width={20} height={20} viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+        <path d="M1.58337 19C1.58337 19 7.91671 6.33334 19 6.33334C30.0834 6.33334 36.4167 19 36.4167 19C36.4167 19 30.0834 31.6667 19 31.6667C7.91671 31.6667 1.58337 19 1.58337 19Z" stroke="#232323" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M19 23.75C21.6234 23.75 23.75 21.6234 23.75 19C23.75 16.3766 21.6234 14.25 19 14.25C16.3766 14.25 14.25 16.3766 14.25 19C14.25 21.6234 16.3766 23.75 19 23.75Z" stroke="#232323" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+)
+
+export const ResumeDownload = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12Z" stroke="#7A6501" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M8 12L12 16L16 12" stroke="#7A6501" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 8L12 16" stroke="#7A6501" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+)

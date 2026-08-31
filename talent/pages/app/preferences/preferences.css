@@ -1,0 +1,1527 @@
+.containSection .manage-preferences {
+    padding-bottom: 6rem;
+
+    .resumeUploadSection {
+        padding: 1.25rem 1rem;
+        border: 1px solid var(--text-field-outline-2);
+        background: var(--white);
+        border-radius: 8px;
+
+        .resume-btn {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            flex-direction: column;
+            position: relative;
+
+            .comment {
+                font-size: 0.625rem;
+                line-height: 0.7625rem;
+                font-weight: 500;
+                color: var(--rgb-dark-gray-60);
+                position: absolute;
+                bottom: 0;
+                left: 16px;
+            }
+
+            .filewrap {
+                background-color: var(--light-blue);
+                border-radius: 27px;
+                outline: 1px solid var(--light-blue);
+                min-width: 16.5625rem;
+                height: 2.25rem;
+                box-shadow: none;
+                padding: 0;
+                margin-bottom: 1.125rem;
+
+                input {
+                    background: none;
+                    width: 16.5625rem;
+                }
+            }
+
+            .filewrap>label {
+                background: url(/images/talent/resume-upload-icon.svg) no-repeat var(--light-blue) 3.5rem center;
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+                justify-content: center;
+                cursor: pointer;
+                padding: 0 0 0 5.625rem;
+                border-radius: 27px;
+                text-transform: capitalize;
+                color: var(--primary-black);
+                font-size: 0.875rem;
+                font-weight: 600;
+                line-height: 1.066875rem;
+                height: 100%;
+            }
+        }
+
+        .resume-btn.replace {
+            .filewrap {
+                outline: 1px solid var(--text-gray);
+                min-width: 14.375rem;
+                width: 14.375rem;
+
+                input {
+                    width: 100%;
+                }
+            }
+
+            .filewrap>label {
+                outline: 1px solid var(--text-gray);
+                background: url(/images/talent/resume-upload-icon.svg) no-repeat var(--white) 1.5rem center;
+                padding: 0 0 0 3.5rem;
+            }
+        }
+
+        .lastUpdatedLabel {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+
+            .lastUpdate {
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+                font-size: 0.625rem;
+                font-weight: 400;
+                line-height: 0.7625rem;
+                color: var(--text-gray);
+
+                strong {
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+
+    .resume-edit {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem 1rem;
+    }
+
+    .resume-flex {
+        display: flex;
+        align-items: center;
+        border: 2px solid rgba(199, 227, 255, 1);
+        border-radius: 8px;
+        padding: 0.5rem;
+        background: rgba(255, 255, 255);
+        gap: 0.5rem;
+        position: relative;
+        width: 100%;
+        padding-right: 2.25rem;
+        min-height: 3.1875rem;
+        min-width: 18.625rem;
+
+        svg {
+            position: absolute;
+            top: 0.875rem;
+            right: 1rem;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        img {
+            height: 2rem;
+            width: 2rem;
+        }
+
+        .latest-note {
+            font-size: 0.6875rem;
+            font-weight: 500;
+            line-height: 0.8375rem;
+            color: var(--link-blue);
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            left: 0;
+        }
+
+        .menuBtn {
+            color: #16497b;
+            font-size: 0.75rem;
+            font-weight: 500;
+            line-height: 1rem;
+            background: transparent;
+            padding: 0.375rem 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: capitalize;
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-radius: 0 0.375rem 0.375rem 0;
+            border: none;
+            border-left: 1px solid #B0CCE8;
+            height: 100%;
+            transition: 0.45s all ease;
+            background: #F1F7FC;
+
+            svg {
+                position: unset !important;
+                top: unset !important;
+                right: unset !important;
+            }
+
+            svg * {
+                transition: inherit;
+            }
+        }
+
+        .menuBtn:hover {
+            background: #D0E3F6;
+        }
+
+    }
+
+    .resume-flex>div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        color: #232323;
+        width: calc(100% - 3rem);
+
+        .title {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            line-height: 1rem;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .size {
+            font-size: 0.625rem;
+            font-weight: 500;
+            line-height: 0.75rem;
+        }
+    }
+
+    .resume-flex.err {
+        border: 2px solid var(--failureRed);
+    }
+
+    .heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        gap: 0.5rem 1rem;
+
+        .left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
+            h2 {
+                font-size: 2.625rem;
+                font-weight: 600;
+                line-height: 3.2rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .minute-badge {
+                font-size: 0.75rem;
+                font-weight: 500;
+                line-height: 0.914375rem;
+                color: var(--primary-black);
+                background-color: #ddffdd;
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+
+                svg * {
+                    stroke: var(--primary-black);
+                }
+            }
+
+            p {
+                padding: 0;
+                border: none;
+            }
+        }
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            background: rgba(248, 248, 248, 1);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            margin: 0;
+
+            label {
+                font-size: 1rem;
+                font-weight: 500;
+                line-height: 1.21875rem;
+            }
+
+            .form-input {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .error-msg {
+                color: var(--failureRed);
+                font-size: 0.75rem;
+                line-height: 0.914375rem;
+                font-weight: 500;
+                margin-top: 0.375rem;
+                position: relative;
+                padding-left: 1.125rem;
+                background-image: url(/images/talent/fi_alert_error.svg);
+                background-size: 0.875rem 0.875rem;
+                background-position: 0 50%;
+                background-repeat: no-repeat;
+            }
+
+            .labelCol {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+                align-items: flex-start;
+
+                span {
+                    font-size: 0.75rem;
+                    font-weight: 500;
+                    line-height: 0.914375rem;
+                    color: var(--text-gray);
+                    white-space: nowrap;
+                }
+            }
+
+            input {
+                background: var(--white);
+            }
+
+            .react-select__control {
+                min-width: 18.6875rem;
+                min-height: 3.375rem !important;
+                background: var(--white) !important;
+                font-size: 0.875rem;
+
+                .react-select__indicator {
+                    padding: 0.5rem;
+
+                    svg {
+                        height: 1.25rem;
+                        width: 1.25rem;
+                    }
+                }
+            }
+
+            &.job-search-preference {
+
+                .form-input {
+                    gap: 0.5rem;
+                }
+
+                .available-in-text {
+                    font-size: 0.75rem;
+                    font-weight: 500;
+                    color: var(--text-gray);
+                    margin-left: 0.25rem;
+                }
+
+                .js-preference-untill {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    padding: 0.875rem 0.75rem;
+                    background: var(--lightest-yellow);
+                    border: 1px solid var(--brandYellow);
+                    border-radius: 8px;
+
+                    .js-date-label {
+                        font-size: 0.75rem;
+                        font-weight: 500;
+                    }
+
+                    .react-select__control {
+                        min-height: 1.25rem !important;
+
+                        .react-select__indicator {
+                            padding: 0.25rem;
+                        }
+
+                        .react-select__value-container .react-select__placeholder,
+                        .react-select__value-container .react-select__single-value {
+                            font-size: 0.8125rem !important;
+                        }
+
+                        .react-select__input-container {
+                            height: 1.25rem !important;
+                        }
+                    }
+                }
+            }
+        }
+
+        .form-group.linkedin,
+        .form-group.phone-number {
+            label {
+                white-space: nowrap;
+            }
+
+            .form-input {
+                width: 100%;
+                max-width: 36rem;
+            }
+        }
+
+        .form-group.phone-number .contactInput {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            background: var(--white);
+        }
+
+        .form-group.phone-number .contactInput .countryBox {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            flex-shrink: 0;
+            font-size: 0.875rem;
+            font-weight: 500;
+            line-height: 1.066875rem;
+            color: var(--primary-black);
+            padding-left: 0.75rem;
+        }
+
+        .form-group.phone-number .contactInput input {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            outline: none;
+            background: transparent;
+            padding: 0.75rem 0.75rem 0.75rem 0;
+        }
+
+        .form-group.phone-number .contactInput input[readonly] {
+            cursor: not-allowed;
+            color: var(--text-gray);
+        }
+
+        .form-group.job-function {
+            label {
+                white-space: nowrap;
+            }
+
+            .form-input {
+                width: 100%;
+                max-width: 29.375rem;
+            }
+        }
+
+        .form-group.job-function .react-select__option {
+            padding-left: 3rem;
+        }
+
+        .form-group.linkedin.resume .form-input {
+            max-width: unset;
+        }
+
+        .form-group.yoe .form-input .experience-input {
+            background: var(--white);
+            min-width: 18.625rem;
+        }
+
+        .form-group.linkedin.resume .form-input {
+            width: auto;
+        }
+
+        .form-group.labelTop {
+            align-items: flex-start;
+        }
+
+        .form-group.labelTop.resume {
+            flex-wrap: wrap;
+        }
+
+        .form-group.labelTop>label {
+            padding: 1rem 0 0;
+        }
+
+        .form-group.preferMethodWork {
+            align-items: flex-start;
+
+            label {
+                padding: 1rem 0 0;
+            }
+
+            .info {
+                font-size: 0.75rem;
+                font-weight: 500;
+                line-height: 0.914375rem;
+                color: var(--text-gray);
+                padding: 0
+            }
+
+            .react-select__control {
+                min-width: 12.5rem;
+                background: var(--white) !important;
+            }
+        }
+
+        .form-group.preferredTimeToCall {
+            .optionsCheckFlex .radioInput {
+                width: 15rem;
+            }
+        }
+
+        .form-input {
+            .joiningExtraQs {
+                padding: 1rem;
+                border: 1px solid var(--brandYellow);
+                color: var(--text-gray);
+                background: var(--lightest-yellow);
+                border-radius: 8px;
+                font-size: 0.75rem;
+                line-height: 0.914375rem;
+                font-weight: 600;
+                margin-top: 0.25rem;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+
+                .serving-np {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 1.5rem;
+                    flex-wrap: wrap;
+                    row-gap: 0.75rem;
+
+                    .radioFlex {
+                        display: flex;
+                        align-items: center;
+                        gap: 1.5rem;
+                        margin: 0;
+                    }
+
+                    span.required_label {
+                        padding-top: 0.125rem;
+                    }
+                }
+
+                .lwd {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                    font-weight: 500;
+                    flex-wrap: wrap;
+
+                    .date-wrapper {
+                        width: auto;
+                    }
+
+                    .react-datepicker__input-container {
+                        background: var(--white);
+                        width: auto;
+                    }
+
+                    input {
+                        padding: 0.5rem 0.5rem 0.5rem 1rem;
+                        border-radius: 24px;
+
+                        &:focus {
+                            border: none;
+                            outline: 1px solid var(--text-field-outline-2);
+                        }
+                    }
+
+                    .date-input {
+                        background: url(/images/talent/calender-rounded.svg) no-repeat;
+                        background-position: 96% center;
+                        background-size: 1.5rem;
+                        width: 9.25rem;
+                        font-size: 0.75rem;
+                    }
+                }
+            }
+
+            .preferredMethod {
+                display: flex;
+                gap: 1rem;
+                margin-bottom: 0.5rem;
+
+                .subLabel {
+                    font-size: 0.75rem;
+                    font-weight: 500;
+                    line-height: 0.914375rem;
+                    color: var(--text-gray);
+                    margin-bottom: 0.25rem;
+                    display: block;
+                }
+            }
+        }
+
+        .optionsMultiRowFlex {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+
+            .error-msg {
+                margin-top: 0;
+            }
+
+            .checkboxInput .name {
+                font-size: 0.875rem;
+                font-weight: 400;
+                line-height: 1.066875rem;
+                color: var(--text-gray);
+            }
+
+            .labelWeekendTime {
+                font-size: 0.875rem;
+                font-weight: 500;
+                line-height: 1.066875rem;
+                margin-top: 0.75rem;
+            }
+        }
+
+        .optionsCheckFlex {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .form-group.intl .optionsCheckFlex {
+            flex-wrap: unset;
+        }
+
+        .optionsCheckFlex .radioInput {
+            padding: 0.75rem 2rem 0.75rem 3.5rem;
+            border: 1px solid var(--text-field-outline-2);
+            border-radius: 8px;
+            margin: 0;
+            display: flex;
+            gap: 0.5rem;
+            background: var(--white);
+            color: var(--primary-black);
+            transition: all 0.38s ease;
+
+            &:hover {
+                background: var(--bg-light-yellow);
+                border: 1px solid var(--brandYellow);
+
+                & .checkmark {
+                    border-color: var(--primary-black);
+                }
+            }
+        }
+
+        .optionsCheckFlex .radioInput:has(.radio:checked) {
+            background: var(--bg-light-yellow);
+            border: 1px solid var(--brandYellow);
+            color: var(--primary-black);
+        }
+
+        .optionsCheckFlex .radioInput .radio {
+            top: 50%;
+            transform: translateY(-50%);
+            left: 1.875rem;
+            width: 1.125rem;
+            height: 1.125rem;
+            border-radius: 18px;
+        }
+
+        .optionsCheckFlex .radioInput .checkmark {
+            top: 50%;
+            transform: translateY(-50%);
+            left: 1.875rem;
+            width: 1.125rem;
+            height: 1.125rem;
+            border-radius: 18px;
+        }
+
+        .optionsCheckFlex .radioInput span {
+            font-weight: 500;
+            color: inherit;
+        }
+
+        .modal-btns {
+            display: flex;
+            flex-direction: row;
+            gap: 0.75rem 1rem;
+            flex-wrap: wrap-reverse;
+            align-items: center;
+
+            .primaryBtn.gradientBtn {
+                background: linear-gradient(90deg, #FFFFFF -199.41%, #000000 -139.52%, #FF2775 -78.78%, #E336FF -9.38%, #3B37FE 50.14%, #339AFA 141.74%, #36FF6E 231.93%, #A3FC32 333.69%, #E0FF2F 420.7%, #FFDF35 494.44%, #F59B68 578.76%, #FF6832 664.04%, #F23535 758.88%);
+                color: var(--white);
+                text-align: center;
+                font-size: 1rem;
+                font-weight: 700;
+                line-height: 1.25rem;
+                text-transform: uppercase;
+                white-space: nowrap;
+                position: relative;
+            }
+        }
+    }
+}
+
+.ReactModal__Content .containSection {
+    padding: 32px 32px;
+}
+
+.ReactModal__Content .containSection .manage-preferences {
+    padding-bottom: 0px;
+}
+
+.resume-menu-options {
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border: 1px solid var(--text-field-outline-2);
+    border-radius: 8px;
+
+    button {
+        background-color: var(--white);
+        font-family: Montserrat;
+        font-weight: 500;
+        font-size: 0.875rem;
+        line-height: 100%;
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        border: none;
+        border-bottom: 1px solid var(--bg-secondary);
+        padding: 0.5rem 1rem;
+    }
+
+    button:hover {
+        background-color: var(--bg-light-yellow);
+    }
+
+    button.viewBtn {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    button.uploadBtn {
+        position: relative;
+        border-bottom: none;
+        border-bottom-right-radius: 8px;
+        border-bottom-left-radius: 8px;
+        padding-bottom: 1.25rem;
+    }
+
+    button.uploadBtn.replace {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+
+    button.uploadBtn input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .comment {
+        font-size: 0.625rem;
+        line-height: 0.7625rem;
+        font-weight: 500;
+        color: var(--rgb-dark-gray-60);
+        position: absolute;
+        bottom: 0.5rem;
+        left: 3.125rem;
+        margin-bottom: 0px;
+    }
+
+
+}
+
+.emailFormDiv {
+    max-width: 645px;
+}
+
+.emailFormDiv .form-group-inline {
+    margin-bottom: 16px
+}
+
+.emailFormDiv .form-group-inline label {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: var(--text-gray);
+    white-space: normal
+}
+
+.emailFormDiv .form-group-inline label span.text-gray {
+    color: var(--gray-A6);
+}
+
+.emailFormDiv .form-group-inline label.checkbox {
+    padding-left: 32px;
+}
+
+.emailFormDiv .form-group-inline.checked label {
+    font-weight: 600
+}
+
+.emailFormDiv .subCheckbox {
+    padding-left: 32px
+}
+
+.emailFormDiv .subCheckbox p {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: var(--text-gray);
+    margin-bottom: 16px
+}
+
+.emailFormDiv .conatinerSubCheckbox {
+    transition: .35s all
+}
+
+.containSection .manage-preferences form .form-group .emailFormDiv label {
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: 600;
+}
+
+.containSection .manage-preferences form .form-group .emailFormDiv .optionsCheckFlex .radioInput {
+    padding: 12px 24px 12px 52px;
+    width: 282px;
+
+    .radio {
+        left: 24px
+    }
+
+    .checkmark {
+        left: 24px
+    }
+}
+
+.containSection .manage-preferences form .bottomAction {
+    display: flex;
+    gap: 6px 12px;
+    margin-top: 12px;
+    flex-wrap: wrap-reverse;
+
+    >span {
+        font-size: 12px;
+        line-height: 14.63px;
+        font-weight: 400;
+        color: var(--text-gray);
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .primaryBtn.gradientBtn {
+        background: linear-gradient(90deg, #FFFFFF -199.41%, #000000 -139.52%, #FF2775 -78.78%, #E336FF -9.38%, #3B37FE 50.14%, #339AFA 141.74%, #36FF6E 231.93%, #A3FC32 333.69%, #E0FF2F 420.7%, #FFDF35 494.44%, #F59B68 578.76%, #FF6832 664.04%, #F23535 758.88%);
+        color: var(--white);
+        text-align: center;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 20px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        position: relative;
+    }
+}
+
+.commonModalWrap.resumeModal .modal-dialog {
+    width: max-content;
+    min-width: 900px;
+
+    h5 {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        margin-bottom: 0px;
+    }
+
+    .downloadBtn {
+        color: #16497b;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 16px;
+        background: transparent;
+        padding: 6px 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-transform: capitalize;
+        width: max-content;
+        margin: auto;
+        /* position: absolute;
+        top: 0;
+        right: 0;*/
+        border-radius: 6px;
+        border: none;
+        height: 100%;
+        transition: 0.45s all ease;
+        background: var(--light-blue);
+
+        svg {
+            position: unset !important;
+            top: unset !important;
+            right: unset !important;
+        }
+
+        svg * {
+            stroke: #16497b;
+            transition: inherit;
+        }
+    }
+
+    .downloadBtn:hover {
+        background: #16497b;
+        border-radius: 6px;
+        color: var(--white);
+
+        svg * {
+            stroke: var(--white)
+        }
+    }
+}
+
+.commonModalWrap.resumeModal .modalCloseBtn svg {
+    height: 32px;
+    width: 32px;
+}
+
+.resumeModal .pdf-page-wrapper {
+    border: 1px solid #CECCCC;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 28px;
+    padding: 16px;
+}
+
+
+
+
+
+@media (max-width:575px) {
+    .emailFormDiv .subCheckbox {
+        padding-left: 24px
+    }
+
+    .emailFormDiv .checkbox {
+        padding-left: 24px
+    }
+
+    .containSection .manage-preferences form .form-group.linkedin.resume .form-input {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:1160px) {
+    .containSection .manage-preferences {
+        form {
+            .form-group.preferMethodWork {
+                width: 100%;
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+
+                label {
+                    padding: 0;
+                }
+
+                .form-input {
+                    width: 100%;
+                }
+
+                .preferredMethod {
+                    flex-wrap: wrap;
+                    width: 100%;
+                    /* .react-select__control{min-width: calc(33.33% - 16px);} */
+                }
+            }
+
+        }
+    }
+
+    .commonModalWrap.resumeModal .modal-dialog {
+        min-width: 900px;
+    }
+}
+
+@media screen and (max-width:991px) {
+    .containSection .manage-preferences {
+        .heading .left h2 {
+            font-size: 36px;
+            line-height: 1.5;
+        }
+
+        form .form-group.emailSnooze {
+            flex-direction: column;
+        }
+    }
+
+    .commonModalWrap.resumeModal .modal-dialog {
+        min-width: 700px;
+    }
+}
+
+@media screen and (max-width:940px) {
+    .containSection .manage-preferences .form-group.preferredTimeToCall {
+        flex-direction: column;
+    }
+
+    .commonModalWrap.resumeModal .modal-dialog {
+        min-width: 700px;
+    }
+}
+
+@media screen and (max-width:881px) {
+    .commonModalWrap.resumeModal #actual_resume_preview .docx {
+        width: 100% !important;
+        padding: 10px !important;
+    }
+}
+
+@media screen and (max-width:840px) {
+    .containSection .manage-preferences {
+        .heading {
+            flex-direction: column;
+            align-items: unset;
+
+            .left h2 {
+                font-size: 34px;
+            }
+        }
+
+        form {
+            .form-group.preferMethodWork {
+                .preferredMethod {
+                    flex-wrap: wrap;
+
+                    .react-select__control {
+                        min-width: unset;
+                    }
+                }
+            }
+
+            .form-input .joiningExtraQs .serving-np {
+                flex-direction: column;
+            }
+        }
+
+        .resumeUploadSection .resume-edit {
+            flex-wrap: wrap;
+        }
+    }
+
+    .commonModalWrap.resumeModal .modal-dialog {
+        min-width: 650px;
+    }
+
+
+}
+
+
+
+
+@media screen and (max-width:767px) {
+    .containSection .manage-preferences {
+        form {
+            .form-group.preferMethodWork {
+                .preferredMethod {
+                    flex-direction: column;
+
+                    .react-select__control {
+                        min-width: 100%;
+                    }
+                }
+            }
+        }
+    }
+
+    .commonModalWrap.resumeModal .modal-dialog {
+        min-width: 500px;
+    }
+
+    .resumeModal .modal-dialog {
+        .react-pdf__Document {
+            margin-top: 24px;
+
+            .pdf-page-wrapper {
+                border-radius: 8px;
+                margin-top: 12px;
+                padding: 8px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width:680px) {
+    .containSection .manage-preferences {
+        .heading {
+            .left h2 {
+                font-size: 32px;
+            }
+
+            .minute-badge {
+                display: none !important;
+            }
+        }
+
+        form {
+
+            .form-group,
+            .form-group.preferMethodWork {
+                flex-direction: column;
+                align-items: unset;
+                gap: 8px;
+
+                .preferredMethod {
+                    gap: 12px;
+                    margin-top: 12px;
+                }
+            }
+
+            .form-group.labelTop>label {
+                padding: 0;
+            }
+
+            .form-group label {
+                font-size: 14px;
+                line-height: 17px;
+            }
+
+            .form-input {
+                width: 100%
+            }
+        }
+
+    }
+
+    .preferences-modal-open .heading .left h2 {
+        font-size: 14px !important;
+        margin-bottom: 10px !important;
+        line-height: 1.3 !important;
+    }
+
+    .commonModalWrap.resumeModal .modal-dialog {
+        min-width: 450px;
+    }
+
+}
+
+@media screen and (max-width:576px) {
+    .containSection .manage-preferences form .form-group.emailSnooze .optionsCheckFlex {
+        width: 100%;
+
+        .radioInput {
+            width: 100%;
+        }
+    }
+
+    .commonModalWrap.resumeModal .modal-dialog {
+        min-width: 400px;
+    }
+}
+
+@media screen and (max-width:480px) {
+    .containSection .manage-preferences form .form-group .emailFormDiv {
+        .subCheckbox {
+            padding-left: 0;
+        }
+
+        .subCheckbox p {
+            font-size: 12px;
+            line-height: 14.63px;
+        }
+
+        label {
+            font-size: 12px;
+            line-height: 14.63px;
+        }
+    }
+
+    .commonModalWrap.resumeModal .modal-dialog {
+        min-width: 350px;
+    }
+
+    .ReactModal__Content .containSection {
+        padding: 24px 16px 32px;
+    }
+}
+
+
+/* Manage Preferences Form Modal Related css start here */
+
+.manage-preferences-modal .modal-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    .primaryBtn {
+        background-color: var(--primary-black);
+        color: var(--white);
+    }
+
+    .outlinedBtn {
+        font-size: 1rem;
+        line-height: 1.375rem;
+    }
+}
+
+.manage-preferences-modal .modal-dialog {
+    width: 64rem;
+}
+
+/* Reserve height while modal content loads to prevent layout jump */
+.manage-preferences-modal .manage-preferences-modal-loading {
+    min-height: 28rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.manage-preferences-modal .containSection .manage-preferences .heading .left h2 {
+    font-size: 1.125rem;
+    line-height: 1;
+}
+
+.manage-preferences-modal .form-group label {
+    font-size: 0.875rem !important;
+}
+
+.manage-preferences-modal .thank-you-content {
+    gap: 1rem;
+    align-items: center;
+    padding: 1.5rem;
+
+    img {
+        width: 10.25rem;
+        height: 10.25rem;
+    }
+
+    p {
+        margin: -2rem 0 0;
+    }
+}
+
+.manage-preferences-modal .containSection .manage-preferences {
+    form {
+        gap: 0.25rem;
+
+        .form-group {
+            padding: 0.375rem 0.75rem;
+
+            .react-select__control {
+                min-height: 2.5625rem !important;
+                padding: 0 0.75rem;
+            }
+        }
+
+        .form-input>input,
+        .form-input>.contactInput {
+            padding: 0.75rem;
+        }
+
+        .form-input>.contactInput {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .form-input>.contactInput .countryBox {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            flex-shrink: 0;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding-left: 0.75rem;
+        }
+
+        .form-input>.contactInput input {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            outline: none;
+            background: transparent;
+            padding: 0.75rem 0.75rem 0.75rem 0;
+        }
+
+        .money-input>input {
+            padding: 0.75rem;
+        }
+
+        .experience-input {
+            padding: 0.5625rem 1rem 0.5rem 1rem;
+        }
+
+        .joiningExtraQs {
+            padding: 0.375rem 0.75rem;
+        }
+    }
+}
+
+@media screen and (max-width:480px) {
+    .containSection .manage-preferences .modal-btns {
+        margin-top: 8px;
+
+        .primaryBtn {
+            width: 100%;
+            font-size: 14px;
+        }
+    }
+
+    .containSection .manage-preferences form {
+        .form-group.preferMethodWork {
+            .preferredMethod {
+                gap: 8px;
+                margin-top: 8px;
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .containSection .manage-preferences {
+        form {
+            .form-group {
+                padding: 12px;
+            }
+
+            .form-group label {
+                font-size: 12px;
+                line-height: 14.63px;
+            }
+
+            .form-group .react-select__control {
+                min-width: unset;
+            }
+
+            .form-group.preferredTimeToCall {
+                .optionsCheckFlex .radioInput {
+                    width: 100%;
+                }
+            }
+
+            .form-group.yoe .form-input .experience-input {
+                min-width: 286px;
+            }
+        }
+
+        .resume-flex {
+            min-width: 286px;
+        }
+    }
+
+    .containSection .manage-preferences {
+        .heading {
+            margin-bottom: 8px;
+
+            .left {
+                h2 {
+                    font-size: 20px;
+                    margin-bottom: 0;
+                }
+
+                p {
+                    display: none;
+                }
+            }
+
+            .right {
+                display: none;
+            }
+        }
+
+        form {
+            gap: 4px;
+
+            .form-group {
+                padding: 6px 12px;
+
+                .react-select__control {
+                    min-height: 41px !important;
+                    padding: 0 12px;
+                }
+            }
+
+            .form-input>input,
+            .form-input>.contactInput {
+                padding: 12px;
+            }
+
+            .form-input>.contactInput {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+
+            .form-input>.contactInput input {
+                padding: 12px 12px 12px 0;
+            }
+
+            .money-input>input {
+                padding: 12px;
+            }
+
+            .experience-input {
+                padding: 9px 16px 8px 16px;
+            }
+
+            .joiningExtraQs {
+                padding: 6px 12px;
+            }
+        }
+    }
+}
+
+
+/* Manage Preferences Form Modal Related css over here */
+
+/* Mobile Profile Related css start here */
+.manage-preferences.mobile-profile {
+    padding-bottom: 148px;
+
+    .mobile-profile-header {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-start;
+
+        .rank-higher {
+            border-radius: 8px;
+            background: linear-gradient(119deg, rgba(221, 220, 255, 0.50) 26.18%, rgba(255, 227, 211, 0.47) 96.85%);
+            display: inline-flex;
+            padding: 6px 8px;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-black);
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 17px;
+        }
+
+        .avg-time {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            svg {
+                width: 13px;
+                min-width: 13px;
+                height: 12px;
+            }
+
+            color: #376899;
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 12px;
+        }
+    }
+
+    form {
+        margin-top: 32px;
+        gap: 18px;
+
+        .form-group {
+            padding: 0;
+            gap: 6px;
+            background: unset;
+
+            label {
+                margin-bottom: 0;
+            }
+
+            .react-select__control {
+                font-size: 14px;
+
+                * {
+                    font-size: 14px;
+                }
+
+                .react-select__loading-indicator {
+                    span {
+                        width: 6px;
+                        height: 6px;
+                        margin-left: 6px;
+
+                        &:first-child {
+                            margin-left: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .bottomAction {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        padding: 12px 16px;
+        width: 100%;
+        border-radius: 16px 16px 0px 0px;
+        border: 1px solid var(--text-field-outline);
+        background: var(--lightest-yellow);
+        box-shadow: 1px -2px 4px 0px rgba(107, 107, 107, 0.12);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+        z-index: 11;
+
+        .primaryBtn {
+            width: 100%;
+            font-size: 14px;
+            padding: 13px 0;
+            background-color: var(--primary-black);
+            color: var(--white);
+            line-height: 17px;
+        }
+
+        span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            /* color: var(--text-gray); */
+            color: var(--text-gray);
+            font-size: 11px;
+            font-style: italic;
+            font-weight: 400;
+            line-height: 13px;
+
+            svg {
+                width: 13px;
+                height: 11px;
+            }
+        }
+    }
+}
+
+
+
+
+/* Mobile Profile Related css over here */
