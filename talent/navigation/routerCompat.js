@@ -60,6 +60,11 @@ export function useLocation() {
     return { pathname, search, hash: '' };
 }
 
+/** Minimal React Router–compatible params stub for embedded/dynamic routes. */
+export function useParams() {
+    return {};
+}
+
 export function useSearchParams() {
     const searchParams = useNextSearchParams();
     const router = useRouter();
