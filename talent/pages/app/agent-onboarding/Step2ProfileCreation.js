@@ -1,15 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import dynamic from 'next/dynamic';
+import JobAgentManagePreferences from '../job-agent/JobAgentManagePreferences';
 import '../job-agent/JobAgentUpdateProfile.css';
 import '../../access-public/HappyJobAgentPublic.css';
 import './AgentOnboarding.css';
-
-const JobAgentManagePreferences = dynamic(
-    () => import('../job-agent/JobAgentManagePreferences'),
-    { ssr: false, loading: () => <div className="agent-onb-scroll agent-onb-scroll--profile" aria-busy="true" /> },
-);
 
 const HAPPY_PUBLIC_PROFILE_FORM_ID = 'happy-onboarding-profile-form';
 
