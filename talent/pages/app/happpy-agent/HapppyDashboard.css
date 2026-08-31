@@ -1,0 +1,2900 @@
+/* ============================================================================
+ * Happpy Agent dashboard — Figma reskin of JobAgentDashboardHome.
+ *
+ * BEM-scoped under `.happpy-dash__*`. Layout / typography reuses the design
+ * tokens already declared by `.job-agent-dashboard` in JobAgentDashboard.css
+ * (the layout shell that wraps this page), so font-family / colour
+ * variables flow in via CSS inheritance.
+ * ========================================================================== */
+
+.happpy-dash {
+    --hd-bg: #fafaf6;
+    --hd-card-bg: #ffffff;
+    --hd-card-border: #e7e4dc;
+    --hd-card-radius: 16px;
+    --hd-text: #1a1a1a;
+    --hd-text-muted: #6b6b6b;
+    --hd-text-soft: #7c7c7c;
+    --hd-divider: #ececec;
+    --hd-link: #059599;
+    --hd-danger: #c1272d;
+    --hd-positive: #16a34a;
+    --hd-setup-card-bg: #ffffff;
+    --hd-setup-card-border: #c9c4b5;
+    --hd-setup-card-shadow: 0 7px 13px -3px rgba(113, 113, 113, 0.25);
+    --hd-setup-glow-left:
+        radial-gradient(90% 90% at 0% 0%, rgba(247, 213, 108, 0.55) 0%,
+            rgba(247, 213, 108, 0.18) 50%, rgba(247, 213, 108, 0) 90%);
+    --hd-setup-glow-right: radial-gradient(55% 65% at 100% 0%, rgba(247, 213, 108, 0.5) 0%,
+            rgba(247, 213, 108, 0.15) 38%, rgba(247, 213, 108, 0) 72%);
+    --hd-setup-glow-teal-right:
+        radial-gradient(65% 110% at 100% 0%, rgba(125, 211, 192, 0.7) 0%,
+            rgba(125, 211, 192, 0.25) 35%, rgba(125, 211, 192, 0) 70%);
+    --hd-setup-glow-teal-left:
+        radial-gradient(55% 90% at 0% 0%, rgba(168, 224, 212, 0.55) 0%,
+            rgba(168, 224, 212, 0.18) 38%, rgba(168, 224, 212, 0) 72%);
+    --hd-setup-glow-cream-bottom:
+        radial-gradient(75% 55% at 25% 100%, rgba(247, 213, 108, 0.10) 0%,
+            rgba(247, 213, 108, 0.15) 38%, rgba(247, 213, 108, 0) 72%);
+    --hd-setup-glow-teal-bottom:
+        radial-gradient(75% 55% at 25% 100%, rgba(168, 224, 212, 0.10) 0%,
+            rgba(168, 224, 212, 0.15) 38%, rgba(247, 213, 108, 0) 72%);
+    --hd-setup-step-bg: #ffffff;
+    --hd-section-gap: 1.5rem;
+    --hd-tile-radius: 14px;
+    --hd-shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --hd-shadow-tile: 0 1px 3px rgba(15, 23, 42, 0.06);
+
+    width: 100%;
+    max-width: 1136px;
+    margin: 0 auto;
+    padding: 0 0 2.5rem;
+    box-sizing: border-box;
+    color: var(--hd-text);
+}
+
+.happpy-dash *,
+.happpy-dash *::before,
+.happpy-dash *::after {
+    box-sizing: border-box;
+}
+
+/* ---------- Hero / greeting ---------- */
+
+.happpy-dash__hero {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    z-index: 20;
+}
+
+.happpy-dash__greeting {
+    font-size: 1.5rem;
+    line-height: 1.2;
+    font-weight: 700;
+    margin: 0;
+    color: var(--hd-text);
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/* Mobile-only daily referral limit beside the greeting (topnav widget is hidden ≤767px). */
+.happpy-dash__hero-limit {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .happpy-dash__hero {
+        align-items: flex-end;
+    }
+
+    .happpy-dash__greeting {
+        font-size: 1.25rem;
+    }
+
+    .happpy-dash__hero-limit {
+        display: block;
+        flex: 0 1 11.5rem;
+        min-width: 0;
+        max-width: 52%;
+    }
+
+    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto auto;
+        min-width: 0;
+        max-width: 100%;
+        column-gap: 0.5rem;
+        row-gap: 0.3125rem;
+    }
+
+    /* Flatten head so label / count can sit on separate grid rows. */
+    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-head {
+        display: contents;
+    }
+
+    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-label {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        font-size: 0.625rem;
+        line-height: 1.25;
+        text-align: right;
+        white-space: normal;
+    }
+
+    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-count {
+        grid-column: 2;
+        grid-row: 2;
+        align-self: center;
+        font-size: 0.625rem;
+        white-space: nowrap;
+    }
+
+    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-bar {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: center;
+        height: 6px;
+        min-width: 0;
+    }
+
+    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-skel--label {
+        grid-column: 1 / -1;
+        grid-row: 1;
+    }
+
+    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-skel--count {
+        grid-column: 2;
+        grid-row: 2;
+        align-self: center;
+    }
+
+    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-skel--bar {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: center;
+        min-width: 0;
+    }
+}
+
+.happpy-dash__setup {
+    position: relative;
+    min-width: 0;
+}
+
+.happpy-dash-pending-wrapper{
+    @media screen and (max-width: 767px) {
+        margin-bottom: 12px;
+    }
+}
+
+.happpy-dash__mascot-wrap {
+    position: absolute;
+    bottom: calc(100% - 12px);
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+@media (max-width: 767px) {
+    .happpy-dash__mascot-wrap {
+        display: none;
+    }
+}
+
+.happpy-dash__pending-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #F5BCBC;
+    margin-bottom: -24px;
+    color: var(--hd-text);
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    box-shadow: 2px 4px 4px 0px #817F7F3D;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.happpy-dash__pending-pill-tail {
+    position: absolute;
+    right: -7px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 7px solid #F5BCBC;
+}
+
+.happpy-dash__mascot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 84px;
+    height: 66px;
+}
+
+/* ---------- Your Next Moves card ----------
+ *
+ *  Aurora-glow card sitting between the greeting and the setup row. Each row
+ *  is conditionally rendered by HapppyDashboard.js based on whether the
+ *  matching data source (interview-list, total_positive_replies,
+ *  reminder_count, manual-outreach hrs) has anything actionable. The card
+ *  itself is hidden when every row is empty. */
+
+.happpy-dash__next-moves {
+    position: relative;
+    background: var(--hd-card-bg);
+    border: 1px solid var(--hd-card-border);
+    border-radius: var(--hd-card-radius);
+    padding: 1.25rem;
+    margin-bottom: var(--hd-section-gap);
+    box-shadow: var(--hd-setup-card-shadow);
+    overflow: hidden;
+}
+
+.next-moves-wrapper{
+
+}
+
+.happpy-dash__nm-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(30% 70% at 15% 0, rgba(125, 211, 192, 0.45) 0%,
+            rgba(125, 211, 192, 0.18) 45%, rgba(125, 211, 192, 0) 75%),
+        radial-gradient(25% 70% at 60% 0, rgba(168, 224, 212, 0.55) 0%,
+            rgba(168, 224, 212, 0.18) 45%, rgba(168, 224, 212, 0) 75%),
+        radial-gradient(20% 80% at 100% 60%, rgba(168, 224, 212, 0.55) 0%,
+            rgba(168, 224, 212, 0.08) 50%, rgba(247, 213, 108, 0) 80%);
+
+}
+
+.happpy-dash__nm-title {
+    position: relative;
+    margin: 0 0 1.25rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--hd-text);
+    
+    @media screen and (max-width: 767px) {
+        margin: 0 0 1rem;
+    }
+}
+
+/* ---------- Your Next Moves accordions ---------- */
+
+.happpy-dash__accordions {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.happpy-dash__acc {
+    background: #ffffff;
+    border: 0.5px solid #6a7e82;
+    border-radius: 12px;
+    box-shadow: 0 7.285px 12.749px -2.732px rgba(113, 113, 113, 0.25);
+    overflow: hidden;
+}
+
+.happpy-dash__acc--open {
+    border-color: #231f20;
+}
+
+.happpy-dash__acc-trigger,
+.happpy-dash__acc--link {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 4rem;
+    padding: 0.75rem;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    text-decoration: none;
+    color: inherit;
+    box-sizing: border-box;
+}
+
+.happpy-dash__acc-trigger {
+    cursor: pointer;
+}
+
+.happpy-dash__acc--link {
+    cursor: pointer;
+    background: #ffffff;
+    border: 0.5px solid #6a7e82;
+}
+
+.happpy-dash__acc--link:hover,
+.happpy-dash__acc--link:focus-visible {
+    text-decoration: none;
+    color: inherit;
+}
+
+.happpy-dash__acc-icon {
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: contain;
+    align-self: flex-start;
+}
+
+.happpy-dash__acc-heading {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.35;
+    color: #231f20;
+}
+
+.happpy-dash__acc-heading-strong {
+    font-weight: 500;
+    color: var(--jad-pref-teal);
+}
+
+.happpy-dash__acc-heading-rest {
+    font-weight: 400;
+    color: #231f20;
+    display: inline-block;
+}
+
+.happpy-dash__acc-chevron {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    background: #46ECCD;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.happpy-dash__acc-chevron--open {
+    transform: rotate(180deg);
+}
+
+.happpy-dash__acc-chevron svg {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+}
+
+.happpy-dash__acc-panel {
+    padding: 0 0.75rem 0.75rem 4rem;
+}
+
+.happpy-dash__acc-rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.happpy-dash__acc-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid #dee1e7;
+}
+
+.happpy-dash__acc-row:last-child {
+    border-bottom: none;
+}
+
+.happpy-dash__acc-row-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.happpy-dash__acc-cta {
+    font-family: "Telegraf", sans-serif !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    min-width: 11.1875rem;
+    height: 2rem;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    background: #059599;
+    color: #ffffff !important;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.happpy-dash__acc-cta:hover,
+.happpy-dash__acc-cta:focus-visible {
+    background: #047a7d;
+    text-decoration: none;
+    outline: none;
+}
+
+.happpy-dash__acc-cta svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+@media (max-width: 768px) {
+    .happpy-dash__acc-panel {
+        padding-left: 0.75rem;
+    }
+
+    .happpy-dash__acc-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.625rem;
+    }
+
+    .happpy-dash__acc-cta {
+        min-width: 0;
+        align-self: flex-start;
+    }
+
+    .happpy-dash__acc-heading {
+        font-size: 0.8125rem;
+    }
+}
+
+.happpy-dash__nm-list {
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+    @media screen and (max-width: 767px) {
+        border-radius: 12px;
+        background: #FFF;
+        box-shadow: 1px 0 6px 0 rgba(107, 107, 107, 0.12);
+        padding: 10px 12px;
+    }
+}
+
+.happpy-dash__nm-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e4e2dc;
+}
+
+.happpy-dash__nm-row:last-child {
+    border-bottom: none;
+}
+
+.happpy-dash__nm-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.happpy-dash__nm-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-top: 0.125rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--hd-text-muted);
+    line-height: 1;
+}
+
+.happpy-dash__nm-icon > svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+}
+
+.happpy-dash__nm-body {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.happpy-dash__nm-text {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--hd-text);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}
+
+.happpy-dash__nm-text-strong {
+    font-weight: 600;
+}
+
+.happpy-dash__nm-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.happpy-dash__nm-chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+}
+
+.happpy-dash__nm-chip {
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: #f3f4f6;
+    border: 1.5px solid #ffffff;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: -2px;
+    flex-shrink: 0;
+}
+
+.happpy-dash__nm-chip:first-child {
+    margin-left: 0;
+}
+
+.happpy-dash__nm-chip img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.happpy-dash__nm-chip-fallback {
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: var(--hd-text-muted);
+    line-height: 1;
+}
+
+.happpy-dash__nm-time {
+    font-size: 0.625rem;
+    color: var(--hd-text-muted);
+    font-weight: 400;
+    line-height: 1;
+}
+
+.happpy-dash__nm-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: #d6d6d6;
+    flex-shrink: 0;
+}
+
+.happpy-dash__nm-badge {
+    display: inline-flex;
+    align-items: center;
+    background: #c0ff9b;
+    color: #2c7a4b;
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.happpy-dash__nm-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    min-width: 12.625rem;
+    padding: 0.5rem 1rem;
+    border-radius: 16px;
+    background: #ffda30;
+    color: var(--hd-text) !important;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.happpy-dash__nm-cta:hover,
+.happpy-dash__nm-cta:focus-visible {
+    background: #ffd400;
+    text-decoration: none;
+}
+
+.happpy-dash__nm-cta svg {
+    width: 16px;
+    height: 16px;
+}
+
+@media (max-width: 768px) {
+    .happpy-dash__nm-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.625rem;
+    }
+
+    .happpy-dash__nm-cta {
+        min-width: 0;
+        align-self: flex-start;
+    }
+}
+
+/* ---------- Top row: setup + resume health ---------- */
+
+.happpy-dash__top-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: var(--hd-section-gap);
+
+    &:has(.happpy-dash__health-slot):has(.happpy-dash__setup) {
+        grid-template-columns: minmax(0, 1.91fr) minmax(0, 1fr);
+        .happpy-dash__setup-card {
+            min-height: 168px;
+            @media screen and (max-width: 767px) {
+                min-height: unset;
+            }
+        }
+    }
+    &:empty{
+        display: none;
+    }
+}
+
+.happpy-dash__top-row--no-pending {
+    grid-template-columns: 1fr;
+}
+
+@media (max-width: 1024px) {
+    .happpy-dash__top-row {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Flatten top-row on mobile so pending wrapper is a direct flow child of
+   .happpy-dash — required for position:sticky (grid items can't stick). */
+@media (max-width: 767px) {
+    .happpy-dash__top-row {
+        display: contents;
+    }
+
+    .happpy-dash__health-slot {
+        margin-bottom: var(--hd-section-gap);
+    }
+}
+
+.happpy-dash__health{
+    width: 100%;
+    margin-bottom: var(--hd-section-gap);
+}
+/* ---------- Setup pending card ---------- */
+
+.happpy-dash__setup-card {
+    position: relative;
+    border-radius: var(--hd-card-radius);
+    padding: 1.25rem;
+    overflow: hidden;
+    background: var(--hd-setup-card-bg);
+    border: 0.5px solid var(--hd-setup-card-border);
+    box-shadow: var(--hd-setup-card-shadow);
+    min-height: 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    @media screen and (max-width: 1024px) {
+        min-height: unset;
+    }
+}
+
+.happpy-dash__setup-card-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        var(--hd-setup-glow-left),
+        var(--hd-setup-glow-right);
+
+    &.non-required-pending {
+        background:
+            var(--hd-setup-glow-teal-right),
+            var(--hd-setup-glow-teal-left),
+            var(--hd-setup-glow-teal-bottom);
+        ;
+    }
+}
+
+.happpy-dash__setup-title {
+    position: relative;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--hd-text);
+    max-width: 640px;
+}
+.happpy-dash__setup-title-hint{
+    color: rgba(35, 31, 32, 0.64);
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: -8px 0 0;
+    position: relative;
+}
+
+.happpy-dash__setup-list {
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.happpy-dash__setup-step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--hd-setup-step-bg);
+    border-radius: 10px;
+    padding: 0.625rem 1rem;
+    box-shadow: var(--hd-shadow-card);
+    border: 1px solid #E4E2DD;
+
+    @media screen and (max-width: 767px) {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 1px 0 6px 0 rgba(107, 107, 107, 0.12);
+
+        &:only-child{
+            .happpy-dash__setup-step-num{
+                display: none;
+            }
+        }
+    }
+}
+
+.happpy-dash__setup-step-num {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: #f3f4f6;
+    color: var(--hd-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.happpy-dash__setup-step-text {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--hd-text);
+}
+
+.happpy-dash__setup-step-required {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    background: #FFDF9B;
+    color: #141414;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+.happpy-dash__setup-step-required>span {
+    display: inline;
+    color: #ff2222;
+    font-weight: 700;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+.happpy-dash__setup-step-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border: none;
+    background: transparent;
+    color: var(--hd-link) !important;
+    text-decoration: none;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-family: 'Telegraf', sans-serif !important;
+
+    @media screen and (max-width: 767px) {
+        color: white !important;
+        padding: 8px 16px;
+        background: #232323;
+        text-decoration: none;
+        border-radius: 27px;
+
+        >span{
+            text-decoration: none !important;
+        }
+
+        svg {
+            display: none;
+        }
+    }
+}
+
+.happpy-dash__setup-step-cta:hover,
+.happpy-dash__setup-step-cta:focus-visible {
+    >span {
+        text-decoration: none;
+    }
+}
+
+.happpy-dash__setup-step-cta>span {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* ---------- Resume health card (rendered by JobAgentProfileResumeHealth) ----
+ *
+ *  Visual variants (driven by classes emitted by the component):
+ *    --default   pie-chart icon + "Check Your Resume Health"
+ *    --score     red/orange/yellow/green score ring + verdict
+ *    --updated   bat illustration + "Seems like you have updated your resume…"
+ *
+ *  Layout variants (driven by `compact` prop):
+ *    --compact   narrow stacked layout used alongside the setup card.
+ *    --wide      full-row horizontal layout with a colourful gradient border.
+ * --------------------------------------------------------------------------- */
+
+.happpy-dash__health-slot {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.happpy-dash__health {
+    width: 100%;
+}
+
+.happpy-dash__health-card {
+    position: relative;
+    background: var(--hd-card-bg);
+    border-radius: var(--hd-card-radius);
+    padding: 1.25rem;
+    min-height: 168px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Backdrop layer — kept as a hook for future per-variant subtle washes
+   (e.g. pie-chart icon glow). Currently empty / decorative-only. */
+.happpy-dash__health-card-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.happpy-dash__health-main {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    min-width: 0;
+}
+
+.happpy-dash__health-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.happpy-dash__health-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--hd-text);
+    line-height: 1.25;
+}
+
+.happpy-dash__health-desc {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--hd-text-muted);
+}
+
+.happpy-dash__health-eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--hd-text-muted);
+    line-height: 1.25;
+}
+
+.happpy-dash__health-verdict {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--hd-text);
+}
+
+.happpy-dash__health-verdict--red {
+    color: var(--hd-danger);
+}
+
+.happpy-dash__health-verdict--orange {
+    color: #d97706;
+}
+
+.happpy-dash__health-verdict--yellow {
+    color: #b45309;
+}
+
+.happpy-dash__health-verdict--green {
+    color: var(--hd-positive);
+}
+
+/* ---------- Icon / illustration / score ring -------------------------- */
+
+
+.happpy-dash__health-illust {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 63px;
+    height: 54px;
+    min-width: 63px;
+    min-height: 54px;
+}
+
+.happpy-dash__health-illust img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.happpy-dash__health-ring {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    border: 3px solid currentColor;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--hd-danger);
+    background: #ffffff;
+    gap: 1px;
+}
+
+.happpy-dash__health-ring--green {
+    color: var(--hd-positive);
+}
+
+.happpy-dash__health-ring--yellow {
+    color: #b45309;
+}
+
+.happpy-dash__health-ring--orange {
+    color: #d97706;
+}
+
+.happpy-dash__health-ring--red {
+    color: var(--hd-danger);
+}
+
+.happpy-dash__health-ring-num {
+    font-size: 1.125rem;
+    font-weight: 800;
+    line-height: 1;
+    color: currentColor;
+}
+
+.happpy-dash__health-ring-suffix {
+    font-size: 0.625rem;
+    font-weight: 600;
+    color: var(--hd-text-muted);
+    line-height: 1;
+}
+
+/* ---------- CTAs ----------------------------------------------------- */
+
+.happpy-dash__health-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.happpy-dash__health-btn {
+    position: relative;
+    border: 1px solid var(--hd-text) !important;
+    border-radius: 999px;
+    background: white;
+    color: var(--hd-text);
+    padding: 0.5rem 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+
+.happpy-dash__health-btn[disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: transparent;
+    color: var(--hd-text);
+}
+
+.happpy-dash__health-btn--transformed {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--hd-text);
+    color: #ffffff;
+}
+
+.happpy-dash__health-limit {
+    position: relative;
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--hd-text-muted);
+}
+
+/* ---------- Compact (narrow side column) --------------------------- */
+
+.happpy-dash__health-card--compact {
+    border: 1px solid #c9c4b5;
+}
+
+/* ---------- Wide (full-row) — gradient border ---------------------- */
+
+.happpy-dash__health-card--wide {
+    flex-direction: row;
+    align-items: center;
+    min-height: 96px;
+    padding: 1rem 1.5rem;
+    border: 1.5px solid transparent;
+    background:
+        linear-gradient(#ffffff, #ffffff) padding-box,
+        linear-gradient(
+                90deg,
+                #80e0cc 0%,
+                #b8e5dc 22%,
+                #ffe7a6 50%,
+                #b8e5dc 78%,
+                #80e0cc 100%
+            ) border-box;
+    box-shadow: 1px 0 6px 0 rgba(107, 107, 107, 0.12);
+}
+
+.happpy-dash__health-card--wide .happpy-dash__health-main {
+    align-items: center;
+    flex: 1;
+}
+
+.happpy-dash__health-card--wide .happpy-dash__health-desc {
+    max-width: 70ch;
+}
+
+/* On the score variant the eyebrow and verdict sit closer together than
+   the title/description rhythm of the other variants. */
+.happpy-dash__health-card--score .happpy-dash__health-text {
+    gap: 0.125rem;
+}
+
+/* ---- Wide score variant — solid border matching the verdict tone ----
+ * Per Figma (node 28501:44675 et al.), the score card swaps the default
+ * blue/teal gradient border for a solid colour that mirrors the verdict
+ * — so users see the severity of their score at a glance. */
+.happpy-dash__health-card--wide.happpy-dash__health-card--score {
+    background: #ffffff;
+}
+
+.happpy-dash__health-card--wide.happpy-dash__health-card--red {
+    border-color: var(--hd-danger);
+    background: #FFF8EC;
+}
+
+.happpy-dash__health-card--wide.happpy-dash__health-card--orange {
+    border-color: #d97706;
+}
+
+.happpy-dash__health-card--wide.happpy-dash__health-card--yellow {
+    border-color: #fca420;
+}
+
+.happpy-dash__health-card--wide.happpy-dash__health-card--green {
+    border-color: var(--hd-positive);
+}
+
+@media (max-width: 480px) {
+    .happpy-dash__health-card--wide {
+        flex-direction: column;
+        align-items: unset;
+        padding: 1.25rem;
+    }
+
+    .happpy-dash__health-card--wide .happpy-dash__health-main {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 1024px) {
+    .happpy-dash__health-card--compact {
+        min-height: unset;
+    }
+}
+
+/* ---------- Skeleton (in-flight background health check) ---------- */
+
+.happpy-dash__health-skel {
+    position: relative;
+    display: block;
+    background: linear-gradient(
+        90deg,
+        #f5f5f0 0%,
+        #ebebe6 50%,
+        #f5f5f0 100%
+    );
+    background-size: 200% 100%;
+    animation: happpy-dash-skel-shimmer 1.4s ease-in-out infinite;
+    border-radius: 6px;
+}
+
+.happpy-dash__health-skel--icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.happpy-dash__health-card--wide .happpy-dash__health-skel--icon {
+    width: 64px;
+    height: 64px;
+}
+
+.happpy-dash__health-skel--title {
+    width: 60%;
+    height: 14px;
+    margin-bottom: 6px;
+}
+
+.happpy-dash__health-skel--line {
+    width: 90%;
+    height: 10px;
+    margin-bottom: 4px;
+}
+
+.happpy-dash__health-skel--line-short {
+    width: 70%;
+}
+
+.happpy-dash__health-skel--btn {
+    width: 180px;
+    height: 32px;
+    border-radius: 999px;
+    align-self: flex-start;
+}
+
+.happpy-dash__health-card--wide .happpy-dash__health-skel--btn {
+    align-self: center;
+}
+
+@keyframes happpy-dash-skel-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ---------- Section titles ---------- */
+
+.happpy-dash__section-title {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--hd-text);
+    line-height: 1.3;
+}
+
+/* ---------- Journey / stats strip ---------- */
+
+.happpy-dash__journey {
+    margin-bottom: var(--hd-section-gap);
+}
+
+.happpy-dash__journey .happpy-dash__section-title {
+    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
+    color: #231f20;
+}
+
+.happpy-dash__stats {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 20px;
+    background: #f1ebe0;
+    border-radius: 16px;
+}
+
+.happpy-dash__stat {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+}
+
+.happpy-dash__stat--clickable {
+    cursor: pointer;
+    color: inherit;
+    font-family: inherit;
+    transition: opacity 0.15s ease;
+}
+
+.happpy-dash__stat--clickable:hover,
+.happpy-dash__stat--clickable:focus-visible {
+    opacity: 0.75;
+}
+
+.happpy-dash__stat-value {
+    font-size: 2.25rem;
+    font-weight: 600;
+    color: #231f20;
+    line-height: 1;
+}
+
+.happpy-dash__stat-label {
+    font-size: 0.75rem;
+    color: #6b6b6b;
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+@media (max-width: 767px) {
+    .happpy-dash__stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px 12px;
+        padding: 16px;
+    }
+
+    .happpy-dash__stats--three .happpy-dash__stat:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .happpy-dash__stat-value {
+        font-size: 1.75rem;
+    }
+}
+
+/* ---------- Recommended jobs (horizontal cards) ---------- */
+
+.happpy-dash__jobs-card {
+    margin-bottom: var(--hd-section-gap);
+}
+
+.happpy-dash__jobs-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 1rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.happpy-dash__jobs-head .happpy-dash__section-title {
+    margin: 0;
+    font-size: 1.125rem;
+    color: #231f20;
+}
+
+.happpy-dash__jobs-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    color: #059599;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.0625em;
+    text-transform: uppercase;
+    font-family: 'Telegraf', sans-serif !important;
+}
+
+.happpy-dash__jobs-view-all:hover {
+    color: #047a7d;
+}
+
+.happpy-dash__jobs-scroll {
+    width: 100%;
+    /* overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 0.25rem; */
+}
+
+.happpy-dash__jobs-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+    width: 100%;
+    flex-wrap: wrap;
+
+    @media screen and (max-width: 800px) {
+        flex-direction: column;
+    }
+}
+
+.happpy-dash__job-card {
+    flex: 0 0 259px;
+    width: 259px;
+    min-width: calc(25% - 9px);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 12px;
+    background: #ffffff;
+    border: 1px solid #c9c4b5;
+    border-radius: 16px;
+    box-shadow: 1px 0 6px rgba(107, 107, 107, 0.12);
+
+    @media screen and (max-width: 800px) {
+        flex-direction: row;
+        width: 100%;
+        min-width: 100%;
+        align-items: center;
+        height: auto;
+        flex: 1;
+    }
+
+    @media screen and (max-width: 480px) {
+        flex-direction: column;
+        align-items: unset;
+        gap: 1rem;
+    }
+}
+
+.happpy-dash__job-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-height: 24px;
+
+    @media screen and (max-width: 800px) {
+        flex-direction: column;
+        align-self: flex-start;
+    }
+    @media screen and (max-width: 480px) {
+        flex-direction: row;
+        align-self: unset;
+    }
+}
+
+.happpy-dash__job-logo {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #dfefec;
+    color: #231f20;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.happpy-dash__job-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.happpy-dash__job-logo-letter {
+    font-size: 0.875rem;
+    font-weight: 800;
+    line-height: normal;
+}
+
+.happpy-dash__job-posted {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.625rem;
+    line-height: 1;
+    color: rgba(107, 107, 107, 0.6);
+    white-space: nowrap;
+
+    @media screen and (max-width: 800px) {
+        display: none;
+    }
+    @media screen and (max-width: 480px) {
+        display: inline-flex;
+    }
+}
+
+.happpy-dash__job-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.happpy-dash__job-title {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #231f20;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}
+
+.happpy-dash__job-company {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #6a7e82;
+}
+
+.happpy-dash__job-details {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.125rem;
+    color: #6b6b6b;
+}
+
+.happpy-dash__job-details-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #6b6b6b;
+    flex-shrink: 0;
+}
+
+.happpy-dash__job-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.happpy-dash__job-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 32px;
+    border-radius: 16px;
+    padding: 0 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-family: 'Telegraf', sans-serif !important;
+}
+
+.happpy-dash__job-btn--ghost {
+    background: #ffffff;
+    border-color: #231f20;
+    color: #231f20;
+}
+
+.happpy-dash__job-btn--ghost:hover,
+.happpy-dash__job-btn--ghost:focus-visible {
+    background: #fafafa;
+}
+
+.happpy-dash__job-btn--primary {
+    background: #231f20;
+    color: #ffffff;
+    border-color: #231f20;
+}
+
+.happpy-dash__job-btn--primary:hover,
+.happpy-dash__job-btn--primary:focus-visible {
+    background: #2e2e2e;
+    border-color: #2e2e2e;
+}
+
+.happpy-dash__job-btn[disabled] {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.happpy-dash__jobs-empty {
+    flex: 1 1 100%;
+    min-width: 100%;
+    padding: 1.5rem 0;
+    color: var(--hd-text-muted);
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+/* ---------- Find referrals anywhere (empty recommended jobs) ---------- */
+
+.happpy-dash__anywhere {
+    margin-bottom: var(--hd-section-gap);
+}
+
+.happpy-dash__anywhere-panel {
+    background: #ffffff;
+    border: 1px solid #c9c4b5;
+    border-radius: 16px;
+    box-shadow: 1px 0 6px rgba(107, 107, 107, 0.12);
+    padding: 1.25rem;
+}
+
+.happpy-dash__anywhere-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 1.5rem;
+    max-width: 34.6875rem;
+}
+
+.happpy-dash__anywhere-title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #231f20;
+}
+
+.happpy-dash__anywhere-subtitle {
+    margin: 0;
+    font-size: 0.6875rem;
+    line-height: normal;
+    color: #6b6b6b;
+}
+
+.happpy-dash__anywhere-subtitle strong {
+    font-weight: 600;
+    color: #4c4c4c;
+}
+
+.happpy-dash__anywhere-cards {
+    display: flex;
+    gap: 1rem 1.5rem;
+    align-items: stretch;
+}
+
+.happpy-dash__anywhere-card {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #ffffff;
+    border: 1px solid #dee1e7;
+    border-radius: 12px;
+    box-shadow: 0 7.285px 12.749px -2.732px rgba(113, 113, 113, 0.25);
+    text-align: left;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.happpy-dash__anywhere-card:hover,
+.happpy-dash__anywhere-card:focus-visible {
+    border-color: #c9c4b5;
+    box-shadow: 0 8px 14px -2px rgba(113, 113, 113, 0.3);
+}
+
+.happpy-dash__anywhere-card-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.happpy-dash__anywhere-card-copy {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.happpy-dash__anywhere-card-title {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: normal;
+    color: #231f20;
+}
+
+.happpy-dash__anywhere-card-desc {
+    margin: 0;
+    font-size: 0.625rem;
+    line-height: 0.875rem;
+    color: #6b6b6b;
+}
+
+.happpy-dash__anywhere-card-arrow {
+    flex-shrink: 0;
+    align-self: center;
+    width: 20px;
+    height: 20px;
+    color: #231f20;
+}
+
+@media (max-width: 900px) {
+    .happpy-dash__anywhere-cards {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 767px) {
+    .happpy-dash__anywhere-panel {
+        padding: 1rem;
+    }
+
+    .happpy-dash__anywhere-head {
+        margin-bottom: 1rem;
+    }
+}
+
+.happpy-dash__job-card--skeleton {
+    pointer-events: none;
+}
+
+@media (max-width: 767px) {
+    .happpy-dash__jobs-head {
+        align-items: flex-start;
+    }
+}
+
+/* ---------- Important Actions tiles ---------- */
+
+.happpy-dash__actions {
+    margin-bottom: 1rem;
+}
+
+.happpy-dash__actions .happpy-dash__section-title {
+    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
+    color: #231f20;
+}
+
+.happpy-dash__action-tiles-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 0.25rem;
+}
+
+.happpy-dash__action-tiles {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 12px 8px;
+    align-items: stretch;
+    padding-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.happpy-dash__action-tile-wrap {
+    list-style: none;
+    min-width: 208px;
+    display: flex;
+    width: calc(20% - 7px);
+}
+
+.happpy-dash__action-tile {
+    flex: 1;
+    width: 100%;
+    height: 182px;
+    background: #ffffff;
+    border: 1px solid rgba(157, 250, 213, 0.3);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #231f20;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    box-shadow: 0 7.285px 12.749px -2.732px rgba(113, 113, 113, 0.25);
+    overflow: hidden;
+}
+
+.happpy-dash__action-tile--btn {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.happpy-dash__action-tile--static {
+    cursor: default;
+    pointer-events: none;
+}
+
+.happpy-dash__action-tile:hover,
+.happpy-dash__action-tile:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 18px -4px rgba(113, 113, 113, 0.3);
+}
+
+.happpy-dash__action-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.happpy-dash__action-icon-img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.happpy-dash__action-label {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #231f20;
+    text-transform: capitalize;
+    max-width: 157px;
+}
+
+@media (max-width: 767px) {
+    .happpy-dash__action-tile-wrap {
+        width: calc(50% - 4px);
+        min-width: unset;
+    }
+
+    .happpy-dash__action-tile {
+        height: 168px;
+        gap: 16px;
+    }
+
+    .happpy-dash__action-icon {
+        width: 72px;
+        height: 72px;
+    }
+
+    .happpy-dash__action-label {
+        font-size: 13px;
+    }
+}
+
+/* ---------- Skeleton primitives ---------- */
+
+.happpy-dash__skel {
+    display: inline-block;
+    background: linear-gradient(90deg, #ecebe6 0%, #f6f5f0 50%, #ecebe6 100%);
+    background-size: 200% 100%;
+    border-radius: 6px;
+    animation: hd-skel 1.4s ease-in-out infinite;
+}
+
+@keyframes hd-skel {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.happpy-dash__skel--avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.happpy-dash__skel--logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.happpy-dash__skel--posted {
+    width: 3.5rem;
+    height: 0.625rem;
+}
+
+.happpy-dash__skel--company {
+    display: block;
+    width: 5rem;
+    height: 0.75rem;
+}
+
+.happpy-dash__skel--details {
+    display: block;
+    width: 7rem;
+    height: 0.75rem;
+}
+
+.happpy-dash__skel--title {
+    display: block;
+    width: 12rem;
+    height: 0.875rem;
+    margin-bottom: 0.375rem;
+}
+
+.happpy-dash__skel--meta {
+    display: block;
+    width: 18rem;
+    max-width: 100%;
+    height: 0.75rem;
+}
+
+.happpy-dash__skel--btn {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 32px;
+    border-radius: 16px;
+}
+
+.happpy-dash__skel--value {
+    width: 2.5rem;
+    height: 2.25rem;
+}
+
+/* ---------- View Job description modal ---------- */
+
+.happpy-dash__job-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(13, 24, 38, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.happpy-dash__job-modal {
+    width: min(720px, 100%);
+    max-height: 85vh;
+    background: var(--hd-card-bg, #fff);
+    border-radius: var(--hd-card-radius, 16px);
+    border: 1px solid var(--hd-card-border, #e7e4dc);
+    box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.happpy-dash__job-modal-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--hd-divider, #ececec);
+}
+
+.happpy-dash__job-modal-head-text {
+    min-width: 0;
+}
+
+.happpy-dash__job-modal-title {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.3;
+    color: var(--hd-text, #1a1a1a);
+    word-break: break-word;
+}
+
+.happpy-dash__job-modal-company {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: var(--hd-text-muted, #5c5c5c);
+}
+
+.happpy-dash__job-modal-close {
+    border: 0;
+    background: transparent;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--hd-text-soft, #7c7c7c);
+    padding: 0.25rem 0.5rem;
+    border-radius: 8px;
+}
+
+.happpy-dash__job-modal-close:hover,
+.happpy-dash__job-modal-close:focus-visible {
+    background: #f5f3ec;
+    color: var(--hd-text, #1a1a1a);
+}
+
+.happpy-dash__job-modal-body {
+    padding: 1rem 1.25rem;
+    overflow: auto;
+}
+
+.happpy-dash__job-modal-text {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--hd-text, #1a1a1a);
+}
+
+.happpy-dash__job-modal-text p {
+    margin: 0 0 0.65rem;
+}
+
+.happpy-dash__job-modal-text p:last-child {
+    margin-bottom: 0;
+}
+
+.happpy-dash__job-modal-text ul,
+.happpy-dash__job-modal-text ol {
+    margin: 0.4rem 0 0.8rem 1.2rem;
+    padding: 0;
+}
+
+.happpy-dash__job-modal-text li {
+    margin: 0.2rem 0;
+}
+
+.happpy-dash__job-modal-text a {
+    color: var(--hd-link, #059599);
+}
+
+.happpy-dash__job-modal-foot {
+    padding: 0.85rem 1.25rem;
+    border-top: 1px solid var(--hd-divider, #ececec);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.happpy-dash__job-modal-open-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--hd-link, #059599);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.happpy-dash__job-modal-open-link:hover,
+.happpy-dash__job-modal-open-link:focus-visible {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .happpy-dash__job-modal {
+        max-height: 92vh;
+    }
+
+    .happpy-dash__job-modal-head,
+    .happpy-dash__job-modal-body,
+    .happpy-dash__job-modal-foot {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* ---------- Extension tip banner (Figma 302:15842) ---------- */
+
+.happpy-dash__extension-tip {
+    margin-top: var(--hd-section-gap);
+}
+
+.happpy-dash__extension-tip-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 106px;
+    padding: 0 20px;
+    border-radius: 16px;
+    background: radial-gradient(100% 110% at 100% 0%, rgba(125, 211, 192, 0.7) 0%, rgba(125, 211, 192, 0.25) 35%, rgba(125, 211, 192, 0) 70%),
+    radial-gradient(100% 200% at 0% 0%, rgba(168, 224, 212, 0.55) 0%, rgba(168, 224, 212, 0.18) 38%, rgba(168, 224, 212, 0) 72%), 
+    radial-gradient(100% 105% at 25% 100%, rgba(168, 224, 212, 0.10) 0%, rgba(168, 224, 212, 0.15) 38%, rgba(247, 213, 108, 0) 72%);
+    box-shadow: 1px 0 6px rgba(107, 107, 107, 0.12);
+    overflow: hidden;
+}
+
+.happpy-dash__extension-tip-copy {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.happpy-dash__extension-tip-mascot {
+    flex-shrink: 0;
+    width: 63px;
+    height: 54px;
+    object-fit: contain;
+}
+
+.happpy-dash__extension-tip-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.happpy-dash__extension-tip-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.35;
+    color: #231f20;
+}
+
+.happpy-dash__extension-tip-desc {
+    margin: 0;
+    max-width: 500px;
+    font-size: 0.75rem;
+    line-height: 1.125rem;
+    color: #6b6b6b;
+}
+
+.happpy-dash__extension-tip-chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 6px;
+    justify-content: flex-end;
+    align-content: center;
+    flex: 0 1 300px;
+    max-width: 300px;
+}
+
+.happpy-dash__extension-tip-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.64);
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #231f20;
+    white-space: nowrap;
+}
+
+.happpy-dash__extension-tip-chip--career {
+    padding: 8px;
+}
+
+.happpy-dash__extension-tip-chip--linkedin {
+    margin-left: 24px;
+}
+
+.happpy-dash__extension-tip-chip--wellfound {
+    margin-left: 8px;
+}
+
+.happpy-dash__extension-tip-chip--google {
+    margin-right: 12px;
+}
+
+.happpy-dash__extension-tip-chip--indeed {
+    margin-left: 16px;
+}
+
+.happpy-dash__extension-tip-chip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+.happpy-dash__extension-tip-chip-icon--img {
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+@media (max-width: 900px) {
+    .happpy-dash__extension-tip-inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .happpy-dash__extension-tip-chips {
+        flex: 1 1 auto;
+        max-width: none;
+        justify-content: flex-start;
+    }
+
+    .happpy-dash__extension-tip-chip--linkedin,
+    .happpy-dash__extension-tip-chip--wellfound,
+    .happpy-dash__extension-tip-chip--google,
+    .happpy-dash__extension-tip-chip--indeed {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .happpy-dash__extension-tip-inner {
+        padding: 16px;
+        min-height: unset;
+    }
+
+    .happpy-dash__extension-tip-copy {
+        align-items: center;
+    }
+
+    .happpy-dash__extension-tip-title {
+        font-size: 0.9375rem;
+    }
+}
+
+/* ---------- Inherit body bg colour from the layout shell ---------- */
+
+.job-agent-dashboard__main:has(.happpy-dash) {
+    background: var(--hd-bg, #fafaf6);
+}
+
+/* ---------- Interview feedback modal (Figma 481:79008) ---------- */
+
+@keyframes happpy-interview-feedback-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes happpy-interview-feedback-scale {
+    from {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes happpy-interview-feedback-shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
+.happpy-interview-feedback {
+    position: fixed;
+    inset: 0;
+    z-index: 10050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+}
+
+.happpy-interview-feedback__backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgba(0, 0, 0, 0.55);
+    cursor: pointer;
+    animation: happpy-interview-feedback-fade 0.18s ease-out;
+}
+
+.happpy-interview-feedback__panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(540px, 100%);
+    max-height: calc(100vh - 48px);
+    max-height: calc(100dvh - 48px);
+    overflow: hidden;
+    border-radius: 28px;
+    background: #231f20;
+    box-shadow: 0 30px 64px -8px rgba(0, 0, 0, 0.5);
+    animation: happpy-interview-feedback-scale 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.happpy-interview-feedback__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    border: 0;
+    background: none;
+    padding: 4px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 18px;
+    line-height: 1;
+    color: #6b6b6b;
+    cursor: pointer;
+}
+
+.happpy-interview-feedback__close:hover,
+.happpy-interview-feedback__close:focus-visible {
+    color: #ffffff;
+    outline: none;
+}
+
+.happpy-interview-feedback__scroll {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.happpy-interview-feedback__hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 48px 40px 20px;
+    text-align: center;
+}
+
+.happpy-interview-feedback__mascot {
+    display: block;
+    width: 98px;
+    height: 84px;
+    object-fit: contain;
+}
+
+.happpy-interview-feedback__eyebrow {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.76px;
+    text-transform: uppercase;
+    color: #46eccd;
+}
+
+.happpy-interview-feedback__title {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #ffffff;
+}
+
+.happpy-interview-feedback__body {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 0 40px 32px;
+}
+
+.happpy-interview-feedback__section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.happpy-interview-feedback__section--error .happpy-interview-feedback__section-title {
+    color: #ff8a8a;
+}
+
+.happpy-interview-feedback__field-error {
+    margin: 0;
+    width: 100%;
+    font-family: 'Rubik', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: normal;
+    color: #ff8a8a;
+    text-align: center;
+}
+
+.happpy-interview-feedback__section-title {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: normal;
+    color: #ffffff;
+    text-align: center;
+}
+
+.happpy-interview-feedback__required {
+    margin-left: 2px;
+    color: #ff6b6b;
+    font-weight: 700;
+}
+
+.happpy-interview-feedback__ratings {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.happpy-interview-feedback__ratings--error {
+    padding: 8px;
+    margin: -8px;
+    border-radius: 12px;
+    box-shadow: inset 0 0 0 1px #ff6b6b;
+}
+
+.happpy-interview-feedback__rating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 80px;
+    min-height: 84px;
+    padding: 10px 0 8px;
+    border: 0;
+    border-radius: 10px;
+    background: #4c4c4c;
+    cursor: pointer;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.happpy-interview-feedback__rating:hover,
+.happpy-interview-feedback__rating:focus-visible {
+    outline: none;
+    background: #565656;
+}
+
+.happpy-interview-feedback__rating--selected {
+    box-shadow: 0 0 0 2px #46eccd;
+}
+
+.happpy-interview-feedback__rating-emoji-wrap {
+    position: relative;
+    width: 42px;
+    height: 42px;
+}
+
+.happpy-interview-feedback__rating-emoji-bg {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.happpy-interview-feedback__rating-emoji {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    line-height: 1;
+}
+
+.happpy-interview-feedback__rating-label {
+    font-family: 'Rubik', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: #ffffff;
+}
+
+.happpy-interview-feedback__textarea-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.happpy-interview-feedback__textarea-wrap--error .happpy-interview-feedback__textarea {
+    border-color: #ff6b6b;
+    background: #2a1515;
+}
+
+.happpy-interview-feedback__textarea--error:focus {
+    border-color: #ff6b6b;
+    background: #2a1515;
+}
+
+.happpy-interview-feedback__textarea {
+    display: block;
+    width: 100%;
+    min-height: 116px;
+    padding: 12px 12px 44px;
+    border: 1px solid #3a3633;
+    border-radius: 14px;
+    background: #1a1715;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: 'Rubik', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 22px;
+    color: #ffffff;
+    outline: none;
+}
+
+.happpy-interview-feedback__textarea::placeholder {
+    color: #6b6b6b;
+}
+
+.happpy-interview-feedback__textarea:focus {
+    border-color: #46eccd;
+    outline: none;
+}
+
+.happpy-interview-feedback__textarea--refining {
+    color: transparent;
+    caret-color: transparent;
+    resize: none;
+    pointer-events: none;
+}
+
+.happpy-interview-feedback__textarea-skeleton {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.happpy-interview-feedback__textarea-skeleton-line {
+    display: block;
+    height: 10px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #2a2624 0%, #3a3633 50%, #2a2624 100%);
+    background-size: 200% 100%;
+    animation: happpy-interview-feedback-shimmer 1.2s ease-in-out infinite;
+}
+
+.happpy-interview-feedback__textarea-skeleton-line--short {
+    width: 62%;
+}
+
+.happpy-interview-feedback__ai-actions {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.happpy-interview-feedback__undo-btn {
+    border: 0;
+    background: none;
+    padding: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    color: #9a9590;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.happpy-interview-feedback__ai-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 0;
+    background: none;
+    padding: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: capitalize;
+    color: #46eccd;
+    cursor: pointer;
+}
+
+.happpy-interview-feedback__ai-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.happpy-interview-feedback__ai-btn img {
+    display: block;
+    flex-shrink: 0;
+}
+
+.happpy-interview-feedback__share-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: #1c1917;
+}
+
+.happpy-interview-feedback__share-title {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.happpy-interview-feedback__share-sub {
+    margin: 2px 0 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: #9a9590;
+}
+
+.happpy-interview-feedback__toggle {
+    position: relative;
+    flex-shrink: 0;
+    width: 62px;
+    height: 28px;
+    padding: 3px;
+    border: 0;
+    border-radius: 14px;
+    background: #3a3633;
+    cursor: pointer;
+}
+
+.happpy-interview-feedback__toggle-knob {
+    display: block;
+    width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    background: #9a9590;
+    transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.happpy-interview-feedback__toggle--on {
+    background: #059599;
+}
+
+.happpy-interview-feedback__toggle--on .happpy-interview-feedback__toggle-knob {
+    transform: translateX(34px);
+    background: #ffffff;
+}
+
+.happpy-interview-feedback__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.happpy-interview-feedback__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 20px;
+    border: 0;
+    border-radius: 28px;
+    background: #46eccd;
+    font-family: 'Telegraf', 'Rubik', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #231f20;
+    cursor: pointer;
+}
+
+.happpy-interview-feedback__submit:hover:not(:disabled),
+.happpy-interview-feedback__submit:focus-visible:not(:disabled) {
+    filter: brightness(0.97);
+    outline: none;
+}
+
+.happpy-interview-feedback__submit:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.happpy-interview-feedback__later {
+    border: 0;
+    background: none;
+    padding: 0;
+    font-family: 'Telegraf', 'Rubik', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.28px;
+    text-transform: uppercase;
+    text-decoration: underline;
+    color: #9a9590;
+    cursor: pointer;
+}
+
+.happpy-interview-feedback__footnote {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: normal;
+    text-align: center;
+    color: #6b6b6b;
+}
+
+.happpy-interview-feedback__negative {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 48px 40px 32px;
+}
+
+.happpy-interview-feedback__negative-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+}
+
+.happpy-interview-feedback__negative-mascot {
+    display: block;
+    width: 71px;
+    height: 76px;
+    object-fit: contain;
+}
+
+.happpy-interview-feedback__negative-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.happpy-interview-feedback__negative-title {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #ffffff;
+}
+
+.happpy-interview-feedback__negative-subtitle {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.45;
+    color: #9a9590;
+}
+
+.happpy-interview-feedback__negative-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.happpy-interview-feedback__negative-tag {
+    border: 1px solid #3a3633;
+    border-radius: 999px;
+    background: #1c1917;
+    padding: 8px 14px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: normal;
+    color: #ffffff;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.happpy-interview-feedback__negative-tag:hover,
+.happpy-interview-feedback__negative-tag:focus-visible {
+    outline: none;
+    border-color: #46eccd;
+}
+
+.happpy-interview-feedback__negative-tag--selected {
+    border-color: #46eccd;
+    background: rgba(70, 236, 205, 0.12);
+}
+
+.happpy-interview-feedback__negative-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.happpy-interview-feedback__negative-label {
+    font-family: 'Rubik', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: normal;
+    color: #ffffff;
+}
+
+.happpy-interview-feedback__negative-textarea {
+    display: block;
+    width: 100%;
+    min-height: 96px;
+    padding: 12px;
+    border: 1px solid #3a3633;
+    border-radius: 14px;
+    background: #1a1715;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: 'Rubik', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.45;
+    color: #ffffff;
+    outline: none;
+}
+
+.happpy-interview-feedback__negative-textarea::placeholder {
+    color: #6b6b6b;
+}
+
+.happpy-interview-feedback__negative-textarea:focus {
+    border-color: #46eccd;
+    outline: none;
+}
+
+.happpy-interview-feedback__negative-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.happpy-interview-feedback__negative-footnote {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: normal;
+    text-align: center;
+    color: #6b6b6b;
+}
+
+@media (max-width: 767px) {
+    .happpy-interview-feedback {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .happpy-interview-feedback__panel {
+        width: 100%;
+        max-height: calc(100vh - 64px);
+        max-height: calc(100dvh - 64px);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .happpy-interview-feedback__close {
+        top: 12px;
+        right: 12px;
+    }
+
+    .happpy-interview-feedback__hero,
+    .happpy-interview-feedback__body,
+    .happpy-interview-feedback__negative {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .happpy-interview-feedback__hero {
+        padding-top: 44px;
+    }
+
+    .happpy-interview-feedback__negative {
+        padding-top: 44px;
+        padding-bottom: 24px;
+    }
+
+    .happpy-interview-feedback__title,
+    .happpy-interview-feedback__negative-title {
+        font-size: 20px;
+    }
+
+    .happpy-interview-feedback__ratings {
+        gap: 6px;
+    }
+
+    .happpy-interview-feedback__rating {
+        width: calc((100% - 24px) / 5);
+        min-width: 58px;
+    }
+}

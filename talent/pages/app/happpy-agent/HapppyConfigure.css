@@ -1,0 +1,3613 @@
+/* =============================================================================
+ * HapppyConfigure — "Configure your Happpy Agent" page
+ * Figma: node 28403:4059  |  BEM-scoped under `.hc-*`
+ * =========================================================================== */
+
+/* ── Page shell ──────────────────────────────────────────────────────────── */
+.hc-page {
+    width: 100%;
+    max-width: 1136px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    background: #f9f8f4;
+    border-radius: 24px;
+    font-family: 'Rubik', sans-serif;
+    min-height: 100%;
+}
+
+.hc-page__title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #141414;
+    letter-spacing: 0.07px;
+    margin: 0 0 1.25rem;
+    line-height: normal;
+}
+
+/* ── Top tab bar ──────────────────────────────────────────────────────────── */
+.hc-tabs {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: #ffffff;
+    border: 1px solid #d0d0cf;
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+}
+
+.hc-tabs__track {
+    display: contents;
+}
+
+.hc-tab-anchor {
+    display: inline-flex;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.hc-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #231f20;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    line-height: normal;
+    transition: background 0.15s ease, color 0.15s ease;
+    position: relative;
+
+
+    @media (max-width: 1150px) {
+        padding: 0.625rem 0.9375rem;
+        font-size: 11px;
+    }
+}
+
+.hc-tab:not(.hc-tab--active):not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60%;
+    width: 1px;
+    background: #e4e2dc;
+}
+
+.hc-tab--active {
+    background: #231f20;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.hc-tab--active::after {
+    display: none;
+}
+
+.hc-tab:not(.hc-tab--active):hover {
+    background: #f5f4f0;
+}
+
+/* Auto Reply tab — first-run tooltip (see AutoReplyTabIntro.js) */
+.hc-auto-reply-intro--portal {
+    position: fixed;
+    z-index: 10050;
+    box-sizing: border-box;
+    pointer-events: none;
+    animation: hc-auto-reply-intro-in 280ms ease-out both;
+}
+
+.hc-auto-reply-intro__callout {
+    position: relative;
+    background: #ffffff;
+    border: 1px solid var(--jad-mascot-outline, #c9c4b5);
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 2px 6px 16px rgba(35, 31, 32, 0.16);
+    pointer-events: auto;
+}
+
+.hc-auto-reply-intro__callout::after {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: var(--hc-auto-reply-arrow-left, 50%);
+    transform: translateX(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background: #ffffff;
+    border-left: 1px solid var(--jad-mascot-outline, #c9c4b5);
+    border-top: 1px solid var(--jad-mascot-outline, #c9c4b5);
+}
+
+.hc-auto-reply-intro__title {
+    margin: 0 0 6px;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1.35;
+    color: #086d7e;
+}
+
+.hc-auto-reply-intro__body {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.45;
+    color: #231f20;
+}
+
+@keyframes hc-auto-reply-intro-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* ── Tab content area ─────────────────────────────────────────────────────── */
+.hc-tab-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.hc-tab-content__title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #231f20;
+    letter-spacing: -0.36px;
+    margin: 0;
+    line-height: normal;
+}
+
+.hc-tab-content__title--bold {
+    font-weight: 600;
+}
+
+/* ── Message Templates card ───────────────────────────────────────────────── */
+.hc-card {
+    background: #ffffff;
+    border: 1px solid #c9c4b5;
+    border-radius: 8px 8px 16px 16px;
+    overflow: visible;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Sub-tab header row (Gmail / LinkedIn) */
+.hc-card__header {
+    background: #dad9d8;
+    border-radius: 7px 7px 8px 8px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hc-subtab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px;
+    flex: 1;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    color: #141414;
+    line-height: normal;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hc-subtab--active {
+    background: #ffffff;
+    outline: 1px solid #a09b93 !important;
+    font-weight: 600;
+}
+
+.hc-subtab__icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hc-subtab__icon img {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+/* Card body */
+.hc-card__body {
+    padding: 16px 23px 16px;
+}
+
+/* ── Template pill selector (radio group) ─────────────────────────────────── */
+.hc-pills {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.hc-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px 6px 7px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #231f20;
+    background: #ffffff;
+    border: 1px solid #dee1e7;
+    cursor: pointer;
+    letter-spacing: -0.076px;
+    line-height: normal;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    white-space: nowrap;
+}
+
+.hc-pill:hover {
+    background: #f9f8f4;
+}
+
+.hc-pill--active,
+.hc-pill--active:hover {
+    background: #ADFFD9;
+    border-color: #ADFFD9;
+    font-weight: 600;
+}
+
+.hc-pill svg {
+    flex-shrink: 0;
+    display: block;
+}
+
+/* ── Message toolbar (rewrite) ────────────────────────────────────────────── */
+.hc-message-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.hc-rewrite-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid #c3c5d9;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #003ec7;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.hc-rewrite-btn:hover:not(:disabled) {
+    background: #f0f7ff;
+    border-color: #b8d4f5;
+}
+
+.hc-rewrite-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.hc-rewrite-btn .material-symbols-outlined {
+    font-size: 16px;
+}
+
+/* ── Form fields ──────────────────────────────────────────────────────────── */
+.hc-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.hc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hc-field__label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6b6b6b;
+    line-height: normal;
+    white-space: nowrap;
+}
+
+.hc-field__input {
+    width: 100%;
+    height: 39px;
+    border: 1.5px solid #e4e2dc;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 0 10.5px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #231f20;
+    
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.hc-field__input:focus {
+    border-color: #a09b93;
+}
+
+.hc-field__input::placeholder {
+    color: #a09b93;
+}
+
+/* Message editor wrapper — Figma card is 378px tall */
+.hc-field__editor-wrap {
+    border: 1.5px solid #e4e2dc;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+    min-height: 378px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, outline-color 0.15s ease;
+
+    &:focus-within {
+        border-color: #231f20;
+        box-shadow: 0 0 0 3px rgba(35, 31, 32, 0.08);
+    }
+}
+
+.hc-field__editor-wrap .rsw-editor {
+    border: none !important;
+    border-radius: 0 !important;
+    min-height: 340px;
+}
+
+.hc-field__editor-wrap .rsw-ce {
+    font-size: 12px !important;
+    line-height: 1.5;
+    
+    color: #231f20;
+}
+
+.hc-field__editor-wrap .rsw-ce p,
+.hc-field__editor-wrap .rsw-ce li,
+.hc-field__editor-wrap .rsw-ce span,
+.hc-field__editor-wrap .rsw-ce div {
+    font-size: 12px;
+}
+
+.hc-field__error {
+    font-size: 11px;
+    color: #c1272d;
+    margin: 2px 0 0;
+}
+
+/* ── Bottom info bar (sits as a chip near card bottom-left) ───────────────── */
+.hc-info-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #d6f4ef;
+    padding: 6px 12px;
+    margin: 0 23px 16px;
+    border-radius: 4px;
+    align-self: flex-start;
+}
+
+.hc-info-bar__text {
+    font-size: 11px;
+    font-weight: 500;
+    color: #231f20;
+    line-height: normal;
+}
+
+/* ── Footer (save button) — sits below the card ───────────────────────────── */
+.hc-footer {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.hc-save-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: #231f20;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+    line-height: normal;
+}
+
+.hc-save-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.hc-save-btn__spinner {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: hc-spin 0.75s linear infinite;
+    flex-shrink: 0;
+}
+
+.hc-linkedin-msg {
+    font-size: 13px;
+    color: #c1272d;
+    font-weight: 600;
+}
+
+/* ── Loading state ────────────────────────────────────────────────────────── */
+.hc-loading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 24px;
+    font-size: 13px;
+    color: #6b6b6b;
+}
+
+.hc-loading__spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e4e2dc;
+    border-top-color: #231f20;
+    border-radius: 50%;
+    animation: hc-spin 0.75s linear infinite;
+    flex-shrink: 0;
+}
+
+/* ── Placeholder tab ──────────────────────────────────────────────────────── */
+.hc-placeholder {
+    text-align: center;
+    padding: 60px 24px;
+    color: #6b6b6b;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ── Animations ───────────────────────────────────────────────────────────── */
+@keyframes hc-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* =============================================================================
+ * Connected Accounts tab (`.hc-ca*`)
+ * Figma: node 28447:9035
+ * =========================================================================== */
+
+.hc-ca {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.hc-ca__cards {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+    position: relative;
+    /* Reserve vertical room below the cards row for the absolute tooltip/mascot
+       that hangs under the Gmail card. */
+    padding-bottom: 110px;
+
+    @media (max-width: 960px) {
+        .hc-ca-card{
+            width: auto;
+        }
+    }
+    @media (max-width: 885px) {
+        flex-direction: column;
+        align-items: stretch;
+
+
+        .hc-ca-card--gmail .hc-ca-tooltip-wrap {
+            top: -28px;
+            right: -4px;
+            left: auto;
+            gap: 0;
+            max-width: 58%;
+            z-index: 2;
+            align-items: flex-end;
+        }
+    }
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
+.hc-ca-card {
+    position: relative;
+    width: 347px;
+    min-height: 230px;
+    background: #ffffff;
+    border: 2px solid #e4e2dc;
+    border-radius: 12px;
+    padding: 21px 18px 18px;
+    box-sizing: border-box;
+    filter: drop-shadow(1px 0 3px rgba(107, 107, 107, 0.12));
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hc-ca-card--connected {
+    background: #f3fff7;
+    border-color: #aed1cc;
+    filter: drop-shadow(2px 4px 2px rgba(129, 127, 127, 0.24));
+}
+
+/* ── Card badge (Optional / Required / Connected) ─────────────────────────── */
+.hc-ca-card__badge {
+    position: absolute;
+    top: -11px;
+    left: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 10px;
+    
+    font-size: 10px;
+    font-weight: 500;
+    color: #141414;
+    line-height: normal;
+    white-space: nowrap;
+}
+
+.hc-ca-card__badge--optional {
+    background: #f3ecdd;
+}
+
+.hc-ca-card__badge--required {
+    background: #fdecec;
+    color: #b32d2d;
+    font-weight: 600;
+}
+
+.hc-ca-card__badge--required .hc-ca-card__badge-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #b32d2d;
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.hc-ca-card__badge--connected {
+    background: #c0ff9b;
+    color: #2c7a4b;
+    font-weight: 700;
+}
+
+.hc-ca-card__badge-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #2c7a4b;
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.12px;
+}
+
+/* ── Card head (avatar + title) ───────────────────────────────────────────── */
+.hc-ca-card__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 0;
+}
+
+.hc-ca-card__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Inter', 'Rubik', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 22.5px;
+    letter-spacing: -0.23px;
+}
+
+.hc-ca-card__avatar--linkedin {
+    background: #0a66c2;
+    color: #ffffff;
+}
+
+.hc-ca-card__avatar--gmail {
+    background: #e4ede7;
+    color: transparent;
+}
+
+.hc-ca-card__avatar--gmail svg {
+    width: 32px;
+    height: 32px;
+    display: block;
+}
+
+.hc-ca-card__head-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.hc-ca-card__title {
+    margin: 0;
+    
+    font-size: 22px;
+    font-weight: 700;
+    color: #231f20;
+    line-height: normal;
+}
+
+.hc-ca-card__subtitle {
+    margin: 0;
+    
+    font-size: 10px;
+    font-weight: 500;
+    color: #4f79a3;
+    line-height: normal;
+}
+
+/* ── Benefit list ─────────────────────────────────────────────────────────── */
+.hc-ca-card__benefits {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hc-ca-card__benefit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    font-size: 11px;
+    font-weight: 400;
+    color: #231f20;
+    line-height: normal;
+}
+
+.hc-ca-card__benefit-icon {
+    flex-shrink: 0;
+    color: #2c7a4b;
+}
+
+/* ── Card divider + actions ───────────────────────────────────────────────── */
+.hc-ca-card__divider {
+    height: 1px;
+    background: #e4e2dc;
+    margin: 4px 0 0;
+}
+
+.hc-ca-card__actions {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+}
+
+.hc-ca-card__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 32px;
+    background: var(--jad-primary);
+    border: none;
+    border-radius: 56px;
+    font-family: 'Telegraf', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: #231f20;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s ease, opacity 0.15s ease, filter 0.15s ease;
+    line-height: normal;
+}
+
+.hc-ca-card__cta:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+.hc-ca-card__cta:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.hc-ca-card__cta--disconnect {
+    background: #ffffff;
+    color: #231f20;
+    border: 0.5px solid #231f20;
+    padding: 10.5px 32.5px;
+}
+
+.hc-ca-card__cta--disconnect:hover:not(:disabled) {
+    background: #f7f7f5;
+}
+
+/* ── Gmail tooltip + mascot ───────────────────────────────────────────────── */
+/* Positioned ABSOLUTELY relative to the Gmail card (just BELOW the card,
+   anchored to its left edge). Mascot sits on the left, tooltip on the right. */
+.hc-ca-tooltip-wrap {
+    position: absolute;
+    top: calc(100% + 20px);
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 100%;
+    pointer-events: none;
+}
+
+.hc-ca-tooltip-wrap > * {
+    pointer-events: auto;
+}
+
+.hc-ca-tooltip {
+    position: relative;
+    background: #ffffff;
+    border: 1px solid var(--jad-mascot-outline);
+    border-radius: 8px;
+    padding: 16px;
+    width: 220px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.hc-ca-tooltip p {
+    margin: 0;
+    
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--jad-pref-teal);
+    line-height: 16px;
+}
+
+.hc-ca-tooltip p strong {
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Speech-bubble triangle pointer — sits on the LEFT side of the tooltip,
+   pointing back toward the mascot (and Gmail card above-left). */
+.hc-ca-tooltip__pointer {
+    position: absolute;
+    top: 24px;
+    left: -12px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 12px 10px 0;
+    border-color: transparent var(--jad-mascot-outline) transparent transparent;
+}
+
+.hc-ca-mascot {
+    display: inline-block;
+    width: 87px;
+    height: 76px;
+    flex-shrink: 0;
+}
+
+.hc-ca-mascot img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ── LinkedIn inline form ─────────────────────────────────────────────────── */
+.hc-ca-form {
+    background: #ffffff;
+    border: 1px solid #e4e2dc;
+    border-radius: 12px;
+    padding: 20px 24px;
+    max-width: 520px;
+}
+
+.hc-ca-form__title {
+    margin: 0 0 4px;
+    
+    font-size: 16px;
+    font-weight: 700;
+    color: #231f20;
+}
+
+.hc-ca-form__hint {
+    margin: 0 0 16px;
+    
+    font-size: 12px;
+    color: #6b6b6b;
+    line-height: 1.5;
+}
+
+.hc-ca-form__alert {
+    margin: 0 0 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.hc-ca-form__alert--success {
+    background: #e7f6ec;
+    color: #2c7a4b;
+}
+
+.hc-ca-form__alert--error {
+    background: #fdecec;
+    color: #b32d2d;
+}
+
+.hc-ca-form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.hc-ca-form__label {
+    
+    font-size: 11px;
+    font-weight: 700;
+    color: #6b6b6b;
+}
+
+.hc-ca-form__input {
+    width: 100%;
+    height: 39px;
+    border: 1.5px solid #e4e2dc;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 0 10.5px;
+    
+    font-size: 13px;
+    color: #231f20;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.hc-ca-form__input:focus {
+    border-color: #a09b93;
+}
+
+.hc-ca-form__input--error {
+    border-color: #b32d2d;
+}
+
+.hc-ca-form__error {
+    
+    font-size: 11px;
+    color: #b32d2d;
+    margin-top: 2px;
+}
+
+.hc-ca-form__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.hc-ca-form__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 8px;
+    
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s ease, background 0.15s ease;
+    line-height: normal;
+}
+
+.hc-ca-form__btn--primary {
+    background: #231f20;
+    color: #ffffff;
+}
+
+.hc-ca-form__btn--primary:hover:not(:disabled) {
+    background: #000000;
+}
+
+.hc-ca-form__btn--secondary {
+    background: #ffffff;
+    color: #231f20;
+    border: 1px solid #e4e2dc;
+}
+
+.hc-ca-form__btn--secondary:hover:not(:disabled) {
+    background: #f7f7f5;
+}
+
+.hc-ca-form__btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* =============================================================================
+ * Follow-up Settings tab (`.hc-fu*`)
+ * Figma: node 28447:10385
+ * =========================================================================== */
+
+.hc-fu-cards {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
+.hc-fu-card {
+    position: relative;
+    flex: 1 1 480px;
+    max-width: 524px;
+    background: #ffffff;
+    border: 1px solid #c9c4b5;
+    border-radius: 12px;
+    padding: 19px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.hc-fu-card--locked {
+    background: #ecece8;
+}
+
+.hc-fu-card--off {
+    background: #fafaf6;
+}
+
+.hc-fu-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.hc-fu-card__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    
+    font-size: 16px;
+    font-weight: 700;
+    color: #0a0a0a;
+    line-height: normal;
+}
+
+.hc-fu-card--locked .hc-fu-card__title {
+    opacity: 0.48;
+}
+
+.hc-fu-card__title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+.hc-fu-card__title-icon svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+/* ── Card body fields ─────────────────────────────────────────────────────── */
+.hc-fu-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.hc-fu-card__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 304px;
+}
+
+.hc-fu-card__field--full {
+    max-width: 100%;
+}
+
+.hc-fu-card__label {
+    
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b6b6b;
+    line-height: normal;
+}
+
+.hc-fu-card--locked .hc-fu-card__label {
+    color: rgba(107, 107, 107, 0.6);
+}
+
+/* Textarea (template preview / editor) */
+.hc-fu-card__textarea {
+    width: 100%;
+    min-height: 107px;
+    padding: 11px;
+    background: #ffffff;
+    border: 1px solid #dee1e7;
+    border-radius: 8px;
+    
+    font-size: 14px;
+    font-weight: 400;
+    color: #231f20;
+    line-height: 19px;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease;
+}
+
+.hc-fu-card__textarea:focus {
+    border-color: #a09b93;
+}
+
+.hc-fu-card__textarea:disabled {
+    background: #faf8f8;
+    color: rgba(107, 107, 107, 0.6);
+    cursor: not-allowed;
+}
+
+/* ── Stepper-style native select ──────────────────────────────────────────── */
+.hc-fu-stepper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: #f1f1f1;
+    border-radius: 8px;
+    padding: 4px 12px;
+    height: 32px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.hc-fu-stepper:hover:not(.hc-fu-stepper--disabled) {
+    background: #e9e9e9;
+}
+
+.hc-fu-stepper--disabled {
+    background: #faf8f8;
+    cursor: not-allowed;
+}
+
+.hc-fu-stepper svg {
+    pointer-events: none;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.hc-fu-stepper__select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    width: 100%;
+    min-width: 0;
+    
+    font-size: 14px;
+    font-weight: 400;
+    color: #231f20;
+    line-height: normal;
+    cursor: pointer;
+}
+
+.hc-fu-stepper--disabled .hc-fu-stepper__select {
+    color: rgba(107, 107, 107, 0.6);
+    cursor: not-allowed;
+}
+
+/* ── Pill toggle (Enabled / Disabled) ─────────────────────────────────────── */
+.hc-fu-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    
+    line-height: normal;
+}
+
+.hc-fu-toggle__track {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 22px;
+    border-radius: 11px;
+    background: #c9c9c9;
+    transition: background 0.18s ease;
+    flex-shrink: 0;
+}
+
+.hc-fu-toggle__thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 22px;
+    height: 18px;
+    border-radius: 9px;
+    background: #ffffff;
+    transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.hc-fu-toggle--on .hc-fu-toggle__track {
+    background: #2c7a4b;
+}
+
+.hc-fu-toggle--on .hc-fu-toggle__thumb {
+    transform: translateX(22px);
+}
+
+.hc-fu-toggle__label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #c9c9c9;
+    transition: color 0.18s ease;
+}
+
+.hc-fu-toggle--on .hc-fu-toggle__label {
+    color: #2c7a4b;
+}
+
+.hc-fu-toggle--disabled {
+    cursor: not-allowed;
+}
+
+/* ── Connect-LinkedIn tooltip + mascot (below the LinkedIn card) ──────────── */
+.hc-fu-connect {
+    position: absolute;
+    top: calc(100% - 8px);
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.hc-fu-connect > * {
+    pointer-events: auto;
+}
+
+.hc-fu-connect__mascot {
+    width: 91px;
+    height: 88px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -16px;
+}
+
+.hc-fu-connect__mascot img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.hc-fu-connect__bubble {
+    position: relative;
+    background: #ffffff;
+    border: 1px solid var(--jad-mascot-outline);
+    border-radius: 8px;
+    padding: 12px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+    filter: drop-shadow(2px 4px 2px rgba(129, 127, 127, 0.24));
+}
+
+/* Triangle pointer on the left side of the bubble (pointing back to mascot) */
+.hc-fu-connect__pointer {
+    position: absolute;
+    top: 20px;
+    left: -7px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px 7px 6px 0;
+    border-color: transparent var(--jad-mascot-outline) transparent transparent;
+    filter: drop-shadow(-1px 0 0 var(--jad-mascot-outline));
+}
+
+.hc-fu-connect__title {
+    margin: 0;
+    
+    font-size: 11px;
+    font-weight: 700;
+    color: #5a5278;
+    line-height: normal;
+}
+
+.hc-fu-connect__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 17px;
+    background: #ffffff;
+    border: 1px solid #231f20;
+    border-radius: 21px;
+    cursor: pointer;
+    
+    font-size: 12px;
+    font-weight: 700;
+    color: #231f20;
+    text-transform: uppercase;
+    line-height: normal;
+    align-self: flex-start;
+    transition: background 0.15s ease;
+}
+
+.hc-fu-connect__btn:hover {
+    background: #f7f7f5;
+}
+
+.hc-fu-connect__btn svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+}
+
+.hc-fu-connect__ps {
+    background: #e2fcd3;
+    border-radius: 8px;
+    padding: 6px 10px;
+}
+
+.hc-fu-connect__ps p {
+    margin: 0;
+    
+    font-size: 10px;
+    font-weight: 500;
+    color: #3a4a31;
+    line-height: normal;
+}
+
+/* Reserve extra space under the LinkedIn card when the connect tooltip is showing
+   so it doesn't overlap the save button below. */
+.hc-fu-cards:has(.hc-fu-connect) {
+    margin-bottom: 142px;
+}
+
+@media (max-width: 1200px) {
+    .hc-fu-cards {
+        flex-wrap: wrap;
+    }
+}
+
+/* =============================================================================
+ * Auto Reply Settings tab (`.hc-ar*`)
+ * Same card language as Follow-up Settings; master toggle + hours dropdown +
+ * category checkboxes stored on talent_outreach_billing.auto_reply_categories.
+ * =========================================================================== */
+
+.hc-ar-card {
+    background: #ffffff;
+    border: 1px solid #c9c4b5;
+    border-radius: 12px;
+    padding: 19px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.hc-ar-card--off {
+    background: #fafaf6;
+}
+
+.hc-ar-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.hc-ar-card__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0a0a0a;
+    line-height: normal;
+}
+
+.hc-ar-card__title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+.hc-ar-card__title-icon svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+.hc-ar-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.hc-ar-check {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    max-width: 100%;
+}
+
+.hc-ar-check__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.hc-ar-check__box {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    border: 1.5px solid #231f20;
+    border-radius: 4px;
+    background: #ffffff;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.hc-ar-check__input:checked + .hc-ar-check__box {
+    background: #231f20;
+}
+
+.hc-ar-check__input:checked + .hc-ar-check__box::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.hc-ar-check__input:focus-visible + .hc-ar-check__box {
+    outline: 2px solid #231f20;
+    outline-offset: 2px;
+}
+
+.hc-ar-check__label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #231f20;
+    line-height: 1.35;
+}
+
+.hc-ar-check--disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.hc-ar-check--category {
+    align-items: flex-start;
+    width: 100%;
+}
+
+.hc-ar-card__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 304px;
+}
+
+.hc-ar-card__field--disabled {
+    opacity: 0.55;
+}
+
+.hc-ar-card__label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b6b6b;
+    line-height: normal;
+}
+
+.hc-ar-card__hint {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 400;
+    color: #6b6b6b;
+    line-height: 1.4;
+}
+
+.hc-ar-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hc-ar-categories--disabled {
+    opacity: 0.55;
+}
+
+.hc-ar-categories__title {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b6b6b;
+    line-height: normal;
+}
+
+.hc-ar-categories__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.hc-ar-categories__item {
+    display: flex;
+    padding: 10px 12px;
+    background: #f7f6f2;
+    border: 1px solid #e4e2dc;
+    border-radius: 8px;
+}
+
+.hc-ar-categories__item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.hc-ar-categories__item-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #231f20;
+    line-height: 1.3;
+}
+
+.hc-ar-categories__item-hint {
+    font-size: 11px;
+    font-weight: 400;
+    color: #6b6b6b;
+    line-height: 1.35;
+}
+
+@media (max-width: 767px) {
+    .hc-ar-categories__list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =============================================================================
+ * Auto Run tab (`.hc-run*`)
+ * Job auto-run after inactivity — single consolidated checkbox.
+ * =========================================================================== */
+
+.hc-run-card {
+    background: #ffffff;
+    border: 1px solid #c9c4b5;
+    border-radius: 12px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 720px;
+}
+
+.hc-run-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.hc-run-card__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #0a0a0a;
+    line-height: normal;
+}
+
+.hc-run-card__title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: #231f20;
+}
+
+.hc-run-card__title-icon svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+.hc-run-card__trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.hc-run-card__trigger-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b6b6b;
+}
+
+.hc-run-card__trigger-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: #f5f4f0;
+    font-size: 13px;
+    font-weight: 500;
+    color: #231f20;
+    line-height: normal;
+}
+
+.hc-run-card__panel {
+    background: #f5f4f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+}
+
+.hc-run-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.hc-run-check--loading {
+    cursor: wait;
+    pointer-events: none;
+}
+
+.hc-run-check--loading .hc-run-check__box {
+    opacity: 0.6;
+}
+
+.hc-run-check__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.hc-run-check__box {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    border: 1.5px solid #231f20;
+    border-radius: 3px;
+    background: #ffffff;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.hc-run-check__input:checked + .hc-run-check__box {
+    background: #231f20;
+    border-color: #231f20;
+}
+
+.hc-run-check__input:checked + .hc-run-check__box::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.hc-run-check__input:focus-visible + .hc-run-check__box {
+    outline: 2px solid #231f20;
+    outline-offset: 2px;
+}
+
+.hc-run-check__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.hc-run-check__title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #231f20;
+    line-height: 1.4;
+}
+
+.hc-run-check__hint {
+    font-size: 12px;
+    font-weight: 400;
+    color: #6b6b6b;
+    line-height: 1.45;
+}
+
+.hc-footer--split {
+    justify-content: space-between;
+    width: 100%;
+    max-width: 720px;
+}
+
+.hc-footer__help {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: #231f20;
+    text-decoration: none;
+    cursor: pointer;
+    line-height: normal;
+}
+
+.hc-footer__help:hover {
+    text-decoration: underline;
+}
+
+/* =============================================================================
+ * Outreach Mode tab (`.hc-om*`)
+ * Figma: node 28457:7066 — visuals are a port of `.agent-onb-mode-*` from
+ * AgentOnboarding.css so this tab matches the onboarding Step 4 cards
+ * without depending on the onboarding stylesheet.
+ * =========================================================================== */
+
+.hc-om-grid {
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 720px;
+    margin: 0;
+}
+
+/* Each column wraps a card + its (optional) tooltip. `position: relative`
+   anchors the absolutely-positioned upgrade tooltip to the Manual card so
+   it sits directly below it in every layout. */
+.hc-om-col {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 347px;
+}
+
+/* Reserve vertical space below the grid when the tooltip is rendered so
+   the absolute element doesn't overflow the page body (same `:has()`
+   pattern used by `.hc-fu-cards` above). */
+.hc-om-grid:has(.hc-om-tooltip) {
+    margin-bottom: 140px;
+}
+
+/* The whole card surface is a button so it's clickable + accessible.
+   `flex: 1` makes the card fill its column so when the grid stretches
+   columns to equal heights, both cards visually match. */
+.hc-om-card {
+    position: relative;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 247px;
+    padding: 20px 20px 38px;
+    background: #ffffff;
+    border: 2px solid #e4e2dc;
+    border-radius: 12px;
+    box-shadow: 1px 0 6px rgba(107, 107, 107, 0.12);
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    
+    transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease,
+        background-color 160ms ease;
+}
+
+.hc-om-card:hover:not(:disabled):not(.hc-om-card--locked) {
+    border-color: #cfcdc7;
+    transform: translateY(-1px);
+    box-shadow: 1px 2px 10px rgba(107, 107, 107, 0.16);
+}
+
+.hc-om-card--selected {
+    background: #f3fff7;
+    border-color: #aed1cc;
+    box-shadow: 2px 4px 4px rgba(129, 127, 127, 0.24);
+}
+
+.hc-om-card--selected:hover {
+    transform: none;
+    box-shadow: 2px 4px 4px rgba(129, 127, 127, 0.24);
+}
+
+/* Locked Manual card (free-trial users) — desaturate + dim the whole card
+   in one place instead of overriding each child color. */
+.hc-om-card--locked {
+    cursor: not-allowed;
+    filter: grayscale(0.7) opacity(0.65);
+    pointer-events: none;
+}
+
+.hc-om-card--locked .hc-om-card__icon--manual {
+    filter: grayscale(1) opacity(0.65);
+}
+
+.hc-om-card:disabled:not(.hc-om-card--locked) {
+    cursor: default;
+}
+
+/* ── Recommended badge (floats above the card's top edge) ─────────────────── */
+.hc-om-card__badge {
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    padding: 4px 10px;
+    background: #c0ff9b;
+    color: #2c7a4b;
+    border-radius: 10px;
+    
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* ── Top-right selection tick (outlined square that fills in when picked) ── */
+.hc-om-card__check {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: #ffffff;
+    border: 1.5px solid #d6d6d6;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 120ms ease, background 120ms ease;
+}
+
+.hc-om-card__check--on {
+    border-color: #2c7a4b;
+}
+
+/* ── Card head (emoji icon + title block) ─────────────────────────────────── */
+.hc-om-card__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 6px;
+}
+
+.hc-om-card__icon {
+    width: 48px;
+    height: 48px;
+    font-family: 'Inter', 'Rubik', sans-serif;
+    font-size: 48px;
+    line-height: 1;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hc-om-card__icon--auto {
+    color: #ffb800;
+}
+
+.hc-om-card__icon--manual {
+    color: #6b6b6b;
+}
+
+.hc-om-card__head-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.hc-om-card__title {
+    margin: 0;
+    
+    font-weight: 700;
+    font-size: 20px;
+    color: #231f20;
+}
+
+.hc-om-card__subtitle {
+    margin: 0;
+    
+    font-weight: 500;
+    font-size: 12px;
+    color: #6b6b6b;
+}
+
+/* ── Feature list ─────────────────────────────────────────────────────────── */
+.hc-om-card__features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hc-om-card__feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 1.35;
+    color: #231f20;
+}
+
+.hc-om-card__feature-icon {
+    flex-shrink: 0;
+    width: 13px;
+    height: 13px;
+    margin-top: 1px;
+    color: #1aa463;
+}
+
+/* ── "Ideal for" full-bleed band at the bottom of the card ────────────────── */
+.hc-om-card__nudge {
+    margin: auto -20px -38px;
+    padding: 16px 20px;
+    position: relative;
+}
+
+.hc-om-card__nudge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 18px;
+    width: calc(100% - 36px);
+    height: 1px;
+    background: #e4e2dc;
+}
+
+.hc-om-card__ideal {
+    padding: 2px;
+    width: fit-content;
+    background: #fff9dd;
+    
+    font-weight: 500;
+    font-size: 11px;
+    color: #141414;
+}
+
+.hc-om-card--selected .hc-om-card__ideal {
+    background: #def8e6;
+    color: #141414;
+}
+
+/* ── Universal "1st-degree LinkedIn" disclaimer (paid users) ──────────────── */
+.hc-om-notice {
+    margin: 16px 0 0;
+    max-width: 720px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f5f7fb;
+    border: 1px solid rgba(69, 88, 115, 0.12);
+    border-radius: 6px;
+    
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.45;
+    color: #455873;
+}
+
+.hc-om-notice svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.hc-om-notice__strong {
+    color: #141414;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* ── Mascot tooltip (free-trial users) ────────────────────────────────────── */
+/* Absolutely positioned relative to the Manual card column so it floats
+   directly under the card without affecting the cards' row alignment, and
+   stays anchored to it whether the grid is side-by-side (desktop) or
+   wrapped into a single column (mobile). */
+.hc-om-tooltip {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 2px;
+    z-index: 1;
+}
+
+.hc-om-tooltip__mascot {
+    width: 80px;
+    height: 80px;
+    display: block;
+    flex-shrink: 0;
+    user-select: none;
+    object-fit: contain;
+
+    @media (max-width: 960px) {
+        transform: scaleX(-1);
+    }
+}
+
+.hc-om-tooltip__bubble {
+    position: relative;
+    background: #ffffff;
+    border: 1px solid var(--jad-mascot-outline);
+    border-radius: 8px;
+    padding: 12px;
+    width: 286px;
+    max-width: 286px;
+    box-shadow: 2px 4px 4px rgba(129, 127, 127, 0.24);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hc-om-tooltip__bubble::before {
+    content: '';
+    position: absolute;
+    left: -13px;
+    top: 16px;
+    border: 6px solid transparent;
+    border-right-color: var(--jad-mascot-outline);
+}
+
+.hc-om-tooltip__text {
+    display: block;
+    
+    font-weight: 500;
+    font-size: 11px;
+    color: #086D7E;
+    line-height: 1.45;
+}
+
+.hc-om-tooltip__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 6px 16px;
+    border: none;
+    border-radius: 16px;
+    background: var(--jad-primary);
+    color: #231f20;
+    
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 140ms ease;
+}
+
+.hc-om-tooltip__cta:hover,
+.hc-om-tooltip__cta:focus-visible {
+    filter: brightness(0.95);
+    outline: none;
+}
+
+/* ── Upgrade plan drawer (Figma 28806:41118) — mirrors `.aa-drawer` behaviour:
+   mobile bottom sheet with 64px top gap + blurred backdrop; desktop right rail. */
+.hc-om-upgrade-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hc-om-upgrade-drawer__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 20, 20, 0.5);
+    backdrop-filter: blur(2px);
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    animation: hc-om-upgrade-drawer-fade 0.18s ease-out;
+}
+
+.hc-om-upgrade-drawer__panel {
+    position: relative;
+    background: #ffffff;
+    width: min(680px, 100vw);
+    max-width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -20px 0 48px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    animation: hc-om-upgrade-drawer-slide 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Beat `.job-agent-dashboard { width: 100% }` from JobAgentDashboard.css when the
+   panel reuses that scope class for subscription card tokens. */
+.hc-om-upgrade-drawer .hc-om-upgrade-drawer__panel.job-agent-dashboard {
+    width: min(814px, 100vw);
+    max-width: 100vw;
+    min-height: 0;
+
+    @media (max-width: 900px) {    
+        width: min(680px, 100vw);
+    }
+}
+
+@keyframes hc-om-upgrade-drawer-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes hc-om-upgrade-drawer-slide {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes hc-om-upgrade-drawer-slide-up {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.hc-om-upgrade-drawer__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    background: transparent;
+    border: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: #6b6b6b;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.hc-om-upgrade-drawer__close:hover:not(:disabled),
+.hc-om-upgrade-drawer__close:focus-visible:not(:disabled) {
+    background: #f0eeea;
+    color: #231f20;
+    outline: none;
+}
+
+.hc-om-upgrade-drawer__close:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.hc-om-upgrade-drawer__head {
+    flex-shrink: 0;
+    padding: 20px 48px 12px 16px;
+    text-align: center;
+}
+
+.hc-om-upgrade-drawer__title {
+    margin: 0;
+    
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.35;
+    color: #231f20;
+}
+
+.hc-om-upgrade-drawer__title-line {
+    display: block;
+    border-bottom: 3px solid #20C6CA;
+    padding-bottom: 2px;
+    width: fit-content;
+    margin: 2px auto 0;
+}
+
+.hc-om-upgrade-drawer__head .hc-om-upgrade-drawer__title-line{
+    display: inline;
+    margin: 0 0 0 4px;
+}
+
+.hc-om-upgrade-drawer__underline {
+    display: none;
+}
+
+.hc-om-upgrade-drawer__body {
+    min-height: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 24px 16px 24px;
+}
+
+.hc-om-upgrade-drawer__grid {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 28px;
+    padding: 12px 0 8px;
+}
+
+/* Referral redeem banner — Figma 1042:33327 */
+.hc-om-upgrade-drawer__referral-banner {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 48px 24px;
+    box-sizing: border-box;
+}
+
+.hc-om-upgrade-drawer__referral-banner-mascot {
+    width: 47px;
+    height: 40px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.hc-om-upgrade-drawer__referral-banner-text {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: #231f20;
+}
+
+
+.hc-om-upgrade-drawer .hc-om-upgrade-drawer__grid .jad-sub-plan-card {
+    width: 100%;
+    max-width: none;
+    flex: 0 0 auto;
+    min-height: 0;
+}
+
+.hc-om-upgrade-drawer__grid .jad-sub-plan-card--featured {
+    margin: 0;
+}
+
+.hc-om-upgrade-drawer__grid .jad-sub-plan-card__features {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px 20px;
+}
+
+@media (max-width: 767px) {
+    .hc-om-upgrade-drawer {
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: stretch;
+    }
+
+    .hc-om-upgrade-drawer__panel {
+        flex: 0 0 auto;
+        width: 100vw;
+        max-width: 100vw;
+        height: calc(100vh - 64px);
+        height: calc(100dvh - 64px);
+        max-height: calc(100vh - 64px);
+        max-height: calc(100dvh - 64px);
+        min-height: 0;
+        border-top-left-radius: 1.25rem;
+        border-top-right-radius: 1.25rem;
+        box-shadow:
+            0 -24px 48px -24px rgba(15, 15, 20, 0.45),
+            0 -12px 24px -16px rgba(15, 15, 20, 0.35);
+        animation: hc-om-upgrade-drawer-slide-up 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .hc-om-upgrade-drawer .hc-om-upgrade-drawer__panel.job-agent-dashboard {
+        width: 100vw;
+        max-width: 100vw;
+    }
+
+    .hc-om-upgrade-drawer__head {
+        padding: 16px 48px 12px 16px;
+    }
+
+    .hc-om-upgrade-drawer__referral-banner {
+        padding: 8px 16px 20px;
+    }
+
+    .hc-om-upgrade-drawer__referral-banner-text {
+        font-size: 12px;
+    }
+}
+
+@media (min-width: 768px) {
+    .hc-om-upgrade-drawer__head {
+        padding-top: 48px;
+    }
+
+    .hc-om-upgrade-drawer__title {
+        font-size: 18px;
+    }
+
+    .hc-om-upgrade-drawer__body {
+        padding: 28px 24px 28px;
+    }
+}
+@media (min-width: 901px) {
+    .hc-om-upgrade-drawer__body {
+        padding: 28px 48px 28px;
+    }
+}
+
+/* =============================================================================
+ * Browser Extension tab (`.hc-be*`)
+ * Figma: node 28447:12683 — visuals are a port of `.agent-onb-ext-*` from
+ * AgentOnboarding.css so this tab matches the onboarding Step 3 card
+ * without depending on the onboarding stylesheet.
+ * =========================================================================== */
+
+.hc-be {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Row: extension card on the left, "Paste job link" coach-mark on the right.
+   `align-items: flex-start` keeps both blocks pinned to the top of the row
+   even when the card grows taller than the bubble. */
+.hc-be__row {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px 0;
+    flex-wrap: wrap;
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
+.hc-be-card {
+    width: 100%;
+    max-width: 368px;
+    background: #ffffff;
+    border: 2px solid #e4e2dc;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 1px 0 6px rgba(107, 107, 107, 0.08);
+    flex-shrink: 0;
+}
+
+.hc-be-card__hero {
+    height: 98px;
+    background: linear-gradient(154deg, #efeeff 26%, rgba(255, 234, 222, 0.94) 97%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.hc-be-card__browser {
+    width: 71px;
+    height: 71px;
+    flex-shrink: 0;
+    display: block;
+}
+
+.hc-be-card__body {
+    padding: 18px 20px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.hc-be-card__title {
+    margin: 0;
+    
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.3;
+    color: #231f20;
+    text-align: center;
+}
+
+/* "Agent" gets a heavier weight + a soft underline accent. */
+.hc-be-card__title-strong {
+    font-weight: 900;
+    position: relative;
+    display: inline-block;
+}
+
+.hc-be-card__title-strong::after {
+    content: '';
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    bottom: -3px;
+    height: 2px;
+    background: #46ECCD;
+    border-radius: 999px;
+}
+
+/* Yellow CTA — matches the card-level CTA tokens from the onboarding step. */
+.hc-be-card__cta {
+    width: 100%;
+    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 56px;
+    background: #46ECCD;
+    color: #231f20;
+    
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    transition: filter 140ms ease, transform 140ms ease;
+}
+
+.hc-be-card__cta:hover,
+.hc-be-card__cta:focus-visible {
+    filter: brightness(0.95);
+    color: #231f20;
+    outline: none;
+    text-decoration: none;
+}
+
+.hc-be-card__cta:active {
+    transform: translateY(1px);
+}
+
+.hc-be-card__cta--done {
+    background: #c0ff9b;
+    color: #2c7a4b;
+}
+
+.hc-be-card__cta--done:hover,
+.hc-be-card__cta--done:focus-visible {
+    background: #b1f48a;
+    color: #2c7a4b;
+}
+
+/* ── "Paste job link" coach-mark (mascot + bubble) ────────────────────────── */
+/* Layout mirrors the onboarding Step 3 tooltip: mascot on the LEFT, bubble
+   on the RIGHT with a small tail pointing back at the mascot. */
+.hc-be-tooltip {
+    display: flex;
+    align-items: flex-start;
+    gap: 2px;
+    flex: 0 1 320px;
+    max-width: 320px;
+}
+
+.hc-be-tooltip__mascot {
+    width: 89px;
+    height: 89px;
+    display: block;
+    flex-shrink: 0;
+    user-select: none;
+    object-fit: contain;
+    margin-top: 12px;
+    transform: scaleX(-1);
+}
+
+.hc-be-tooltip__bubble {
+    position: relative;
+    background: #ffffff;
+    border: 1px solid var(--jad-mascot-outline);
+    border-radius: 8px;
+    padding: 16px;
+    flex: 1;
+    min-width: 0;
+    box-shadow: 2px 4px 4px rgba(129, 127, 127, 0.24);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Left-pointing tail aimed at the mascot. */
+.hc-be-tooltip__bubble::before {
+    content: '';
+    position: absolute;
+    left: -13px;
+    top: 22px;
+    border: 6px solid transparent;
+    border-right-color: var(--jad-mascot-outline);
+}
+
+.hc-be-tooltip__text {
+    margin: 0;
+    
+    font-weight: 500;
+    font-size: 11px;
+    color: #5a5278;
+    line-height: 15px;
+}
+
+.hc-be-tooltip__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    padding: 9px 17px;
+    background: #ffffff;
+    color: #231f20;
+    border: 1px solid #231f20;
+    border-radius: 21px;
+    
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: normal;
+    transition: background 140ms ease;
+}
+
+.hc-be-tooltip__cta:hover,
+.hc-be-tooltip__cta:focus-visible {
+    background: #f7f7f5;
+    outline: none;
+}
+
+/* ── Info note under the card ─────────────────────────────────────────────── */
+.hc-be-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    
+    font-weight: 500;
+    font-size: 10px;
+    color: #565b6c;
+    line-height: normal;
+    margin-top: 4px;
+}
+
+.hc-be-note svg {
+    flex-shrink: 0;
+}
+
+/* =============================================================================
+ * Blocked Companies tab (`.hc-bc*`)
+ * Figma: node 28463:8400 — single white card holds the heading, description
+ * and search input; selected companies render as chips inside the card, and
+ * the info-line under the card flips between empty-state copy and a live
+ * "N companies blocked" summary.
+ *
+ * API is shared with `OutreachSettings` (`pages/app/linkedin/`) so blocking
+ * from either surface stays in sync.
+ * =========================================================================== */
+
+.hc-bc {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 720px;
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
+.hc-bc-card {
+    background: #ffffff;
+    border: 1px solid #e4e2dc;
+    border-radius: 12px;
+    padding: 19px;
+    box-sizing: border-box;
+    box-shadow: 1px 0 6px rgba(107, 107, 107, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hc-bc-card__title {
+    margin: 0;
+    
+    font-size: 14px;
+    font-weight: 600;
+    color: #231f20;
+    letter-spacing: -0.0762px;
+    line-height: normal;
+}
+
+.hc-bc-card__title-strong {
+    font-weight: 600;
+    /* Same weight as the rest of the title — kept as a span so designers
+       can easily bump emphasis later without restructuring the markup. */
+}
+
+.hc-bc-card__desc {
+    margin: 0;
+    
+    font-size: 12px;
+    font-weight: 400;
+    color: #6b6b6b;
+    letter-spacing: -0.0762px;
+    line-height: normal;
+}
+
+/* ── Search field + dropdown ──────────────────────────────────────────────── */
+.hc-bc-search {
+    position: relative;
+    margin-top: 14px;
+}
+
+.hc-bc-search__icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.hc-bc-search__input {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px 0 34px;
+    background: #ffffff;
+    border: 1.5px solid #e4e2dc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    
+    font-size: 12px;
+    font-weight: 500;
+    color: #231f20;
+    letter-spacing: -0.0762px;
+    outline: none;
+    transition: border-color 140ms ease;
+}
+
+.hc-bc-search__input::placeholder {
+    color: rgba(107, 107, 107, 0.6);
+    font-weight: 500;
+}
+
+.hc-bc-search__input:focus {
+    border-color: #a09b93;
+}
+
+/* Suggestions panel: floats below the input so it doesn't push chips around. */
+.hc-bc-search__dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #e4e2dc;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    max-height: 240px;
+    overflow-y: auto;
+    z-index: 20;
+}
+
+.hc-bc-search__list {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+}
+
+.hc-bc-search__option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 14px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    
+    font-size: 13px;
+    font-weight: 500;
+    color: #231f20;
+    transition: background 120ms ease;
+}
+
+.hc-bc-search__option:hover:not(:disabled),
+.hc-bc-search__option:focus-visible {
+    background: #f9f8f4;
+    outline: none;
+}
+
+.hc-bc-search__option:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.hc-bc-search__option-logo {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    object-fit: contain;
+    border-radius: 4px;
+    background: #f3f4f6;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hc-bc-search__option-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hc-bc-search__hint {
+    margin: 0;
+    padding: 12px 14px;
+    
+    font-size: 12px;
+    color: #6b6b6b;
+}
+
+/* ── Selected company chips (inside the card, below the search) ───────────── */
+.hc-bc-chips {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.hc-bc-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px 6px 6px;
+    background: #f9f8f4;
+    border: 1px solid #e4e2dc;
+    border-radius: 999px;
+    max-width: 100%;
+}
+
+.hc-bc-chip__logo {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    object-fit: contain;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #efeee9;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    box-sizing: border-box;
+}
+
+.hc-bc-chip__name {
+    
+    font-size: 12px;
+    font-weight: 500;
+    color: #231f20;
+    line-height: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.hc-bc-chip__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    background: #ffffff;
+    color: #6b6b6b;
+    border: 1px solid #e4e2dc;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.hc-bc-chip__remove:hover:not(:disabled),
+.hc-bc-chip__remove:focus-visible {
+    background: #fdecec;
+    color: #b32d2d;
+    border-color: #f4c1c1;
+    outline: none;
+}
+
+.hc-bc-chip__remove:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+/* ── Info note under the card ─────────────────────────────────────────────── */
+.hc-bc-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    
+    font-weight: 500;
+    font-size: 10px;
+    color: #565b6c;
+    line-height: normal;
+}
+
+.hc-bc-note svg {
+    flex-shrink: 0;
+}
+
+/* ── Responsive tweaks ────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+    /* Figma 28806:32259 — title + pill tabs in a horizontal scroll row below 768px. */
+    .hc-page {
+        border-radius: 16px;
+    }
+
+    .hc-page__title {
+        font-size: 20px;
+        color: #2f2f2f;
+        margin-bottom: 16px;
+    }
+
+    .hc-tabs {
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        padding: 0;
+        margin-bottom: 20px;
+        overflow: visible;
+        flex-wrap: nowrap;
+    }
+
+    .hc-tabs__track {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 2px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        scroll-padding-inline: 16px;
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        padding-inline: 16px;
+        box-sizing: border-box;
+    }
+
+    .hc-tabs__track::-webkit-scrollbar {
+        display: none;
+    }
+
+    .hc-tab:not(.hc-tab--active):not(:last-child)::after {
+        display: none;
+    }
+
+    .hc-tab {
+        font-size: 10px;
+        padding: 10px 8px;
+        min-height: 32px;
+        border-radius: 8px;
+        background: #ffffff;
+        border: 1px solid #e4e2dc;
+    }
+
+    .hc-tab--with-divider {
+        border-right: 1px solid #e4e2dc;
+    }
+
+    .hc-tab--active {
+        border-color: #231f20;
+        background: #231f20;
+        font-weight: 600;
+    }
+
+    /* Figma 28806:32325 — Message Templates tab content */
+    .hc-tab-content {
+        gap: 20px;
+    }
+
+    .hc-tab-content__title {
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: -0.36px;
+    }
+
+    .hc-card {
+        border-radius: 8px 8px 16px 16px;
+        overflow: hidden;
+    }
+
+    .hc-card__header {
+        flex-direction: row;
+        background: #e4e1dc;
+        border-radius: 7px 7px 6px 6px;
+        padding: 4px;
+        gap: 4px;
+        min-height: 40px;
+        box-sizing: border-box;
+    }
+
+    .hc-subtab {
+        flex: 1 1 0;
+        min-width: 0;
+        height: 32px;
+        padding: 2px 8px;
+        font-size: 12px;
+        gap: 8px;
+    }
+
+    .hc-subtab--active {
+        font-size: 11px;
+    }
+
+    .hc-subtab__icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .hc-subtab__icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .hc-subtab:not(.hc-subtab--active) .hc-subtab__icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .hc-subtab:not(.hc-subtab--active) .hc-subtab__icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .hc-card__body {
+        padding: 12px;
+    }
+
+    .hc-pills {
+        flex-wrap: nowrap;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .hc-pills::-webkit-scrollbar {
+        display: none;
+    }
+
+    .hc-pill {
+        flex-shrink: 0;
+        gap: 4px;
+        padding: 6px 8px;
+        font-size: 10px;
+        letter-spacing: -0.076px;
+    }
+
+    .hc-pill svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .hc-fields {
+        gap: 16px;
+    }
+
+    .hc-field__label {
+        font-size: 10px;
+    }
+
+    .hc-field__input {
+        height: 31px;
+        padding: 0 6.5px;
+        font-size: 11px;
+        border-color: #dee1e7;
+    }
+
+    .hc-field__editor-wrap {
+        min-height: 335px;
+        border-color: #dee1e7;
+    }
+
+    .hc-field__editor-wrap .rsw-editor {
+        min-height: 303px;
+        resize: none !important;
+    }
+
+    .hc-field__editor-wrap .rsw-toolbar {
+        background: #f2f2f3;
+        border-bottom: 1px solid #e4e1dc;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 4px 6px;
+
+        .rsw-btn{
+            width: 16px;
+            min-width: 16px;
+            height: 16px;   
+            min-height: 16px;         
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+
+            svg{
+                width: 16px;
+                height: 16px;
+            }
+            s{
+                font-size: 14px;
+            }
+
+            &[title="Link"] {
+                font-size: 10px;
+            }
+        }
+    }
+
+    .hc-field__editor-wrap .rsw-ce {
+        min-height: 260px;
+        max-height: 305px;
+        overflow-y: auto;
+        padding: 12px 6.5px;
+        font-size: 11px !important;
+        line-height: normal;
+    }
+
+    .hc-field__editor-wrap .rsw-ce p,
+    .hc-field__editor-wrap .rsw-ce li,
+    .hc-field__editor-wrap .rsw-ce span,
+    .hc-field__editor-wrap .rsw-ce div {
+        font-size: 11px;
+    }
+
+    .hc-info-bar {
+        width: 100%;
+        margin: 0;
+        padding: 6px 12px;
+        border-radius: 0;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    .hc-info-bar__text {
+        font-size: 10px;
+        white-space: normal;
+        text-align: center;
+    }
+
+    .hc-footer {
+        margin-top: 0;
+    }
+
+    .hc-footer--split {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .hc-footer__help {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .hc-save-btn {
+        width: 100%;
+        font-size: 12px;
+        padding: 10px 16px;
+    }
+
+    .hc-loading {
+        padding: 16px 12px;
+        font-size: 12px;
+    }
+
+    /* Figma 28806:33421 — Connected Accounts tab content */
+    .hc-ca {
+        gap: 20px;
+    }
+
+    .hc-ca__cards {
+        flex-direction: column;
+        align-items: stretch;
+        padding-bottom: 0;
+    }
+
+    .hc-ca-card {
+        width: 100%;
+        max-width: none;
+        min-height: 222px;
+        padding: 18px;
+    }
+
+    .hc-ca-card--connected {
+        filter: drop-shadow(1px 0 3px rgba(107, 107, 107, 0.12));
+    }
+
+    .hc-ca-card__badge {
+        left: 20px;
+    }
+
+    .hc-ca-card__avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 6px;
+    }
+
+    .hc-ca-card__avatar--gmail svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .hc-ca-card__avatar--linkedin {
+        font-size: 24px;
+        line-height: 22.5px;
+    }
+
+    .hc-ca-card__title {
+        font-size: 20px;
+    }
+
+    .hc-ca-card__cta {
+        font-size: 12px;
+        padding: 13px 33px;
+    }
+
+    .hc-ca-card__cta--disconnect {
+        padding: 13px 33px;
+        border-width: 1px;
+    }
+
+    .hc-ca-card__benefit span {
+        white-space: normal;
+    }
+
+    .hc-ca-card--gmail .hc-ca-card__head {
+        padding-right: 88px;
+    }
+    .hc-ca-card--gmail {
+        overflow: visible;
+    }
+
+    .hc-ca-mascot {
+        width: 41px;
+        height: 36px;
+        transform: scaleX(-1);
+        margin-bottom: -12px;
+    }
+
+    .hc-ca-tooltip {
+        width: auto;
+        max-width: 124px;
+        padding: 4px 8px;
+        border-radius: 5.5px;
+        border-width: 0.7px;
+        box-shadow: 1.4px 2.8px 1.4px rgba(129, 127, 127, 0.24);
+    }
+
+    .hc-ca-tooltip p {
+        font-size: 9px;
+        line-height: 11px;
+    }
+
+    .hc-ca-tooltip__pointer {
+        top: 75%;
+        left: -6px;
+        border-width: 5px 6px 5px 0;
+    }
+
+    .hc-ca-form {
+        max-width: none;
+        width: 100%;
+        padding: 16px;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 767px) {
+    /* Figma 28806:34297 — Follow-up Settings tab content */
+    .hc-fu-cards {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .hc-fu-card {
+        width: 100%;
+        max-width: none;
+        flex: unset;
+        min-height: 333px;
+        padding: 16px 15px;
+        gap: 16px;
+    }
+
+    .hc-fu-card__head {
+        gap: 8px;
+    }
+
+    .hc-fu-card__title {
+        font-size: 16px;
+        gap: 6px;
+    }
+
+    .hc-fu-card__body {
+        gap: 16px;
+    }
+
+    .hc-fu-card__field {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .hc-fu-card__label {
+        font-size: 10px;
+    }
+
+    .hc-fu-stepper {
+        width: 100%;
+        height: 32px;
+    }
+
+    .hc-fu-stepper__select {
+        font-size: 14px;
+    }
+
+    .hc-fu-card__textarea {
+        min-height: 78px;
+        height: 78px;
+        font-size: 12px;
+        line-height: 18px;
+        padding: 11px;
+        resize: none;
+    }
+
+    .hc-fu-toggle__track {
+        width: 44px;
+    }
+
+    .hc-fu-toggle__thumb {
+        width: 18px;
+        height: 18px;
+    }
+
+    .hc-fu-toggle--on .hc-fu-toggle__thumb {
+        transform: translateX(22px);
+    }
+
+    .hc-fu-toggle__label {
+        font-size: 12px;
+    }
+
+    /* Connect-LinkedIn mascot + bubble below the LinkedIn card */
+    .hc-fu-card--linkedin {
+        overflow: visible;
+    }
+
+    .hc-fu-connect {
+        top: calc(100% - 24px);
+        left: 0;
+        right: 0;
+        align-items: flex-start;
+        gap: 0;
+    }
+
+    .hc-fu-connect__bubble {
+        width: 100%;
+        padding: 8px;
+        border-radius: 5.5px;
+        border-width: 0.7px;
+        box-shadow: 1.4px 2.8px 1.4px rgba(129, 127, 127, 0.24);
+        filter: none;
+        gap: 12px;
+    }
+
+    .hc-fu-connect__pointer {
+        display: none;
+    }
+
+    .hc-fu-connect__title {
+        font-size: 10px;
+    }
+
+    .hc-fu-connect__btn {
+        width: 100%;
+        box-sizing: border-box;
+        justify-content: center;
+        font-size: 10px;
+        padding: 9px 17px;
+    }
+
+    .hc-fu-connect__mascot {
+        width: 43px;
+        height: 40px;
+        margin-top: 0;
+        margin-bottom: 4px;
+        margin-left: 5px;
+    }
+
+    .hc-fu-connect__ps {
+        padding: 4px 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .hc-fu-connect__ps p {
+        font-size: 9px;
+    }
+
+    .hc-fu-cards:has(.hc-fu-connect) {
+        margin-bottom: 132px;
+    }
+
+    .hc-om-grid {
+        flex-direction: column;
+        gap: 16px;
+        max-width: none;
+    }
+
+    .hc-om-col {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .hc-om-card {
+        min-height: 0;
+        padding: 14px 18px 36px;
+        gap: 10px;
+        box-shadow: 1px 0 3px rgba(107, 107, 107, 0.12);
+    }
+
+    .hc-om-card--auto {
+        min-height: 199px;
+    }
+
+    .hc-om-card--manual {
+        min-height: 224px;
+    }
+
+    .hc-om-card--selected {
+        box-shadow: 1px 0 3px rgba(107, 107, 107, 0.12);
+    }
+
+    .hc-om-card__badge {
+        left: 20px;
+        font-size: 10px;
+        padding: 4px 12px;
+    }
+
+    .hc-om-card__check {
+        top: 18px;
+        right: 18px;
+        border-radius: 4px;
+    }
+
+    .hc-om-card__head {
+        margin-top: 0;
+        gap: 12px;
+    }
+
+    .hc-om-card__icon {
+        width: auto;
+        height: auto;
+    }
+
+    .hc-om-card__icon--auto {
+        font-size: 38px;
+    }
+
+    .hc-om-card__icon--manual {
+        font-size: 28px;
+    }
+
+    .hc-om-card__subtitle {
+        font-size: 10px;
+    }
+
+    .hc-om-card__feature {
+        font-size: 10px;
+        line-height: normal;
+    }
+
+    .hc-om-card__feature span {
+        white-space: normal;
+    }
+
+    .hc-om-card__nudge {
+        margin: auto -18px -36px;
+        padding: 12px 18px 14px;
+    }
+
+    .hc-om-card__ideal {
+        font-size: 11px;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 2px 4px;
+    }
+
+    .hc-om-card--locked {
+        filter: none;
+        opacity: 1;
+    }
+
+    .hc-om-card--locked .hc-om-card__title,
+    .hc-om-card--locked .hc-om-card__subtitle,
+    .hc-om-card--locked .hc-om-card__feature {
+        color: rgba(107, 107, 107, 0.6);
+    }
+
+    .hc-om-card--locked .hc-om-card__feature-icon {
+        color: rgba(107, 107, 107, 0.6);
+    }
+
+    .hc-om-card--locked .hc-om-card__ideal {
+        background: #e4e3e0;
+        color: rgba(107, 107, 107, 0.6);
+    }
+
+    .hc-om-card--locked .hc-om-card__icon--manual {
+        filter: none;
+        opacity: 0.6;
+    }
+
+    /* Mascot + upgrade bubble below Manual card — Figma 28806:40127 */
+    .hc-om-tooltip {
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        align-items: flex-end;
+        gap: 0;
+    }
+
+    .hc-om-tooltip__mascot {
+        width: 79px;
+        height: 79px;
+        flex-shrink: 0;
+        margin-left: 7px;
+    }
+
+    .hc-om-tooltip__bubble {
+        flex: 1 1 auto;
+        width: auto;
+        max-width: calc(100% - 88px);
+        margin-left: auto;
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .hc-om-tooltip__bubble::before {
+        top: auto;
+        bottom: 48px;
+        left: -12px;
+    }
+
+    .hc-om-tooltip__text {
+        font-size: 10px;
+        line-height: 14px;
+    }
+
+    .hc-om-tooltip__cta {
+        justify-content: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 16px;
+        box-sizing: border-box;
+    }
+
+    .hc-om-tooltip__cta svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .hc-om-grid:has(.hc-om-tooltip) {
+        margin-bottom: 120px;
+    }
+
+    .hc-om-notice {
+        margin-top: 8px;
+        padding: 6px;
+        gap: 4px;
+        font-size: 10px;
+    }
+
+    .hc-be__row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* Figma 28806:42076 — Browser Extension tab */
+    .hc-be {
+        gap: 12px;
+    }
+
+    .hc-be-card {
+        max-width: 100%;
+        width: 100%;
+        box-shadow: 1px 0 3px rgba(107, 107, 107, 0.12);
+    }
+
+    .hc-be-card__hero {
+        height: 101px;
+    }
+
+    .hc-be-card__body {
+        padding: 12px 20px 16px;
+        gap: 8px;
+    }
+
+    .hc-be-card__title {
+        font-size: 15px;
+    }
+
+    .hc-be-card__platforms {
+        gap: 4px;
+    }
+
+    .hc-be-card__cta {
+        margin-top: 28px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .hc-be-tooltip {
+        flex: unset;
+        width: 100%;
+        max-width: 100%;
+        align-items: flex-end;
+        gap: 0;
+    }
+
+    .hc-be-tooltip__mascot {
+        width: 90px;
+        height: 89px;
+        margin-top: 0;
+        margin-left: 0;
+    }
+
+    .hc-be-tooltip__bubble {
+        flex: 1 1 auto;
+        width: auto;
+        max-width: calc(100% - 96px);
+        margin-left: auto;
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .hc-be-tooltip__bubble::before {
+        top: auto;
+        bottom: 42px;
+        left: -12px;
+    }
+
+    .hc-be-tooltip__text {
+        font-size: 10px;
+        line-height: 15px;
+    }
+
+    .hc-be-tooltip__cta {
+        padding: 9px 17px;
+    }
+
+    .hc-be-note {
+        display: none;
+    }
+
+    .hc-bc-chip__name {
+        max-width: 140px;
+    }
+}
+
+/* Tooltip/mascot: desktop sits below the Gmail card; mobile repositions to the
+   card header — see the 767px media query above. */
