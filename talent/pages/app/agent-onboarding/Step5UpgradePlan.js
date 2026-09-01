@@ -14,6 +14,7 @@ import {
 import { SET_LOADER, UPDATE_CURRENT_USER } from '../../../store/actions/actionsTypes';
 import { trackHappyAgentMixpanel } from '../../../store/actions/happyAgentTracking';
 import { DISPLAY_ORDER, PlanCard, landingPlanCardProps, planCardReferralProps } from '../happpy-agent/HappyPlanCards';
+import { HAPPPY_RAZORPAY_THEME_COLOR } from '../linkedin/happyAgentPageAssets';
 import '../happpy-agent/HapppySubscription.css';
 
 /**
@@ -169,7 +170,7 @@ const Step5UpgradePlan = ({ onBack, onPaymentSuccess }) => {
                         email: orderResp?.notes?.email,
                     },
                     notes: {},
-                    theme: { color: '#231F20' },
+                    theme: { color: HAPPPY_RAZORPAY_THEME_COLOR },
                     config: {
                         display: {
                             preferences: { show_default_blocks: true },

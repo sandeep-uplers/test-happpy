@@ -10,6 +10,7 @@ import ConfirmationModal from "../../../../components/common/ConfirmationModal";
 import TailorPaymentLoader from "../payment/TailorPaymentLoader";
 import { API_GET_OUTREACH_STEP } from "../../../../components/Constant";
 import { DISPLAY_ORDER, PlanCard, landingPlanCardProps, planCardReferralProps } from "../../happpy-agent/HappyPlanCards";
+import { HAPPPY_RAZORPAY_THEME_COLOR } from "../../linkedin/happyAgentPageAssets";
 import "../../happpy-agent/HapppySubscription.css";
 
 /** @param rootClassName Outer wrapper class; default keeps resume-editor / modal styling. AgentJ Subscription passes a neutral class to avoid global `.tailor-resume-payment-screen` rules. */
@@ -150,7 +151,7 @@ export default function TailorPaymentScreen({
                 notes: {
                 },
                 theme: {
-                    color: "#0D94FB",
+                    color: HAPPPY_RAZORPAY_THEME_COLOR,
                 },
                 config: {
                     display: {

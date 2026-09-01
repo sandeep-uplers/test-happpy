@@ -32,7 +32,7 @@ import {
 } from './HappyPlanCards';
 import { API_OUTREACH_AGENT_PLANS, IMAGE_URL } from '../../../components/Constant';
 import { GET_API } from '../../../components/Helper';
-import { HAPPY_PRICING_RIBBON_STAR_SRC } from '../linkedin/happyAgentPageAssets';
+import { HAPPY_PRICING_RIBBON_STAR_SRC, HAPPPY_RAZORPAY_THEME_COLOR } from '../linkedin/happyAgentPageAssets';
 
 const REFERRAL_REWARD_MASCOT_SRC = `${IMAGE_URL}outreach/mascot-celebrate.svg`;
 
@@ -236,7 +236,7 @@ const HapppySubscription = () => {
                         email: orderResp?.notes?.email,
                     },
                     notes: {},
-                    theme: { color: '#231F20' },
+                    theme: { color: HAPPPY_RAZORPAY_THEME_COLOR },
                     config: {
                         display: {
                             preferences: { show_default_blocks: true },

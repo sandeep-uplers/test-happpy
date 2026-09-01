@@ -96,6 +96,7 @@ import {
     HAPPY_PRICING_FOOTNOTE,
     HAPPY_PRICING_TITLE,
     PUBLIC_LANDING_PLAN_FALLBACKS,
+    HAPPPY_RAZORPAY_THEME_COLOR,
     HAPPY_PRIVACY_BADGES,
     HAPPY_PRIVACY_CARDS,
     HAPPY_PRIVACY_SPARKLE_SRC,
@@ -952,7 +953,7 @@ function HappyJobAgentContent({
                         name: result?.notes?.name,
                         email: result?.notes?.email,
                     },
-                    theme: { color: "#0D94FB" },
+                    theme: { color: HAPPPY_RAZORPAY_THEME_COLOR },
                     config: {
                         display: {
                             preferences: { show_default_blocks: true },

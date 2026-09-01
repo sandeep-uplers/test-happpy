@@ -8,6 +8,7 @@ import { CloseModalIcon } from '../../../../assets/IconSVG';
 import { SET_LOADER, SET_TAILOR_MODAL_OPEN, UPDATE_CURRENT_USER } from '../../../../store/actions/actionsTypes';
 import { tailorResumeCaptureOrder, tailorResumeCreateOrder } from '../../../../store/actions/resumeActions';
 import { trackDownloadTailorExtensionClicked, trackTailorPaymentSuccess } from '../../../../store/actions/trackingActions';
+import { HAPPPY_RAZORPAY_THEME_COLOR } from '../../linkedin/happyAgentPageAssets';
 
 
 export default function TailorResumePaymentModal({ isOpen, setIsOpen, hrEncId = null, activeJob = null }) {
@@ -125,7 +126,7 @@ export default function TailorResumePaymentModal({ isOpen, setIsOpen, hrEncId = 
                 notes: {
                 },
                 theme: {
-                    color: "#0D94FB",
+                    color: HAPPPY_RAZORPAY_THEME_COLOR,
                 },
                 config: {
                     display: {

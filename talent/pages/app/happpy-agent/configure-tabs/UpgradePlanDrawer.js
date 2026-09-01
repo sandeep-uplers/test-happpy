@@ -21,6 +21,7 @@ import { PlanCard, landingPlanCardProps, planCardReferralProps } from '../HappyP
 import '../HapppyConfigure.css';
 import '../HapppySubscription.css';
 import { IMAGE_URL } from '../../../../components/Constant';
+import { HAPPPY_RAZORPAY_THEME_COLOR } from '../../linkedin/happyAgentPageAssets';
 
 const REFERRAL_REWARD_MASCOT_SRC = `${IMAGE_URL}outreach/mascot-celebrate.svg`;
 
@@ -189,7 +190,7 @@ const UpgradePlanDrawer = ({ open, onClose }) => {
                         email: orderResp?.notes?.email,
                     },
                     notes: {},
-                    theme: { color: '#231F20' },
+                    theme: { color: HAPPPY_RAZORPAY_THEME_COLOR },
                     config: {
                         display: {
                             preferences: { show_default_blocks: true },

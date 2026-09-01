@@ -4,6 +4,9 @@
 
 const OUTREACH_IMAGE_ROOT = "/images/talent/outreach";
 
+/** Happpy brand teal — Razorpay checkout accent (Pay button, highlights). */
+export const HAPPPY_RAZORPAY_THEME_COLOR = '#086d7e';
+
 /* Hero header */
 export const HAPPY_HERO_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/hero`;
 export const HAPPY_HERO_BG_SRC = `${HAPPY_HERO_ASSET_BASE}/hero-bg.png`;
