@@ -1,0 +1,606 @@
+.autosubmit-card{
+    border: 1px solid var(--text-field-outline-2);border-radius: 8px;padding: 16px 24px;display: flex;align-items: flex-start;gap: 8px;position: relative;
+}
+.autosubmit-card::before{position: absolute;top: -24px;left: -1px;height: 24px;width: 50%;content: ' ';border-right: 1px dashed var(--text-field-outline-2);}
+.autosubmit-card img{width: 24px;height: 24px;min-width: 24px;}
+.autosubmit-card .detes{display: flex;flex-direction: column;gap: 4px;font-size: 14px;font-weight: 400;line-height: 18.2px;}
+.autosubmit-card .detes .note{font-size: 12px;font-weight: 400;line-height: 14.63px;color: var(--text-gray);}
+.autosubmit-card .detes .note strong{font-weight: 600;}
+
+
+
+/* touchpoint modal */
+
+.commonModal.touchpoints{overflow: visible;}
+.commonModal.touchpoints .modal-dialog{width: 940px;}
+.commonModal.touchpoints .modal-body{text-align: left;padding: 56px;}
+.commonModal.touchpoints .head{padding-bottom: 16px;border-bottom: 1px solid var(--text-field-outline-2);margin-bottom: 20px;}
+.commonModal.touchpoints .head h5{font-size: 24px;font-weight: 600;line-height: 29.26px;color: var(--primary-black);margin-bottom: 4px;}
+.commonModal.touchpoints .head span{font-size: 10px;font-weight: 400;line-height: 12.19px;}
+.commonModal.touchpoints .head span strong{font-weight: 700;color:var(--text-gray);}
+.commonModal.touchpoints .action-bottom{display: flex;align-items: center;gap: 24px;column-gap: 48px;margin-top: 48px;}
+.commonModal.touchpoints .action-bottom .outlinedBtn{
+    background: none;font-size: 18px;font-weight: 700;line-height: 21.94px;outline: 1px solid var(--primary-black);border-radius: 27px;padding: 12px 24px;
+    border: none;
+}
+.commonModal.touchpoints .action-bottom .underlinedBtn{font-size: 18px;font-weight: 700;line-height: 21.94px;}
+
+.commonModal.touchpoints .stepper{width: 100%;display: flex;gap: 16px;align-items: center;margin-bottom: 42px;}
+.commonModal.touchpoints .stepper .bar{width: 100%;height: 8px;outline: 1px solid var(--text-field-outline-2);border-radius: 4px;position: relative;}
+.commonModal.touchpoints .stepper span{white-space: nowrap;font-size: 11px;font-weight: 500;line-height: 13.41px;color: var(--text-gray);}
+.commonModal.touchpoints .stepper.halfway .bar::before{content: '';position: absolute;top: 0;left: 0;background: var(--successGreen);height: 8px;width: 50%;border-radius: 4px;}
+
+.commonModal.touchpoints .skill-labels{display: flex;flex-direction: column;gap: 8px;margin-bottom: 12px;align-items: flex-start;}
+.commonModal.touchpoints .skill-labels label{margin-bottom: 0 !important;font-size: 11px;font-weight: 400;line-height: 13.41px;}
+.commonModal.touchpoints .skillFields{display: flex;align-items: flex-start;flex-wrap: wrap;gap:16px}
+.commonModal.touchpoints .skillFields .skillCard{
+    border-radius: 8px;border: 1px solid var(--brandYellow);padding: 8px;background: rgba(255, 253, 241, 1);
+    display: flex;flex-direction: column;gap: 0;
+}
+.commonModal.touchpoints .skillFields .skillCard .main{display: flex;align-items: center;flex-wrap: wrap;gap: 8px;width: auto;}
+.commonModal.touchpoints .skillFields .skillCard .form-control{max-width: 160px;font-size: 12px;font-weight: 400;line-height: 14.63px;padding: 8px;}
+.skillCard .form-control:focus,.skillCard .form-control:focus-visible,.skillCard .form-control:focus-within{
+    border-color: var(--text-gray) !important;box-shadow:none;
+}
+
+.commonModal.touchpoints .skillFields .skillCard .starro{
+    display: flex;align-items: center;gap: 8px;font-size: 14px;font-weight: 500;line-height: 17.07px;
+}
+
+.commonModal.touchpoints .inputFields{
+    display: flex;column-gap: 24px;padding-top: 32px;margin-top: 32px;border-top: 1px dashed var(--text-field-outline-2);flex-wrap: wrap;
+}
+.commonModal.touchpoints .inputFields .form-group{width: calc(50% - 12px);}
+.commonModal.touchpoints .inputFields .form-group.shift{width: 100%;}
+.commonModal.touchpoints label{font-size: 12px;font-weight: 500;line-height: 14.63px;color: var(--text-gray);margin-bottom: 8px;}
+
+.commonModal.touchpoints .inputFields .joiningExtraQs{
+    padding: 16px;border: 1px solid var(--brandYellow);color: var(--text-gray);background: var(--lightest-yellow);border-radius: 8px;
+    font-size: 12px;line-height: 14.63px;font-weight: 600;margin-top: 4px;display: flex;flex-direction: column;gap: 16px;
+}
+.commonModal.touchpoints .inputFields .joiningExtraQs .serving-np{display: flex;align-items: center;gap: 24px;flex-wrap: wrap;row-gap: 12px;}
+.commonModal.touchpoints .inputFields .joiningExtraQs .serving-np .radioFlex{display: flex;align-items: center;gap: 24px;margin: 0;}
+.commonModal.touchpoints .inputFields .joiningExtraQs .lwd{display: flex;align-items: center;gap: 12px;font-weight: 500;flex-wrap: wrap;}
+.commonModal.touchpoints .inputFields .joiningExtraQs .lwd .date-wrapper{width: auto;}
+.commonModal.touchpoints .inputFields .joiningExtraQs .lwd .react-datepicker__input-container{background: var(--white);width: auto;}
+.commonModal.touchpoints .inputFields .joiningExtraQs .lwd input{padding: 8px 8px 8px 16px;border-radius: 24px;}
+.commonModal.touchpoints .inputFields .joiningExtraQs .lwd .date-input{
+    background: url(/images/talent/calender-rounded.svg) no-repeat;
+    background-position: 96% center;background-size: 24px;width: 148px;font-size: 12px;
+}
+
+.commonModal.touchpoints .inputFields .joiningExtraQs .lwd input:focus{border: none;outline: 1px solid var(--text-field-outline-2);}
+
+.commonModal.touchpoints .form-control{
+    height: auto !important;outline: none !important;padding: 16px;font-size: 14px;font-weight: 500;line-height: 17.07px;border-radius: 8px;
+}
+.commonModal.touchpoints label.strong{font-size: 14px;font-weight: 500;line-height: 17.07px;color: var(--primary-black);margin-bottom: 8px;}
+
+
+.commonModal.touchpoints .react-select__control {font-size: 14px;font-weight: 500;line-height: 17.07px;padding: 7px 12px;}
+.commonModal.touchpoints .react-select__menu{font-size: 14px;font-weight: 400;line-height: 17.07px;}
+
+
+.resume-field{margin-bottom: 56px;}
+.commonModal.touchpoints .resume-edit{display: flex;align-items: flex-start;gap:24px;flex-wrap: wrap;row-gap: 48px;}
+.commonModal.touchpoints .resume-edit .resume-input{display: flex;flex-direction: column;position: relative;flex: 1;}
+.commonModal.touchpoints .resume-edit .resume-input .comment{font-size: 10px;line-height: 12.19px;font-weight: 500;color: var(--rgb-dark-gray-60);padding-left: 16px;position: absolute;top: calc(100% + 8px);left: 0;}
+.commonModal.touchpoints .resume-edit .resume-flex{flex: 2;}
+
+.commonModal.touchpoints .radioFlex{display: flex;align-items: flex-start;gap: 40px;margin-top: 4px;}
+.commonModal.touchpoints .radioFlex .radioInput{padding-left: 26px;}
+.commonModal.touchpoints .radioInput input[type="radio"]:checked ~ .checkmark{background:var(--primary-black)}
+
+.commonModal.touchpoints .resume-flex{
+    display: flex;align-items: center;border: 2px solid rgba(199, 227, 255, 1);border-radius: 8px;padding: 8px;background: rgba(199, 227, 255, 0.24);gap: 8px;position: relative;
+    width: 100%;
+}
+.commonModal.touchpoints .resume-flex .lastUpdate{
+    position: absolute;top: 8px;right: 8px;display: flex;align-items: center;gap: 4px;font-size: 10px;font-weight: 400;line-height: 12.19px;color: var(--text-gray);
+}
+.commonModal.touchpoints .resume-flex .lastUpdate strong{font-weight: 500;}
+.commonModal.touchpoints .resume-flex .latest-note{
+    font-size: 11px;font-weight: 500;line-height: 13.41px;color: var(--link-blue);position: absolute;top: calc(100% + 8px);left: 0;
+}
+.commonModal.touchpoints .resume-flex.err{border: 2px solid var(--failureRed);}
+.commonModal.touchpoints .resume-flex > div{display: flex;flex-direction: column;gap: 4px;color: var(--secondary-black);width: calc(100% - 40px);}
+.commonModal.touchpoints .resume-flex > div .title{font-size: 13px;font-weight: 500;line-height: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    width: calc(100% - 16px);
+    text-overflow: ellipsis;
+}
+.commonModal.touchpoints .resume-flex.new > div .title{width: calc(100% - 164px);}
+
+.commonModal.touchpoints .resume-flex > div .size{font-size: 10px;font-weight: 500;line-height: 12px;}
+.commonModal.touchpoints .resumeReplaceBtn input{background: none;}
+.commonModal.touchpoints .filewrap{border-radius: 27px;outline: 1px solid var(--primary-black);min-width: 261px;height: 48px;box-shadow: none;}
+.commonModal.touchpoints .resumeReplaceBtn>label{
+    background: url(/images/talent/upload-rounded.svg) no-repeat var(--white) 16px center;display: flex;flex-direction: column;gap: 4px;justify-content: center;
+    cursor: pointer;padding: 0 0 0 56px;border-radius: 27px;text-transform: uppercase;color: var(--primary-black);font-size: 14px;font-weight: 500;line-height: 17.07px;   
+}
+
+.commonModal.touchpoints .error{margin-top: 8px;font-size: 12px;line-height: 14.63px;}
+.commonModal.touchpoints .money-input::before{height: unset;}
+.commonModal.touchpoints .mismatch-warning{
+    background: var(--light-brown-bg);padding: 4px 8px;border-radius: 4px;font-size: 11px;font-weight: 500;line-height: 13.41px;color:var(--light-brown);margin-top: 8px;
+    width: max-content;display: flex;align-items: flex-start;max-width: 100%;
+}
+.commonModal.touchpoints .mismatch-warning.brown{color: var(--light-brown);background: var(--light-brown-bg);}
+.commonModal.touchpoints .mismatch-warning svg *{stroke: var(--light-brown);}
+
+.pcAssessment{display: block;}
+.mobileAssessment{display: none;}
+
+
+/*Start Touch Points Cards*/
+.touchpoints .touchpointsNote {
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    color: var(--text-gray);
+    text-align: left;
+    margin: 0 0 30px;
+    padding: 24px 24px 24px 72px;
+    position: relative;
+    border: 1px solid var(--text-orange);
+    border-radius: 8px;
+}
+
+.touchpoints .touchpointsNote h3{
+    font-family: Montserrat;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 600;
+    color:var(--primary-black);
+    text-align: left;
+    margin: 0 0 8px;
+}
+
+.touchpointsNote .tpNoteIcon {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    display: inline-flex;
+}
+
+.touchpoints .touchpointsResponse {
+    margin: 0 0 40px;
+}
+
+.touchpoints .touchpointsResponse p{
+    margin-bottom: 0;
+}
+
+.touchpointsResponse .tpResponseTitle {
+    font-family: Montserrat;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    color: var(--text-gray);
+    margin: 0 0 24px;
+}
+
+.touchpointsResponse .tpResponseTitle h2 {
+    font-family: Montserrat;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 500;
+    color: var(--primary-black);
+    text-align: left;
+    margin: 0 0 8px;
+}
+
+.touchpointsResponse .tpResponseBox {
+    padding: 24px 24px 24px 56px;
+    background: var(--bg-light-gray);
+    border-radius: 8px;
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.touchpoints .tpBoxClose {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border: 1px solid var(--rgb-gray-20);
+    border-radius: 30px;
+    width: 24px;
+    height: 24px;
+    background: var(--white);
+    margin: 0;
+    padding: 0;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+    display: inline-flex;
+}
+
+.touchpointsResponse .tpResponseBox .tpResponseBoxIcon {
+    position: absolute;
+    top: 27px;
+    left: 24px;
+    display: inline-flex;
+}
+
+.touchpointsResponse .tpResponseBox h3 {
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+    color: var(--dark-orange);
+    text-align: left;
+    margin: 0 0 16px;
+}
+
+.touchpointsResponse .tpResponseBox h3 span {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.touchpointsResponse .tpResponseBox .tpResponseUploadBox {
+    margin: 0 0 24px;
+    align-items: flex-start;
+    display: flex;
+}
+
+.tpResponseBox .tpResponseUploadBox .form-group {
+    position: relative;
+    margin-bottom: 0;
+}
+
+.touchpointsResponse .tpResponseBox .tpResponseUploadBox .label {
+    color: rgba(107, 107, 107, 0.72);
+    line-height: 16px;
+    vertical-align: top;
+}
+
+.tpResponseBox .tpResponseUploadBox .tpUploadExp {
+    width: 47.47%;
+    min-width: 47.47%;
+}
+
+.tpResponseBox .tpResponseUploadBox .tpUploadResume{
+    flex: 1;
+}
+
+.tpResponseBox .tpResponseUploadBox .tpUploadExp .tpSmallLbl {
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 400;
+    color: var(--rgb-dark-gray-60);
+    position: absolute;
+    top: 34px;
+    right: 13px;
+    display: inline-block;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.touchpointsResponse .tpResponseBox .tpResponseUploadBox .form-group .form-control {
+    padding: 10px 58px 10px 12px;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--primary-black);
+    border: 1px solid var(--text-field-outline-2);
+}
+
+.tpResponseBox .tpResponseUploadBox .tpUploadExp .mismatch-warning {
+    background: var(--rgb-gray-20);
+    color: var(--text-gray);
+    margin-top: 4px;
+}
+
+.tpResponseBox .tpResponseUploadBox .tpUploadExp .mismatch-warning svg path{
+    stroke:var(--text-gray);
+}
+
+.tpResponseBox .tpUploadResume .tpUploadResumeInner {
+    position: relative;
+    align-items: flex-start;
+    gap: 16px;
+    display: flex;
+}
+
+.tpUploadResume .tpUploadResumeInner .tpUploadResumeBtn {
+    position: relative;
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 500;
+    color: var(--primary-black);
+    background: var(--light-blue);
+    border-radius: 50px;
+    padding: 8px 24px;
+    text-align: center;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;   
+}
+
+.tpUploadResume .tpUploadResumeInner .tpUploadResumeBtn input,
+.tpResponseUploadBox .tpUploadResume .tpUploadMoreResume input {
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 40px;
+    box-shadow: none;
+    outline: none;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: -100px;
+    z-index: 1;
+    width: calc(100% + 100px);
+    height: 100%;
+    opacity: 0;
+}
+
+.tpResponseBox .tpUploadResume .tpUploadResumeNote {
+    font-family: Montserrat;
+    font-size: 10px;
+    line-height: 14px;
+    font-weight: 500;
+    color: rgba(107, 107, 107, 0.72);
+    margin-top: 4px;
+}
+
+
+.tpResponseUploadBox .tpUploadResume .tpUploadResumeItem {
+    border: 2px solid var(--light-blue);
+    border-radius: 8px;
+    background: rgba(199, 227, 255, 0.24);
+    padding: 6px 26px 6px 48px;
+    font-family: Montserrat;
+    font-size: 10px;
+    line-height: 14px;
+    font-weight: 500;
+    color: var(--text-gray);
+    position: relative;
+    min-height: 48px;
+    flex-direction: column;
+    justify-content: center;
+    display: inline-flex;
+    word-break: break-word;
+}
+
+.tpResponseUploadBox .tpUploadResume .tpUploadResumeItem .tpBoxClose {
+    background: #16497B;
+    width: 16px;
+    height: 16px;
+    border: none;
+    top: 2px;
+    right: 2px;
+}
+
+.tpResponseUploadBox .tpUploadResume .tpUploadResumeItem .tpBoxClose svg{
+    width: 10px;
+    height: 10px;
+}
+
+.tpResponseUploadBox .tpUploadResume .tpUploadResumeItem .tpBoxClose svg path{
+    stroke: var(--white);
+}
+
+.tpResponseUploadBox .tpUploadResume .tpUploadResumeItem h4 {
+    font-family: Montserrat;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    color: var(--primary-black);
+    margin: 0 0 2px;
+}
+.tpResponseUploadBox .tpUploadResume .tpUploadResumeItem h4:last-child{
+    margin-bottom: 0;
+}
+
+.tpUploadResume .tpUploadResumeItem .tpUploadResumeIcon {
+    border: 1px solid #16497B;
+    background: var(--light-blue);
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    position: absolute;
+    top: 6px;
+    left: 6px;
+}
+
+.tpResponseUploadBox .tpUploadResume .tpUploadMoreResume {
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    border-radius: 50px;
+    overflow: hidden;
+    background: var(--rgb-gray-20);
+    cursor: pointer;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    display: inline-flex;
+}
+
+.tpResponseBox .tpResponseUploadBox .tpUploadOr {
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 500;
+    color: rgba(35, 31, 32, 0.8);
+    padding: 35px 32px 0;
+}
+
+.touchpointsResponse .tpResponseBox .tpProceedInfo {
+    font-family: Montserrat;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+    color: var(--text-gray);
+    padding-left: 24px;
+    position: relative;
+}
+
+.touchpointsResponse .tpResponseBox .tpProceedInfo img {
+    position: absolute;
+    left: 0;
+    top: -2px;
+}
+
+.touchpoints .tpRiseBox{
+    background: var(--bg-light-gray);
+    margin: 0 0 32px;
+    padding: 16px;
+    border-radius: 8px;
+    position: relative;
+    font-family: Montserrat;
+    font-size: 11px;
+    line-height: 16px;
+    font-weight: 400;
+    color: var(--text-gray);
+}
+
+.touchpoints .tpRiseBox h3 {
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+    color: var(--dark-orange);
+    text-align: left;
+    margin: 0 0 24px;
+    position: relative;
+    padding: 0 24px;
+}
+
+.touchpoints .tpRiseBox h3 img {
+    position: absolute;
+    top: 1px;
+    left: 0;
+}
+
+.touchpoints .tpRiseBox h4 {
+    font-family: Montserrat;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+    color: var(--text-gray);
+    text-align: left;
+    margin: 0 0 4px;
+}
+
+.touchpoints .tpRiseBox p {
+    margin: 0 0 8px;
+}
+
+.commonModal.touchpoints .tpRiseBox .form-group {
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.commonModal.touchpoints .tpRiseBox .form-group textarea.form-control{
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--primary-black);
+    border: 1px solid var(--text-field-outline-2);
+    height: 77px !important;
+}
+
+.commonModal.touchpoints .tpRiseBox .form-group textarea.form-control::-webkit-input-placeholder {
+    color:var(--rgb-dark-gray-60) !important;
+    opacity: 1;
+}
+
+.commonModal.touchpoints .tpRiseBox .form-group textarea.form-control::-moz-placeholder {
+    color:var(--rgb-dark-gray-60) !important;
+    opacity: 1;
+}
+
+.commonModal.touchpoints .tpRiseBox .form-group textarea.form-control:-ms-input-placeholder {
+    color:var(--rgb-dark-gray-60) !important;
+    opacity: 1;
+}
+
+.commonModal.touchpoints .tpRiseBox .form-group textarea.form-control:-moz-placeholder {
+    color:var(--rgb-dark-gray-60) !important;
+    opacity: 1;
+}
+
+/*End Touch Points Cards*/
+
+/*Responsive*/
+@media(max-width:840px){
+    .mobileAssessment{display: block;}
+    .commonModal.touchpoints .resume-flex .lastUpdate{align-items: flex-start;}
+    .commonModal.touchpoints .resume-flex .lastUpdate .right{display: flex;flex-direction: column;align-items: flex-start;gap: 4px;}
+    .commonModal.touchpoints .resume-flex.new > div .title{width: calc(100% - 120px);}
+    .commonModal.touchpoints .action-bottom{flex-direction: column-reverse;}
+}
+
+@media(max-width:768px){
+    .commonModal.touchpoints .modal-body{padding: 24px;}
+}
+
+@media(max-width:680px){
+    .commonModal.touchpoints .resume-edit{flex-direction: column;align-items: unset;gap: 16px;row-gap: 40px;}
+}
+
+@media(max-width:576px){
+    .commonModal.touchpoints .inputFields .form-group{width: 100%;}
+    .commonModal.touchpoints .resume-flex{padding-bottom: 32px;}
+    .commonModal.touchpoints .resume-flex .lastUpdate{bottom: 8px;left: 12px;top: unset;right: unset;align-items: center;}
+    .commonModal.touchpoints .resume-flex .lastUpdate .right{flex-direction: row;}
+    .commonModal.touchpoints .resume-flex.new > div .title{width: calc(100% - 16px);}
+    .commonModal.touchpoints .action-bottom button{font-size: 14px !important;line-height: 17px !important;}
+}
+
+.commonModal.touchpoints .modal-body.noPointer{
+    pointer-events: none !important;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.uploadingButSubmit{
+    position: absolute;background: rgb(255, 255, 255, 0.8);z-index:2;display: flex;gap: 24px;
+    flex-direction: column;align-items: center;justify-content: center;width: 100%;height: 100%;
+    top: 0;left: 0;border-radius: 8px;font-size: 20px;font-weight: 600;line-height: 24.38px;
+}
+
+.commonModal.touchpoints .tpRiseBox .form-group .charCounter{
+   font-size: 12px;font-weight: 500;color: var(--successGreen);margin-block: 8px;display: flex;align-items: center;justify-content: flex-end;
+}
+
+.commonModal.touchpoints .error.serveNp{width: 100%;font-weight: 400;}
+
+
+.filtersBottom .totalOpportunitiesCount .spinner-border-bubble {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: text-bottom;
+    border: 0.1em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spinner-border 0.5s linear infinite;
+}
+
+
+@keyframes spinner-border-bubble {
+    100% {
+        transform: rotate(360deg);
+    }
+}

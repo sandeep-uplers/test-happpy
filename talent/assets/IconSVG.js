@@ -2209,3 +2209,42 @@ export const ResumeDownload = () => (
         <path d="M12 8L12 16" stroke="#7A6501" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 )
+
+export const FilterIcon = () => (
+    <svg width="1.25rem" height="1.25rem" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M18.3327 2.5H1.66602L8.33268 10.3833V15.8333L11.666 17.5V10.3833L18.3327 2.5Z"
+            stroke="#232323"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+    </svg>
+);
+
+export const MapPin = () => (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 6.66675C14 11.3334 8 15.3334 8 15.3334C8 15.3334 2 11.3334 2 6.66675C2 5.07545 2.63214 3.54933 3.75736 2.42411C4.88258 1.29889 6.4087 0.666748 8 0.666748C9.5913 0.666748 11.1174 1.29889 12.2426 2.42411C13.3679 3.54933 14 5.07545 14 6.66675Z" stroke="#232323" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M8 8.66675C9.10457 8.66675 10 7.77132 10 6.66675C10 5.56218 9.10457 4.66675 8 4.66675C6.89543 4.66675 6 5.56218 6 6.66675C6 7.77132 6.89543 8.66675 8 8.66675Z" stroke="#232323" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+);
+
+export const GreenCheck = () => (
+    <svg width="28" height="25" viewBox="0 0 28 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="11" r="8" fill="white" />
+        <path d="M15 9L11.1702 12.5L9 10.1667" stroke="#32936F" strokeWidth="1.5" />
+    </svg>
+);
+
+export const ArrowLeftRounded = () => (
+    <svg width="28" height="25" viewBox="0 0 28 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="11" r="8" fill="white" />
+        <path d="M10.5 8.25L13.2172 10.9672C13.3734 11.1234 13.3734 11.3766 13.2172 11.5328L10.5 14.25" stroke="#231F20" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+);
+
+export const LinkIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.4987 5.8335H14.9987C16.5459 5.8335 18.1654 9.45299 18.1654 10.0002C18.1654 10.5473 17.0987 13.6403 16.5932 13.8497C16.0877 14.0591 15.5459 14.1668 14.9987 14.1668H12.4987M7.4987 14.1668H4.9987C3.89363 14.1668 2.83382 13.3334 2.05242 12.9464C1.27102 12.165 0.832031 11.1052 0.832031 10.0002C0.832031 8.89509 1.27102 7.83529 2.05242 7.05388C2.83382 6.27248 3.89363 5.8335 4.9987 5.8335H7.4987" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M6.66797 10H13.3346" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+);

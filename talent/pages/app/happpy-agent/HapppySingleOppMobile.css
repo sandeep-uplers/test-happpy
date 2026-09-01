@@ -1,0 +1,129 @@
+/**
+ * Happpy Agent — mobile single job detail (fork of work single-opp-mobile styling).
+ */
+.happpy-single-hr.containSection {
+    padding: 0 16px 5.5rem;
+    max-width: none;
+    font-family: 'Rubik', sans-serif;
+}
+
+.happpy-single-opp-mobile {
+    font-family: 'Rubik', sans-serif;
+    color: #231f20;
+}
+
+.happpy-single-opp-mobile .breadcrumb {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0 16px;
+}
+
+.happpy-single-opp-mobile .breadcrumb a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #086d7e;
+    text-decoration: none;
+}
+
+.happpy-single-opp-mobile .bookmarkIconBtn {
+    border-radius: 8px;
+    background: #fff;
+}
+
+.happpy-single-opp-mobile .breadcrumb .bookmarkIconBtn {
+    border: none !important;
+}
+
+.happpy-single-opp-mobile .bookmarkIconBtn.saved,
+.happpy-single-opp-mobile .bookmarkIconBtn:hover {
+    background: #46eccd;
+    outline: 1px solid #46eccd !important;
+}
+
+.happpy-single-opp-mobile .oppHead,
+.happpy-single-opp-mobile .jobDescription,
+.happpy-single-opp-mobile .opportunitiesSKillsDiv,
+.happpy-single-opp-mobile .similar-jobs {
+    font-family: 'Rubik', sans-serif;
+}
+
+.happpy-single-opp-mobile .oppHead h6,
+.happpy-single-opp-mobile .companyName,
+.happpy-single-opp-mobile .jobAttribs,
+.happpy-single-opp-mobile .bottomActionDrawer .primaryBtn {
+    font-family: 'Rubik', sans-serif;
+}
+
+.happpy-single-opp-mobile .bottomActionDrawer {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
+
+    @media (max-width: 1023px) and (min-width: 768px) {
+        position: sticky;
+        top: -32px;
+        background: #ecfef6;
+        border: none;
+        border-radius: inherit;
+        padding: 12px 16px;
+        margin-inline: -16px;
+        width: calc(100% + 32px);
+        margin-block: -8px 8px;
+        box-shadow: none;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    @media screen and (max-width: 767px) {
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 76px) !important;
+        background: #ecfef6 !important;
+    }
+}
+
+.happpy-single-opp-mobile .bottomActionDrawer .applyWithTailorCVBtn {
+    background: #059599;
+    border-color: #059599;
+}
+
+.happpy-single-opp-mobile .HSContentWrap > .HSContent,
+.happpy-single-opp-mobile .HSContentWrap > .HSContent * {
+    font-family: 'Rubik', sans-serif !important;
+}
+
+.happpy-single-opp-mobile .company_intialBg,
+.happpy-single-opp-mobile .custom_company_initialBg {
+    background: #DFEFEC !important;
+}
+
+.happpy-single-opp-mobile .custom_company_initial h6 {
+    color: #231f20 !important;
+}
+
+
+.happpy-single-opp-mobile .company_intialBg .company_intial h6{
+    color: #231f20 !important;
+}
+
+@media (max-width: 1023px) {
+    .happpy-single-hr.containSection {
+        background: white;
+        border-radius: 12px;
+
+        .opportunitiesSKillsDiv{
+            background: white;
+        }
+        .matcherList{
+            border: none;
+            margin-left: -12px;
+            width: calc(100% + 24px);
+            border-radius: inherit;
+            background: white;
+
+            .matcherCard{
+                border-top: 1px solid #f1f1f1;
+            }
+        }
+    }
+}

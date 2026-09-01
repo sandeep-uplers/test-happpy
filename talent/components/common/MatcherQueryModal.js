@@ -1,15 +1,10 @@
-'use client';
-
-import { ensureModalAppElement } from '@/talent/helpers/setModalAppElement';
-ensureModalAppElement();
-
 import React, { createContext, useContext, useState } from "react";
 
 import Modal from 'react-modal';
 import WhatsappButton from "../../assets/WhatsappButton";
 import { trackMatcherWhatsapp } from "../../helpers/Mixpanel";
 import { useSelector } from "react-redux";
-
+import { ensureModalAppElement } from '@/talent/helpers/setModalAppElement';
 ensureModalAppElement();
 
 

@@ -1,0 +1,457 @@
+.permission-modal .ReactModal__Body--open {
+    overflow: hidden;
+}
+
+.permission-modal .ReactModal__Overlay {
+    background: var(--rgb-dark-40) !important;
+    backdrop-filter: blur(2px) !important;
+    z-index: 999;
+}
+
+.permission-modal .ReactModal__Content {
+    max-width: fit-content;
+    height: fit-content;
+    z-index: 999;
+    margin: auto;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    background: var(--white) !important;
+    border: none !important;
+}
+
+.permission-modal .modal-container {
+    padding: 40px;
+}
+
+.permission-modal p {
+    margin: 0;
+    padding: 0;
+}
+
+
+/*********** Modal head CSS  ***********/
+.modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+.modal-head .img-ellipse {
+    width: 58px;
+    height: 58px;
+    background-color: var(--bg-light-yellow);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.modal-head .heading {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-head .heading h2 {
+    color: var(--secondary-black);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.modal-head .heading p {
+    color: var(--secondary-black);
+    font-family: Montserrat;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 8px 0 0 0;
+}
+
+/*********** Modal head CSS end ***********/
+
+/* Common  */
+.modal-cta-row {
+    display: flex;
+    gap: 24px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.button {
+    display: flex;
+    width: 465px;
+    padding: 12px 24px;
+    justify-content: center;
+    align-items: center;
+    color: var(--secondary-black);
+    background: var(--brandYellow);
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    border-radius: 27px;
+    border: none;
+    cursor: pointer;
+    transition: 0.5s all;
+}
+
+
+.button.disabled {
+    background: var(--rgb-gray-20);
+    color: var(--rgb-overlay-dark-20);
+    cursor: default;
+}
+
+.button-white {
+    display: flex;
+    padding: 11px 32px;
+    justify-content: center;
+    align-items: center;
+    color: var(--secondary-black);
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    border-radius: 27px;
+    border: 1px solid var(--text-field-outline-2);
+    background: var(--white);
+    cursor: pointer;
+    transition: 0.5s all;
+}
+
+.button-white:hover {
+    background: var(--secondary-black);
+    color: var(--white);
+    border-color: transparent;
+}
+
+/* Common  */
+
+
+/*************** PermissionDeniedModal Start  ***************/
+.permission-denied-modal {
+    width: 883px;
+    max-width: 100%;
+    max-height: 80vh;
+    overflow-y: scroll;
+}
+
+.permission-denied-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.permission-denied-modal::-webkit-scrollbar:horizontal{
+    height:6px
+}
+
+.permission-denied-modal::-webkit-scrollbar-thumb {
+    background: var(--bg-gray-bf);
+}
+
+.permission-denied-modal::-webkit-scrollbar-track {
+    background: var(--border-gray2);
+}
+
+.permission-denied-modal .modal-head {
+    gap: 16px;
+}
+
+.permission-denied-modal .modal-head .img-container {
+    width: 94px;
+    min-width: 94px;
+    /* height: 108px; */
+    flex-shrink: 0;
+}
+
+.permission-denied-modal .modal-head .heading{
+    flex: 1;
+}
+
+.permission-denied-modal .modal-head .heading h2 {
+    font-size: 18px;
+    line-height: 26px;
+    color: var(--secondary-black);
+    font-weight: 700;
+    font-style: normal;
+    /* width: 632px; */
+}
+
+.permission-denied-modal .modal-head .heading p {
+    margin: 9px 0 0 0;
+    /* width: 693px; */
+}
+
+.permission-denied-modal hr {
+    border: none;
+    border-bottom: 1px solid var(--rgb-gray-20);
+    margin: 24px 0;
+}
+
+.permission-denied-modal .permission-denied-modal-body {
+    width: 742px;
+    max-width: 100%;
+}
+
+.permission-denied-modal .permission-denied-modal-body h5 {
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 500;
+    font-style: normal;
+    color: var(--secondary-black);
+    margin: 0;
+}
+
+.permission-denied-modal .permission-denied-modal-body ul.steps {
+    list-style: none;
+    margin: 24px 0 0 0;
+}
+
+.permission-denied-modal .permission-denied-modal-body .steps .step {
+    margin: 0 0 32px 0;
+}
+
+.permission-denied-modal .permission-denied-modal-body .steps .step:last-child {
+    margin: 0 0 40px 0;
+}
+
+.permission-denied-modal .permission-denied-modal-body .steps .step .text-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 16px 0;
+}
+
+.permission-denied-modal .permission-denied-modal-body .steps .step .text-container .number-ellipse {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-secondary);
+    border-radius: 50%;
+    color: var(--text-gray);
+    font-family: Montserrat;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin: 0 0 auto;
+}
+
+.permission-denied-modal .permission-denied-modal-body .steps .step .text-container .instruction {
+    color: var(--secondary-black);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.permission-denied-modal .permission-denied-modal-body .steps .step .instruction-img {
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 80%;
+}
+
+.permission-denied-modal .permission-denied-modal-body .steps .step .instruction-img img {
+    width: 100%;
+    height: 100%;
+}
+
+.permission-denied-modal .permission-denied-modal-body .steps .step .instruction-img.image2 {
+    position: relative;
+}
+
+.permission-denied-modal .permission-denied-modal-body .steps .step .instruction-img.image2 .rectangle1 {
+    position: absolute;
+    bottom: 9px;
+    left: 24px;
+    border: 2px solid var(--failureRed);
+    width: 101px;
+    height: 57px;
+}
+
+.permission-denied-modal .permission-denied-modal-body .steps .step .instruction-img.image2 .rectangle2 {
+    position: absolute;
+    bottom: 0px;
+    right: -11px;
+    border: 2px solid var(--failureRed);
+    width: 161px;
+    height: 69px;
+}
+
+.permission-denied-modal .modal-cta-row .button {
+    min-width: 186px;
+    width: auto;
+    padding: 12px 32px;
+}
+
+.permission-denied-modal .modal-cta-row a {
+    color: var(--secondary-black);
+    font-family: Montserrat;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-decoration-line: underline;
+}
+
+/*************** PermissionDeniedModal End  ***************/
+
+/*************** DeviceErrorModal Start  ***************/
+.device-error-modal {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 723px;
+    max-width: 100%;
+    gap: 16px;
+}
+
+.device-error-modal .img-container {
+    width: 94px;
+    height: 108px;
+    flex-shrink: 0;
+}
+
+.device-error-modal .col-right .heading h2 {
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 700;
+    color: var(--secondary-black);
+    font-style: normal;
+    margin: 20px 0 8px 0;
+}
+
+.device-error-modal .col-right .heading p {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 400;
+    color: var(--secondary-black);
+    font-style: normal;
+}
+
+.device-error-modal .col-right .instructions {
+    color: var(--text-gray);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* width: 533px; */
+    margin: 24px 0 40px 0;
+}
+
+/* CSS for DeviceInUseModal   */
+.device-in-use .instruction-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 24px 0 40px 0;
+}
+
+.device-error-modal.device-in-use .instruction-container .instructions {
+    margin: 0;
+}
+
+/* CSS for DeviceInUseModal   */
+
+.device-error-modal .col-right .modal-cta-row .button-white,
+.device-error-modal .col-right .modal-cta-row .button {
+    width: auto;
+    min-width: 186px;
+}
+
+/*************** DeviceErrorModal End  ***************/
+
+/*************** Responsive  ***************/
+
+@media screen and (max-width: 991px){
+    .permission-denied-modal{
+        width: 100%;
+    }
+    .permission-modal .ReactModal__Content{
+        max-width: calc(96% - 15px);
+        inset: inherit !important;
+    }
+    .permission-modal .modal-container {
+        padding: 24px;
+    }
+    .permission-denied-modal .modal-cta-row .button, .device-error-modal .col-right .modal-cta-row .button-white, .device-error-modal .col-right .modal-cta-row .button {
+        font-size: 16px;
+    }
+    .permission-denied-modal .permission-denied-modal-body .steps .step:last-child {
+        margin-bottom:32px;
+    }
+    .device-error-modal .col-right .heading h2{
+        margin-top: 10px;
+    }
+    .device-error-modal .col-right .instructions{
+        margin: 16px 0 24px 0;
+    }
+    .device-in-use .instruction-container{
+        margin: 16px 0 24px 0;
+    }
+}
+
+@media screen and (max-width: 767px){
+    .permission-denied-modal {
+        max-height: 90vh;
+    }
+    .permission-modal .modal-container {
+        padding: 16px;
+    }
+    .permission-denied-modal .permission-denied-modal-body .steps .step:last-child {
+        margin-bottom:24px;
+    }
+    .permission-denied-modal .permission-denied-modal-body .steps .step .instruction-img {
+        max-width: 100%;
+    }
+    .permission-denied-modal .permission-denied-modal-body .steps .step .instruction-img.image2 .rectangle2 {        
+        bottom: 3px;
+        right: 2px;
+        width: 151px;
+    }
+    .permission-denied-modal .modal-cta-row .button, .device-error-modal .col-right .modal-cta-row .button-white, .device-error-modal .col-right .modal-cta-row .button {
+        min-width: 151px;
+        padding: 10px 24px;
+    }
+}
+
+@media screen and (max-width: 480px){
+    .permission-denied-modal .modal-head {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+    .permission-denied-modal .permission-denied-modal-body .steps .step .instruction-img.image2 .rectangle1{
+        height: 40px;
+    }
+    .permission-denied-modal .permission-denied-modal-body .steps .step .instruction-img.image2 .rectangle2 {
+        width: 111px;
+        height: 51px;
+    }
+    .device-error-modal .col-right .heading h2{
+        margin-top: 4px;
+    }
+    .device-error-modal {
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+    }
+    .device-error-modal .modal-cta-row{
+        justify-content: center;
+    }
+}

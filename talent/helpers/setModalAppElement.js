@@ -6,5 +6,6 @@ let configured = false;
 export function ensureModalAppElement() {
     if (configured || typeof document === 'undefined') return;
     const el = document.getElementById('happpy-root') || document.getElementById('app') || document.body;
+    Modal.setAppElement(el);
     configured = true;
 }

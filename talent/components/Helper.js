@@ -1,6 +1,7 @@
 'use client';
 
 import axios from 'axios';
+import toast from 'react-hot-toast';
 import { addDays, differenceInHours, differenceInMinutes, format, subYears } from 'date-fns';
 import Cookies from 'js-cookie';
 import store from '../store/store'
@@ -1483,3 +1484,33 @@ export const REFERRAL_TEST_USERS = [
 export const isReferralTestUser = (userEmail) => {
     return TALENT_BETA_USERS.includes(userEmail) || REFERRAL_TEST_USERS.includes(userEmail) || process.env.NEXT_PUBLIC_APP_ENV === 'local';
 }
+
+const copyTextFallback = (text) => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+        return document.execCommand('copy');
+    } finally {
+        document.body.removeChild(ta);
+    }
+};
+
+export const copyLinkToClipboard = (link, { silent = false } = {}) => {
+    if (!link) return;
+    const onOk = () => {
+        if (!silent) toast.success('Link copied to clipboard.');
+    };
+    const onFail = () => toast.error('Could not copy link.');
+    if (navigator.clipboard?.writeText && window.isSecureContext) {
+        navigator.clipboard.writeText(link).then(onOk).catch(() => (copyTextFallback(link) ? onOk() : onFail()));
+    } else if (copyTextFallback(link)) {
+        onOk();
+    } else {
+        onFail();
+    }
+};

@@ -244,6 +244,11 @@ export const API_JOB_AGENT_AGENT_TAILOR_ACTIVITY = API_URL + "talent/outreach/ag
 export const API_JOB_AGENT_MISSED_REPLY_FOLLOWUPS = API_URL + "talent/outreach/missed-positive-reply-followups";
 /** Job Agent — lightweight `{ pending }` for sidebar (same filters as MISSED_REPLY_FOLLOWUPS). */
 export const API_JOB_AGENT_MISSED_REPLY_FOLLOWUPS_PENDING = API_URL + "talent/outreach/missed-positive-reply-followups-pending";
+export const AUTO_RUN_CONSENT_DEFAULT = 0;
+export const AUTO_RUN_CONSENT_GIVEN = 1;
+export const AUTO_RUN_CONSENT_REMOVED = 2;
+export const isAutoRunConsentOn = (value) => Number(value) !== AUTO_RUN_CONSENT_REMOVED;
+
 export const API_GET_RECOMMENDED_JOBS = API_URL + "talent/outreach/get-recommended-jobs";
 export const API_GET_RECOMMENDED_EMAIL_JOBS_META = API_URL + "talent/outreach/recommended-jobs-meta-email";
 export const API_GET_RECOMMENDED_EMAIL_JOBS = API_URL + "talent/outreach/recommended-jobs-email";

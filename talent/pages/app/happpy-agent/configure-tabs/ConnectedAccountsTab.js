@@ -348,7 +348,7 @@ const ConnectedAccountsTab = () => {
     const handleGmailConnect = (e) => {
         if (e?.preventDefault) e.preventDefault();
 
-        const gmailUrl = `${process.env.MIX_APP_URL}/auth/login/gmail/${user?.enc_id}`;
+        const gmailUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/login/gmail/${user?.enc_id}`;
         const popup = window.open(
             gmailUrl,
             'Gmail OAuth',

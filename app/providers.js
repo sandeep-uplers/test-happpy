@@ -4,7 +4,9 @@ import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { Provider, useDispatch } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
-import Modal from 'react-modal';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ensureModalAppElement } from '@/talent/helpers/setModalAppElement';
 import store from '@/talent/store/store';
 import { HYDRATE_AUTH } from '@/talent/store/actions/actionsTypes';
 import { readStoredAuth } from '@/talent/store/reducers/authReducer';
@@ -16,9 +18,7 @@ function AuthHydrator({ children }) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (document.getElementById('happpy-root')) {
-            Modal.setAppElement('#happpy-root');
-        }
+        ensureModalAppElement();
         dispatch({ type: HYDRATE_AUTH, payload: readStoredAuth() });
     }, [dispatch]);
 
@@ -34,6 +34,7 @@ export default function Providers({ children }) {
                     <GlobalPopups />
                 </HappyAiAgentLayout>
                 <Toaster position="top-center" />
+                <ToastContainer position="bottom-center" theme="dark" />
             </AuthHydrator>
         </Provider>
     );

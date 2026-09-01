@@ -1,0 +1,3530 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600&display=swap');
+
+
+.commonModal .modalCloseBtn svg {
+    height: 20px;
+    width: 20px;
+}
+
+.press-record-now-img-box {
+    position: relative;
+    background-size: 100%;
+    background-position: center;
+    height: 355px;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 15px 30px;
+    margin-bottom: 24px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.press-record-now-img-box::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: linear-gradient(180.14deg, var(--rgb-dark-black-0) -12.38%, var(--bg-primary-dark) 99.88%);
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+}
+
+.press-record-now-img-box.second:after {
+    background: var(--rgb-dark-70);
+}
+
+.press-record-now-img-box .press-record-now-text {
+    position: relative;
+    z-index: 2;
+    text-align: left;
+}
+
+
+.press-record-now-img-box .press-record-now-text h3 {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 27px;
+    color: var(--white);
+    text-align: left;
+    margin: 0;
+}
+
+.press-record-now-img-box .press-record-now-text p {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--white);
+}
+
+.press-record-now-img-box .press-record-now-text.first {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    max-width: 466px;
+}
+
+
+.record-back-btn-wrap {
+    position: absolute;
+    top: 15px;
+    left: 0px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 20px;
+    z-index: 8;
+}
+
+.record-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rgb-light-gray-40);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+
+.record-now-btn {
+    display: flex;
+    align-items: center;
+    margin: 32px 0;
+}
+
+.record-now-btn .record-icon-btn {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    background: var(--rgb-bg-peach-32);
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    margin-right: 15px
+}
+
+.record-now-btn button {
+    border: 0;
+    background: transparent;
+}
+
+.now-btn-text {
+    color: var(--brandYellow);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    text-transform: uppercase;
+    text-decoration-line: underline;
+}
+
+.playUnderlinedBtn .record-icon-btn {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    background: var(--rgb-bg-peach-32);
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    margin-right: 15px
+}
+
+.playUnderlinedBtn .record-icon-btn img {
+    margin-left: 4px;
+}
+
+.playUnderlinedBtn .now-btn-text {
+    color: var(--brandYellow);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    text-transform: uppercase;
+    text-decoration-line: underline;
+}
+
+.record-now-btn .now-btn-text {
+    color: var(--brandYellow);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    text-transform: uppercase;
+    text-decoration-line: underline;
+}
+
+
+
+.record-now-btn .record-icon-btn img {
+    margin-left: 4px;
+}
+
+
+.record-now-btn .limit-text {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 15px;
+    color: var(--white);
+}
+
+
+.press-record-now-text.third {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.press-record-now-text.forth {
+    display: block;
+    height: 100%;
+    width: 100%;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.press-record-now-img-box.recorded-video-sec.forth .record-back-btn {
+    background: var(--rgb-dark-30);
+}
+
+.press-record-now-text .primaryBtn {
+    font-size: 14px;
+    line-height: 17px;
+}
+
+
+.press-record-now-text.forth .record-now-btn button {
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.press-record-now-text.forth .discard-text {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    text-decoration-line: underline;
+    text-transform: capitalize;
+    color: var(--white);
+}
+
+
+.press-record-now-text.second {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.press-record-now-text.second .recording-second-text {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: var(--white);
+    margin-top: 16px;
+}
+
+.press-record-now-img-box .video-btn-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.press-record-now-text.isstop-blur .recording-second-text {
+    font-weight: 400;
+}
+
+.press-record-now-text.second .recording-second-text .vid-resume-btn {
+    cursor: pointer;
+}
+
+.press-record-now-text.second.isstop-blur .CircularProgressbar {
+    opacity: 0.4;
+}
+
+
+.press-record-now-img-box .video-btn-wrap .record-back-btn {
+    margin-right: 0;
+}
+
+.press-record-now-img-box .video-btn-wrap .record-back-btn:nth-child(2) {
+    margin-right: 0;
+}
+
+.press-record-now-img-box.recorded-video-sec {
+    padding: 0px;
+}
+
+
+.press-record-now-text.third {
+    position: relative;
+    z-index: 2;
+}
+
+.press-record-now-text.third:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: linear-gradient(180.14deg, var(--rgb-dark-black-0) 52%, var(--bg-primary-dark) 99.88%);
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+}
+
+.press-record-now-img-box.recorded-video-sec video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.press-record-now-img-box.recorded-video-sec .video-btn-wrap {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    bottom: 16px;
+    z-index: 6;
+    padding: 0 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.press-record-now-img-box.recorded-video-sec.forth .video-btn-wrap {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 6;
+    background: var(--rgb-dark-30);
+}
+
+.press-record-now-img-box.forth .record-now-btn button {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    text-decoration-line: underline;
+    text-transform: uppercase;
+    color: var(--brandYellow);
+}
+
+.press-record-now-img-box.forth:after {
+    background: linear-gradient(181.04deg, var(--rgb-dark-black-0) -139.51%, var(--bg-primary-dark) 149.89%);
+}
+
+.press-record-now-img-box .press-record-now-text.five {
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.press-record-now-img-box .press-record-now-text.five a {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    text-decoration-line: underline;
+    text-transform: uppercase;
+    color: var(--brandYellow);
+}
+
+
+.CircularProgressbar .CircularProgressbar-trail {
+    stroke: var(--rgb-bg-peach-50);
+    stroke-width: 5px;
+}
+
+.CircularProgressbar .CircularProgressbar-path {
+    stroke: var(--brandYellow);
+    stroke-width: 5px;
+}
+
+.CircularProgressbar .CircularProgressbar-text {
+    font-family: 'Exo';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 57px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    fill: var(--rgb-bg-peach-50);
+    /* dominant-baseline: central; */
+}
+
+
+.video-up-bottom-text {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap-reverse;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.video-up-bottom-text h4 {
+    font-family: 'Montserrat';
+    color: var(--secondary-black);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 26px;
+    text-align: left;
+    max-width: 434px;
+}
+
+.video-up-bottom-text .vd-btn-wrape {
+    display: flex;
+    align-items: center;
+}
+
+.video-up-bottom-text .vd-btn-wrape button {
+    font-family: 'Montserrat';
+    color: var(--secondary-black);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.video-up-bottom-text .vd-btn-wrape button:first-child {
+    margin-right: 25px;
+}
+
+
+
+.video-cus-record-box {
+    padding: 0;
+}
+
+.video-cus-record-box .position-absolute {
+    z-index: 4;
+}
+
+.press-record-now-img-box.recorded-video-sec .video-btn-wrap.forth {
+    flex-wrap: wrap;
+    padding: 0 32px 16px;
+}
+
+.press-record-now-img-box.recorded-video-sec.forth .video-btn-wrap.forth {
+    flex-wrap: wrap;
+    padding: 16px 52px 16px 32px;
+}
+
+.press-record-now-img-box.recorded-video-sec .video-btn-wrap.forth h3 {
+    width: 100%;
+}
+
+.press-record-now-img-box.recorded-video-sec .video-btn-wrap.forth .record-now-btn {
+    width: 100%;
+    gap: 24px;
+}
+
+.press-record-now-img-box.recorded-video-sec .video-btn-wrap.forth .record-now-btn button {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    text-decoration-line: underline;
+    text-transform: uppercase;
+    color: var(--brandYellow);
+}
+
+.press-record-now-text.five {
+    display: block;
+    height: 100%;
+    width: 100%;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.press-record-now-text.five .video-btn-group {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+}
+
+.press-record-now-img-box.five {
+    padding: 0;
+}
+
+.press-record-now-text.five .record-now-btn {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    justify-content: center;
+    gap: 24px;
+}
+
+.press-record-now-text.five .record-now-btn .primaryBtn {
+    background: var(--brandYellow);
+}
+
+.press-record-now-text .record-resume-group {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.video-box {
+    width: 100%;
+    height: 628px !important;
+    display: flex;
+    justify-content: center;
+    background: var(--primary-dark);
+}
+
+.fullscreen.fullscreen-enabled .video-box {
+    width: 100%;
+    height: 100vh !important;
+}
+
+.video-box:first-child video {
+    width: auto !important;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+}
+
+.access-title {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: var(--secondary-black);
+}
+
+.commonModal.access-video .modal-dialog {
+    width: 100vw;
+}
+
+.commonModal.access-video .modal-body {
+    text-align: inherit;
+}
+
+.access-video-inner-content .record-back-btn-wrap {
+    justify-content: inherit;
+    width: inherit;
+    padding: 0 0;
+    top: 27px;
+    left: 27px;
+}
+
+.access-video .access-video-inner {
+    position: relative;
+    padding: 52px 70px 40px;
+}
+
+/* .access-video .access-video-inner .record-back-btn{
+    background: #F5F5F5;
+} */
+.access-video-inner-content .access-content-title {
+    margin-bottom: 36px;
+    display: flex;
+    align-items: self-start;
+}
+
+.access-video-inner-content .access-content-title .video-icon {
+    display: inline-block;
+    width: 64px;
+    min-width: 64px;
+    max-width: 64px;
+    min-height: 64px;
+    max-height: 64px;
+    height: 64px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.access-video-inner-content .access-content-title .video-icon img {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    height: 100%;
+}
+
+.access-video-inner-content .access-content-title h4 {
+    width: calc(100% - 0px);
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 700;
+    color: var(--secondary-black);
+}
+
+.access-video-inner-content .access-content-list .access-point {
+    display: flex;
+    align-items: start;
+    margin-bottom: 32px;
+}
+
+.access-video-inner-content .access-img {
+    margin-right: 16px;
+    width: 16px;
+    min-width: 16px;
+}
+
+.access-video-inner-content .access-title {
+    font-size: 14px;
+    line-height: 17px;
+    color: var(--secondary-black);
+    font-weight: 500;
+    margin-bottom: 9px;
+}
+
+.access-video-inner-content .access-pera {
+    font-size: 12px;
+    line-height: 15px;
+    color: var(--text-gray);
+    font-weight: 400;
+}
+
+.access-video-inner-content .access-content-list {
+    max-width: 575px;
+    width: 100%;
+}
+
+.access-video-inner-content .video-btn-group {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.access-video-inner-content .video-btn-group .primaryBtn {
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 700;
+}
+
+.access-video-inner-content .video-btn-group .deny-btn {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 700;
+    color: var(--secondary-black);
+    text-transform: capitalize;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    position: relative;
+    background-color: transparent;
+}
+
+.access-video-inner-content .video-btn-group .deny-btn::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: var(--secondary-black);
+
+}
+
+.access-video-inner-content.recording-steps .access-content-title {
+    margin-bottom: 0;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--text-field-outline-2);
+}
+
+.access-video-inner-content.recording-steps .access-content-title h4 {
+    margin-bottom: 24px;
+}
+
+.access-video-inner-content.recording-steps .access-content-list {
+    display: flex;
+    align-items: center;
+    gap: 64px;
+    max-width: 100%;
+    width: 100%;
+}
+
+.access-video-inner-content.recording-steps .access-content-list .access-point {
+    margin-bottom: 0;
+    align-items: center;
+}
+
+.access-video-inner-content.recording-steps .access-title {
+    margin-bottom: 0px;
+}
+
+.recording-steps .recording-steps-list {
+    padding-top: 32px;
+}
+
+.recording-steps .recording-steps-list .steps-list-title {
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 500;
+    color: var(--secondary-black);
+    margin-bottom: 24px;
+}
+
+.recording-steps .recording-steps-list h6 {
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 500;
+    color: var(--secondary-black);
+}
+
+.recording-steps .recording-steps-list ul li {
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 36px;
+}
+
+.recording-steps .recording-steps-list ul li:last-child {
+    margin-bottom: 0;
+}
+
+.recording-steps .recording-steps-list ul li .list-number {
+    width: 24px;
+    min-width: 24px;
+    max-width: 24px;
+    min-height: 24px;
+    max-height: 24px;
+    height: 24px;
+    background: var(--bg-secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: 500;
+    color: var(--text-gray);
+    margin-right: 8px;
+    border-radius: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.recording-steps .recording-steps-list ul li h5 {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    color: var(--secondary-black);
+}
+
+.recording-steps .recording-steps-list ul li h5 strong {
+    font-weight: 500;
+}
+
+.recording-steps .recording-steps-list ul li h5 .dots {
+    display: inline-flex;
+    position: relative;
+    flex-direction: column;
+    gap: 2px;
+    top: -8px;
+    line-height: 18px;
+    margin: 0 5px;
+
+}
+
+.recording-steps .recording-steps-list ul li h5 .dots span {
+    display: inline-block;
+    background-color: var(--primary-dark);
+    border-radius: 100%;
+    width: 4px;
+    height: 4px;
+    position: relative;
+}
+
+.recording-steps .recording-steps-list ul li h5 .dots span::before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    border-radius: 100%;
+    background-color: var(--white);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.recording-steps .recording-steps-list ul li .steps-list-img {
+    display: flex;
+    gap: 40px;
+}
+
+.steps-list-img .two-img {
+    width: calc(50% - 20px);
+}
+
+
+/* .recording-steps .recording-steps-list ul li h5 .menu-line{
+    display: inline-flex;
+    position: relative;
+    flex-direction: column;
+    gap: 2px;
+    top: -8px;
+    line-height: 18px;
+}
+.recording-steps .recording-steps-list ul li h5 .menu-line span{
+    display: inline-block;
+    border: 2px solid #000;
+    border-radius: 100%;
+
+} */
+
+
+@media (max-width: 1366px) {
+
+    .video-box {
+        height: 550px !important;
+    }
+
+    .access-video-inner-content.recording-steps .access-content-title {
+        padding-bottom: 24px;
+    }
+
+    .recording-steps .recording-steps-list {
+        padding-top: 24px;
+    }
+
+    .access-video .access-video-inner {
+        padding: 52px 60px 40px;
+    }
+
+    .recording-steps .recording-steps-list ul li {
+        margin-bottom: 28px;
+    }
+
+    .commonModal.access-video .modal-dialog {
+        width: 832px;
+    }
+}
+
+@media (max-width: 1280px) {
+
+    .video-box {
+        height: 452px !important;
+    }
+
+    .access-video-inner-content .record-back-btn-wrap {
+        top: 10px;
+        left: 20px;
+    }
+
+}
+
+.commonModal .modal-body .videoErrorPlayer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.commonModal .modal-body .videoErrorPlayer.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 28px;
+    text-align: left;
+    border: 1px solid var(--text-orange);
+    border-radius: 8px;
+}
+
+.commonModal .modal-body .videoErrorPlayer .imgDiv {
+    background-color: #FFF1E2;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 60px;
+    margin-bottom: 24px;
+}
+
+.commonModal .modal-body .videoErrorPlayer.ios .imgDiv {
+    background-color: var(--bg-light-yellow);
+}
+
+.commonModal .modal-body .videoErrorPlayer.ios .imgDiv img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+}
+
+.commonModal .modal-body .videoErrorPlayer h5 {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 26px;
+    color: var(--secondary-black);
+    margin-bottom: 8px;
+}
+
+.commonModal .modal-body .videoErrorPlayer h6 {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 26px;
+    color: var(--secondary-black);
+}
+
+.commonModal .modal-body .videoErrorPlayer.ios h6 {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.commonModal .modal-body .videoErrorPlayer.profile h6 {
+    color: var(--failureRed);
+}
+
+.commonModal .modal-body .videoErrorPlayer p {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 26px;
+    color: var(--text-gray);
+    margin: 24px 0 32px;
+}
+
+.commonModal .modal-body .videoErrorPlayer.ios p {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    padding-inline: 24px;
+    margin: 8px 0 16px;
+}
+
+.commonModal .modal-body .videoErrorPlayer.profile p {
+    font-size: 14px;
+    line-height: 20px;
+    margin: 16px 0;
+}
+
+.commonModal .modal-body .videoErrorPlayer .browser-list {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.commonModal .modal-body .videoErrorPlayer.profile .browser-list {
+    gap: 8px;
+}
+
+.commonModal .modal-body .videoErrorPlayer .browser-list .list-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 108px;
+    gap: 8px;
+}
+
+.commonModal .modal-body .videoErrorPlayer.profile .browser-list .list-item {
+    width: 80px;
+}
+
+.commonModal .modal-body .videoErrorPlayer .browser-list .list-item img {
+    width: 64px;
+    height: 64px;
+}
+
+.commonModal .modal-body .videoErrorPlayer.profile .browser-list .list-item img {
+    width: 24px;
+    height: 24px;
+}
+
+
+@media (max-width:680px) {
+    .commonModal .modal-body .videoErrorPlayer .browser-list {
+        gap: 24px;
+    }
+
+    .commonModal .modal-body .videoErrorPlayer .browser-list .list-item {
+        width: 90px;
+    }
+
+    .commonModal .modal-body .videoErrorPlayer.profile .browser-list {
+        gap: 8px;
+    }
+
+    .commonModal .modal-body .videoErrorPlayer.profile .browser-list .list-item {
+        width: 80px;
+    }
+}
+
+@media (max-width:575px) {
+    .commonModal .modal-body .videoErrorPlayer .browser-list .list-item img {
+        width: 48px;
+        height: 48px;
+    }
+
+    .commonModal .modal-body .videoErrorPlayer.profile .browser-list .list-item img {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.commonModal .modal-body .videoErrorPlayer .browser-list .list-item span {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: var(--secondary-black);
+    text-align: center;
+}
+
+.commonModal .modal-body .videoErrorPlayer.profile .browser-list .list-item span {
+    font-size: 10px;
+    line-height: 12px;
+}
+
+.commonModal .modal-body .videoErrorPlayer .action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 12px;
+}
+
+.commonModal .modal-body .videoErrorPlayer.ios .action {
+    margin: 24px 0 12px;
+}
+
+.ios-unavailable-text {
+    font-weight: 500;
+}
+
+.commonModal .modal-body .videoErrorPlayer button {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--secondary-black);
+    background: var(--brandYellow);
+    border: none;
+    border-radius: 27px;
+    display: inline-block;
+    padding: 14px 32px;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.commonModal .modal-body .videoErrorPlayer.ios button {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.commonModal .modal-body .videoErrorPlayer button:hover {
+    background: var(--secondary-black);
+    color: var(--white);
+}
+
+.commonModal .modal-body .videoErrorPlayer button.backBtn {
+    background: transparent;
+    color: var(--secondary-black);
+    border-radius: 0;
+    text-decoration: underline;
+    padding: 0;
+}
+
+.uploadVideoResumeBody {
+    padding: 1.5rem 2.25rem 2.25rem 2.25rem !important;
+}
+
+.uploadVideoResumeBody.access-video-inner {
+    padding: 2.25rem !important;
+}
+
+.uploadVideoResumeBody .initialScreenHead {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+    justify-content: space-between;
+}
+
+.uploadVideoResumeBody .initialScreenHead .left {
+    text-align: left;
+    width: calc(100% - 300px);
+}
+
+.uploadVideoResumeBody .initialScreenCount {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    padding: 30px;
+    text-align: left;
+}
+
+.uploadVideoResumeBody .toggel-switch-wrapper .toggel-switch-inner {
+    flex-wrap: wrap;
+}
+
+.uploadVideoResumeBody .video-controls {
+    position: absolute;
+    bottom: 30px;
+    width: 100%;
+}
+
+.uploadVideoResumeBody .video-controls .count {
+    text-align: left;
+    position: absolute;
+    left: 0;
+}
+
+.uploadVideoResumeBody .video-controls .media {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    position: relative;
+}
+
+.access-video .access-video-inner .step2HeadImage {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.access-video .access-video-inner .exploreVideoResumeAction {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.videoResumeUploadProgress {
+    border: 1px solid var(--text-field-outline-2);
+    border-radius: 8px;
+    text-align: left;
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.videoResumeUploadProgressCancel {
+    background: #ff00003b;
+    border-radius: 30px;
+    cursor: pointer;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.videoResumeUploadProgressCancel>svg {
+    fill: red;
+    /* margin-top: -2.5px; */
+}
+
+@media (max-width:767px) {
+    .access-video .access-video-inner {
+        padding: 48px 32px 40px;
+    }
+
+    .uploadVideoResumeBody.access-video-inner {
+        padding: 48px 32px 40px !important;
+    }
+
+    .recording-steps .recording-steps-list ul li .steps-list-img {
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .steps-list-img .two-img {
+        width: 100%;
+    }
+}
+
+@media (max-width:680px) {
+    .uploadVideoResumeBody {
+        padding: 16px 16px 24px !important;
+    }
+
+    .uploadVideoResumeBody.access-video-inner {
+        padding: 40px 16px 24px !important;
+    }
+
+    .uploadVideoResumeBody .initialScreenHead {
+        flex-direction: column;
+    }
+
+    .uploadVideoResumeBody .initialScreenHead .left {
+        width: 100%;
+    }
+
+    .access-video-inner-content .video-btn-group {
+        justify-content: center;
+    }
+
+    .recording-steps .recording-steps-list ul li:last-child {
+        padding-left: 0;
+    }
+}
+
+@media (max-width:575px) {
+    .uploadVideoResumeBody .video-controls .count {
+        top: -32px;
+    }
+
+    .access-video .access-video-inner {
+        padding: 48px 24px 40px;
+    }
+
+    .access-video .access-video-inner .step2HeadImage {
+        /* flex-direction: row; */
+        margin-bottom: 24px;
+    }
+
+    .access-video .access-video-inner .step2HeadImage img {
+        height: 240px;
+    }
+
+    .access-video .access-video-inner .exploreVideoResumeAction {
+        flex-direction: column;
+    }
+
+    .press-record-now-text.five .record-now-btn {
+        flex-direction: column;
+    }
+
+    .press-record-now-text.five .video-btn-group {
+        flex-direction: column;
+    }
+
+    .press-record-now-img-box.recorded-video-sec .video-btn-wrap.forth .record-now-btn {
+        flex-direction: column;
+    }
+
+    .access-video-inner-content.recording-steps .access-content-list {
+        gap: 24px;
+    }
+}
+
+@media (max-width:440px) {
+    .press-record-now-img-box {
+        padding: 12px 24px 24px;
+    }
+
+    .video-cus-record-box {
+        padding: 0;
+    }
+
+    .record-now-btn {
+        flex-direction: column;
+    }
+
+    .access-video .access-video-inner {
+        padding: 48px 20px 40px;
+    }
+
+    .access-video-inner-content .access-content-title {
+        flex-direction: column;
+    }
+
+    .access-video-inner-content.recording-steps .access-content-list {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
+/* profile preview video start */
+.video-box {
+    width: 100%;
+    height: 628px !important;
+    display: flex;
+    justify-content: center;
+    background: var(--primary-dark);
+}
+
+.fullscreen.fullscreen-enabled .video-box {
+    width: 100%;
+    height: 100vh !important;
+}
+
+.video-box:first-child video {
+    width: auto !important;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+}
+
+.video-box .videoControlDiv {
+    position: absolute;
+    width: "100%";
+    height: "100%";
+    top: "0";
+    border-radius: "0.5rem";
+}
+
+.volume-button .progressVideo {
+    display: inline-block;
+}
+
+.video-box-controls {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    right: 0;
+    padding: 22px 0;
+    background: var(--rgb-dark-72);
+    display: flex;
+    /* gap: 24px; */
+    column-gap: 24px;
+    flex-wrap: wrap;
+}
+
+.video-box-controls .primary-controls {
+    display: flex;
+    align-items: center;
+    width: 340px;
+    padding-left: 16px;
+    justify-content: space-between;
+}
+
+.video-box-controls .primary-controls .actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.volume-button .progressVideo {
+    display: inline-block;
+}
+
+.video-box-controls .secondary-controls {
+    display: flex;
+    align-items: center;
+    width: calc(100% - 364px);
+    max-width: calc(100% - 364px);
+    padding: 0 16px;
+    justify-content: space-between;
+}
+
+.video-box-controls .secondary-controls .full-small-screen {
+    display: block;
+    color: var(--white);
+    width: 24px;
+    cursor: pointer;
+}
+
+.video-play-range {
+    width: 48%;
+    margin-left: auto;
+    position: absolute;
+    border-radius: 8px;
+}
+
+.video-play-range .progressVideoSeek {
+    width: 50%;
+    position: absolute;
+    right: 80px;
+}
+
+.video-play-range .MuiBox-root.css-1v5z18m {
+    width: 100%;
+    line-height: 0;
+}
+
+.video-play-range .css-14gf62f-MuiSlider-thumb:hover,
+.css-14gf62f-MuiSlider-thumb.Mui-focusVisible {
+    box-shadow: inherit;
+}
+
+.video-play-range .css-53tbrc-MuiSlider-root {
+    height: 4px;
+    background: var(--rgb-gredient-gray-32);
+    padding: 0;
+}
+
+.video-play-range .css-14pt78w-MuiSlider-rail {
+    background: var(--rgb-gredient-gray-32);
+}
+
+.video-play-range .css-1n40zqk-MuiSlider-track {
+    background: var(--rgb-gredient-gray-72);
+}
+
+.video-play-range .css-14gf62f-MuiSlider-thumb {
+    background: var(--white);
+}
+
+/* ----- range slider css ----- */
+.volume-button {
+    max-width: 128px;
+    width: 100%;
+}
+
+.video-slider-wrap {
+    max-width: 360px;
+}
+
+.volume-button .volume-btn-icon {
+    min-width: 32px;
+}
+
+.volume-button .rangeslider,
+.rangeslider .rangeslider__fill,
+.video-slider-wrap .rangeslider,
+.rangeslider .rangeslider__fill {
+    box-shadow: none;
+}
+
+.volume-button .video-slider {
+    width: 100%;
+    margin-left: 16px;
+}
+
+.video-slider-wrap .video-slider .rating-track,
+.volume-button .video-slider .rating-track {
+    height: 5px !important;
+    padding: 0;
+    border-radius: 8px;
+    background: var(--rgb-gredient-gray-32);
+    outline: none;
+}
+
+.video-slider-wrap .video-slider:focus,
+.video-slider-wrap .video-slider:focus {
+    border-bottom: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.video-slider-wrap .video-slider .rating-thumb,
+.volume-button .video-slider .rating-thumb {
+    width: 12px !important;
+    height: 12px !important;
+    background: var(--white) !important;
+    cursor: pointer;
+    border-radius: 12px !important;
+    margin-top: 1px;
+}
+
+.video-slider-wrap .rating-track-0,
+.volume-button .rating-track-0 {
+    background-color: var(--white);
+}
+
+.video-slider-wrap .video-slider .rating-thumb::before,
+.volume-button .video-slider .rating-thumb::before {
+    position: absolute;
+    content: "";
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    top: 50%;
+    left: 50%;
+    background: none;
+    transform: translate(-50%, -50%);
+}
+
+.video-slider-wrap .video-slider .rating-thumb:hover,
+.volume-button .video-slider .rating-thumb:hover {
+    box-shadow: var(--rgb-dark-blue-shade-16) 0px 0px 0px 10px;
+}
+
+.commonModal.profile-modal.preview .buffering {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.commonModal.profile-modal.preview .buffering .loaderDiv {
+    width: 56px;
+    height: 56px;
+    padding: 8px;
+    border-radius: 4px;
+    background: var(--rgb-light-gray-60);
+    box-shadow: 0px 0px 4px var(--rgb-dark-30);
+}
+
+@media(max-width:1366px) {
+    .video-play-range {
+        width: 44%;
+    }
+
+    .video-box {
+        height: 550px !important;
+    }
+}
+
+@media (max-width: 1280px) {
+
+    .video-box {
+        height: 452px !important;
+    }
+}
+
+@media (max-width:800px) {
+    .video-box-controls {
+        row-gap: 24px;
+    }
+
+    .video-box-controls .primary-controls {
+        width: 100%;
+        padding: 0 20px;
+    }
+
+    .video-box-controls .secondary-controls {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 20px 0 32px;
+    }
+
+    .video-play-range {
+        width: calc(100% - 92px)
+    }
+
+    .video-slider-wrap {
+        max-width: 100%;
+    }
+}
+
+@media (max-width:480px) {
+    .commonModal.profile-modal.preview .modal-dialog {
+        margin: 0;
+        max-width: 100%;
+    }
+
+    .video-box {
+        height: 100vh !important;
+    }
+}
+
+/* profile preview video end */
+
+
+/*Start Record Video Resume Modal*/
+.commonModal.recordVideoResumeModal .modal-dialog {
+    width: 940px;
+}
+
+.commonModal.recordVideoResumeModal .modal-content {
+    background: var(--primary-black);
+    border-radius: 16px;
+}
+
+.commonModal .popupBackBtn {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    cursor: pointer;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+    z-index: 1;
+}
+
+.commonModal.recordVideoResumeModal .modalCloseBtn svg,
+.commonModal.recordVideoResumeModal .popupBackBtn svg,
+.commonModal.canRecordVideoResumeModal .modalCloseBtn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.commonModal.recordVideoResumeModal .modalCloseBtn svg path,
+.commonModal.recordVideoResumeModal .popupBackBtn svg path,
+.commonModal.canRecordVideoResumeModal .modalCloseBtn svg path {
+    stroke: var(--text-field-outline-2);
+}
+
+.commonModal.recordVideoResumeModal .modal-body,
+.commonModal.canRecordVideoResumeModal .modal-body {
+    padding: 40px;
+    text-align: left;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--white);
+}
+
+.recordVideoResumeModal .videoResumeWrap {
+    font-family: Montserrat;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    color: var(--bg-secondary);
+}
+
+.videoResumeWrap .videoResumeBox {
+    width: 100%;
+    height: 382px;
+    border-radius: 16px;
+    margin-bottom: 32px;
+    background: var(--primary-dark);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px 8px 0 0;
+}
+
+.videoResumeWrap .videoResumeBox iframe,
+.videoResumeWrap .videoResumeBox video,
+.videoResumeWrap .videoResumeBox img {
+    width: 100% !important;
+    max-width: 100%;
+    /* height: 100%; */
+    border: none;
+    outline: none;
+    border-radius: 8px 8px 0 0;
+    object-fit: contain;
+}
+
+.canRecordingVideoBox.preRecording {
+    display: flex;
+    align-items: flex-end;
+}
+
+.canRecordingVideoBox .videoResumeWrap .videoResumeBox {
+    margin-bottom: 0;
+}
+
+.canRecordingVideoBox .videoResumeBoxInfo {
+    padding: 40px;
+    text-align: left;
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--bg-secondary);
+}
+
+.canRecordingVideoBox .videoResumeBoxInfo p {
+    margin-bottom: 0;
+}
+
+.videoResumeWrap h2 {
+    font-family: Montserrat;
+    font-size: 22px;
+    line-height: 26px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 32px;
+}
+
+.videoResumeWrap .videoResumeAction {
+    display: flex;
+    align-items: center;
+    margin: 0 0 16px;
+    font-family: Montserrat;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+    color: var(--text-field-outline-2);
+}
+
+.videoResumeWrap .videoResumeAction .videoPlayBtn {
+    margin-right: 16px;
+    font-family: Montserrat;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 22px;
+    color: var(--brandYellow);
+    text-decoration: underline;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    box-shadow: none;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+.videoResumeWrap .videoResumeAction .videoPlayBtn svg circle,
+.videoResumeWrap .videoResumeAction .videoPlayBtn svg path {
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+.videoResumeWrap .videoResumeAction .videoPlayBtn:hover {
+    text-decoration: none;
+}
+
+.videoResumeWrap .videoResumeAction .videoPlayBtn:hover path {
+    stroke: var(--secondary-black);
+}
+
+.videoResumeWrap .videoResumeAction .videoPlayBtn:hover svg circle {
+    opacity: 1;
+}
+
+.canRecordingVideoBox .videoResumeBoxInfo .videoResumeActionBtn {
+    align-items: center;
+    gap: 16px 18px;
+    display: flex;
+    margin-bottom: 16px;
+    font-family: Montserrat;
+    font-size: 14px;
+    color: var(--white);
+    line-height: 18px;
+    font-weight: 400;
+}
+
+.videoResumeBoxInfo .videoResumeActionBtn .primaryBtn,
+.videoResumeBoxInfo .videoResumeActionBtn .secondaryBtn {
+    font-family: Montserrat;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid transparent;
+    background: var(--brandYellow);
+    color: var(--primary-black);
+    padding: 11px 24px;
+    border-radius: 40px;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.videoResumeBoxInfo .videoResumeActionBtn .secondaryBtn {
+    color: var(--white);
+    border-color: var(--white);
+    background: transparent;
+}
+
+.videoResumeBoxInfo .videoResumeGoBack {
+    margin-top: 32px;
+}
+
+.videoResumeBoxInfo .videoResumeGoBack .btn {
+    font-family: Montserrat;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 600;
+    color: var(--white);
+    text-transform: uppercase;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    text-decoration: underline;
+    box-shadow: none;
+    padding: 0;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+.videoResumeBoxInfo .videoResumeGoBack:hover {
+    color: var(--brandYellow);
+    text-decoration: none;
+}
+
+/*Video Recording Modal*/
+.commonModal.canRecordVideoResumeModal .modal-dialog {
+    width: 1233px;
+}
+
+.commonModal.canRecordVideoResumeModal .modal-content {
+    background: #343131;
+    border-radius: 8px;
+}
+
+.canRecordVideoResumeModal .candidateVideoResume {
+    margin: 0 -20px;
+    align-items: flex-start;
+    display: flex;
+}
+
+.candidateVideoResume .canPointsVideoResume {
+    padding: 0 20px;
+    width: 27.25%;
+    min-width: 27.25%;
+}
+
+.candidateVideoResume .canVideoResumeBox {
+    padding: 0 20px;
+    flex: 1;
+}
+
+.canRecordingStarted .canVideoResumeBox {
+    max-width: 828px;
+    margin: 0 auto;
+}
+
+.candidateVideoResume .canPointsVideoResumeList {
+    border: 1px solid var(--rgb-border-light-gray-40);
+    border-radius: 8px;
+    padding: 12px;
+    background: var(--rgb-light-gray-12);
+    color: var(--text-field-outline-2);
+    font-family: Montserrat;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.candidateVideoResume .canPointsVideoResumeList h3 {
+    font-family: Montserrat;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+    text-align: left;
+    color: var(--bg-secondary);
+    margin: 0 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.candidateVideoResume .canPointsVideoResumeList ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: li;
+}
+
+.candidateVideoResume .canPointsVideoResumeList ul li {
+    margin-bottom: 24px;
+    position: relative;
+    padding-left: 15px;
+}
+
+.candidateVideoResume .canPointsVideoResumeList ul li:before {
+    content: counter(li)'.';
+    counter-increment: li;
+    top: 0;
+    right: calc(100% - 10px);
+    z-index: 1;
+    position: absolute;
+}
+
+.candidateVideoResume .canPointsVideoResumeList ul li:last-child {
+    margin-bottom: 0;
+}
+
+.candidateVideoResume .canRecordingVideoBox {
+    /* background: #000000; */
+    background: var(--primary-black);
+    border-radius: 8px;
+    text-align: center;
+    min-height: 548px;
+}
+
+.candidateVideoResume .canRecordingVideoBox .canVideoCountDown {
+    margin: 72px auto;
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 500;
+    color: var(--white);
+    flex-direction: column;
+    align-items: center;
+    display: inline-flex;
+}
+
+.candidateVideoResume .canRecordingVideoBox .canVideoCountDown strong {
+    font-weight: 800;
+}
+
+.canRecordingVideoBox .canVideoCountDown .canVideoCountDownBox {
+    width: 152px;
+    height: 152px;
+    border: 8px solid var(--rgb-bg-peach-50);
+    border-radius: 150px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Exo;
+    font-size: 64px;
+    line-height: 72px;
+    font-weight: 600;
+    text-align: center;
+    margin: auto auto 16px;
+    color: #FFDE2F;
+}
+
+.candidateVideoResume .canRecordingVideoBox .canVideoCountDown p {
+    margin: 0;
+}
+
+.candidateVideoResume .canRecordingVideoBox .canVideoCountDown strong {
+    font-weight: 800;
+}
+
+.candidateVideoResume .canRecordingVideoBox .canVideoCountDown .primaryBtn {
+    font-family: Montserrat;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid var(--white);
+    background: transparent;
+    color: var(--white);
+    padding: 11px 32px;
+    border-radius: 40px;
+    margin-top: 32px;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+.candidateVideoResume .canRecordingVideoBox .canVideoCountDown .primaryBtn:hover {
+    background: var(--brandYellow);
+    color: var(--secondary-black);
+    border-color: var(--brandYellow);
+}
+
+.candidateVideoResume .canRecordingVideoBox .canVideoCountDown .cancelBtn {
+    font-family: Montserrat;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 600;
+    color: var(--white);
+    text-transform: uppercase;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    text-decoration: underline;
+    box-shadow: none;
+    margin-top: 24px;
+    padding: 0;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+.candidateVideoResume .canRecordingVideoBox .canVideoCountDown .cancelBtn:hover {
+    color: var(--brandYellow);
+    text-decoration: none;
+}
+
+.candidateVideoResume .canRecordingVideoBox .canRecordingVideoItem {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 548px;
+}
+
+.candidateVideoResume .canRecordingVideoBox .canRecordingVideoItem::before {
+    content: '';
+    background: linear-gradient(180deg, var(--primary-dark) -6.3%, var(--rgb-dark-black-80) 100%);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.canRecordingVideoBox .canRecordingVideoItem .canRecordingIframe {
+    max-height: 548px;
+    height: fit-content;
+}
+
+.canRecordingVideoBox .canRecordingVideoItem .canRecordingIframe iframe,
+.canRecordingVideoBox .canRecordingVideoItem .canRecordingIframe video,
+.canRecordingVideoBox .canRecordingVideoItem .canRecordingIframe img {
+    width: 100% !important;
+    max-width: 828px;
+    /* max-width: 100%; */
+    /* height: 100%; */
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.canRecordingVideoBox .canRecordingVideoItem .canVideoLive {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-family: Montserrat;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    text-align: center;
+    color: var(--failureRed);
+    background: var(--rgb-light-red-80);
+    padding: 8px 12px 8px 24px;
+    border-radius: 8px;
+    z-index: 1;
+}
+
+.canRecordingVideoBox .canRecordingVideoItem .canVideoLive:before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 8px;
+    margin: auto;
+    display: inline-block;
+    background: var(--failureRed);
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.canRecordingVideoBox .canRecordingVideoItem .canRecordingFooter {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 16px 24px;
+    background: var(--rgb-gray-20);
+    border-radius: 0 0 8px 8px;
+    z-index: 2;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    display: flex;
+}
+
+.canRecordingVideoItem .canRecordingFooter .canRecordingProgress {
+    align-items: center;
+    display: flex;
+}
+
+.canRecordingFooter .canRecordingProgress .canRecordingWave {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    background: var(--rgb-gray-20);
+    border-radius: 40px;
+    gap: 3px;
+    align-items: center;
+    justify-content: center;
+    display: inline-flex;
+    overflow: hidden;
+    margin-right: 24px;
+}
+
+.canRecordingFooter .canRecordingProgress .canRecordingWave span {
+    display: inline-block;
+    background: var(--white);
+    width: 4px;
+    height: 16px;
+    border-radius: 20px;
+    animation: up-and-down 1.3s ease infinite alternate;
+}
+
+.canRecordingFooter .canRecordingProgress .canRecordingWave span:first-child {
+    height: 18px;
+}
+
+.canRecordingFooter .canRecordingProgress .canRecordingWave span:nth-child(2) {
+    height: 13px;
+    animation-delay: -2.2s;
+}
+
+.canRecordingFooter .canRecordingProgress .canRecordingWave span:nth-child(3) {
+    height: 15px;
+    animation-delay: -3.7s;
+}
+
+@keyframes up-and-down {
+    10% {
+        /* height: 30%; */
+        height: 7px;
+    }
+
+    30% {
+        /* height: 100%; */
+        height: 18px;
+    }
+
+    60% {
+        /* height: 50%; */
+        height: 9px;
+    }
+
+    80% {
+        /* height: 75%; */
+        height: 14px;
+    }
+
+    100% {
+        /* height: 60%; */
+        height: 11px;
+    }
+}
+
+.canRecordingVideoItem .canRecordingFooter .canRecordingTimer {
+    font-family: Montserrat;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    color: var(--white);
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    margin: 0;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+.canRecordingFooter .canRecordingAction {
+    align-items: center;
+    gap: 16px;
+    display: flex;
+}
+
+.canRecordingFooter .canRecordingAction .primaryBtn {
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+    color: var(--primary-black);
+    text-align: center;
+    border: 1px solid transparent;
+    border-radius: 40px;
+    padding: 11px 24px;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+.canRecordingFooter .canRecordingAction .primaryBtn:hover {
+    background: var(--primary-black);
+    color: var(--white);
+    border-color: var(--primary-black);
+}
+
+.canRecordingFooter .canRecordingAction .primaryBtn:disabled {
+    background: var(--rgb-gray-60);
+    color: rgba(35, 31, 32, 0.8);
+    cursor: not-allowed;
+    pointer-events: unset;
+}
+
+.canRecordingFooter .canRecordingAction .restartRecording {
+    display: flex;
+    padding: 11px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    border-radius: var(--Big-curve, 40px);
+    border: 1px solid var(--white);
+    background: var(--rgb-light-gray-24);
+
+    color: var(--white);
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 18px;
+    font-style: normal;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+/*Recording Video Success */
+.commonModal.recordVideoSuccessModal .modal-dialog {
+    width: 974px;
+}
+
+.commonModal.recordVideoSuccessModal .modalCloseBtn {
+    top: 24px;
+    right: 24px;
+}
+
+.commonModal.recordVideoSuccessModal .modalCloseBtn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.commonModal.recordVideoSuccessModal .modalCloseBtn svg path {
+    stroke: #676767;
+}
+
+.commonModal.recordVideoSuccessModal.videoPlayerModal .modalCloseBtn svg path {
+    stroke: var(--primary-dark);
+}
+
+.commonModal.recordVideoSuccessModal .modal-content {
+    background: var(--white);
+    border-radius: 8px;
+}
+
+.commonModal.recordVideoSuccessModal .modal-body {
+    padding: 56px;
+    text-align: left;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--primary-black);
+}
+
+.recordVideoSuccessModal .recordVideoSuccessHead {
+    margin: 0 0 40px;
+    font-family: Montserrat;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 400;
+    color: var(--rgb-dark-gray-60);
+    letter-spacing: 0.02em;
+}
+
+.recordVideoSuccessModal .recordVideoSuccessHead strong {
+    font-weight: 600;
+}
+
+.recordVideoSuccessModal .recordVideoSuccessHead h2 {
+    font-family: Montserrat;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 700;
+    color: var(--primary-black);
+    margin: 0 0 8px;
+}
+
+.recordVideoSuccessModal .recordVideoSuccessBox {
+    position: relative;
+    /* height: 355px; */
+    height: fit-content;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.recordVideoSuccessModal .recordVideoSuccessBox:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: var(--rgb-dark-black-18);
+    /* background: linear-gradient(180.14deg, rgba(12, 12, 12, 0) -12.38%, #0C0C0C 99.88%); */
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.recordVideoSuccessBox .videoSuccessPlayer {
+    height: 100%;
+    text-align: center;
+}
+
+.recordVideoSuccessBox .videoSuccessPlayer>div {
+    /* height: 100%; */
+    max-height: 548px;
+    height: fit-content !important;
+}
+
+.recordVideoSuccessBox .videoSuccessPlayer iframe,
+.recordVideoSuccessBox .videoSuccessPlayer video,
+.recordVideoSuccessBox .videoSuccessPlayer img {
+    width: 100%;
+    height: 100%;
+    /* max-width: 100%; */
+    /* max-width: 828px; */
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.commonModal .recordVideoSuccessAction {
+    align-items: center;
+    display: flex;
+    margin-top: 48px;
+}
+
+.recordVideoSuccessAction button+button {
+    margin-left: 24px;
+}
+
+.recordVideoSuccessAction .primaryBtn,
+.recordVideoSuccessAction .secondaryBtn {
+    font-family: Montserrat;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 700;
+    text-align: center;
+    padding: 11px 24px;
+    border-radius: 40px;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+    text-transform: uppercase;
+}
+
+.recordVideoSuccessAction .primaryBtn {
+    border: 1px solid var(--brandYellow);
+    background: var(--brandYellow);
+    color: var(--primary-black);
+}
+
+.recordVideoSuccessAction .primaryBtn:hover {
+    background: var(--primary-black);
+    color: var(--white);
+    border-color: var(--primary-black);
+}
+
+.recordVideoSuccessAction .secondaryBtn {
+    border: 1px solid var(--primary-black);
+    background: transparent;
+    color: var(--primary-black);
+}
+
+.recordVideoSuccessAction .secondaryBtn:hover {
+    border: 1px solid var(--primary-black);
+    background: var(--primary-black);
+    color: var(--white);
+}
+
+.recordVideoSuccessAction .cancelBtn {
+    font-family: Montserrat;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 700;
+    color: var(--primary-black);
+    text-transform: uppercase;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    text-decoration: underline;
+    box-shadow: none;
+    padding: 0;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+.recordVideoSuccessAction .cancelBtn:hover {
+    text-decoration: none;
+}
+
+.recordVideoSuccessBox .videoPlayerStrip {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: var(--rgb-gray-20);
+    border-radius: 0 0 8px 8px;
+    padding: 16px 24px;
+    gap: 24px;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    z-index: 1;
+}
+
+.recordVideoSuccessBox .videoPlayerStrip .videoPlayerAction {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.videoPlayerStrip .videoPlayerAction .videoPlayerBtn {
+    font-family: Montserrat;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+    color: var(--white);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    box-shadow: none;
+    outline: none;
+    align-items: center;
+    justify-content: center;
+    display: inline-flex;
+}
+
+.videoPlayerStrip .videoPlayerAction .videoPlayerBtn svg {
+    position: relative;
+    -webkit-transition: all 0.25s ease 0s;
+    transition: all 0.25s ease 0s;
+}
+
+.videoPlayerStrip .videoPlayerAction .videoPlayerNext svg {
+    right: 0;
+}
+
+.videoPlayerStrip .videoPlayerAction .videoPlayerNext:hover svg {
+    right: -3px;
+}
+
+.videoPlayerStrip .videoPlayerAction .videoPlayerPre svg {
+    left: 0;
+}
+
+.videoPlayerStrip .videoPlayerAction .videoPlayerPre:hover svg {
+    left: -3px;
+}
+
+.videoPlayerAction .videoPlayerBtn.videoPlayerPause {
+    width: 32px;
+    height: 32px;
+    border-radius: 40px;
+    background: var(--rgb-light-gray-32);
+}
+
+.recordVideoSuccessBox .videoPlayerStrip .videoPlayerTimer {
+    flex: 1;
+    /* cursor: pointer; */
+    font-family: Montserrat;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    color: var(--white);
+    letter-spacing: 0.02em;
+    gap: 6px;
+    align-items: center;
+    justify-content: flex-end;
+    display: flex;
+}
+
+.videoPlayerStrip .videoPlayerTimer .videoPlayerProgress {
+    border-radius: 32px;
+    background: var(--rgb-light-gray-32);
+    width: 400px;
+    height: 6px;
+    max-width: 100%;
+    position: relative;
+}
+
+.videoPlayerStrip .videoPlayerTimer .videoPlayerProgress span {
+    height: 6px;
+    display: block;
+    background: var(--rgb-light-gray-72);
+    border-radius: 32px;
+    position: relative;
+    cursor: pointer;
+    -webkit-transition: all 0.15s ease 0s;
+    transition: all 0.15s ease 0s;
+}
+
+.videoPlayerStrip .videoPlayerTimer .videoPlayerProgress span:before {
+    content: '';
+    background: var(--light-gray);
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    border-radius: 30px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    right: -6px;
+}
+
+.videoPlayerStrip .videoPlayerTimer .videoPlayerTime {
+    min-width: 80px;
+    text-align: right;
+    -webkit-transition: all 0.2s ease 0s;
+    transition: all 0.2s ease 0s;
+}
+
+/**/
+.recordVideoSuccessBox .videoSuccessPaused {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0 40px 40px;
+    text-align: left;
+}
+
+.recordVideoSuccessBox .videoSuccessPaused h3 {
+    font-family: Montserrat;
+    font-size: 22px;
+    line-height: 26px;
+    font-weight: 600;
+    color: var(--white);
+    text-align: left;
+    margin: 0 0 16px;
+}
+
+.recordVideoSuccessBox .videoSuccessPaused .secondaryBtn {
+    font-family: Montserrat;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 18px;
+    text-align: center;
+    background: transparent;
+    color: var(--white);
+    border: 1px solid var(--white);
+    padding: 11px 24px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: none;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+.recordVideoSuccessBox .videoSuccessPaused .secondaryBtn:hover {
+    border-color: var(--brandYellow);
+    background: var(--brandYellow);
+    color: var(--primary-black);
+}
+
+.recordVideoSuccessBox .videoSuccessPaused .firstTimePlayBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.recordVideoSuccessBox .videoSuccessPaused .firstTimePlayBtn span {
+    color: var(--brandYellow);
+    font-family: Montserrat;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-decoration-line: underline;
+}
+
+.recordVideoSuccessBox .videoSuccessPaused .firstTimePlayBtn:hover span {
+    text-decoration-line: none;
+}
+
+
+/*Recording Video Discard Modal */
+.commonModal.recordVideoDiscardModal .modal-dialog {
+    width: 974px;
+}
+
+.commonModal.recordVideoDiscardModal .modalCloseBtn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--rgb-light-gray-90);
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    align-items: center;
+    justify-content: center;
+    display: inline-flex;
+    z-index: 2;
+}
+
+.commonModal.recordVideoDiscardModal .modalCloseBtn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.commonModal.recordVideoDiscardModal .modalCloseBtn svg path {
+    stroke: var(--rgb-dark-gray-100);
+    stroke-width: 2px;
+}
+
+.commonModal.recordVideoDiscardModal .modal-content {
+    background: #343131;
+    border-radius: 16px;
+    color: var(--white);
+}
+
+.commonModal.recordVideoDiscardModal .modal-body {
+    padding: 0;
+    text-align: left;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--white);
+}
+
+.recordVideoDiscardModal .recordVideoDiscardBox {
+    position: relative;
+}
+
+.recordVideoDiscardModal .recordVideoDiscardBox:before {
+    content: '';
+    background: linear-gradient(181.07deg, var(--rgb-dark-20) -56.71%, #1D1D1D 99.08%);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 16px;
+    pointer-events: none;
+}
+
+.recordVideoDiscardBox .recordVideoDiscardPlayer {
+    text-align: center;
+    border-radius: 16px;
+    height: 628px;
+}
+
+.recordVideoDiscardBox .recordVideoDiscardPlayer * {
+    height: 100%;
+}
+
+.recordVideoDiscardBox .recordVideoDiscardPlayer iframe,
+.recordVideoDiscardBox .recordVideoDiscardPlayer video,
+.recordVideoDiscardBox .recordVideoDiscardPlayer img {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    border-radius: 16px;
+    object-fit: cover;
+    background-color: var(--white);
+}
+
+.recordVideoDiscardBox .recordVideoDiscardInfo {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0 40px 40px;
+    font-family: Montserrat;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0.02em;
+    text-align: left;
+    color: var(--text-field-outline-2);
+}
+
+.recordVideoDiscardBox .recordVideoDiscardInfo h3 {
+    font-family: Montserrat;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 26px;
+    color: var(--white);
+    text-align: left;
+    margin: 0 0 4px;
+}
+
+.recordVideoDiscardBox .recordVideoDiscardInfo p {
+    color: inherit;
+    margin: 0;
+}
+
+.recordVideoDiscardBox .recordVideoDiscardInfo .recordVideoDiscardAction {
+    margin: 32px 0 0;
+    align-items: center;
+    display: flex;
+}
+
+.recordVideoDiscardInfo .recordVideoDiscardAction button+button {
+    margin-left: 24px;
+}
+
+.recordVideoDiscardInfo .recordVideoDiscardAction .primaryBtn {
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 700;
+    text-align: center;
+    border: 1px solid var(--brandYellow);
+    background: var(--brandYellow);
+    color: var(--primary-black);
+    padding: 11px 24px;
+    border-radius: 40px;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+.recordVideoDiscardInfo .recordVideoDiscardAction .primaryBtn:hover {
+    background: transparent;
+    color: var(--white);
+    border-color: var(--white);
+}
+
+.recordVideoDiscardInfo .recordVideoDiscardAction .cancelBtn {
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 700;
+    color: var(--white);
+    text-transform: uppercase;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    text-decoration: underline;
+    box-shadow: none;
+    padding: 0;
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+.recordVideoDiscardInfo .recordVideoDiscardAction .cancelBtn:hover {
+    color: var(--brandYellow);
+    text-decoration: none;
+}
+
+/*END Record Video Resume Modal*/
+
+/*############ Video player modal start  ############*/
+.videoPlayerModal .modal-body {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.videoPlayerModal .modal-body .recordVideoSuccessBox {
+    width: auto;
+    height: 530px;
+}
+
+/*############ Video player modal end  ############*/
+
+/*############ replaceVRModal Start  ############*/
+.replaceVRModal .modal-content {
+    padding: 56px;
+}
+
+.replaceVRModal .modal-head {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+.replaceVRModal .modal-head h2 {
+    color: var(--primary-black);
+    font-family: Montserrat;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 26px;
+    margin: 0;
+}
+
+.replaceVRModal .modal-head p {
+    color: var(--text-gray);
+    font-family: Montserrat;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin: 0;
+}
+
+.replaceVRModal .modal-body {
+    padding: 0;
+}
+
+.replaceVRModal .modal-body .warning-container {
+    margin: 32px 0 24px 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
+    border-radius: var(--Medium-Curve, 8px);
+    border: 0.5px solid var(--text-orange);
+    padding: 24px;
+}
+
+.replaceVRModal .modal-body .warning-container .col-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.replaceVRModal .modal-body .warning-container .col-right .warning-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.replaceVRModal .modal-body .warning-container .col-right .warning-info h3 {
+    color: var(--primary-black);
+    font-family: Montserrat;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+}
+
+.replaceVRModal .modal-body .warning-container .col-right .warning-info p {
+    color: var(--text-gray);
+    font-family: Montserrat;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    text-align: left;
+}
+
+.replaceVRModal .modal-body .warning-container .col-right .video-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
+    text-align: left;
+}
+
+.replaceVRModal .modal-body .warning-container .col-right .video-row .video-thumbnail {
+    width: 90px;
+    height: 62px;
+    border-radius: var(--Medium-Curve, 8px);
+    background: linear-gradient(183deg, var(--rgb-dark-black-0) -6.65%, var(--primary-dark) 116.28%);
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+
+}
+
+.replaceVRModal .modal-body .warning-container .col-right .video-row .video-thumbnail img,
+.replaceVRModal .modal-body .warning-container .col-right .video-row .video-thumbnail video {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+
+}
+
+.replaceVRModal .modal-body .warning-container .col-right .video-row .video-thumbnail .playBtn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
+
+.replaceVRModal .modal-body .warning-container .col-right .video-row .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.replaceVRModal .modal-body .warning-container .col-right .video-row .content h3 {
+    color: var(--primary-black);
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+    font-style: normal;
+    margin: 0;
+    text-align: left;
+}
+
+.replaceVRModal .modal-body .warning-container .col-right .video-row .content .info {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0;
+    text-decoration: none;
+    gap: 8px;
+    color: var(--text-gray);
+    font-family: Montserrat;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.replaceVRModal .modal-body .warning-container .col-right .video-row .content .info .date {
+    color: var(--text-gray);
+    font-family: Montserrat;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 14px;
+}
+
+.replaceVRModal .modal-body .warning-container .col-right .video-row .content .info .view-count {
+    color: #749C8D;
+    font-family: Montserrat;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+.replaceVRModal .modal-body hr {
+    width: 100%;
+    border-top: 2px dashed var(--rgb-overlay-dark-20);
+    margin: 24px 0;
+}
+
+.replaceVRModal .modal-body .visibility-toggle-info {
+    color: var(--primary-black);
+    font-family: Montserrat;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-align: left;
+    margin: 0 0 12px 0;
+}
+
+.replaceVRModal .client-visibilty-warning b {
+    color: var(--secondary-black);
+    font-family: Montserrat;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.replaceVRModal .client-visibilty-warning p {
+    color: var(--text-gray);
+    font-family: Montserrat;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.replaceVRModal .cta-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 24px;
+    margin: 34px 0 0 0;
+}
+
+.replaceVRModal .cancelBtn {
+    border-radius: var(--Big-curve, 27px);
+    border: 1px solid var(--primary-black);
+    color: var(--primary-black);
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+    text-transform: uppercase;
+    display: inline-flex;
+    padding: 12px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    background: var(--white);
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+.replaceVRModal .primaryBtn {
+    -webkit-transition: all 0.35s ease 0s;
+    transition: all 0.35s ease 0s;
+}
+
+.replaceVRModal .cancelBtn:hover {
+    color: var(--white);
+    background-color: var(--primary-black);
+}
+
+
+/*############ replaceVRModal End  ############*/
+
+
+/*Start Responsive Record Video Resume Modal*/
+@media screen and (max-width: 991px) {
+
+    .commonModal.recordVideoResumeModal .modal-body,
+    .commonModal.canRecordVideoResumeModal .modal-body {
+        padding: 32px 24px 24px 24px;
+    }
+
+    .commonModal.recordVideoResumeModal .modalCloseBtn,
+    .commonModal.canRecordVideoResumeModal .modalCloseBtn {
+        top: 8px;
+        right: 8px;
+    }
+
+    .commonModal .popupBackBtn {
+        top: 8px;
+        left: 8px;
+    }
+
+    .videoResumeWrap h2 {
+        font-size: 20px;
+        line-height: 26px;
+        margin-bottom: 24px;
+    }
+
+    .videoResumeWrap .videoResumeAction .videoPlayBtn {
+        font-size: 16px;
+        line-height: 20px;
+    }
+
+    .canRecordVideoResumeModal .candidateVideoResume {
+        margin: 0 -8px;
+    }
+
+    .candidateVideoResume .canPointsVideoResume,
+    .candidateVideoResume .canVideoResumeBox {
+        padding: 0 8px;
+    }
+
+    .candidateVideoResume .canPointsVideoResumeList h3,
+    .candidateVideoResume .canPointsVideoResumeList ul li {
+        margin-bottom: 16px;
+    }
+
+    .candidateVideoResume .canPointsVideoResume {
+        width: 34%;
+        min-width: 34%;
+    }
+
+    .candidateVideoResume .canRecordingVideoBox,
+    .candidateVideoResume .canRecordingVideoBox .canRecordingVideoItem  {
+        min-height: 386px;
+    }
+
+    /* .canRecordingVideoBox .canRecordingVideoItem .canRecordingIframe {
+        height: 386px;
+    } */
+
+    .canRecordingVideoBox .canRecordingVideoItem .canRecordingFooter {
+        padding: 8px 16px;
+    }
+
+    .canRecordingFooter .canRecordingProgress .canRecordingWave {
+        margin-right: 16px;
+    }
+
+    .canRecordingFooter .canRecordingAction .primaryBtn,
+    .canRecordingFooter .canRecordingAction .restartRecording {
+        padding: 9px 16px;
+        font-size: 13px;
+    }
+
+    .canRecordingVideoBox .canRecordingVideoItem .canVideoLive {
+        top: 8px;
+        left: 8px;
+    }
+
+    .commonModal.recordVideoSuccessModal .modalCloseBtn {
+        top: 16px;
+        right: 16px;
+    }
+
+    .commonModal.recordVideoSuccessModal .modal-body {
+        padding: 32px;
+    }
+
+    .recordVideoSuccessModal .recordVideoSuccessHead {
+        margin-bottom: 24px;
+    }
+
+    .recordVideoSuccessBox .videoSuccessPaused {
+        padding: 0 24px 24px;
+    }
+
+    .recordVideoSuccessBox .videoPlayerStrip {
+        padding: 8px 16px;
+    }
+
+    .recordVideoSuccessBox .videoPlayerStrip .videoPlayerAction {
+        gap: 16px;
+    }
+
+    .videoPlayerStrip .videoPlayerTimer .videoPlayerProgress {
+        width: 300px;
+    }
+
+    .commonModal .recordVideoSuccessAction {
+        margin-top: 32px;
+    }
+
+    .recordVideoSuccessAction .cancelBtn {
+        font-size: 16px;
+        line-height: 20px;
+    }
+
+    .recordVideoSuccessAction .primaryBtn,
+    .recordVideoSuccessAction .secondaryBtn {
+        font-size: 16px;
+        line-height: 20px;
+        padding: 9px 16px;
+    }
+
+    .recordVideoDiscardBox .recordVideoDiscardInfo {
+        padding: 0 24px 24px;
+    }
+
+    .recordVideoDiscardBox .recordVideoDiscardInfo .recordVideoDiscardAction {
+        margin: 24px 0 0;
+    }
+
+    .recordVideoDiscardBox .recordVideoDiscardInfo h3 {
+        font-size: 20px;
+    }
+
+    .recordVideoDiscardBox .recordVideoDiscardInfo .recordVideoDiscardAction {
+        margin-top: 24px;
+    }
+
+    .recordVideoDiscardInfo .recordVideoDiscardAction .primaryBtn {
+        padding: 9px 16px;
+    }
+
+    .commonModal.recordVideoDiscardModal .modalCloseBtn {
+        top: 8px;
+        right: 8px;
+        width: 32px;
+        height: 32px;
+    }
+
+    .commonModal.recordVideoDiscardModal .modalCloseBtn svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .recordVideoDiscardBox .recordVideoDiscardPlayer {
+        height: 500px;
+    }
+
+    .candidateVideoResume .canRecordingVideoBox .canVideoCountDown {
+        margin: 56px auto;
+    }
+
+    .canRecordingVideoBox .canVideoCountDown .canVideoCountDownBox {
+        width: 122px;
+        height: 122px;
+        border-width: 6px;
+        font-size: 44px;
+        line-height: 52px;
+    }
+
+    .candidateVideoResume .canRecordingVideoBox .canVideoCountDown .primaryBtn {
+        font-size: 16px;
+        line-height: 20px;
+        padding: 9px 24px;
+        margin-top: 24px;
+    }
+
+    .candidateVideoResume .canRecordingVideoBox .canVideoCountDown .cancelBtn {
+        font-size: 16px;
+        line-height: 20px;
+        margin-top: 16px;
+    }
+
+    .videoPlayerModal .modal-body .recordVideoSuccessBox {
+        height: 440px;
+    }
+
+    .replaceVRModal .modal-content {
+        padding: 32px;
+    }
+
+    .replaceVRModal .modal-body .warning-container {
+        margin-top: 24px;
+        padding: 16px;
+    }
+
+    .replaceVRModal .cancelBtn {
+        font-size: 16px;
+        line-height: 20px;
+        padding: 9px 24px;
+    }
+
+    .canRecordingVideoBox .videoResumeBoxInfo {
+        padding: 16px;
+    }
+
+    .canRecordingVideoBox .videoResumeBoxInfo .videoResumeActionBtn {
+        gap: 16px;
+    }
+
+    .videoResumeBoxInfo .videoResumeActionBtn .primaryBtn,
+    .videoResumeBoxInfo .videoResumeActionBtn .secondaryBtn {
+        font-size: 13px;
+        line-height: 18px;
+        padding: 8px 16px;
+    }
+
+    .videoResumeBoxInfo .videoResumeGoBack {
+        margin-top: 24px;
+    }
+
+    .videoResumeBoxInfo .videoResumeGoBack .btn {
+        font-size: 16px;
+        line-height: 20px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+
+    .commonModal.recordVideoResumeModal .modal-body,
+    .commonModal.canRecordVideoResumeModal .modal-body {
+        padding: 36px 16px 16px 16px;
+    }
+
+    .videoResumeWrap .videoResumeBox {
+        height: 260px;
+    }
+
+    .canRecordVideoResumeModal .candidateVideoResume {
+        margin: 0;
+        flex-direction: column-reverse;
+    }
+
+    .candidateVideoResume .canVideoResumeBox {
+        padding: 0;
+        width: 100%;
+    }
+
+    .candidateVideoResume .canPointsVideoResume {
+        width: 100%;
+        min-width: 100%;
+        padding-top: 24px;
+    }
+
+    .candidateVideoResume .canRecordingVideoBox,
+    .candidateVideoResume .canRecordingVideoBox .canRecordingVideoItem  {
+        min-height: 300px;
+    }
+
+    /* .canRecordingVideoBox .canRecordingVideoItem .canRecordingIframe {
+        height: 300px;
+    } */
+
+    .commonModal.recordVideoSuccessModal .modalCloseBtn {
+        top: 8px;
+        right: 8px;
+    }
+
+    .commonModal.recordVideoSuccessModal .modal-body {
+        padding: 16px;
+    }
+
+    .recordVideoSuccessModal .recordVideoSuccessHead {
+        margin-bottom: 16px;
+    }
+
+    .recordVideoSuccessBox .videoPlayerStrip {
+        padding: 8px 10px 8px 8px;
+        gap: 16px;
+    }
+
+    .videoPlayerStrip .videoPlayerTimer .videoPlayerProgress {
+        width: 220px;
+    }
+
+    .commonModal .recordVideoSuccessAction {
+        margin-top: 24px;
+    }
+
+    .recordVideoSuccessAction button+button {
+        margin-left: 16px;
+    }
+
+    .recordVideoSuccessModal .recordVideoSuccessBox {
+        height: 300px;
+    }
+
+    .recordVideoSuccessAction .cancelBtn,
+    .recordVideoSuccessAction .primaryBtn,
+    .recordVideoSuccessAction .secondaryBtn {
+        font-size: 14px;
+        line-height: 18px;
+    }
+
+    .recordVideoSuccessAction .cancelBtn {
+        margin: 0 6px 16px 0;
+    }
+
+    .recordVideoSuccessBox .videoSuccessPaused h3 {
+        font-size: 20px;
+        line-height: 24px;
+        margin: 0 0 12px;
+    }
+
+    .recordVideoSuccessBox .videoSuccessPaused .secondaryBtn {
+        font-size: 13px;
+        padding: 9px 16px;
+    }
+
+    .recordVideoDiscardBox .recordVideoDiscardPlayer {
+        height: 400px;
+    }
+
+    .recordVideoDiscardBox .recordVideoDiscardInfo {
+        padding: 0 16px 16px;
+    }
+
+    .recordVideoDiscardInfo .recordVideoDiscardAction .primaryBtn {
+        font-size: 13px;
+        line-height: 16px;
+    }
+
+    .recordVideoDiscardInfo .recordVideoDiscardAction button+button {
+        margin-left: 16px;
+    }
+
+    .commonModal.recordVideoDiscardModal .modalCloseBtn {
+        width: 24px;
+        height: 24px;
+    }
+
+    .commonModal.recordVideoDiscardModal .modalCloseBtn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .recordVideoDiscardBox .recordVideoDiscardInfo h3 {
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    .recordVideoDiscardBox .recordVideoDiscardInfo .recordVideoDiscardAction {
+        margin-top: 20px;
+    }
+
+    .candidateVideoResume .canRecordingVideoBox .canVideoCountDown {
+        margin: 32px auto;
+        font-size: 13px;
+    }
+
+    .candidateVideoResume .canRecordingVideoBox .canVideoCountDown .primaryBtn,
+    .candidateVideoResume .canRecordingVideoBox .canVideoCountDown .cancelBtn {
+        font-size: 14px;
+    }
+
+    .videoPlayerModal .modal-body .recordVideoSuccessBox {
+        height: 300px;
+    }
+
+    .replaceVRModal .modal-content {
+        padding: 24px 16px 16px 16px;
+    }
+
+    .commonModal .replaceVRModal .modalCloseBtn {
+        top: 8px;
+        right: 8px;
+    }
+
+    .replaceVRModal .modal-body .warning-container {
+        margin-top: 20px;
+        margin-bottom: 16px;
+    }
+
+    .replaceVRModal .cta-row {
+        margin-top: 24px;
+    }
+
+    .candidateVideoResume .canRecordingVideoBox.preRecording {
+        min-height: inherit;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .videoResumeWrap .videoResumeBox {
+        height: 200px;
+    }
+
+    .videoResumeWrap h2 {
+        margin-bottom: 18px;
+    }
+
+    .candidateVideoResume .canRecordingVideoBox,
+    .candidateVideoResume .canRecordingVideoBox .canRecordingVideoItem  {
+        min-height: 230px;
+    }
+
+    /* .canRecordingVideoBox .canRecordingVideoItem .canRecordingIframe {
+        height: 300px;
+    } */
+
+    .canRecordingVideoBox .canRecordingVideoItem .canRecordingFooter {
+        padding: 8px;
+        gap: 8px;
+    }
+
+    .canRecordingFooter .canRecordingAction .primaryBtn {
+        padding: 8px 10px;
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .canRecordingFooter .canRecordingAction .restartRecording {
+        position: absolute;
+        top: -39px;
+        right: 8px;
+        gap: 6px;
+        padding: 6px 10px;
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .recordVideoSuccessModal .recordVideoSuccessBox {
+        height: 230px;
+    }
+
+    .commonModal .recordVideoSuccessAction {
+        flex-wrap: wrap-reverse;
+        justify-content: center;
+    }
+
+    .recordVideoSuccessAction button+button {
+        margin: 0 0 16px;
+    }
+
+    .recordVideoSuccessBox .videoPlayerStrip .videoPlayerAction {
+        gap: 8px;
+    }
+
+    .videoPlayerStrip .videoPlayerAction .videoPlayerBtn {
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .videoPlayerStrip .videoPlayerAction .videoPlayerPre svg,
+    .videoPlayerStrip .videoPlayerAction .videoPlayerNext svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .videoPlayerAction .videoPlayerBtn.videoPlayerPause {
+        width: 24px;
+        height: 24px;
+    }
+
+    .recordVideoSuccessBox .videoPlayerStrip {
+        gap: 8px;
+        padding: 8px 10px 8px 6px;
+    }
+
+    .recordVideoSuccessBox .videoPlayerStrip .videoPlayerTimer {
+        font-size: 10px;
+        line-height: 14px;
+    }
+
+    .videoPlayerStrip .videoPlayerTimer .videoPlayerTime {
+        min-width: 64px;
+    }
+
+    .videoPlayerStrip .videoPlayerTimer .videoPlayerProgress {
+        width: 90px;
+        height: 4px;
+    }
+
+    .videoPlayerStrip .videoPlayerTimer .videoPlayerProgress span {
+        height: 4px;
+    }
+
+    .videoPlayerStrip .videoPlayerTimer .videoPlayerProgress span:before {
+        width: 10px;
+        height: 10px;
+    }
+
+    .recordVideoSuccessBox .videoSuccessPaused {
+        padding: 0 16px 16px;
+    }
+
+    .recordVideoSuccessBox .videoSuccessPaused .secondaryBtn {
+        padding: 7px 16px;
+    }
+
+    .recordVideoDiscardBox .recordVideoDiscardPlayer {
+        height: 430px;
+    }
+
+    .recordVideoDiscardBox .recordVideoDiscardInfo {
+        text-align: center;
+    }
+
+    .recordVideoDiscardBox .recordVideoDiscardInfo h3 {
+        text-align: center;
+    }
+
+    .recordVideoDiscardBox .recordVideoDiscardInfo .recordVideoDiscardAction {
+        flex-direction: column;
+    }
+
+    .recordVideoDiscardInfo .recordVideoDiscardAction button+button {
+        margin: 16px 0 0;
+    }
+
+    .videoPlayerModal .modal-body .recordVideoSuccessBox {
+        height: 250px;
+    }
+
+    .replaceVRModal .modal-body .warning-container {
+        gap: 12px;
+    }
+
+    .replaceVRModal .modal-body .warning-container .col-right {
+        gap: 12px;
+    }
+
+    .replaceVRModal .modal-body .warning-container .col-right .video-row {
+        gap: 10px;
+    }
+
+    .replaceVRModal .modal-body .warning-container .col-right .video-row .content .info {
+        flex-wrap: wrap;
+    }
+
+    .canRecordingVideoBox .videoResumeBoxInfo {
+        text-align: center;
+        padding: 24px 16px;
+    }
+
+    .canRecordingVideoBox .videoResumeBoxInfo .videoResumeActionBtn {
+        flex-direction: column;
+    }
+
+    .videoResumeBoxInfo .videoResumeActionBtn .primaryBtn,
+    .videoResumeBoxInfo .videoResumeActionBtn .secondaryBtn {
+        font-size: 14px;
+        line-height: 18px;
+        padding: 9px 16px;
+    }
+
+    .canRecordingFooter .canRecordingProgress .canRecordingWave {
+        margin-right: 10px;
+    }
+}
+
+/*END Responsive Record Video Resume Modal*/

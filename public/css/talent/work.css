@@ -6477,8 +6477,8 @@ white-space: nowrap;}
     overflow: hidden;
 }
 .containSection.workPc {
-    background: #F7F7F7;
-    padding: 0 64px;
+    /* background: #F7F7F7;
+    padding: 0 64px; */
     overflow: hidden;
     max-width: unset;
     margin-inline: unset;

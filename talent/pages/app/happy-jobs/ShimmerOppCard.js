@@ -1,0 +1,71 @@
+
+
+export default function ShimmerOppCard({ totalOpp, currentPage, bookMarkedTab }) {
+
+    const getCount = () => {
+        if (typeof totalOpp == 'undefined') return 5;
+        let a = totalOpp - (currentPage * 10)
+        if (a > 1) {
+            if (a > 10) return 10
+            return a
+        }
+        return 5
+    }
+
+    return (
+        <>
+            {bookMarkedTab ?
+                <>
+                    <LoadingCard />
+                    <LoadingCard />
+                    <LoadingCard />
+                </>
+                :
+                <>
+                    {[...new Array(getCount())].map(item => (
+                        <LoadingCard />
+                    ))}
+                </>
+            }
+        </>
+    )
+}
+
+const LoadingCard = () => {
+    const isMobile = window.innerWidth < 768;
+    return (
+        <div className={`shimmer-opp-card ${isMobile ? 'mobile' : ''}`}>
+            <div class="head">
+                <div className="top">
+                    <span className="image"></span>
+
+                    <div class="right">
+                        <span class="name"></span>
+                        <span class="company"></span>
+                        <div className="pcOnly">
+                            <span class="attribs"></span>
+                            <span class="attribs"></span>
+                        </div>
+                    </div>
+                </div>
+                <div className="bottom mobileOnly">
+                    <span class="attribs"></span>
+                    <span class="attribs"></span>
+                    <span class="skills"></span>
+                    <span class="skills"></span>
+                </div>
+            </div>
+            <div class="content">
+                <div class="mustSkills">
+                    <span class="label"></span>
+                    <span class="skills"></span>
+                </div>
+                <hr />
+                <div className="detes_apply">
+                    <span class="cta-btn"></span>
+                    <span class="cta-btn"></span>
+                </div>
+            </div>
+        </div>
+    )
+}

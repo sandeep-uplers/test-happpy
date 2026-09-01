@@ -1,7 +1,7 @@
 'use client';
 
 import NextLink from 'next/link';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import {
     usePathname,
     useRouter,
@@ -60,9 +60,26 @@ export function useLocation() {
     return { pathname, search, hash: '' };
 }
 
-/** Minimal React Router–compatible params stub for embedded/dynamic routes. */
 export function useParams() {
+    const pathname = usePathname() || '';
+    const jobAgentMatch = pathname.match(/\/talent\/job-agent\/job\/([^/?]+)/);
+    if (jobAgentMatch) {
+        return { hrId: decodeURIComponent(jobAgentMatch[1]) };
+    }
+    const gmailMatch = pathname.match(/\/talent\/gmail-connect\/([^/?]+)/);
+    if (gmailMatch) {
+        return { token: decodeURIComponent(gmailMatch[1]) };
+    }
     return {};
+}
+
+export function Navigate({ to, replace = false }) {
+    const router = useRouter();
+    useEffect(() => {
+        if (replace) router.replace(to);
+        else router.push(to);
+    }, [to, replace, router]);
+    return null;
 }
 
 export function useSearchParams() {
