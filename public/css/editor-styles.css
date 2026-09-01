@@ -1,0 +1,103 @@
+@import url("https://cdn.jsdelivr.net/npm/jodit@latest/es2021/jodit.fat.min.css");
+
+.jodit-react-container {
+    font-family: Montserrat;
+    color: #231f20;
+    line-height: 1.5;
+
+    .jodit-ui-group_separated_true,
+    .jodit-ui-group__dots {
+        display: none;
+    }
+    .jodit-add-new-line{display: none;}
+    .jodit-status-bar{display: none;}
+    .jodit-container{
+        border-radius: 8px !important;
+    }
+    .jodit-toolbar__box{
+        background: #fff;
+        border-radius: 8px 8px 0 0 !important;
+        .jodit-toolbar-editor-collection{
+            background: #fff;
+        }
+        .jodit-toolbar-button{
+            border-radius: 6px !important;
+        }
+        p, span, button, label, div, a {
+            color: unset;
+        }
+    }
+    .jodit-ui-group_separated_true.jodit-ui-group_group_font-style {
+        display: inline-flex;
+    }
+
+    .jodit-ui-group_separated_true.jodit-ui-group_group_list {
+        display: inline-flex;
+    }
+    .jodit-ui-spacer{display: none;}
+    .jodit-ui-group__lineHeight{
+        display: none;
+    }
+    .jodit-ui-group_separated_true.jodit-ui-group_group_font {
+        display: inline-flex;
+        .jodit-toolbar-button_font{display: none;}
+    }
+    .jodit-workplace{
+        border-radius: 0 0 8px 8px !important;
+    }
+    .jodit-workplace .jodit-wysiwyg {
+        min-height: 208px !important;
+
+        p {
+            margin: unset;
+            line-height: unset;
+        }
+    }
+
+    .jodit-container:not(.jodit_inline) .jodit-wysiwyg {
+        padding: 16px;
+    }
+
+    .jodit-container.jodit-preview {
+        border: none !important;
+        border-radius: 0 !important;
+        .jodit-workplace{
+            border: none !important;
+            border-radius: 0 !important;
+        }
+        .jodit-wysiwyg{
+            padding: 0 !important;
+        }
+    }
+
+    .jodit-status-bar .jodit-status-bar__item.jodit-status-bar__item-right a {
+        display: none;
+    }
+
+    li {
+        list-style-type: unset;
+    }
+
+    ul,
+    ol {
+        display: block;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        padding-inline-start: 40px;
+        unicode-bidi: isolate;
+    }
+
+    ul {
+        list-style-type: disc;
+    }
+}
+
+.ql-toolbar.ql-snow{
+    border-radius: 8px 8px 0 0 !important;
+}
+
+.ql-container.ql-snow{
+    border-radius: 0 0 8px 8px !important;
+}

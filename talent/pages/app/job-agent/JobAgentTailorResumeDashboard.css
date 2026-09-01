@@ -1,0 +1,1005 @@
+/* Rozi job-agent — Tailor Resume page (redesign: cream surface, gradient CTA, pill actions) */
+
+.job-agent-dashboard .job-agent-tailor-dashboard {
+    --jtrd-surface: #f9f8f4;
+    --jtrd-card: #ffffff;
+    --jtrd-header-cell: #f9fafc;
+    --jtrd-border: #e1e1e1;
+    --jtrd-border-strong: #e4e4e4;
+    --jtrd-text: #0a0a0a;
+    --jtrd-text-strong: #141414;
+    --jtrd-text-muted: #6b6b6b;
+    --jtrd-text-dark: #231f20;
+    --jtrd-link: #384ad7;
+    --jtrd-accent: #1632b0;
+    --jtrd-pill-border: #231f20;
+    --jtrd-placeholder: rgba(107, 107, 107, 0.6);
+    --jtrd-cta-gradient: linear-gradient(170.72deg, #9810fa 0%, #155dfc 50%, #4f39f6 100%);
+    --jtrd-cta-gradient-hover: linear-gradient(170.72deg, #8a0ee0 0%, #1252e0 50%, #4631dc 100%);
+
+    max-width: 71rem;
+    margin: 0 auto;
+    min-width: 0;
+    overflow-x: auto;
+    background: var(--jtrd-surface);
+    border-radius: 1.5rem;
+    box-sizing: border-box;
+}
+
+/* —— Header (title + total stat) —— */
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-page__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-heading {
+    flex: 1 1 24rem;
+    min-width: 0;
+    max-width: 39rem;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-page__title {
+    margin: 0 0 0.25rem;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--jtrd-text-strong);
+    letter-spacing: 0.0703px;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-page__lead {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--jtrd-text-muted);
+    letter-spacing: -0.36px;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-total {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--jtrd-text-dark);
+    white-space: nowrap;
+    padding-top: 0.25rem;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-total b {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #086D7E;
+    line-height: 1;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-total--inline {
+    display: none;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-page__title-short {
+    display: none;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-nudge__bubble-short {
+    display: none;
+}
+
+/* Mobile card list — hidden on desktop */
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card-list {
+    display: none;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card {
+    background: var(--jtrd-card);
+    border: 1px solid rgba(186, 186, 186, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    filter: drop-shadow(1px 0 6px rgba(107, 107, 107, 0.12));
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__head {
+    padding: 12px 16px;
+    min-height: 44px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    background: #e3e6fe;
+    border-bottom: 1px solid rgba(186, 186, 186, 0.2);
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__title {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--jtrd-text-dark);
+    letter-spacing: -0.455px;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__body {
+    padding: 12px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__base {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__base-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px;
+    font-size: 10px;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__base-label {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    color: var(--jtrd-text-muted);
+    letter-spacing: -0.35px;
+    white-space: nowrap;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__base-name {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    color: var(--jtrd-text-dark);
+    letter-spacing: -0.0762px;
+    word-break: break-all;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__base-name--link {
+    padding: 0;
+    border: none;
+    background: transparent;
+    text-decoration: underline;
+    text-decoration-color: var(--jtrd-link);
+    text-underline-offset: 2px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__base-sub {
+    font-family: 'Rubik', sans-serif;
+    font-size: 8px;
+    font-weight: 400;
+    color: var(--jtrd-text-muted);
+    letter-spacing: 0.0645px;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px 12px;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__meta {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: self-end;
+    gap: 4px;
+    min-width: 0;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__meta--job {
+    margin-left: auto;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__meta-label {
+    font-family: 'Rubik', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--jtrd-text-muted);
+    letter-spacing: -0.35px;
+    white-space: nowrap;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__meta-value {
+    font-family: 'Rubik', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--jtrd-text-dark);
+    white-space: nowrap;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__job-link {
+    font-family: 'Rubik', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--jtrd-link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__divider {
+    height: 1px;
+    margin: 0;
+    border: none;
+    background: var(--jtrd-border);
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card__cta {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 16px;
+    min-height: 32px;
+    font-size: 12px;
+    justify-content: center;
+}
+
+/* —— Toolbar (plan chip + actions) —— */
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-page__td-header.td-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .td-left {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    min-height: 1px;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .td-left > span:first-of-type {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.75rem;
+    border-radius: 9999px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: #ffffff;
+    color: var(--jtrd-text-dark);
+    border: 1px solid var(--jtrd-border-strong);
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .td-left p {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--jtrd-text-muted);
+}
+
+/* —— Mascot + speech bubble nudge —— */
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-nudge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    max-width: 100%;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-nudge__mascot {
+    width: 3.4375rem;
+    height: 3rem;
+    flex-shrink: 0;
+    object-fit: contain;
+    user-select: none;
+    transform: scaleX(-1);
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-nudge__bubble {
+    position: relative;
+    padding: 0.75rem;
+    background: #ffffff;
+    border: 1px solid var(--jad-mascot-outline);
+    border-radius: 0.5rem;
+    filter: drop-shadow(2px 4px 2px rgba(129, 127, 127, 0.24));
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #5a5278;
+}
+
+/* Outlined arrow on the left edge of the bubble — two triangles layered
+   for the border + fill effect. */
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-nudge__bubble::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 7px 8px 7px 0;
+    border-style: solid;
+    border-color: transparent var(--jad-mascot-outline) transparent transparent;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .td-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .resume-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* Hide the older inline total markup if present */
+.job-agent-dashboard .job-agent-tailor-dashboard .td-right .total-resumes {
+    display: none;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .outlinedBtn.add-resume-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--jtrd-pill-border);
+    border-radius: 27px;
+    background: #ffffff;
+    color: var(--jtrd-text-dark);
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .outlinedBtn.add-resume-btn:hover {
+    background: var(--jtrd-text-dark);
+    color: #ffffff;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .outlinedBtn.add-resume-btn svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .create-tr-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 27px;
+    background: #46ECCD;
+    color: #231f20;
+    font-family: 'Telegraf', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    white-space: nowrap;
+    text-transform: uppercase;
+    line-height: 1;
+    cursor: pointer;
+    transition: filter 0.15s ease, background 0.15s ease;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .create-tr-btn:hover {
+    filter: brightness(0.95);
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .create-tr-btn svg {
+    width: 1.0625rem;
+    height: 1.0625rem;
+
+    path{
+        fill: #231f20;
+    }
+}
+
+/* —— Plan expired banner —— */
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-plan-banner.plan-expired-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+    padding: 0.875rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--jtrd-border-strong);
+    background: #ffffff;
+    color: var(--jtrd-text-dark);
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-plan-banner .b-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--jtrd-text-dark);
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-plan-banner .renew-plan-btn {
+    padding: 0.6rem 1rem;
+    border-radius: 27px;
+    border: 1px solid #9810fa;
+    background: var(--jtrd-cta-gradient);
+    color: #ffffff;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: filter 0.15s ease, background 0.15s ease;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-plan-banner .renew-plan-btn:hover {
+    background: var(--jtrd-cta-gradient-hover);
+    filter: brightness(1.03);
+}
+
+/* —— Table shell —— */
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-list.td-resume-list-container {
+    border: 1px solid var(--jtrd-border-strong);
+    border-radius: 0.75rem;
+    background: var(--jtrd-card);
+    box-shadow: none;
+    overflow: hidden;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .td-resume-table-header {
+    display: grid;
+    grid-template-columns: minmax(15rem, 1.4fr) minmax(15rem, 2fr) minmax(7rem, 0.85fr) minmax(11rem, 0.95fr);
+    align-items: stretch;
+    background: var(--jtrd-header-cell);
+    border-bottom: 1px solid var(--jtrd-border);
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--jtrd-text-muted);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .td-resume-table-header .tdr-col {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 900px) {
+    .job-agent-dashboard .job-agent-tailor-dashboard .td-resume-table-header {
+        display: none;
+    }
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .td-resume-list-row {
+    display: grid;
+    grid-template-columns: minmax(15rem, 1.4fr) minmax(15rem, 2fr) minmax(7rem, 0.85fr) minmax(11rem, 0.95fr);
+    align-items: stretch;
+    border-bottom: 1px solid var(--jtrd-border);
+    background: var(--jtrd-card);
+    transition: background 0.12s ease;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .td-resume-list-row:last-child {
+    border-bottom: none;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .td-resume-list-row:hover {
+    background: #fafafa;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .td-resume-list-row .tdr-col {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    min-height: 4.4375rem;
+    position: relative;
+
+    @media screen and (max-width: 899px) and (min-width: 768px) {
+        padding: 0.25rem;
+        min-height: unset;
+    }
+}
+
+/* Custom column dividers: short (39px) vertical line, centered on the row,
+   appearing between body cells only (skipped on the first cell of each row). */
+.job-agent-dashboard .job-agent-tailor-dashboard .td-resume-list-row .tdr-col:not(:first-child)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 2.4375rem;
+    background: var(--jtrd-border);
+    pointer-events: none;
+}
+
+/* —— Base resume cell —— */
+.job-agent-dashboard .job-agent-tailor-dashboard .tdr-col.resume-col {
+    align-items: center;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-base {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    width: 100%;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-base__icon {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-base__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .resume-name {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 0.75rem;
+    line-height: 1.25;
+    color: var(--jtrd-text);
+    letter-spacing: -0.0762px;
+    word-break: break-word;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .resume-type {
+    display: block;
+    margin-top: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 400;
+    color: var(--jtrd-text-muted);
+    letter-spacing: 0.0645px;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .base-resume-view {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--jtrd-link);
+    text-underline-offset: 2px;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .base-resume-view:hover {
+    color: var(--jtrd-link);
+}
+
+/* —— Tailored resume cell —— */
+.job-agent-dashboard .job-agent-tailor-dashboard .tdr-col.tailored-resume-col {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.125rem;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .tr-name {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 0.75rem;
+    line-height: 1.25;
+    color: var(--jtrd-text);
+    letter-spacing: -0.0762px;
+    word-break: break-word;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-placeholder {
+    font-family: 'Rubik', sans-serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: var(--jtrd-placeholder);
+    letter-spacing: -0.0762px;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .tr-info.link {
+    color: #086D7E;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.0645px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard a.tr-info.link:hover,
+.job-agent-dashboard .job-agent-tailor-dashboard span.tr-info.link:hover {
+    text-decoration: underline;
+    opacity: 0.85;
+}
+
+/* —— Last Modified —— */
+.job-agent-dashboard .job-agent-tailor-dashboard .last-modified-at-col {
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--jtrd-text-dark);
+    font-variant-numeric: tabular-nums;
+}
+
+/* —— Action: VIEW RESUME pill —— */
+.job-agent-dashboard .job-agent-tailor-dashboard .tdr-col.action-col {
+    justify-content: flex-start;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-view-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.6875rem 1.5625rem;
+    border-radius: 27px;
+    border: 1px solid var(--jtrd-pill-border);
+    background: #ffffff;
+    color: var(--jtrd-text-dark);
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: normal;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+    font-family: 'Telegraf', sans-serif;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-view-btn:hover {
+    background: var(--jtrd-text-dark);
+    color: #ffffff;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-view-btn--loading {
+    min-width: 7.5rem;
+    min-height: 2.5rem;
+    cursor: progress;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-view-btn--loading .spinner-border {
+    color: var(--jtrd-text-dark);
+    border-width: 2px;
+}
+
+/* —— Pagination —— */
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-pagination.pagination-container {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--jtrd-border);
+    background: var(--jtrd-card);
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-pagination ul.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-pagination ul.pagination li a,
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-pagination ul.pagination li span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    min-height: 2rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--jtrd-text-dark);
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-pagination ul.pagination li.active a,
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-pagination ul.pagination li.active span {
+    background: var(--jtrd-text-dark);
+    color: #ffffff;
+    border-color: var(--jtrd-text-dark);
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-pagination ul.pagination li:not(.active):not(.disabled) a:hover {
+    background: #f3f3f3;
+    border-color: var(--jtrd-border-strong);
+}
+
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-pagination ul.pagination li.disabled a,
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-pagination ul.pagination li.disabled span {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Spinner in table */
+.job-agent-dashboard .job-agent-tailor-dashboard .spinner-border-sm {
+    border-color: var(--jtrd-text-dark);
+    border-right-color: transparent;
+}
+
+/* —— Loading overlay —— */
+.job-agent-dashboard .job-agent-tailor-dashboard .jad-subscription-fetch-state .jad-subscription-fetch-state__text {
+    color: var(--jtrd-text-dark);
+}
+
+
+/* Figma 28886:26996 — mobile tailor resume dashboard */
+@media (max-width: 767px) {
+    .job-agent-dashboard .job-agent-tailor-dashboard {
+        border-radius: 0;
+        overflow-x: hidden;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-page__header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        margin-bottom: 12px;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-heading {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-page__title-full {
+        display: none;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-page__title-short {
+        display: inline;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-page__title {
+        margin: 0 0 4px;
+        font-family: 'Poppins', 'Montserrat', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: #2f2f2f;
+        letter-spacing: 0;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-page__lead {
+        display: none;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-total--desktop {
+        display: none;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-total--inline {
+        display: block;
+        margin: 0;
+        padding: 0;
+        font-size: 12px;
+        line-height: 1.56;
+        letter-spacing: -0.7px;
+        white-space: normal;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-total--inline b {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: normal;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-page__td-header.td-header {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .td-right {
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .resume-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .outlinedBtn.add-resume-btn,
+    .job-agent-dashboard .job-agent-tailor-dashboard .create-tr-btn {
+        flex: 1 1 calc(50% - 6px);
+        min-width: 0;
+        justify-content: center;
+        padding: 12px;
+        font-size: 12px;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .td-left {
+        align-self: stretch;
+        width: 100%;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-nudge {
+        align-items: center;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-nudge__mascot {
+        width: 47px;
+        height: 41px;
+        margin-bottom: 0;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-nudge__bubble {
+        flex: 1 1 auto;
+        max-width: calc(100% - 52px);
+        margin-left: auto;
+        padding: 8px;
+        border-radius: 6px;
+        font-size: 10px;
+        line-height: normal;
+        filter: drop-shadow(2px 4px 2px rgba(129, 127, 127, 0.24));
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-nudge__bubble-full {
+        display: none;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-nudge__bubble-short {
+        display: inline;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-list.td-resume-list-container {
+        background: transparent;
+        border: none;
+        overflow: visible;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-table-head,
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-table-row {
+        display: none;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-card-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-pagination.pagination-container {
+        border: 1px solid var(--jtrd-border-strong);
+        border-radius: 12px;
+        margin-top: 8px;
+    }
+}
+
+@media (max-width: 900px) and (min-width: 768px) {
+    /* Tablet: stack header/toolbar; keep desktop table */
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-page__header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-heading {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-trd-total {
+        padding-top: 0;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .td-left {
+        align-self: flex-start;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .td-right {
+        align-items: stretch;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .resume-actions {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 899px) {
+    .job-agent-dashboard .job-agent-tailor-dashboard .td-resume-table-header {
+        display: none;
+    }
+}
+
+@media (max-width: 899px) and (min-width: 768px) {
+    .job-agent-dashboard .job-agent-tailor-dashboard .td-resume-list-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "resume    last"
+            "tailored  action";
+        column-gap: 1rem;
+        background: var(--jtrd-card);
+        border: 1px solid var(--jtrd-border-strong);
+        border-radius: 0.75rem;
+        margin-bottom: 0.75rem;
+        padding: 1rem;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .jad-tailor-list.td-resume-list-container {
+        background: transparent;
+        border: none;
+        overflow: visible;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .td-resume-list-row .tdr-col::before {
+        display: none;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .td-resume-list-row .tdr-col.resume-col {
+        grid-area: resume;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .td-resume-list-row .tdr-col.tailored-resume-col {
+        grid-area: tailored;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .td-resume-list-row .tdr-col.last-modified-at-col {
+        grid-area: last;
+        justify-content: flex-end;
+        text-align: right;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .td-resume-list-row .tdr-col.last-modified-at-col::before {
+        content: 'Last Modified: ';
+        font-weight: 700;
+        color: var(--jtrd-text-muted);
+        margin-right: 0.25rem;
+    }
+
+    .job-agent-dashboard .job-agent-tailor-dashboard .td-resume-list-row .tdr-col.action-col {
+        grid-area: action;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 767px) {
+    .job-agent-dashboard .job-agent-tailor-dashboard .outlinedBtn.add-resume-btn svg,
+    .job-agent-dashboard .job-agent-tailor-dashboard .create-tr-btn svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+    }
+}

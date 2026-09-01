@@ -1,0 +1,1944 @@
+/********************************  beforeAfter Start **************************/
+.beforeAfter-wrapper {
+    width: 100%;
+    background: linear-gradient(118.92deg, #EFEEFF 26.18%, rgba(255, 234, 222, 0.94) 96.85%);
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* margin-inline: -64px;
+    width: calc(100% + 128px); */
+}
+
+.beforeAfter-wrapper .beforeAfter-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.25rem 0 1.5rem;
+    gap: 2rem;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Left Section Styling */
+.beforeAfter-wrapper .beforeAfter-container .left-section {
+    /* flex: 1; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .left-section h1 {
+    color: #231F20;
+    font-family: Montserrat;
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.875rem;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .left-section p {
+    font-family: Montserrat;
+    font-weight: 400;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    margin: 0;
+}
+
+/* Hero Description Styling */
+.beforeAfter-wrapper .beforeAfter-container .left-section .hero-description {
+    font-family: Montserrat, sans-serif;
+    font-weight: 500;
+    font-size: 1.125rem;
+    line-height: 1.4;
+    color: #231F20;
+    text-align: center;
+    margin: 0;
+    padding: 0 1.25rem;
+    max-width: 80%;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .left-section .hero-description .highlight-number {
+    font-weight: 700;
+    color: #32936F;
+    background: linear-gradient(135deg, #32936F 0%, #2a7a5f 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(50, 147, 111, 0.2);
+}
+
+.beforeAfter-wrapper .beforeAfter-container .left-section .cta-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.375rem;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .left-section .cta-container .cta-btn {
+    background: #000;
+    color: #fff;
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 1.125rem;
+    padding: 0.875rem 2rem;
+    border: none;
+    border-radius: 27px;
+    cursor: pointer;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .left-section .cta-container p {
+    font-size: 0.75rem;
+    font-family: Montserrat;
+    font-weight: 500;
+    color: #231F20;
+}
+
+/* Right Section - Placeholder for profile cards */
+
+.beforeAfter-wrapper .beforeAfter-container .right-section {
+    padding-inline: 1.5rem;
+    flex-shrink: 0;
+
+    @media screen and (min-width: 768px) and (max-width: 991px) {
+        padding-inline: 40px;
+    }
+}
+
+/* Candidate Carousel Styling */
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    background-color: transparent;
+    max-width: 100%;
+    width: 100%;
+}
+
+/* Candidate Card Styling */
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card {
+    background-color: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 2px 2px 15px 0px #00000014;
+    position: relative;
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .before-after-topper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        border-radius: 0 0 16px 16px;
+
+        >div {
+            width: 50%;
+            display: flex;
+            justify-content: flex-start;
+
+            span {
+                padding: 0.5rem 1rem;
+                color: #231F20;
+                font-size: 0.875rem;
+                font-weight: 600;
+                line-height: 0.875rem;
+                background: #FF9C8C;
+                border-radius: 12px 0 12px 0;
+
+                @media screen and (max-width: 768px) {
+                    font-size: 10px;
+                    line-height: 10px;
+                    padding: 4px 12px;
+                    border-radius: 0 0 0 8px;
+                }
+            }
+
+            &:last-child {
+                justify-content: flex-end;
+
+                span {
+                    background: rgba(0, 255, 0, 0.5);
+                    border-radius: 0 16px 0 12px;
+                    color: #231F20;
+
+                    @media screen and (max-width: 768px) {
+                        border-radius: 0 12px 0 8px;
+                    }
+                }
+            }
+        }
+    }
+
+    .fade-before {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        border-radius: 16px 0 0 16px;
+        border: 1px solid rgba(255, 0, 0, 0.5);
+        box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.5);
+    }
+
+    .fade-after {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        border-radius: 0 16px 16px 0;
+        border: 1px solid rgba(0, 255, 0, 0.5);
+        box-shadow: inset 0 0 16px rgba(0, 255, 0, 0.5);
+    }
+}
+
+.before-after-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    .before-after-pointer {
+        display: flex;
+        width: 100%;
+        padding-inline: 1rem;
+
+        .before-pointers {
+            width: 50%;
+            background: rgba(255, 156, 140, 0.95);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            outline: 1px solid rgba(255, 156, 140, 0.3);
+            padding: 0.75rem 1rem 0.75rem 1.5rem;
+            border-radius: 16px 0 0 0;
+
+            h3 {
+                color: #231F20;
+                font-size: 0.875rem;
+                font-weight: 600;
+                line-height: 0.875rem;
+                margin-bottom: 0.5rem;
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.375rem 1rem;
+                padding-left: 0.25rem;
+
+                li {
+                    font-size: 0.75rem;
+                    font-weight: 500;
+                    line-height: 0.9375rem;
+                    color: #231F20;
+                    margin-left: 0.75rem;
+                    list-style: disc;
+
+                    @media screen and (max-width: 768px) {
+                        width: 100%;
+                    }
+                }
+            }
+
+            @media screen and (max-width: 576px) {
+                padding: 8px 12px 8px 12px;
+
+                h3 {
+                    font-size: 12px;
+                    line-height: 14px;
+                }
+
+                ul {
+                    padding-left: 12px;
+
+                    li {
+                        font-size: 10px;
+                        line-height: 12px;
+                        margin-left: 0;
+                    }
+                }
+            }
+        }
+
+        .after-pointers {
+            width: 50%;
+            background: rgba(163, 255, 156, 0.7);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            outline: 1px solid rgba(163, 255, 156, 0.3);
+            padding: 0.75rem 1rem 0.75rem 1.5rem;
+            border-radius: 0 16px 0 0;
+
+            h3 {
+                color: #231F20;
+                font-size: 0.875rem;
+                font-weight: 600;
+                line-height: 0.875rem;
+                margin-bottom: 0.5rem;
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.375rem 1rem;
+                padding-left: 0.25rem;
+
+                li {
+                    font-size: 0.75rem;
+                    font-weight: 500;
+                    line-height: 0.9375rem;
+                    color: #231F20;
+                    margin-left: 0.75rem;
+                    list-style: disc;
+                }
+            }
+
+
+
+            @media screen and (max-width: 576px) {
+                padding: 8px 12px 8px 12px;
+
+                h3 {
+                    font-size: 12px;
+                    line-height: 14px;
+                }
+
+                ul {
+                    padding-left: 12px;
+
+                    li {
+                        font-size: 10px;
+                        line-height: 12px;
+                        margin-left: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@-webkit-keyframes fade-in {
+    0% {
+        opacity: 0
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+    background-color: transparent;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .left {
+    flex-shrink: 0;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .left .card-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .left .card-image img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .left .card-image .profile-cta {
+    background-color: #FFF3C2;
+    border: none;
+    padding: 6px 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+    font-weight: 600;
+    font-family: Montserrat;
+
+    cursor: pointer;
+    color: #000;
+    transition: all 0.2s ease-in-out;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .left .card-image .profile-cta:hover {
+    background-color: #fff7d7;
+}
+
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row1 .name-yoe h3 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0;
+    color: #231F20;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row1 .name-yoe p {
+    font-family: Montserrat;
+    font-weight: 400;
+    font-size: 14px;
+    color: #666;
+    margin: 4px 0 0 0;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row1 .availability {
+    display: flex;
+    align-items: center;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background-color: #F3FEFF;
+    border: 0.5px solid #093E49;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row1 .availability p {
+    color: #231F20;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: Montserrat;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(90deg, rgba(226, 226, 231, 0.6) 0%, rgba(246, 236, 185, 0.6) 46.5%, rgba(238, 231, 208, 0.6) 100%);
+    border-radius: 18px;
+    padding: 16px;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 .current-company {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 .current-company p {
+    font-family: Montserrat;
+    font-weight: 500;
+    font-size: 14px;
+    margin: 0;
+    color: #231F20;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 .current-company img {
+    height: 14px;
+    object-fit: contain;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 hr {
+    border: none;
+    height: 1px;
+    background-color: #E0E1E0;
+    margin: 16px 0 12px 0
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 .previous-companies {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 .previous-companies p {
+    margin: 0;
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 8px;
+    line-height: 100%;
+    text-transform: uppercase;
+    color: #231F20;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 .previous-companies .company-list {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 .previous-companies .company-list img {
+    height: 14px;
+    object-fit: contain;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .skills-container .skill-pebble {
+    background-color: #F2F2F2;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #000000;
+    margin: 0;
+    font-family: Montserrat;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card hr {
+    border: none;
+    height: 1px;
+    background-color: #EFEFEF;
+    margin: 0;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .candidate-summary {
+    max-height: 60px;
+    overflow: hidden;
+    margin: 16px 0 0 0;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .candidate-summary p {
+    font-family: Montserrat;
+    font-size: 12px;
+    color: #000000;
+    font-weight: 400;
+    line-height: 18px;
+    margin: 0;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Candidate Selector Row */
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-row .candidate-selector {
+    width: 4.6875rem;
+    height: 4.6875rem;
+    border-radius: 50%;
+    border: 3px solid #FFF3C2;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin-left: -0.9375rem;
+    position: relative;
+
+    .company-logo {
+        position: absolute;
+        bottom: -1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #FFF;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        width: 3rem;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        scale: 0.6;
+        transition: all 0.35s ease-in-out;
+        padding: 0.1875rem;
+
+        img {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .company-logo.active {
+        scale: 1;
+    }
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-row .candidate-selector:first-child {
+    margin-left: 0;
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-row .candidate-selector.active {
+    border-color: #FFDA30;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 8;
+    transform: scale(1.05);
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-row .candidate-selector:hover {
+    transform: scale(1.05);
+}
+
+.beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-row .candidate-selector img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+
+/********************************  beforeAfter End **************************/
+
+
+/********************************  beforeAfterModal Start **************************/
+.beforeAfter-modal-portal .ReactModal__Content {
+    outline: none !important;
+    border: none !important;
+}
+
+.beforeAfter-modal-portal .ReactModal__Overlay {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.beforeAfter-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 500px;
+    width: 500px;
+    background: white;
+    border-radius: 24px;
+    max-height: 90vh;
+    padding: 0;
+    border: none;
+    outline: none;
+    overflow-y: scroll;
+}
+
+.beforeAfter-modal .commanModalHeader {
+    padding: 32px 40px 24px 40px;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+.beforeAfter-modal .commanModalHeader::before {
+    display: none;
+}
+
+
+.beforeAfter-modal .commanModalHeader .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    z-index: 999;
+}
+
+.beforeAfter-modal .commanModalHeader h2 {
+    font-family: Montserrat, sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: #231F20;
+    margin: 0 0 5px;
+    position: relative;
+}
+
+.beforeAfter-modal .commanModalHeader h2 .sparkle-icon {
+    position: absolute;
+    top: -10px;
+    right: -23px;
+}
+
+.beforeAfter-modal .commanModalHeader p {
+    font-family: Montserrat, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.beforeAfter-modal .modal-container {
+    padding: 0 40px 40px 40px;
+    min-height: fit-content;
+}
+
+.beforeAfter-modal .modal-container .form-group {
+    margin-bottom: 22px;
+}
+
+.beforeAfter-modal .modal-container .form-group label {
+    display: block;
+    font-family: Montserrat, sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: #6B6B6B;
+    margin-bottom: 6px;
+}
+
+.beforeAfter-modal .modal-container .form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #DDD;
+    border-radius: 8px;
+    font-family: Montserrat, sans-serif;
+    font-size: 14px;
+    color: #232323;
+    outline: none;
+    font-weight: 500;
+}
+
+.beforeAfter-modal .modal-container .form-group input::placeholder {
+    color: #6B6B6B99;
+    font-size: 14px;
+    font-family: Montserrat;
+    font-weight: 500;
+
+}
+
+.beforeAfter-modal .modal-container .form-group .customSelect__control {
+    padding: 6px 15px;
+    min-height: 0;
+}
+
+.beforeAfter-modal .modal-container .form-group .customSelect__placeholder {
+    font-family: Montserrat;
+    font-weight: 500;
+    font-size: 14px;
+    color: #6B6B6B99;
+}
+
+.beforeAfter-modal .modal-container .form-group .password-input-container {
+    position: relative;
+}
+
+.beforeAfter-modal .modal-container .form-group .password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+}
+
+.beforeAfter-modal .modal-container .form-group .contact-support {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 4px;
+
+    background: linear-gradient(90deg, rgba(226, 226, 231, 0.6) 0%, rgba(246, 236, 185, 0.6) 46.5%, rgba(238, 231, 208, 0.6) 100%);
+    border-radius: 8px;
+    padding: 10px 8px;
+}
+
+.beforeAfter-modal .modal-container .form-group .contact-support p {
+    color: #232326;
+    font-family: Montserrat;
+    font-weight: 450;
+    font-size: 11px;
+    line-height: 16px;
+}
+
+.beforeAfter-modal .modal-container .form-group .contact-support a {
+    color: #384AD7;
+    text-decoration: underline;
+    cursor: pointer;
+
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 16px;
+}
+
+.beforeAfter-modal .modal-container .form-group .contact-support a:hover {
+    text-decoration: none;
+}
+
+.beforeAfter-modal .modal-container .btnPrimary {
+    width: 100%;
+    background: #231F20;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 14px;
+    font-family: Montserrat, sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.beforeAfter-modal .modal-container .btnPrimary:hover {
+    background: #333;
+}
+
+.beforeAfter-modal .modal-container .login-link {
+    text-align: center;
+    margin-top: 18px;
+    font-family: Montserrat, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+}
+
+.beforeAfter-modal .modal-container .login-link a {
+    color: #232323;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: Montserrat, sans-serif;
+    cursor: pointer;
+}
+
+.beforeAfter-modal .modal-container .login-link a:hover {
+    text-decoration: underline;
+}
+
+.beforeAfter-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.beforeAfter-modal::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.beforeAfter-modal::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.beforeAfter-modal::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+/* Password Info Field Styling Start */
+.beforeAfter-modal .passwordInfoField {
+    margin: 8px 0 0 0;
+    padding: 14px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #CECCCC;
+    z-index: 999;
+}
+
+.beforeAfter-modal .passwordInfoField p {
+    font-family: Montserrat;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    margin: 0 0 8px 0;
+}
+
+.beforeAfter-modal .passwordInfoField ul {
+    gap: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.beforeAfter-modal .passwordInfoField ul li {
+    font-family: Montserrat;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    color: #6B6B6B;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.beforeAfter-modal .passwordInfoField ul li svg {
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+}
+
+.beforeAfter-modal .passwordInfoField ul li i {
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+}
+
+.beforeAfter-modal .passwordInfoField ul .passwordSuccess {
+    color: #32936F;
+}
+
+/* Password Info Field Styling End */
+
+.beforeAfter-modal .modal-container .error-input input,
+.beforeAfter-modal .modal-container .error-input .customSelect__control {
+    border-color: #FF5C5C !important;
+}
+
+.beforeAfter-modal .modal-container .error-message {
+    color: #FF5C5C;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+
+/* Custom select styles start  */
+.beforeAfter-modal .customSelect__menu-list {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+.beforeAfter-modal .customSelect__menu-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.beforeAfter-modal .customSelect__menu-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.beforeAfter-modal .customSelect__menu-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.beforeAfter-modal .customSelect__menu-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.beforeAfter-modal .company-option {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    background-color: white;
+    font-family: Montserrat;
+}
+
+.beforeAfter-modal .company-option:hover,
+.beforeAfter-modal .company-option.focused {
+    background-color: #f2f0f0;
+}
+
+.beforeAfter-modal .company-option.selected {
+    background-color: #dfdfdf;
+    font-weight: 500;
+}
+
+.beforeAfter-modal .company-option .company-logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.beforeAfter-modal .company-option .company-initials {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    border-radius: 4px;
+    background-color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 12px;
+    color: #ffffff;
+    font-family: Montserrat;
+}
+
+.beforeAfter-modal .company-option .company-label {
+    font-size: 14px;
+    color: #232323;
+    font-family: Montserrat;
+}
+
+/* Single Value and Value Container */
+
+
+
+/* Single Value */
+.beforeAfter-modal .company-single-value {
+    display: flex;
+    align-items: center;
+    font-family: Montserrat;
+    font-size: 14px;
+    position: absolute;
+    transform: translateY(-50%);
+    top: 50%;
+}
+
+.beforeAfter-modal .company-single-value .company-logo-small {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.beforeAfter-modal .company-single-value .company-initials-small {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border-radius: 4px;
+    background-color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 11px;
+    color: #ffffff;
+    font-family: Montserrat;
+}
+
+/* Custom select styles end  */
+
+/********************************  beforeAfterModal End **************************/
+
+
+/********************************  Contact Sales Modal Start **************************/
+.contact-sales-modal {
+    width: 928px;
+    max-width: 90%;
+    overflow-y: auto;
+}
+
+.contact-sales-modal .commanModalHeader-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0;
+}
+
+.contact-sales-modal .commanModalHeader-title .left {
+    flex-shrink: 0;
+}
+
+.contact-sales-modal .commanModalHeader-title .left img {
+    width: 78px;
+    height: auto;
+}
+
+.contact-sales-modal .commanModalHeader-title .right {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: flex-start;
+}
+
+.contact-sales-modal .commanModalHeader-title .right h2 {
+    font-family: Montserrat, sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #231F20;
+    margin: 0;
+}
+
+.contact-sales-modal .commanModalHeader-title .right p {
+    font-family: Montserrat, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    color: #6B6B6B;
+    margin: 0;
+}
+
+.contact-sales-modal .modal-container .form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+.contact-sales-modal .modal-container .form-row .form-group {
+    width: 100%;
+    max-width: 400px;
+}
+
+.contact-sales-modal .modal-container textarea {
+    width: 100%;
+    min-height: 82px;
+    padding: 16px;
+    border: 1px solid #CECCCC;
+    border-radius: 8px;
+    font-family: Montserrat, sans-serif;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+    color: #231F20;
+    font-weight: 500;
+}
+
+.contact-sales-modal .modal-container .error-input textarea {
+    border-color: #FF5C5C !important;
+}
+
+.contact-sales-modal .modal-container textarea::placeholder {
+    color: #6B6B6B99;
+    font-weight: 500;
+}
+
+.contact-sales-modal .modal-container .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.contact-sales-modal .modal-container .footer .left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: Montserrat, sans-serif;
+}
+
+.contact-sales-modal .modal-container .footer .left p {
+    font-family: Montserrat;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    color: #231F20;
+}
+
+.contact-sales-modal .modal-container .footer .left p a {
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 100%;
+    color: #231F20;
+    cursor: pointer;
+}
+
+.contact-sales-modal .modal-container .footer .right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.contact-sales-modal .modal-container .footer .right .btnPrimary {
+    font-size: 14px;
+    margin: 0;
+    font-weight: 600;
+    line-height: 100%;
+    padding: 10px 24px;
+    white-space: nowrap;
+    min-height: fit-content;
+}
+
+.contact-sales-modal .modal-container .footer .right .btnSecondary {
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 100%;
+    color: #6B6B6B;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    white-space: nowrap;
+    height: fit-content;
+}
+
+/********************************  Contact Sales Modal End **************************/
+
+
+/********************************  beforeAfter Errors Modal Start **************************/
+/* Base Modal Styles */
+.beforeAfter-errors-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 500px;
+    background: white;
+    border-radius: 24px;
+    max-height: 90vh;
+    padding: 0;
+    border: none;
+    outline: none;
+    overflow-y: auto;
+}
+
+/* Text Styles */
+
+.beforeAfter-errors-modal .commanModalHeader h4 {
+    font-family: Montserrat, sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #231F20;
+    margin: 0;
+    margin-bottom: 8px;
+}
+
+.beforeAfter-errors-modal .commanModalHeader p {
+    font-family: Montserrat, sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #231F20;
+    margin: 0;
+}
+
+
+/* Scrollbar Styling */
+.beforeAfter-errors-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.beforeAfter-errors-modal::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.beforeAfter-errors-modal::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.beforeAfter-errors-modal::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+/********************************  beforeAfter Errors Modal End **************************/
+
+
+
+/* Responsive styles */
+
+@media (max-width: 1100px) {
+
+    /* .beforeAfter-wrapper .beforeAfter-container .left-section .hero-description {
+        font-size: 16px;
+        padding: 0 16px;
+    } */
+
+    .beforeAfter-wrapper .beforeAfter-container .left-section {
+        align-items: center;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .left-section h1 {
+        text-align: center;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .left-section p {
+        text-align: center;
+        max-width: 100%;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .left-section .cta-container {
+        align-items: center;
+    }
+
+}
+
+@media (max-width: 750px) {
+    .beforeAfter-wrapper .beforeAfter-container .left-section .hero-description {
+        font-size: 14px;
+        padding: 0 12px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .left-section h1 {
+        font-size: 20px;
+        line-height: 26px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .left-section p {
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .left-section .cta-container .cta-btn {
+        font-weight: 600;
+        font-size: 14px;
+        padding: 12px 32px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .left-section .cta-container p {
+        font-size: 10px;
+    }
+
+    .contact-sales-modal .commanModalHeader-title .right h2 {
+        font-size: 20px;
+    }
+
+    .contact-sales-modal .commanModalHeader-title .right p {
+        font-size: 12px;
+    }
+
+    .contact-sales-modal .modal-container .footer {
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .contact-sales-modal .modal-container .footer .right .btnSecondary {
+        padding: 0;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 620px) {
+
+    .public-navbar-wrapper .public-navbar-container {
+        padding: 16px 16px;
+    }
+
+    .public-navbar-wrapper .public-navbar-container .col-right .btn-row .free-trial-btn {
+        padding: 6px 4px;
+        font-size: 11px;
+    }
+
+    .public-navbar-wrapper .public-navbar-container .col-right .btn-row .primary-btn {
+        padding: 5px;
+        font-size: 11px;
+    }
+
+    .contact-sales-modal .commanModalHeader .close-btn {
+        top: 14px;
+        right: 14px;
+    }
+}
+
+@media (max-width: 600px) {
+    .beforeAfter-wrapper .beforeAfter-container .right-section {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-shrink: 1;
+        padding-inline: 0;
+    }
+
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card {
+
+        padding: 14px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head {
+        gap: 12px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .left .card-image img {
+        width: 65px;
+        height: 65px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .left .card-image .profile-cta {
+        padding: 6px 4px;
+        font-size: 10px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .skills-container .skill-pebble {
+        padding: 4px 6px;
+        font-size: 10px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row1 .name-yoe h3 {
+        font-size: 14px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row1 .name-yoe p {
+        font-size: 12px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 .current-company {
+        flex-wrap: wrap;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 .current-company p {
+        font-size: 12px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 .current-company img {
+        height: 12px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 .previous-companies .company-list img {
+        height: 12px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row1 .availability {
+        white-space: nowrap;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row1 .availability p {
+        font-size: 8px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-row .candidate-selector {
+        width: 60px;
+        height: 60px;
+
+        .company-logo {
+            width: 36px;
+            height: 36px;
+        }
+    }
+
+    .beforeAfter-modal {
+        width: 90%;
+    }
+
+    .beforeAfter-modal .commanModalHeader {
+        padding: 24px 24px 32px 24px;
+        gap: 6px;
+    }
+
+    .beforeAfter-modal .modal-container {
+        padding: 0 24px 40px 24px;
+    }
+
+    .beforeAfter-modal .commanModalHeader h2 {
+        font-size: 22px;
+    }
+
+    .beforeAfter-modal .commanModalHeader p {
+        font-size: 12px;
+    }
+
+    .beforeAfter-modal .modal-container .form-group input {
+        font-size: 12px;
+    }
+
+    .beforeAfter-modal .modal-container .form-group input::placeholder {
+        font-size: 12px;
+    }
+
+    .customSelectPicker .customSelect__value-container .customSelect__input-container,
+    .customSelectPicker .customSelect__single-value {
+        font-size: 0.8125rem;
+    }
+
+    .beforeAfter-modal .modal-container .form-group .customSelect__placeholder {
+        font-size: 12px;
+    }
+
+    .beforeAfter-modal .modal-container .btnPrimary {
+        padding: 10px;
+        font-size: 16px;
+
+    }
+
+    .beforeAfter-modal .modal-container .login-link {
+        font-size: 12px;
+    }
+
+    .beforeAfter-modal .modal-container .login-link a {
+        font-size: 12px;
+    }
+
+    .beforeAfter-modal .company-single-value {
+        font-size: 12px;
+    }
+
+    .beforeAfter-modal .company-option .company-label {
+        font-size: 12px;
+    }
+
+    .beforeAfter-modal .company-option .company-initials {
+        width: 22px;
+        height: 22px;
+        font-size: 11px;
+    }
+
+    .beforeAfter-modal .company-option .company-logo {
+        width: 22px;
+        height: 22px;
+    }
+
+    .beforeAfter-modal .company-single-value .company-initials-small {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+    }
+
+    .beforeAfter-modal .company-single-value .company-logo-small {
+        width: 18px;
+        height: 18px;
+    }
+
+    .contact-sales-modal .commanModalHeader-title .left {
+        display: none;
+    }
+
+    .contact-sales-modal .commanModalHeader-title .right h2 {
+        font-size: 18px;
+    }
+
+    .contact-sales-modal .modal-container .form-row {
+        flex-wrap: wrap;
+        gap: 0;
+    }
+
+    .contact-sales-modal .modal-container .form-row .form-group {
+        max-width: 100%;
+    }
+
+    .contact-sales-modal .modal-container textarea {
+        padding: 12px 15px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+}
+
+@media (max-width: 500px) {
+    .beforeAfter-wrapper .beforeAfter-container .left-section .hero-description {
+        font-size: 13px;
+        padding: 0 8px;
+        line-height: 1.3;
+    }
+
+    .public-navbar-wrapper .public-navbar-container {
+        padding: 12px 6px;
+    }
+
+    .public-navbar-wrapper .public-navbar-container .col-right .btn-row {
+        gap: 12px;
+    }
+
+    .public-navbar-wrapper .public-navbar-container .col-right .btn-row .free-trial-btn {
+        padding: 4px 2px;
+        font-size: 10px;
+    }
+
+    .public-navbar-wrapper .public-navbar-container .col-right .btn-row .free-trial-btn svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .public-navbar-wrapper .public-navbar-container .col-right .btn-row .primary-btn {
+        padding: 4px;
+        font-size: 8px;
+    }
+
+    .public-navbar-wrapper .public-navbar-container .col-right .btn-row .primary-btn svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .public-navbar-wrapper .public-navbar-container .col-left {
+        width: 80px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .left-section {
+        gap: 6px;
+        max-width: 100%;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .left-section h1 {
+        font-size: 24px;
+        line-height: 30px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .left-section p {
+        max-width: 80%;
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .left-section .cta-container {
+        max-width: 100%;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .candidate-summary {
+        max-height: fit-content;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .candidate-summary p {
+        -webkit-line-clamp: 8;
+    }
+
+    .contact-sales-modal .modal-container .footer .left p,
+    .contact-sales-modal .modal-container .footer .left p a {
+        font-size: 12px;
+    }
+
+    .contact-sales-modal .modal-container .footer .right .btnPrimary {
+        font-size: 11px;
+        padding: 8px;
+    }
+
+    .contact-sales-modal .modal-container .footer .right .btnSecondary {
+        padding: 0;
+        font-size: 11px;
+    }
+
+}
+
+
+@media screen and (max-width: 1366px) and (max-height: 800px) {
+
+    /* Navbar */
+    .public-navbar-wrapper .public-navbar-container {
+        padding: 12px 32px;
+    }
+
+    .public-navbar-wrapper .public-navbar-container .col-left svg {
+        width: 96px;
+        height: 28px;
+    }
+
+    .public-navbar-wrapper .public-navbar-container .col-right .btn-row {
+        gap: 16px;
+
+        .free-trial-btn {
+            padding: 5px 7px;
+            font-size: 11px;
+            gap: 6px;
+        }
+
+        .primary-btn {
+            padding: 6px;
+            font-size: 11px;
+            gap: 3px;
+
+            svg {
+                width: 13px;
+                height: 13px;
+            }
+        }
+
+        .free-trial-btn svg {
+            width: 11px;
+            height: 11px;
+        }
+    }
+
+    /* Left Section */
+
+    /* .beforeAfter-wrapper .beforeAfter-container .left-section {
+        gap: 6px !important;
+
+        p {
+            font-size: 12px !important;
+            line-height: 18px !important;
+        }
+
+        h1 {
+            font-size: 24px !important;
+            line-height: 30px !important;
+        }
+    } */
+
+    .beforeAfter-wrapper .beforeAfter-container .left-section .cta-container {
+        gap: 4px !important;
+
+        p {
+            font-size: 9.5px !important;
+        }
+
+        .cta-btn {
+            font-size: 14px !important;
+            padding: 11px 26px !important;
+        }
+    }
+
+    /* Main Section */
+    /* .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel {
+        gap: 16px !important;
+
+        .candidate-row {
+            margin-bottom: 16px !important;
+
+            .candidate-selector {
+                width: 75px !important;
+                height: 75px !important;
+            }
+        }
+
+        .candidate-card {
+            padding: 20px !important;
+        }
+    } */
+
+    /* Candidate Carousel */
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .left .card-image {
+        gap: 6px !important;
+
+        img {
+            height: 65px !important;
+            width: 65px !important;
+        }
+
+        .profile-cta {
+            font-size: 9px !important;
+        }
+
+        .profile-cta svg {
+            width: 12px !important;
+            height: 12px !important;
+        }
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row1 {
+
+        .name-yoe {
+            h3 {
+                font-size: 14px !important;
+
+                svg {
+                    width: 18px !important;
+                    height: 18px !important;
+                }
+            }
+
+            p {
+                line-height: 12px !important;
+                font-size: 11px !important;
+            }
+        }
+
+        .availability {
+            padding: 3px 5px !important;
+
+            p {
+                font-size: 8px !important;
+            }
+        }
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 {
+        padding: 12px 14px !important;
+
+        .current-company {
+            p {
+                font-size: 12px !important;
+            }
+
+            img {
+                height: 12px !important;
+            }
+        }
+
+        hr {
+            margin: 10px 0 12px 0 !important;
+        }
+
+        .previous-companies {
+            gap: 5px !important;
+
+            p {
+                font-size: 7px !important;
+            }
+
+            .company-list {
+                img {
+                    height: 12px !important;
+                }
+            }
+        }
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card {
+        .skills-container {
+            gap: 8px !important;
+            margin-bottom: 16px !important;
+
+            .skill-pebble {
+                font-size: 10px !important;
+                padding: 4px 8px !important;
+            }
+        }
+
+        .candidate-summary {
+            margin: 14px 0 0 0 !important;
+
+            p {
+                font-size: 10px !important;
+                line-height: 16px !important;
+            }
+        }
+
+        .tooltip-triangle {
+            border-left: 10px solid transparent !important;
+            border-right: 10px solid transparent !important;
+            border-top: 14px solid white !important;
+            border-radius: 2px !important;
+            top: -14px !important;
+        }
+
+        .card-head {
+            gap: 18px !important;
+            margin-bottom: 20px !important;
+        }
+
+        .card-head .right {
+            gap: 14px !important;
+        }
+    }
+
+}
+
+@media screen and (max-width: 1440px) and (min-height: 600px) and (max-height: 700px) {
+    .beforeAfter-wrapper .beforeAfter-container {
+        transform: scale(0.9) !important;
+        padding: 0;
+    }
+
+    .public-navbar-wrapper .public-navbar-container {
+        padding: 14px 36px;
+    }
+
+    .public-navbar-wrapper .public-navbar-container .col-left svg {
+        width: 102px;
+        height: 32px;
+    }
+
+    .public-navbar-wrapper .public-navbar-container .col-right .btn-row {
+        gap: 18px;
+
+        .free-trial-btn {
+            padding: 6px 8px;
+            font-size: 12px;
+            gap: 7px;
+        }
+
+        .primary-btn {
+            padding: 7px;
+            font-size: 12px;
+            gap: 4px;
+
+            svg {
+                width: 15px;
+                height: 15px;
+            }
+        }
+
+        .free-trial-btn svg {
+            width: 13px;
+            height: 13px;
+        }
+    }
+}
+
+@media screen and (max-width: 1200px) and (min-height: 500px) and (max-height: 550px) {
+    .beforeAfter-wrapper .beforeAfter-container {
+        transform: scale(0.9) !important;
+    }
+}
+
+
+@media (max-width: 420px) {
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .left .card-image img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .left .card-image .profile-cta {
+        gap: 3px;
+        font-size: 8px;
+        padding: 4px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row1 {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .card-head .right .row2 {
+        padding: 12px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-card .candidate-summary p {
+        font-size: 11px;
+    }
+
+    .beforeAfter-wrapper .beforeAfter-container .right-section .candidate-carousel .candidate-row .candidate-selector {
+        width: 56px !important;
+        height: 56px !important;
+
+        .company-logo {
+            width: 36px !important;
+            height: 36px !important;
+        }
+    }
+
+    .beforeAfter-modal .commanModalHeader .close-btn {
+        top: 12px;
+        right: 12px;
+    }
+
+    .beforeAfter-modal .commanModalHeader h2 .sparkle-icon {
+        display: none;
+    }
+
+    .contact-sales-modal .commanModalHeader-title .right h2 {
+        font-size: 16px;
+    }
+
+    .contact-sales-modal .commanModalHeader-title .right p {
+        font-size: 10px;
+    }
+}

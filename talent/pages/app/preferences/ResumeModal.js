@@ -2,15 +2,17 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import Modal from 'react-modal';
+import { ensureModalAppElement } from '@/talent/helpers/setModalAppElement';
+ensureModalAppElement();
 import { checkIfFilePasswordProtected } from "../../../components/Helper";
 import { renderAsync } from 'docx-preview';
 import { pdfjs, Document, Page } from 'react-pdf';
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
+import './ResumeModal.css';
 import { ResumeDownload } from "../../../assets/IconSVG";
 
 if (typeof document !== 'undefined' && document.getElementById('happpy-root')) {
-    Modal.setAppElement('#happpy-root');
 }
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -63,28 +65,34 @@ export default function ResumeModal({ isOpen, setOpen, data, onDownloadClick, sh
     const resumeScale = 1;
     const [resumeWidth, setResumeWidth] = useState(1200)
     const handleWindowResize = useCallback(() => {
+        const viewportPad = window.innerWidth <= 767 ? 48 : 64;
+        const maxWidth = Math.max(280, window.innerWidth - viewportPad);
         if (window.innerWidth <= 767) {
-            setResumeWidth(window.innerWidth - 90)
+            setResumeWidth(maxWidth);
         } else if (window.innerWidth <= 991) {
-            setResumeWidth(window.innerWidth - 202)
+            setResumeWidth(Math.min(maxWidth, window.innerWidth - 202));
         } else if (window.innerWidth <= 1100) {
-            setResumeWidth(window.innerWidth - 224)
+            setResumeWidth(Math.min(maxWidth, window.innerWidth - 224));
         } else if (window.innerWidth < 1484) {
-            setResumeWidth(window.innerWidth - (window.innerWidth <= 1366 ? 268 : 284))
+            setResumeWidth(Math.min(maxWidth, window.innerWidth - (window.innerWidth <= 1366 ? 268 : 284)));
         } else {
-            setResumeWidth(1200)
+            setResumeWidth(Math.min(1200, maxWidth));
         }
     }, []);
 
     useEffect(() => {
-        handleWindowResize()
-        setTimeout(() => {
-            window.addEventListener('resize', handleWindowResize);
-        }, 500)
+        handleWindowResize();
+        window.addEventListener('resize', handleWindowResize);
         return () => {
             window.removeEventListener('resize', handleWindowResize);
         };
-    }, []);
+    }, [handleWindowResize]);
+
+    useEffect(() => {
+        if (isOpen) {
+            handleWindowResize();
+        }
+    }, [isOpen, handleWindowResize]);
     const getResumeData = async (resumeData) => {
         let url = resumeData?.data;
         let resumeUrl = url;
@@ -146,7 +154,7 @@ export default function ResumeModal({ isOpen, setOpen, data, onDownloadClick, sh
                 className={`modal commonModalWrap commonModal resumeModal fade ${isOpen && "show"}`}
             >
 
-                <div className="modal-dialog modal-dialog-centered" role="document">
+                <div className="modal-dialog" role="document">
                     <div className="modal-content">
                         <button type="button" className="modalCloseBtn" aria-label="Close" onClick={() => setOpen(false)}>
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none"

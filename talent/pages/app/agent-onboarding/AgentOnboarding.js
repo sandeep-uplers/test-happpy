@@ -2,6 +2,8 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import { ensureModalAppElement } from '@/talent/helpers/setModalAppElement';
+ensureModalAppElement();
 import { useRouter } from 'next/navigation';
 import { GET_API } from '../../../components/Helper';
 import { API_GET_OUTREACH_STEP } from '../../../components/Constant';
@@ -21,7 +23,6 @@ import { pageActivityTracker } from '../../../store/actions/UserActions';
 import { useDispatch, useSelector } from 'react-redux';
 
 if (typeof document !== 'undefined' && document.getElementById('happpy-root')) {
-    Modal.setAppElement('#happpy-root');
 }
 
 /**

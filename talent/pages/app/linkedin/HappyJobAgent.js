@@ -110,7 +110,6 @@ import {
 import { happyEnterClass, happyStaggerStyle, useHappySectionReveal } from "./happyLandingMotion";
 
 if (typeof document !== "undefined" && document.getElementById("happpy-root")) {
-    Modal.setAppElement("#happpy-root");
 }
 
 const CHROME_WEBSTORE_URL =

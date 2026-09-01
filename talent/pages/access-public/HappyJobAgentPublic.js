@@ -28,7 +28,6 @@ import { HappyJobAgentContent } from "../app/linkedin/HappyJobAgent";
 import "./HappyJobAgentPublic.css";
 
 if (typeof document !== "undefined" && document.getElementById("happpy-root")) {
-    Modal.setAppElement("#happpy-root");
 }
 
 const CONNECT_ACCOUNTS_PATH = REFERRAL_AI_AGENT_ONBOARDING_PATH;

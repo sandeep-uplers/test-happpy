@@ -1,0 +1,1545 @@
+@font-face {
+    font-family: 'Sentinel';
+    src: url('fonts/sentinel/sentinel-book.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Sentinel';
+    src: url(https://platform.uplers.com/fonts/sentinel/sentinel-book.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Century';
+    src: url('https://platform.uplers.com/fonts/century/century-regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Century';
+    src: url('https://platform.uplers.com/fonts/century/century-bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Century';
+    src: url('https://platform.uplers.com/fonts/century/century-italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'EB Garamond';
+    src: url('fonts/eb-garamond/EBGaramond.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'EB Garamond';
+    src: url(https://platform.uplers.com/fonts/eb-garamond/EBGaramond.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Calibri';
+    src: url(https://platform.uplers.com/fonts/calibri/calibri-regular.ttf) format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Calibri';
+    src: url(https://platform.uplers.com/fonts/calibri/calibri-bold.ttf) format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Calibri';
+    src: url(https://platform.uplers.com/fonts/calibri/calibri-italic.ttf) format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Calibri';
+    src: url(https://platform.uplers.com/fonts/calibri/calibri-bold-italic.ttf) format('truetype');
+    font-weight: 700;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Times New Roman';
+    src: url(https://platform.uplers.com/fonts/times/times.ttf) format('truetype');
+}
+
+:root {
+    --white: #FFF;
+    --text-field-outline-2: #CECCCC;
+    --primary-black: #231F20;
+    --primary-dark: #000;
+    --link-color: #0563c1;
+    --elite-ink: #1c2330;
+    --elite-body: #1f1f1f;
+}
+
+@page {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.pagedjs_margin-top,
+.pagedjs_margin-bottom,
+.pagedjs_margin-left,
+.pagedjs_margin-right,
+.pagedjs_margin-top-left-corner-holder,
+.pagedjs_margin-top-right-corner-holder,
+.pagedjs_margin-bottom-left-corner-holder,
+.pagedjs_margin-bottom-right-corner-holder,
+.pagedjs_margin-box {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+}
+
+.pagedjs_pages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin: 24px auto;
+    overflow-x: hidden;
+}
+
+.pagedjs_page {
+    height: 1056px !important;
+    width: 794px !important;
+    border: 1px solid var(--text-field-outline-2, #CECCCC);
+}
+
+.pagedjs_page,
+.pagedjs_sheet {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: none !important;
+}
+
+.pagedjs_sheet,
+.pagedjs_pagebox {
+    box-sizing: unset !important;
+    height: unset !important;
+    width: unset !important;
+    padding: unset !important;
+    display: unset !important;
+    position: unset !important;
+}
+
+@media screen {
+    #resume-print {
+        visibility: hidden;
+        height: 0 !important;
+        overflow: hidden !important;
+    }
+}
+
+@media print {
+    #resume-print {
+        display: none !important;
+    }
+}
+
+.classic-resume-template {
+    background: var(--white, #FFF);
+
+    a {
+        text-decoration: underline;
+        color: var(--link-color, #0563c1) !important;
+    }
+}
+
+.classic-resume-template-page {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--rt-font-family, 'Calibri');
+    min-height: 1056px;
+    height: 1056px;
+    max-height: 1056px;
+    padding: var(--rt-tb-margin, 24px) var(--rt-side-margin, 32px) !important;
+    page-break-after: always;
+}
+
+.classic-resume-template-page h1,
+.classic-resume-template-page h2,
+.classic-resume-template-page h3,
+.classic-resume-template-page h4,
+.classic-resume-template-page h5,
+.classic-resume-template-page h6,
+.classic-resume-template-page p,
+.classic-resume-template-page ul {
+    margin-block-start: unset;
+    margin-block-end: unset;
+    padding-inline-start: unset;
+}
+
+.classic-resume-template-page .dynamic-content {
+    color: #ff7b24;
+}
+
+.classic-resume-template-page .template-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.classic-resume-template-page.compact {
+    .template-header {
+        gap: 2px;
+        margin-bottom: 6px;
+    }
+
+    .template-header .tmp-contact-info {
+        font-size: 11px;
+    }
+
+    .section .section-title {
+        border-bottom: 0.75px solid var(--primary-black, #231F20);
+        margin-bottom: 4px;
+        line-height: 1.321;
+    }
+
+    .section.common-section ul li {
+        margin-left: 20px;
+    }
+
+    .section.experience-section .exp-items .exp-item .exp-description li {
+        margin-left: 20px;
+    }
+
+    .section.experience-section .exp-items .exp-item .exp-info .exp-title {
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        a {
+            color: inherit
+        }
+
+        .exp-title-left {
+            display: inline;
+        }
+    }
+
+    .section.experience-section .exp-items .exp-item .exp-description {
+        margin: 2px 0;
+    }
+
+    .section.tmp-projects-section .project-items .prj-item ul li {
+        margin-left: 20px;
+    }
+}
+
+.classic-resume-template-page .template-header h2 {
+    font-size: var(--rt-main-heading, 18px);
+    line-height: normal;
+}
+
+.classic-resume-template-page .template-header h4 {
+    font-size: var(--rt-subheader, 12px);
+}
+
+.classic-resume-template-page .template-header .tmp-contact-info {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.214;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.classic-resume-template-page .template-header .tmp-contact-info a {
+    color: var(--link-color, #0563c1);
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
+.classic-resume-template-page .section {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--rt-section-space, 12px);
+}
+
+.classic-resume-template-page .section .section-title {
+    width: 100%;
+    text-transform: uppercase;
+    font-size: var(--rt-section-heading, 14px);
+    border-bottom: 1.5px solid var(--primary-black, #231F20);
+    text-align: center;
+    color: var(--rt-theme-color, #0070c0);
+    margin-bottom: 0.375rem;
+    line-height: 1.618;
+}
+
+.classic-resume-template-page .section.tmp-summary-section p {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+}
+
+.classic-resume-template-page .section.tmp-skills-section p {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin: 0;
+}
+
+.classic-resume-template-page .section.experience-section .exp-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-space, 8px);
+}
+
+.classic-resume-template-page .section.experience-section .exp-items .exp-item .exp-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.classic-resume-template-page .section.experience-section .exp-items .exp-item .exp-info .exp-flex {
+    display: flex;
+    justify-content: space-between;
+    font-style: italic;
+
+    a {
+        color: inherit
+    }
+}
+
+.classic-resume-template-page .section.experience-section .exp-items .exp-item .exp-info .exp-flex strong {
+    font-style: normal;
+}
+
+.classic-resume-template-page .section.experience-section .exp-items .exp-item .exp-info span {
+    font-size: var(--rt-subheader, 12px);
+}
+
+.classic-resume-template-page .section.experience-section .exp-items .exp-item .exp-description {
+    margin: 0.25rem 0;
+}
+
+.classic-resume-template-page .section.experience-section .exp-items .exp-item .exp-description li {
+    list-style-type: disc;
+    margin-left: 1.75rem;
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+}
+
+.classic-resume-template-page .section.experience-section .exp-items .exp-item .exp-tech-skills p {
+    font-style: italic;
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+    text-decoration: underline;
+}
+
+
+.classic-resume-template-page .section.tmp-projects-section .project-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-space, 8px);
+}
+
+.classic-resume-template-page .section.tmp-projects-section .project-items .prj-item .project-title {
+    font-size: var(--rt-subheader, 12px);
+    line-height: var(--rt-line-space, 1.2);
+}
+
+.classic-resume-template-page .section.tmp-projects-section .project-items .prj-item .project-title b {
+    font-weight: 700;
+}
+
+.classic-resume-template-page .section.tmp-projects-section .project-items .prj-item a {
+    color: var(--link-color, #0563c1);
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+}
+
+.classic-resume-template-page .section.tmp-projects-section .project-items .prj-item .project-desc,
+.classic-resume-template-page .section.tmp-projects-section .project-items .prj-item ul li {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+}
+
+.classic-resume-template-page .section.tmp-projects-section .project-items .prj-item .project-points {
+    margin-top: 0.25rem;
+}
+
+.classic-resume-template-page .section.tmp-projects-section .project-items .prj-item ul li {
+    list-style-type: disc;
+    margin-left: 1.75rem;
+}
+
+
+.classic-resume-template-page .section.tmp-education-section .education-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-space, 8px);
+}
+
+.classic-resume-template-page .section.tmp-education-section .education-items .ed-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.classic-resume-template-page .section.tmp-education-section .education-items .ed-item span {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+}
+
+.classic-resume-template-page .section.tmp-education-section .education-items .ed-item span.ed-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-style: italic;
+    font-size: var(--rt-subheader, 12px);
+}
+
+.classic-resume-template-page .section.tmp-education-section .education-items .ed-item span.ed-title strong {
+    font-style: normal;
+}
+
+.classic-resume-template-page .section.tmp-personal-details-section ul li {
+    list-style-type: disc;
+    margin-left: 1.75rem;
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+}
+
+.classic-resume-template-page .section.tmp-courses-section ul li {
+    list-style-type: disc;
+    margin-left: 1.75rem;
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+}
+
+.classic-resume-template-page .section.common-section ul li {
+    list-style-type: disc;
+    margin-left: 1rem;
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+}
+
+.modern-resume-template-page {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--rt-font-family, 'Calibri');
+    min-height: 1056px;
+    height: 1056px;
+    max-height: 1056px;
+    padding: var(--rt-tb-margin, 24px) var(--rt-side-margin, 32px) !important;
+    page-break-after: always;
+}
+
+.modern-resume-template-page h1,
+.modern-resume-template-page h2,
+.modern-resume-template-page h3,
+.modern-resume-template-page h4,
+.modern-resume-template-page h5,
+.modern-resume-template-page h6,
+.modern-resume-template-page p,
+.modern-resume-template-page ul {
+    margin-block-start: unset;
+    margin-block-end: unset;
+    padding-inline-start: unset;
+}
+
+.modern-resume-template-page .dynamic-content {
+    color: #ff7b24 !important;
+}
+
+.modern-resume-template-page .template-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.modern-resume-template-page .template-header h2 {
+    font-size: var(--rt-main-heading, 20px);
+    text-transform: uppercase;
+}
+
+.modern-resume-template-page .template-header h4 {
+    font-size: var(--rt-subheader, 12px);
+    color: #666666;
+}
+
+.modern-resume-template-page .template-header .tmp-contact-info {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.214;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.modern-resume-template-page .template-header .tmp-contact-info a {
+    color: var(--link-color, #0563c1);
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
+.modern-resume-template-page .section {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--rt-section-space, 12px);
+}
+
+.modern-resume-template-page .section .section-title {
+    font-size: var(--rt-section-heading, 13px);
+    text-transform: uppercase;
+    border-bottom: 1.5px solid #666666;
+    color: var(--rt-theme-color, --primary-black);
+    margin-bottom: 0.375rem;
+    line-height: 1.618;
+}
+
+.modern-resume-template-page .section.mt-summary-section p {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+}
+
+.modern-resume-template-page .section.mt-skills-section p {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin: 0;
+}
+
+.modern-resume-template-page .section.mt-skills-section p b {
+    color: #666666;
+}
+
+.modern-resume-template-page .section.mt-experience-section .exp-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-space, 8px);
+}
+
+.modern-resume-template-page .section.mt-experience-section .exp-items .exp-item .exp-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    color: #666666;
+    font-size: var(--rt-subheader, 12px);
+}
+
+.modern-resume-template-page .section.mt-experience-section .exp-items .exp-item .exp-info .exp-flex {
+    display: flex;
+    justify-content: space-between;
+    font-style: italic;
+
+    a {
+        color: inherit
+    }
+}
+
+.modern-resume-template-page .section.mt-experience-section .exp-items .exp-item .exp-info .exp-flex strong {
+    font-style: normal;
+}
+
+.modern-resume-template-page .section.mt-experience-section .exp-items .exp-item .exp-description {
+    margin: 0.25rem 0;
+}
+
+.modern-resume-template-page .section.mt-experience-section .exp-items .exp-item .exp-description li {
+    list-style-type: disc;
+    margin-left: 1.75rem;
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+}
+
+.modern-resume-template-page .section.mt-experience-section .exp-items .exp-item .exp-tech-skills p {
+    font-style: italic;
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+    text-decoration: underline;
+    color: #666666;
+}
+
+.modern-resume-template-page .section.mt-projects-section .project-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-space, 8px);
+}
+
+.modern-resume-template-page .section.mt-projects-section .project-items .prj-item .project-title {
+    font-size: var(--rt-subheader, 12px);
+    line-height: var(--rt-line-space, 1.2);
+    color: #666666;
+    margin-bottom: 0.125rem;
+}
+
+.modern-resume-template-page .section.mt-projects-section .project-items .prj-item .project-title b {
+    font-weight: 700;
+}
+
+.modern-resume-template-page .section.mt-projects-section .project-items .prj-item a {
+    color: var(--link-color, #0563c1);
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+}
+
+.modern-resume-template-page .section.mt-projects-section .project-items .prj-item .project-desc,
+.modern-resume-template-page .section.mt-projects-section .project-items .prj-item ul li {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+}
+
+.modern-resume-template-page .section.mt-projects-section .project-items .prj-item .project-points {
+    margin-top: 0.25rem;
+}
+
+.modern-resume-template-page .section.mt-projects-section .project-items .prj-item ul li {
+    list-style-type: disc;
+    margin-left: 1.75rem;
+}
+
+.modern-resume-template-page .section.mt-education-section .education-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-space, 8px);
+}
+
+.modern-resume-template-page .section.mt-education-section .education-items .ed-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.modern-resume-template-page .section.mt-education-section .education-items .ed-item span {
+    font-size: var(--rt-subheader, 12px);
+    line-height: var(--rt-line-space, 1.2);
+}
+
+.modern-resume-template-page .section.mt-education-section .education-items .ed-item span.ed-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #666666;
+    font-style: italic;
+    font-size: var(--rt-subheader, 12px);
+}
+
+.modern-resume-template-page .section.mt-education-section .education-items .ed-item span.ed-title strong {
+    font-style: normal;
+}
+
+.modern-resume-template-page .section.common-section ul li {
+    list-style-type: disc;
+    margin-left: 1.75rem;
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+}
+
+.elegant-resume-template-page {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--rt-font-family, 'Times New Roman');
+    min-height: 1056px;
+    height: 1056px;
+    max-height: 1056px;
+    padding: var(--rt-tb-margin, 24px) var(--rt-side-margin, 32px) !important;
+    page-break-after: always;
+}
+
+.elegant-resume-template-page h1,
+.elegant-resume-template-page h2,
+.elegant-resume-template-page h3,
+.elegant-resume-template-page h4,
+.elegant-resume-template-page h5,
+.elegant-resume-template-page h6,
+.elegant-resume-template-page p,
+.elegant-resume-template-page ul {
+    margin-block-start: unset;
+    margin-block-end: unset;
+    padding-inline-start: unset;
+}
+
+.elegant-resume-template-page .dynamic-content {
+    color: #ff7b24 !important;
+}
+
+.elegant-resume-template-page .template-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.elegant-resume-template-page .template-header h2 {
+    font-size: var(--rt-main-heading, 20px);
+    text-transform: uppercase;
+}
+
+.elegant-resume-template-page .template-header h4 {
+    font-size: var(--rt-subheader, 12px);
+    font-weight: 400;
+    color: #434343;
+}
+
+.elegant-resume-template-page .template-header .tmp-contact-info {
+    font-size: 13px;
+    font-weight: 500;
+    color: #434343;
+    line-height: 1.214;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.elegant-resume-template-page .template-header .tmp-contact-info a {
+    color: var(--link-color, #0563c1);
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
+.elegant-resume-template-page .section {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--rt-section-space, 12px);
+}
+
+.elegant-resume-template-page .section .section-title {
+    font-size: var(--rt-section-heading, 13px);
+    text-transform: uppercase;
+    border-bottom: 1.5px solid #666666;
+    color: var(--rt-theme-color, --primary-dark);
+    margin-bottom: 0.375rem;
+    line-height: 1.618;
+    text-align: center;
+    font-weight: 500;
+}
+
+.elegant-resume-template-page .section.elt-summary-section p {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+    color: #434343;
+}
+
+.elegant-resume-template-page .section.elt-skills-section p {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin: 0;
+    color: #434343;
+}
+
+.elegant-resume-template-page .section.elt-skills-section p b {
+    color: var(--primary-dark, #000);
+    font-weight: 500;
+}
+
+.elegant-resume-template-page .section.elt-experience-section .exp-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-space, 8px);
+}
+
+.elegant-resume-template-page .section.elt-experience-section .exp-items .exp-item .exp-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    color: #3d85c6;
+    font-size: var(--rt-subheader, 12px);
+}
+
+.elegant-resume-template-page .section.elt-experience-section .exp-items .exp-item .exp-info .exp-title {
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    a {
+        color: inherit
+    }
+}
+
+.elegant-resume-template-page .section.elt-experience-section .exp-items .exp-item .exp-description {
+    margin: 0.25rem 0;
+}
+
+.elegant-resume-template-page .section.elt-experience-section .exp-items .exp-item .exp-description li {
+    list-style-type: disc;
+    margin-left: 1.75rem;
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+    color: #434343;
+}
+
+.elegant-resume-template-page .section.elt-experience-section .exp-items .exp-item .exp-tech-skills p {
+    font-style: italic;
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+    text-decoration: underline;
+    color: #434343;
+}
+
+.elegant-resume-template-page .section.elt-experience-section .exp-items .exp-item .exp-tech-skills p b {
+    color: var(--primary-dark, #000);
+}
+
+.elegant-resume-template-page .section.elt-projects-section .project-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-space, 8px);
+}
+
+.elegant-resume-template-page .section.elt-projects-section .project-items .prj-item .project-title {
+    font-size: var(--rt-subheader, 12px);
+    line-height: var(--rt-line-space, 1.2);
+    font-weight: 500;
+    color: var(--primary-dark, #000);
+}
+
+.elegant-resume-template-page .section.elt-projects-section .project-items .prj-item .project-title b {
+    color: #3d85c6;
+    font-weight: 700;
+}
+
+.elegant-resume-template-page .section.elt-projects-section .project-items .prj-item a {
+    color: var(--link-color, #0563c1);
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+}
+
+.elegant-resume-template-page .section.elt-projects-section .project-items .prj-item .project-desc,
+.elegant-resume-template-page .section.elt-projects-section .project-items .prj-item ul li {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+    color: #434343;
+}
+
+.elegant-resume-template-page .section.elt-projects-section .project-items .prj-item .project-points {
+    margin-top: 0.25rem;
+}
+
+.elegant-resume-template-page .section.elt-projects-section .project-items .prj-item ul li {
+    list-style-type: disc;
+    margin-left: 1.75rem;
+}
+
+.elegant-resume-template-page .section.elt-education-section .education-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-space, 8px);
+}
+
+.elegant-resume-template-page .section.elt-education-section .education-items .ed-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.elegant-resume-template-page .section.elt-education-section .education-items .ed-item span {
+    font-size: var(--rt-subheader, 12px);
+    line-height: var(--rt-line-space, 1.2);
+    color: #434343;
+}
+
+.elegant-resume-template-page .section.elt-education-section .education-items .ed-item span.ed-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #000;
+    font-size: var(--rt-subheader, 12px);
+}
+
+.elegant-resume-template-page .section.elt-education-section .education-items .ed-item span.ed-title b,
+.elegant-resume-template-page .section.elt-education-section .education-items .ed-item span.ed-title strong {
+    color: #3d85c6;
+    font-weight: 700;
+}
+
+.elegant-resume-template-page .section.common-section ul li {
+    list-style-type: disc;
+    margin-left: 1.75rem;
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+    margin-bottom: 0;
+}
+
+
+#resume-previewer {
+    .resume-page {
+        position: relative;
+
+        &::after {
+            content: "Transformed By Uplers";
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            color: white;
+            font-size: 1px;
+            line-height: 1;
+        }
+    }
+}
+
+#resume-previewer {
+    width: 794px;
+    margin: auto;
+}
+
+.page-separator {
+    width: 100%;
+    height: 20px;
+    background: rgb(245, 245, 245);
+}
+
+
+@media print {
+
+    #resume-previewer {
+        zoom: 1 !important;
+    }
+
+    .page-separator {
+        display: none !important;
+        /* hide the gray bar */
+    }
+
+    .page-break-marker {
+        page-break-before: always;
+        /* force new page */
+    }
+}
+
+/* ==========================================================================
+   PROFESSIONAL RESUME TEMPLATE (ID 4)
+   ========================================================================== */
+
+.professional-resume-template-page {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--rt-font-family, 'Calibri');
+    min-height: 1056px;
+    height: 1056px;
+    max-height: 1056px;
+    padding: var(--rt-tb-margin, 24px) var(--rt-side-margin, 32px) !important;
+    page-break-after: always;
+    color: #333;
+}
+
+.professional-resume-template-page h1,
+.professional-resume-template-page h2,
+.professional-resume-template-page h3,
+.professional-resume-template-page h4,
+.professional-resume-template-page h5,
+.professional-resume-template-page h6,
+.professional-resume-template-page p,
+.professional-resume-template-page ul {
+    margin-block-start: unset;
+    margin-block-end: unset;
+    padding-inline-start: unset;
+}
+
+.professional-resume-template-page .template-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.professional-resume-template-page .template-header h2 {
+    font-family: var(--rt-font-family, 'Calibri');
+    font-size: calc(var(--rt-main-heading, 28px) * 1.25);
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.professional-resume-template-page .template-header h2 strong {
+    font-weight: 700;
+    color: #222;
+}
+
+.professional-resume-template-page .template-header h2 .name-last {
+    font-weight: 300;
+    color: #333;
+}
+
+.professional-resume-template-page .template-header h4 {
+    font-size: var(--rt-body, 12px);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.professional-resume-template-page .template-header .tmp-contact-info {
+    font-size: 13px;
+    display: flex;
+    gap: 0.25rem;
+    color: #333;
+    justify-content: center;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.professional-resume-template-page .template-header .tmp-contact-info a {
+    color: var(--link-color, #0563c1);
+    text-decoration: underline;
+}
+
+.professional-resume-template-page .template-header hr {
+    width: 100%;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 0.5rem 0 0 0;
+}
+
+.professional-resume-template-page .section {
+    margin-top: var(--rt-section-space, 1rem);
+}
+
+.professional-resume-template-page .pt-summary-section .summary-text {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.5);
+    color: #333;
+    font-family: inherit;
+    font-weight: 500;
+}
+
+.professional-resume-template-page .section-header-professional-template {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-bottom: 6px;
+    margin-top: 12px;
+}
+
+.professional-resume-template-page .section-title {
+    font-size: var(--rt-section-heading, 14px);
+    font-weight: 700;
+    text-transform: capitalize;
+    white-space: nowrap;
+    color: var(--rt-theme-color, #333);
+    margin: 0 !important;
+    display: inline-block !important;
+    flex-shrink: 0;
+}
+
+.professional-resume-template-page .section-header-professional-template hr {
+    flex: 1;
+    border: 0;
+    border-top: 1.5px solid #000 !important;
+    margin: 0;
+    height: 1px;
+    display: block !important;
+    align-self: end;
+}
+
+.professional-resume-template-page .skills-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.professional-resume-template-page .skill-group {
+    display: inline;
+    /* align-items: flex-start; */
+    /* gap: 8px; */
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.4);
+}
+
+.professional-resume-template-page .skill-group-name {
+    /* width: 120px; */
+    margin-right: 4px;
+    flex-shrink: 0;
+    display: inline-block;
+}
+
+.professional-resume-template-page .skill-list {
+    flex: 1;
+}
+
+.professional-resume-template-page .section-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-space, 1rem);
+}
+
+.professional-resume-template-page .exp-info-top,
+.professional-resume-template-page .prj-info-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2px;
+}
+
+.professional-resume-template-page .exp-company-title,
+.professional-resume-template-page .prj-title-company {
+    font-size: var(--rt-subheader, 12px);
+    color: #333;
+}
+
+.professional-resume-template-page .exp-company-name,
+.professional-resume-template-page .prj-title {
+    font-weight: 700;
+    color: #111;
+}
+
+.professional-resume-template-page .exp-company-name b {
+    font-weight: 600;
+}
+
+.professional-resume-template-page .exp-job-title,
+.professional-resume-template-page .prj-company-name {
+    font-size: var(--rt-body, 11px);
+    font-weight: 600;
+    color: #5d5d5d;
+}
+
+.professional-resume-template-page .exp-company-title a,
+.professional-resume-template-page .prj-title-company a {
+    color: inherit;
+}
+
+.professional-resume-template-page .exp-date {
+    font-size: var(--rt-body, 11px);
+    font-weight: 600;
+    font-style: italic;
+    color: #5d5d5d;
+}
+
+.professional-resume-template-page .exp-description,
+.professional-resume-template-page .project-points {
+    margin-top: 0.25rem;
+    padding-left: 1rem;
+}
+
+.professional-resume-template-page .exp-description li,
+.professional-resume-template-page .project-points li {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.3);
+    list-style-type: disc;
+    margin-bottom: 0.125rem;
+}
+
+.professional-resume-template-page .exp-tech-skills {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.3);
+    margin-top: 6px;
+    color: #333;
+}
+
+.professional-resume-template-page .exp-tech-skills b {
+    font-weight: 700;
+    font-style: normal;
+    color: #111;
+}
+
+.professional-resume-template-page .exp-tech-skills .tech-list {
+    font-style: italic;
+    color: #666;
+}
+
+.professional-resume-template-page .section.tmp-education-section .education-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-space, 8px);
+}
+
+.professional-resume-template-page .section.tmp-education-section .education-items .ed-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.professional-resume-template-page .section.tmp-education-section .education-items .ed-item span {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.2);
+}
+
+.professional-resume-template-page .section.tmp-education-section .education-items .ed-item span.ed-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-style: italic;
+    font-size: var(--rt-subheader, 12px);
+}
+
+.professional-resume-template-page .section.tmp-education-section .education-items .ed-item span.ed-title strong {
+    font-style: normal;
+}
+
+.professional-resume-template-page .ed-grid {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr 80px;
+    gap: 1rem;
+    font-size: var(--rt-body, 11px);
+    color: #333;
+}
+
+.professional-resume-template-page .ed-date {
+    color: #666;
+}
+
+.professional-resume-template-page .ed-degree {
+    font-weight: 500;
+}
+
+.professional-resume-template-page .ed-college {
+    color: #555;
+}
+
+.professional-resume-template-page .ed-grade {
+    text-align: right;
+    color: #555;
+}
+
+.professional-resume-template-page .common-section ul {
+    padding-left: 1rem;
+    margin-top: 0.25rem;
+}
+
+.professional-resume-template-page .common-section li {
+    font-size: var(--rt-body, 11px);
+    line-height: var(--rt-line-space, 1.3);
+    list-style-type: disc;
+    margin-bottom: 0.125rem;
+}
+
+.professional-resume-template-page .dynamic-content {
+    color: #ff7b24 !important;
+}
+
+/* END PROFESSIONAL RESUME TEMPLATE (ID 4) */
+
+
+
+/* ==========================================================================
+   Elite RESUME TEMPLATE (ID 5)
+   ========================================================================== */
+
+.elite-resume-template-page {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--rt-font-family, 'Calibri');
+    min-height: 1056px;
+    height: 1056px;
+    max-height: 1056px;
+    padding: var(--rt-tb-margin, 24px) var(--rt-side-margin, 32px) !important;
+    page-break-after: always;
+    color: var(--elite-body);
+    font-weight: 400;
+    line-height: 1.618;
+    letter-spacing: 0.01618rem;
+}
+
+.elite-resume-template-page h1,
+.elite-resume-template-page h2,
+.elite-resume-template-page h3,
+.elite-resume-template-page h4,
+.elite-resume-template-page h5,
+.elite-resume-template-page h6,
+.elite-resume-template-page p,
+.elite-resume-template-page ul {
+    margin-block-start: unset;
+    margin-block-end: unset;
+    padding-inline-start: unset;
+}
+
+.elite-resume-template-page .template-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    margin-bottom: 0.5rem;
+}
+
+.elite-resume-template-page .template-header h2 {
+    font-family: var(--rt-font-family, 'Calibri');
+    font-size: var(--rt-main-heading, 28px);
+    font-weight: 700;
+    color: var(--elite-ink);
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.01618rem;
+}
+
+.elite-resume-template-page .template-header h4 {
+    font-size: var(--rt-subheader, 13px);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+    letter-spacing: 0.1214rem;
+    color: var(--elite-body);
+}
+
+.elite-resume-template-page .template-header .tmp-contact-info {
+    font-size: 13px;
+    display: flex;
+    gap: 0.25rem;
+    color: var(--elite-body);
+    justify-content: center;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.elite-resume-template-page .template-header .tmp-contact-info a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.elite-resume-template-page .template-header hr {
+    width: 100%;
+    border: 0;
+    border-top: 1px solid #e8edf1;
+    margin: 0.5rem 0 0 0;
+}
+
+.elite-resume-template-page .section {
+    margin-top: var(--rt-section-space, 1rem);
+}
+
+.elite-resume-template-page .pt-summary-section .summary-text {
+    color: inherit;
+    font-size: var(--rt-body, 11px);
+    line-height: inherit;
+    font-family: inherit;
+    font-weight: 500;
+}
+
+.elite-resume-template-page .section-title {
+    font-size: var(--rt-section-heading, 14px);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1214rem;
+    white-space: nowrap;
+    color: var(--rt-theme-color, #333);
+    display: inline-block !important;
+    flex-shrink: 0;
+    margin-bottom: 0.5rem;
+    border-bottom: 1.5px solid var(--elite-ink);
+    padding-bottom: 0.25rem;
+    padding-top: 0.5rem;
+    width: 100%;
+}
+
+
+.elite-resume-template-page .skills-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-space, 0.25rem);
+}
+
+.elite-resume-template-page .skill-group {
+    display: inline;
+    font-size: var(--rt-body, 11px);
+    line-height: inherit;
+}
+
+.elite-resume-template-page .skill-group-name {
+    font-weight: 600;
+    flex-shrink: 0;
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: calc(var(--rt-body, 11px) * 0.84);
+    letter-spacing: 1px;
+}
+
+.elite-resume-template-page .skill-list {
+    line-height: 1.214;
+}
+
+.elite-resume-template-page .section-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rt-item-space, 1rem);
+
+    .section-item {
+        padding-bottom: var(--rt-item-space, 0.5rem);
+        ;
+        border-bottom: 1px solid #e8edf1;
+
+        &:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+    }
+}
+
+.elite-resume-template-page .exp-info {
+    line-height: 1.214;
+    margin-bottom: 0.25rem;
+}
+
+.elite-resume-template-page .exp-info-top,
+.elite-resume-template-page .prj-info-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0;
+}
+
+.elite-resume-template-page .exp-company-title,
+.elite-resume-template-page .prj-title-company {
+    font-size: var(--rt-subheader, 12px);
+    color: var(--elite-ink);
+    font-weight: 600;
+}
+
+.elite-resume-template-page .exp-company-name,
+.elite-resume-template-page .prj-title {
+    font-weight: 600;
+    color: var(--elite-ink);
+}
+
+.elite-resume-template-page .exp-job-title,
+.elite-resume-template-page .prj-company-name {
+    font-size: calc(var(--rt-body, 11px) * 0.84);
+    font-weight: 600;
+    color: var(--elite-body);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.elite-resume-template-page .exp-company-title a,
+.elite-resume-template-page .prj-title-company a {
+    color: inherit;
+}
+
+.elite-resume-template-page .exp-date {
+    font-size: var(--rt-body, 11px);
+    color: var(--elite-body);
+}
+
+.elite-resume-template-page .exp-description,
+.elite-resume-template-page .project-points {
+    /* margin-top: 0.25rem; */
+    margin-top: 0;
+    padding-left: 1rem;
+}
+
+.elite-resume-template-page .exp-description li,
+.elite-resume-template-page .project-points li {
+    font-size: var(--rt-body, 11px);
+    line-height: inherit;
+    margin-bottom: 0.125rem;
+    list-style-type: none;
+    position: relative;
+
+    strong {
+        font-weight: 600;
+        color: var(--elite-ink);
+    }
+
+    &::before {
+        content: '\2013';
+        color: var(--elite-body);
+        position: absolute;
+        left: -1rem;
+    }
+}
+
+.elite-resume-template-page .ed-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: var(--rt-body, 11px);
+
+    .ed-left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        .ed-degree {
+            font-size: var(--rt-subheader, 12px);
+            font-weight: 600;
+        }
+
+        .ed-college {
+            font-weight: 400;
+        }
+    }
+
+    .ed-right {
+        text-align: right;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+
+        .ed-grade {
+            font-weight: 500;
+        }
+    }
+}
+
+.elite-resume-template-page .exp-tech-skills {
+    font-size: var(--rt-body, 11px);
+    line-height: inherit;
+    margin-top: 6px;
+}
+
+.elite-resume-template-page .exp-tech-skills b {
+    font-weight: 700;
+    font-style: normal;
+}
+
+.elite-resume-template-page .common-section ul {
+    padding-left: 1rem;
+    /* margin-top: 0.25rem; */
+    margin-top: 0;
+}
+
+.elite-resume-template-page .common-section li {
+    font-size: var(--rt-body, 11px);
+    line-height: inherit;
+    list-style-type: none;
+    margin-bottom: 0.125rem;
+    position: relative;
+
+    strong {
+        font-weight: 600;
+        color: var(--elite-ink);
+    }
+
+    &::before {
+        content: '\2013';
+        color: var(--elite-body);
+        position: absolute;
+        left: -0.75rem;
+    }
+}
+
+.elite-resume-template-page .dynamic-content {
+    color: #ff7b24 !important;
+}
+
+/* END ELITE RESUME TEMPLATE (ID 5) */

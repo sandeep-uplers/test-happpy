@@ -14,10 +14,10 @@ export default function HealthCheckPusher({ healthCheckId }) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const pusher = new Pusher(process.env.MIX_VR_PUSHER_APP_KEY, {
-            cluster: process.env.MIX_VR_PUSHER_APP_CLUSTER,
+        const pusher = new Pusher(process.env.NEXT_PUBLIC_VR_PUSHER_APP_KEY, {
+            cluster: process.env.NEXT_PUBLIC_VR_PUSHER_APP_CLUSTER,
         });
-        const channelName = `${process.env.MIX_RESUME_TRANSFORM_PUSHER_CHANNEL}-${healthCheckId}`;
+        const channelName = `${process.env.NEXT_PUBLIC_RESUME_TRANSFORM_PUSHER_CHANNEL}-${healthCheckId}`;
         const channel = pusher.subscribe(channelName);
 
         channel.bind("health_check_completed", (data) => {
