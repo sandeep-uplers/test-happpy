@@ -4368,6 +4368,7 @@ button.jad-cta-card__btn:hover {
     border-bottom: 1px solid var(--jad-outline-variant);
     color: var(--jad-on-surface);
     transition: background 0.12s ease;
+    border: 1px solid var(--jad-outline-variant);
 }
 
 .jad-jobs__table tbody tr:hover td {
@@ -8113,6 +8114,7 @@ button.jad-cta-card__btn:hover {
 }
 
 .job-agent-dashboard .jad-helpguide-raise__guide-cta {
+    border: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
