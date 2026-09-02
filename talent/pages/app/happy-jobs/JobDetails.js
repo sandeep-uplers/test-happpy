@@ -24,7 +24,6 @@ import { differenceInMonths } from "date-fns";
 import ConfirmAppliedCard from "../../../components/extensionModal/ConfirmAppliedCard";
 import ReferralAgentModal from "../../../components/ReferralAgentModal";
 import { trackTailorPricePopupOpen } from "../../../store/actions/trackingActions";
-import TailorResumePaymentModal from "../resume/nudges/TailorResumePaymentModal";
 import AiScreeningRequired from "./AiScreeningRequired";
 import CustomQuesNeeded from "./CustomQuesNeeded";
 import EstimatedSalaryPill from "./EstimatedSalaryPill";
@@ -32,7 +31,6 @@ import JobDetailsApply from "./JobDetailsApply";
 import JobHeaderSticky from "./JobHeaderSticky";
 import MatcherInfo from "./MatcherInfo";
 import NotInterested from "./modals/NotInterested";
-import TailorResumeBanner from "./TailorResumeBanner";
 import UplersPartnerBadge from "./UplersPartnerBadge";
 import JobDetailsResumePromo from "../resume/nudges/JobDetailsResumePromo";
 import ReferralAgentResumeModal from "../../../components/ReferralAgentResumeModal";
@@ -165,7 +163,6 @@ export default function JobDetails({
     const { status: talentStatus, recruitment_data } = user;
     // const { is_tailored_eligible, is_tailored_paid } = user.resume_tailored;
     const { is_tailored_paid: is_tailored_eligible } = user.resume_tailored; // need to remove after allowing new user to tailor
-    const [showTailorResumePaymentModal, setShowTailorResumePaymentModal] = useState(false);
     const { isLoading } = useSelector(state => state.loader)
     const { similarJobs } = useSelector(state => state.opps)
     const similarJobObj = similarJobs[data.HR_Number]
@@ -829,24 +826,6 @@ export default function JobDetails({
                     <AboutCompany hr_id={data?.id} isOppDisabled={isOppDisabled} companyData={data?.company} />
                 </div>
             }
-
-            {/* {showTailorResumePaymentModal &&
-                <TailorResumePaymentModal
-                    isOpen={showTailorResumePaymentModal}
-                    setIsOpen={setShowTailorResumePaymentModal}
-                    hrEncId={data.enc_id}
-                    activeJob={
-                        {
-                            job_title: data.RequestForTalent,
-                            company: { ...data.company },
-                            is_applied: data.is_applied,
-                            aggregator_application_link: data.aggregator_application_link,
-                            aggregator: data.aggregator,
-                            HR_Number: data.HR_Number
-                        }
-                    }
-                />
-            } */}
         </div>
     )
 }

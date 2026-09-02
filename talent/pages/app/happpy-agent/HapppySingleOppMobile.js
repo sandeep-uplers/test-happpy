@@ -11,9 +11,8 @@ import { formattedINRJobBudget, formattedYOE, getApplyButtonText, isTalentHired 
 import { talentRelevancyTracking, viewAllJobsClickedTracking, viewJobClickedTracking } from "../../../helpers/Mixpanel";
 import { OPEN_SIGNUP_APPLY_FLOW, SET_TAILOR_MODAL_OPEN, SET_TOUCHPOINT_DATA } from "../../../store/actions/actionsTypes";
 import { trackTailorPricePopupOpen } from "../../../store/actions/trackingActions";
-import TailorResumePaymentModal from "../resume/nudges/TailorResumePaymentModal";
-import AboutCompany from "../happy-jobs/AboutCompany";
 import AiScreeningRequired from "../happy-jobs/AiScreeningRequired";
+import AboutCompany from "../happy-jobs/AboutCompany";
 import CompanyLogo from "../happy-jobs/CompanyLogo";
 import CustomQuesNeeded from "../happy-jobs/CustomQuesNeeded";
 import EstimatedSalaryPill from "../happy-jobs/EstimatedSalaryPill";
@@ -48,7 +47,6 @@ export default function HapppySingleOppMobile({
     const { is_tailored_paid: is_tailored_eligible } = user?.resume_tailored ?? {}; // need to remove after allowing new user to tailor
 
     const dispatch = useDispatch()
-    // const [showTailorResumePaymentModal, setShowTailorResumePaymentModal] = useState(false);
     const [isReferralModalVisible, setIsReferralModalVisible] = useState(false);
     const [referralPayloadHtml, setReferralPayloadHtml] = useState('');
     const [messageTemplateIds, setMessageTemplateIds] = useState({});
@@ -458,23 +456,6 @@ export default function HapppySingleOppMobile({
                     </div>
                 </>
             }
-            {/* {showTailorResumePaymentModal &&
-                <TailorResumePaymentModal
-                    isOpen={showTailorResumePaymentModal}
-                    setIsOpen={setShowTailorResumePaymentModal}
-                    hrEncId={data.enc_id}
-                    activeJob={
-                        {
-                            job_title: data.RequestForTalent,
-                            company: { ...data.company },
-                            is_applied: data.is_applied,
-                            aggregator_application_link: data.aggregator_application_link,
-                            aggregator: data.aggregator,
-                            HR_Number: data.HR_Number
-                        }
-                    }
-                />
-            } */}
         </>
     )
 }

@@ -1,4 +1,4 @@
-import { differenceInHours, differenceInMonths } from 'date-fns';
+import { differenceInMonths } from 'date-fns';
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,12 +7,10 @@ import { ArrowRightIcon } from "../../../assets/IconSVG";
 import SkillInfoModal from "../../../components/common/SkillInfoModal";
 import { useInView } from "../../../components/common/useInView";
 import { browserSupportScreening, getApplyButtonText, isTalentHired } from "../../../components/Helper";
-import { applyCtaForOpportunityClicked, applyHoverResumePromoClickedTracking, applyHoverResumePromoVisibleTracking, jobOpportunityPageLandTrack } from "../../../helpers/Mixpanel";
+import { applyCtaForOpportunityClicked, jobOpportunityPageLandTrack } from "../../../helpers/Mixpanel";
 import { OPEN_SIGNUP_APPLY_FLOW, SET_TOUCHPOINT_DATA, TOGGLE_ASK_APPLIED, UPDATE_HRDATA_TO_APPLY } from "../../../store/actions/actionsTypes";
 import { applyMandateVr, associateAggreeJobTalent, fetchTouchpointsQuestion, getIndividualHR, startHrAssessment } from "../../../store/actions/UserActions";
 import ManagePreferencesModal from "../preferences/ManagePreferencesModal";
-import PromoteHealthCheckAggModal from "../resume/nudges/PromoteHealthCheckAggModal";
-import PromoteTailoredAggModal from "../resume/nudges/PromoteTailoredAggModal";
 import AI_BrowserRestrictModal from "./modals/AI_BrowserRestrictModal";
 
 export default function JobDetailsApply({ data, setIsHeaderVisible, handleCustomizeResume }) {
@@ -139,50 +137,7 @@ export default function JobDetailsApply({ data, setIsHeaderVisible, handleCustom
     }
 
 
-    const { resumeHealthControl } = useSelector(state => state.resume);
-    // const { is_tailored_eligible } = user.resume_tailored;
-    const { is_tailored_paid: is_tailored_eligible } = user.resume_tailored; // need to remove after allowing new user to tailor
-    const [promoteHealthCheckAggModalOpen, setPromoteHealthCheckAggModalOpen] = useState(false);
-    const [promoteTransformAggModalOpen, setPromoteTransformAggModalOpen] = useState(false);
-    const [promoteTailoredAggModalOpen, setPromoteTailoredAggModalOpen] = useState(false);
     const handleAggApply = () => {
-        // let justTailored = sessionStorage.getItem('tailored_resume_generated_' + data.HR_Number);
-        // let noTransformPromo = is_tailored_eligible && justTailored;
-        // if (is_tailored_eligible && data.tailored_status != 2 && !justTailored) {
-        //     const interactedData = localStorage.getItem('promoTailorAggModalInteracted_' + data.HR_Number);
-        //     let lastInteractedDate = interactedData ? new Date(parseInt(interactedData, 10)) : '';
-        //     if (!lastInteractedDate || differenceInHours(new Date(), lastInteractedDate) > 12) {
-        //         setPromoteTailoredAggModalOpen(true);
-        //         return;
-        //     }
-        // }
-        // if (!is_tailored_eligible) {
-        //     if (resumeHealthControl.is_eligible && !resumeHealthControl.resume_healthchecked) {
-        //         const interactedData = localStorage.getItem('promoteHealthcheckAggModalInteracted');
-        //         let lastInteractedDate = interactedData ? new Date(parseInt(interactedData, 10)) : '';
-        //         if (!lastInteractedDate || differenceInHours(new Date(), lastInteractedDate) > 12) {
-        //             setPromoteHealthCheckAggModalOpen(true);
-        //             return;
-        //         }
-        //     }
-        //     else {
-        //         if (resumeHealthControl.is_eligible && resumeHealthControl.resume_healthchecked && resumeHealthControl.health_check &&
-        //             resumeHealthControl.health_check.resume_score < 85 && !resumeHealthControl.is_paid) {
-        //             const interactedData = localStorage.getItem('promoteTransformAggModalInteracted');
-        //             let lastInteractedDate = interactedData ? new Date(parseInt(interactedData, 10)) : '';
-
-        //             let remindLater = localStorage.getItem('jdResumePromoRemindLater');
-        //             let remindLaterDate = new Date(parseInt(remindLater, 10));
-        //             let isRemindLater = remindLaterDate && differenceInHours(new Date(), remindLaterDate) < 2;
-        //             if (!isRemindLater && (!lastInteractedDate || differenceInHours(new Date(), lastInteractedDate) > 12)) {
-        //                 setPromoteHealthCheckAggModalOpen(true);
-        //                 setPromoteTransformAggModalOpen(true);
-        //                 return;
-        //             }
-        //         }
-        //     }
-        // }
-
         let payload = {
             hr_id: data.enc_id,
             talent_id: user?.talent_enc_id
@@ -282,99 +237,6 @@ export default function JobDetailsApply({ data, setIsHeaderVisible, handleCustom
                         closeModal={() => setShowBrowserValidation(false)}
                     />
                 </>
-            }
-            {/* <PromoteHealthCheckAggModal
-                isOpen={promoteHealthCheckAggModalOpen}
-                isTransformModal={promoteTransformAggModalOpen}
-                setIsOpen={setPromoteHealthCheckAggModalOpen}
-                onSkip={handleAggApply}
-            />
-            <PromoteTailoredAggModal
-                isOpen={promoteTailoredAggModalOpen}
-                setIsOpen={setPromoteTailoredAggModalOpen}
-                onSkip={handleAggApply}
-                hrData={data}
-                handleCustomizeResume={handleCustomizeResume}
-            /> */}
-        </>
-    )
-}
-
-const ResumeHealthPromo = ({ data }) => {
-    const [showHealthcheckBanner, setShowHealthcheckBanner] = useState(false);
-    const [showFixResumeBanner, setShowFixResumeBanner] = useState(false);
-    const { resumeHealthControl } = useSelector(state => state.resume);
-    const { user } = useSelector(state => state.auth)
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (resumeHealthControl.is_eligible) {
-            if (!resumeHealthControl.resume_healthchecked) {
-                if (data.aggregator_application_link) {
-                    const interactedData = localStorage.getItem('promoteHealthcheckAggModalInteracted');
-                    let lastInteractedDate = interactedData ? new Date(parseInt(interactedData, 10)) : '';
-                    if (!lastInteractedDate || differenceInHours(new Date(), lastInteractedDate) > 12) {
-                        setShowHealthcheckBanner(false);
-                        return;
-                    }
-                }
-                applyHoverResumePromoVisibleTracking("Health Check");
-                setShowHealthcheckBanner(true);
-            } else if (
-                resumeHealthControl.resume_healthchecked &&
-                resumeHealthControl.health_check &&
-                resumeHealthControl.health_check.resume_score < 85 &&
-                !resumeHealthControl.is_paid
-            ) {
-                if (data.aggregator_application_link) {
-                    const interactedData = localStorage.getItem('promoteTransformAggModalInteracted');
-                    let lastInteractedDate = interactedData ? new Date(parseInt(interactedData, 10)) : '';
-                    if (!lastInteractedDate || differenceInHours(new Date(), lastInteractedDate) > 12) {
-                        setShowFixResumeBanner(false);
-                        return;
-                    }
-                }
-                applyHoverResumePromoVisibleTracking("Fix Resume");
-                setShowFixResumeBanner(true);
-            }
-        }
-    }, [resumeHealthControl.is_eligible, resumeHealthControl.resume_healthchecked, data.HR_Number]);
-
-    const onClickHandler = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        applyHoverResumePromoClickedTracking("Health Check");
-        navigate('/talent/resume-health-check/new');
-    }
-
-    const onClickHandlerFix = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        applyHoverResumePromoClickedTracking("Fix Resume");
-        navigate('/talent/resume-health-check/' + resumeHealthControl.health_check.file_id);
-    }
-
-    return (
-        <>
-            {showHealthcheckBanner &&
-                <div className="resume-health">
-                    <div className="resume-health-concern">
-                        <h6>Give your application the best chance.</h6>
-                        <button className="primaryBtn" onClick={onClickHandler}>Free Resume Check - 2 Mins</button>
-                    </div>
-                </div>
-            }
-            {showFixResumeBanner &&
-                <div className="resume-health">
-                    <div className="resume-health-concern fix-resume">
-                        <h6>
-                            Your resume scored only <span className="score">{resumeHealthControl.health_check.resume_score}/100</span>
-                            <br />
-                        </h6>
-                        <text>It will keep you below the radar</text>
-                        <button className="primaryBtn" onClick={onClickHandlerFix}>Fix it now !</button>
-                    </div>
-                </div>
             }
         </>
     )

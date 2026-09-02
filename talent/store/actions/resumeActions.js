@@ -298,8 +298,8 @@ export const downloadTransformedResume = (payload) => (dispatch) => {
     })
 }
 
-export const getOutreachAgentPreviewConfig = (HR_Number) => (dispatch) => {
-    dispatch({ type: SET_LOADER, payload: true })
+export const getOutreachAgentPreviewConfig = (HR_Number, noLoader = false) => (dispatch) => {
+    if (!noLoader) dispatch({ type: SET_LOADER, payload: true })
     return new Promise((resolve, reject) => {
         GET_API(API_OUTREACH_AGENT_PREVIEW_CONFIG + (HR_Number ? "?HR_Number=" + HR_Number : ""))
             .then((res) => {
@@ -307,7 +307,7 @@ export const getOutreachAgentPreviewConfig = (HR_Number) => (dispatch) => {
             }).catch((err) => {
                 reject(err)
             }).finally(() => {
-                dispatch({ type: SET_LOADER, payload: false })
+                if (!noLoader) dispatch({ type: SET_LOADER, payload: false })
             })
     })
 }

@@ -37,23 +37,6 @@ export default function OppTabFilters({
     }, [activeTab])
 
     useEffect(() => {
-        if (search) {
-            if (section == 'skills' || section == 'locations') {
-                filterMaster()
-            }
-            else {
-                let masters = [...sectionMaster]
-                let filtered = masters?.filter((item) => item.label?.toLowerCase()?.includes(search?.toLowerCase()))
-                setMaster(filtered)
-            }
-        } else {
-            if (sectionMaster?.length)
-                updateLocMaster(sectionMaster)
-        }
-        return filterMaster.cancel
-    }, [search, sectionMaster])
-
-    useEffect(() => {
         let newRange = { ...rangeInput[section] || {} }
         if (newRange[0] && newRange[1] && (Number(newRange[1]) > Number(newRange[0]))) {
             updateSelectedFilter({ [newRange[0] + "," + newRange[1]]: true })

@@ -4,17 +4,12 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useSearchParams } from "@/talent/navigation/routerCompat";
+import { useSearchParams } from "@/talent/navigation/routerCompat";
 import { FilterIcon } from "@/talent/assets/IconSVG";
-import { IMAGE_URL } from "../../../components/Constant";
 import { ALL_FILTERS, groupOptionsByCategoryFilters, MASTER_FILTERS, urlCustomDecode, urlCustomEncode } from "../../../components/Helper";
-import { countAppliedFilters, engagementFilterMaster, experienceFilterMaster, jobPostedDateFilterMaster, payoutFilterMaster, teamSizeFilterMaster } from "../../../components/Masters";
+import { countAppliedFilters, experienceFilterMaster, jobPostedDateFilterMaster, payoutFilterMaster, teamSizeFilterMaster } from "../../../components/Masters";
 import { SET_OPP_MASTER } from "../../../store/actions/actionsTypes";
 import { fetchOppCompanyMaster, fetchOppLocationMaster, fetchOppRoleMaster, fetchOppSkillMaster } from "../../../store/actions/UserActions";
-import OppEngagementFilter from "./filters/OppEngagementFilter";
-import OppPopoverFilter from "./filters/OppPopoverFilter";
-import OppEstimatedSalaryFilter from "./filters/OppEstimatedSalaryFilter";
-import OpportunitiesFilterMobile from "./OpportunitiesFilterMobile";
 import AllJobsFilterDrawer from "../happpy-agent/AllJobsFilterDrawer";
 
 const filterKeys = ["engagements", "payout", "roles", "experience", "locations", "skills", "job_posted_date", "maang_plus", "salary_available", "team_size"];
@@ -25,18 +20,14 @@ export default function OpportunitiesFilter({ showFiltered, noSearch, searchVal,
     loading, bookmarkCount, nonMatchingJobs, isBookmarkedActive, isPc, syncFiltersToUrl = true, applyMasterBufferFilters = true,
     filterLayout = 'inline', toolbarMeta = null, toolbarMetaLoading = false, toolbarHost = null, toolbarMountInHost = false,
     defaultJobPostedDate = null }) {
-    const [errors, setErrors] = useState({ otherExperience: true, otherPayRange: true })
     const dispatch = useDispatch()
-    const location = useLocation();
     const firstPageLoad = useRef(true);
 
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
     const [rangeInputs, setRangeInputs] = useState({});
 
     const [searchParams, updateSearchParams] = useSearchParams();
     const filterMasterData = useSelector(state => state.work)?.oppFilterMaster;
     const [bufferFilters, setBufferFilters] = useState({});
-    const useDrawerFilters = filterLayout === 'drawer';
     const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
     const [drawerFilters, setDrawerFilters] = useState({});
     const [drawerRangeInputs, setDrawerRangeInputs] = useState({});
@@ -239,49 +230,6 @@ export default function OpportunitiesFilter({ showFiltered, noSearch, searchVal,
     }
 
 
-    useEffect(() => {
-        const toggles = document.querySelectorAll('.addFilterMainDropdown .dropdown-toggle');
-        if (!toggles.length) return undefined;
-
-        const handlers = [];
-
-        toggles.forEach((toggle) => {
-            const handler = (e) => {
-                document.querySelectorAll('.addFilterMainDropdown .dropdown-toggle').forEach((other) => {
-                    if (other !== toggle) {
-                        other.parentElement?.classList.remove('openedSubMenu');
-                        const otherSub = other.nextElementSibling;
-                        if (otherSub?.classList.contains('addFilterSubDropdown')) {
-                            otherSub.classList.remove('show');
-                        }
-                    }
-                });
-
-                const dropdown = toggle.parentElement;
-                const subMenu = toggle.nextElementSibling;
-
-                if (dropdown?.classList.contains('openedSubMenu')) {
-                    dropdown.classList.remove('openedSubMenu');
-                    subMenu?.classList.remove('show');
-                } else {
-                    dropdown?.classList.add('openedSubMenu');
-                    subMenu?.classList.add('show');
-                }
-
-                e.preventDefault();
-            };
-
-            toggle.addEventListener('click', handler);
-            handlers.push({ toggle, handler });
-        });
-
-        return () => {
-            handlers.forEach(({ toggle, handler }) => {
-                toggle.removeEventListener('click', handler);
-            });
-        };
-    }, [])
-
     const [masterLoader, setMasterLoader] = useState(false)
 
     const fetchMasters = async () => {
@@ -329,26 +277,6 @@ export default function OpportunitiesFilter({ showFiltered, noSearch, searchVal,
         checkAnyFilter(currentFilters)
     }, [currentFilters])
 
-    useEffect(() => {
-        let elm = document.getElementById("clearFilters")
-        if (elm) {
-            if (checkAnyFilter(currentFilters)) elm.style = "display:block"
-            else elm.style = "display:none"
-        }
-    }, [currentFilters])
-
-    const handleRemoveFilter = (section, val, subVal) => {
-        let newFilters = { ...currentFilters[section] }
-        if (subVal) {
-            delete newFilters[val][subVal];
-            if (Object.keys(newFilters[val]).length == 0) {
-                delete newFilters[val];
-            }
-        } else
-            delete newFilters[val]
-
-        setCurrentFilters({ ...currentFilters, [section]: newFilters })
-    }
     const removeAllFilter = () => {
         setCurrentFilters({
             roles: {},
@@ -365,11 +293,11 @@ export default function OpportunitiesFilter({ showFiltered, noSearch, searchVal,
     }
 
     useEffect(() => {
-        if (!useDrawerFilters || !filterDrawerOpen) return;
+        if (!filterDrawerOpen) return;
         setDrawerFilters(currentFilters && Object.keys(currentFilters).length > 0 ? currentFilters : {});
         setDrawerRangeInputs(rangeInputs || {});
         setDrawerSearchVal(searchVal || '');
-    }, [filterDrawerOpen, useDrawerFilters]);
+    }, [filterDrawerOpen]);
 
     const handleOpenFilterDrawer = () => {
         setDrawerFilters(currentFilters && Object.keys(currentFilters).length > 0 ? currentFilters : {});
@@ -401,44 +329,10 @@ export default function OpportunitiesFilter({ showFiltered, noSearch, searchVal,
         setFilterDrawerOpen(false);
     };
 
-    const handleSearch = (searchText) => {
-        // trackAllOpportunitiesSearch(searchText)
-        onSearch(searchText)
-    }
-
-    const handleBookmarkedFilter = () => {
-        setCurrentFilters({ is_saved_filter: currentFilters.is_saved_filter == 1 ? 0 : 1 })
-    }
-
     const setSavedJobsView = (saved) => {
         const next = saved ? 1 : 0;
         if (currentFilters.is_saved_filter == next) return;
         setCurrentFilters({ is_saved_filter: next });
-    }
-
-    useEffect(() => {
-        if (!syncFiltersToUrl || useDrawerFilters) return;
-        if (isMobile && searchParams.get('is_saved_filter') != currentFilters.is_saved_filter) {
-            setCurrentFilters({
-                search: '',
-                roles: {},
-                experience: {},
-                skills: {},
-                engagements: {},
-                payout: {},
-                locations: {},
-                salary_available: null,
-                job_posted_date: {},
-                maang_plus: {},
-                is_saved_filter: searchParams.get('is_saved_filter')
-            })
-        }
-    }, [searchParams.get('is_saved_filter'), syncFiltersToUrl, useDrawerFilters])
-
-    const [mobileToggle, setMobileToggle] = useState(false)
-
-    const handleMobileToggle = () => {
-        setMobileToggle(!mobileToggle)
     }
 
     const drawerToolbar = (
@@ -499,272 +393,24 @@ export default function OpportunitiesFilter({ showFiltered, noSearch, searchVal,
 
     return (
         <>
-            {useDrawerFilters ? (
-                <>
-                    {toolbarMountInHost
-                        ? (toolbarHost ? createPortal(drawerToolbar, toolbarHost) : null)
-                        : drawerToolbar}
-                    <AllJobsFilterDrawer
-                        open={filterDrawerOpen}
-                        onClose={handleCloseFilterDrawer}
-                        onApply={handleDrawerApply}
-                        onClearAll={handleDrawerClearAll}
-                        selectedFilters={drawerFilters}
-                        setSelectedFilters={setDrawerFilters}
-                        masterLoader={masterLoader}
-                        rangeInput={drawerRangeInputs}
-                        setRangeInput={setDrawerRangeInputs}
-                        subMaster={drawerSubMaster}
-                        setSubMaster={setDrawerSubMaster}
-                        searchValue={drawerSearchVal}
-                        onSearchChange={setDrawerSearchVal}
-                    />
-                </>
-            ) : isMobile ?
-                <OpportunitiesFilterMobile
-                    rangeInputs={rangeInputs}
-                    noSearch={noSearch}
-                    searchVal={searchVal}
-                    handleSearch={handleSearch}
-                    currentFilters={currentFilters}
-                    setCurrentFilters={setCurrentFilters}
-                    removeAllFilter={removeAllFilter}
-                    bookmarkCount={bookmarkCount}
-                    totalOpp={totalOpp}
-                    loading={loading}
-                    nonMatchingJobs={nonMatchingJobs}
-                    masterLoader={masterLoader}
-                    errors={errors}
-                    filterCount={filterCount}
-                    isBookmarkedActive={isBookmarkedActive}
-                />
-                :
-                <div className={`opportunitiesFilter ${(masterLoader && MASTER_FILTERS.some(item => searchParams.has(item))) ? 'masterLoading' : ''}`}>
-                    <div className="opportunitiesFilterInner">
-                        {!noSearch &&
-                            <div className={`oppFilterTop ${isBookmarkedActive ? 'bookmarkedFilter' : ''}`}>
-                                <div className="searchWithEngagement">
-                                    <div className="oppSearchBox">
-                                        <div className="form-group">
-                                            <button type="button" className="btn oppSearchIcon">
-                                                <img src={IMAGE_URL + "work/filter-search-icon.svg"}
-                                                    alt="filter-search-icon" />
-                                            </button>
-                                            <input type="text" className="form-control "
-                                                placeholder="Search Opportunities"
-                                                value={searchVal}
-                                                onChange={(e) => handleSearch(e.target.value)}
-                                                data-hj-allow
-                                            />
-                                            {errors.searchOpportunity && <label className="fieldError">Please search opportunities</label>}
-                                        </div>
-                                    </div>
-                                    {!isBookmarkedActive &&
-                                        <OppEngagementFilter
-                                            master={engagementFilterMaster}
-                                            currenAllFilters={currentFilters}
-                                            setCurrentAllFilters={setCurrentFilters}
-                                        />
-                                    }
-
-                                </div>
-                            </div>
-                        }
-
-                        <div className="oppFilterBottom" style={{ display: currentFilters.is_saved_filter == 1 ? 'none' : '' }}>
-                            <div className="mobileFlex">
-                                <button className={`outlinedBtn ${mobileToggle ? 'mobileToggleOn' : ''}`} onClick={handleMobileToggle}>
-                                    <FilterIcon />
-                                    Filters
-                                    {filterCount > 0 ?
-                                        <span className="filterCount">
-                                            {filterCount}
-                                        </span>
-                                        :
-                                        <></>
-                                    }
-                                </button>
-                            </div>
-                            <div className={`oppAdvanceFilter ${mobileToggle ? 'mobileToggleOn' : ''}`}>
-                                <OppEngagementFilter
-                                    master={engagementFilterMaster}
-                                    currenAllFilters={currentFilters}
-                                    setCurrentAllFilters={setCurrentFilters}
-                                />
-                                <OppPopoverFilter
-                                    title="Posted Date"
-                                    section="job_posted_date"
-                                    sectionMaster={jobPostedDateFilterMaster}
-                                    currenAllFilters={currentFilters}
-                                    setCurrentAllFilters={setCurrentFilters}
-                                />
-                                <OppPopoverFilter
-                                    title="Location"
-                                    section="locations"
-                                    masterLoader={masterLoader}
-                                    allowSearch
-                                    sectionMaster={filterMasterData.locationMaster}
-                                    currenAllFilters={currentFilters}
-                                    setCurrentAllFilters={setCurrentFilters}
-                                />
-                                <OppPopoverFilter
-                                    title="Experience"
-                                    section="experience"
-                                    sectionMaster={experienceFilterMaster}
-                                    currenAllFilters={currentFilters}
-                                    setCurrentAllFilters={setCurrentFilters}
-                                    onLoadRangeInput={rangeInputs.experience}
-                                />
-                                <OppPopoverFilter
-                                    title="Salary Range"
-                                    section="payout"
-                                    sectionMaster={payoutFilterMaster}
-                                    currenAllFilters={currentFilters}
-                                    setCurrentAllFilters={setCurrentFilters}
-                                    onLoadRangeInput={rangeInputs.payout}
-                                />
-                                <OppPopoverFilter
-                                    title="Team Size"
-                                    section="team_size"
-                                    sectionMaster={teamSizeFilterMaster}
-                                    currenAllFilters={currentFilters}
-                                    setCurrentAllFilters={setCurrentFilters}
-                                    onLoadRangeInput={rangeInputs.team_size}
-                                />
-                                <OppPopoverFilter
-                                    title="Role"
-                                    section="roles"
-                                    masterLoader={masterLoader}
-                                    sectionMaster={filterMasterData.roleMaster}
-                                    currenAllFilters={currentFilters}
-                                    setCurrentAllFilters={setCurrentFilters}
-                                />
-                                <OppPopoverFilter
-                                    title="Skills"
-                                    section="skills"
-                                    masterLoader={masterLoader}
-                                    allowSearch
-                                    sectionMaster={filterMasterData.skillMaster}
-                                    currenAllFilters={currentFilters}
-                                    setCurrentAllFilters={setCurrentFilters}
-                                />
-                                <OppPopoverFilter
-                                    title={"MAANG+"}
-                                    section="maang_plus"
-                                    masterLoader={masterLoader}
-                                    allowSearch
-                                    sectionMaster={filterMasterData.maangMaster}
-                                    currenAllFilters={currentFilters}
-                                    setCurrentAllFilters={setCurrentFilters}
-                                />
-
-                                <OppEstimatedSalaryFilter
-                                    currenAllFilters={currentFilters}
-                                    setCurrentAllFilters={setCurrentFilters}
-                                />
-
-                                <button type="button" id="clearFilters" className="tagClearBtn" onClick={removeAllFilter} style={{ display: "none" }}>
-                                    Clear Filter
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    {!isPc &&
-                        <div className="filtersBottom">
-
-
-                            {(nonMatchingJobs === true && totalOpp > 0 && !loading) ?
-                                <>
-                                    {currentFilters.is_saved_filter == 1 ?
-                                        <div className="noMatchingJobs">
-                                            <span>No matching jobs found</span>
-                                            <strong>Showing all jobs that are bookmarked ({totalOpp})</strong>
-                                        </div>
-                                        :
-                                        <div className="noMatchingJobs">
-                                            <span>No matching jobs found</span>
-                                            <strong>Showing jobs that best match your profile ({totalOpp})</strong>
-                                        </div>
-                                    }
-                                </>
-                                :
-                                <div className="totalOpportunitiesCount">
-                                    <div
-                                        className={`jobCountBubble active`}
-                                    >
-                                        {currentFilters.is_saved_filter === 1 ? (
-                                            <>
-                                                All Bookmarked{" "}
-                                                {loading ? (
-                                                    <i className="spinner-border-bubble"></i>
-                                                ) : (
-                                                    `(${bookmarkCount})`
-                                                )}
-                                            </>
-                                        ) : (
-                                            <>
-                                                All{" "}
-                                                {loading ? (
-                                                    <i className="spinner-border-bubble"></i>
-                                                ) : (
-                                                    <>
-                                                        {totalOpp}
-                                                    </>
-                                                )}
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                            }
-
-
-
-
-                            {location.pathname != "/talent/inhouse-positions" &&
-                                <div className="filtersBottmRight">
-                                    <Link
-                                        className={`inhouseBtn`}
-                                        to={'/talent/inhouse-positions'}
-                                        target="_blank"
-                                    >
-                                        In-house Positions
-                                    </Link>
-                                    <button
-                                        className={`bookmarkedBtn ${currentFilters.is_saved_filter ? 'isBookmarkActive' : ''}`}
-                                        onClick={handleBookmarkedFilter}
-                                        disabled={loading}
-                                    >
-                                        <svg width="8" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M7.5 10L4 7.5L0.5 10V2C0.5 1.73478 0.605357 1.48043 0.792893 1.29289C0.98043 1.10536 1.23478 1 1.5 1H6.5C6.76522 1 7.01957 1.10536 7.20711 1.29289C7.39464 1.48043 7.5 1.73478 7.5 2V10Z" stroke="#232323" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                        {currentFilters.is_saved_filter ? 'Bookmarked' : 'My Bookmarks'}
-                                        <span className='bookmarkedCount'>{bookmarkCount}</span>
-                                    </button>
-                                </div>
-                            }
-                        </div>
-                    }
-                </div >
-            }
+            {toolbarMountInHost
+                ? (toolbarHost ? createPortal(drawerToolbar, toolbarHost) : null)
+                : drawerToolbar}
+            <AllJobsFilterDrawer
+                open={filterDrawerOpen}
+                onClose={handleCloseFilterDrawer}
+                onApply={handleDrawerApply}
+                onClearAll={handleDrawerClearAll}
+                selectedFilters={drawerFilters}
+                setSelectedFilters={setDrawerFilters}
+                masterLoader={masterLoader}
+                rangeInput={drawerRangeInputs}
+                setRangeInput={setDrawerRangeInputs}
+                subMaster={drawerSubMaster}
+                setSubMaster={setDrawerSubMaster}
+                searchValue={drawerSearchVal}
+                onSearchChange={setDrawerSearchVal}
+            />
         </>
-    )
-}
-
-const Label = ({ name, onDelete, blackLabel }) => {
-    return (
-        <label>
-            {name}
-            <span type="button" className="tagCloseBtn" onClick={onDelete}>
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <line y1="-0.5" x2="10.9767" y2="-0.5"
-                        transform="matrix(-0.68471 0.728816 0.671938 0.740608 9 1.5)"
-                        stroke={blackLabel ? "#fff" : "#232323"} />
-                    <line y1="-0.5" x2="10.9767" y2="-0.5"
-                        transform="matrix(0.68471 0.728816 -0.671938 0.740608 1 1.5)"
-                        stroke={blackLabel ? "#fff" : "#232323"} />
-                </svg>
-            </span>
-        </label>
     )
 }

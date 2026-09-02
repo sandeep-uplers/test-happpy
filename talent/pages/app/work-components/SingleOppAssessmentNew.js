@@ -1,26 +1,21 @@
-import { differenceInHours, differenceInMonths, format } from "date-fns";
+import { differenceInMonths, format } from "date-fns";
 
-import Pusher from "pusher-js";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "@/talent/navigation/routerCompat";
-import { NonMandatoryAiIcon, PlayBtn, StepperTitleIcon, ToggleFalse, ToggleTrue, WarningSvgIcon } from "../../../assets/IconSVG";
+import { NonMandatoryAiIcon, StepperTitleIcon } from "../../../assets/IconSVG";
 import { AI_INTERVIEW, IMAGE_URL, TRACK_HR_IDS } from "../../../components/Constant";
 import { browserSupportScreening, getApplicationSource, getApplyButtonText, isTalentHired } from "../../../components/Helper";
 import AssessmentStatusModal from "../../../components/common/AssessmentStatusModal";
 import SkillInfoModal from "../../../components/common/SkillInfoModal";
 import { useInView } from "../../../components/common/useInView";
-import ReplaceVRModal from "../../../components/profile/video-resume/ReplaceVRModal";
-import VideoPlayerModal from "../../../components/profile/video-resume/VideoPlayerModal";
 import VideoResumeContainer from "../../../components/profile/video-resume/VideoResumeContainer";
 import { useSingleHrContext } from "../../../context/SingleHrContext";
-import { applyCtaForOpportunityClicked, checkAiMendatoryOrNot, jobOpportunityPageLandTrack, pageVisitLoadAndCtaTrack, publicOppoApplyCtaTrack, setNewApplicationId, trackAllCtaClickV2, videoResumeToggleTrack } from "../../../helpers/Mixpanel";
-import { applyMandateVr, AssessmentRetest, associateAggreeJobTalent, fetchVideoResume, startHrAssessment, toggleVisibility } from "../../../store/actions/UserActions";
-import { OPEN_SIGNUP_APPLY_FLOW, SET_SINGLEHR_REDIRECT, TOGGLE_ASK_APPLIED, VR_PUSHER_SUBSCRIBE, VR_PUSHER_TOGGLE } from "../../../store/actions/actionsTypes";
+import { applyCtaForOpportunityClicked, checkAiMendatoryOrNot, jobOpportunityPageLandTrack, pageVisitLoadAndCtaTrack, publicOppoApplyCtaTrack, setNewApplicationId, trackAllCtaClickV2 } from "../../../helpers/Mixpanel";
+import { applyMandateVr, AssessmentRetest, associateAggreeJobTalent, startHrAssessment } from "../../../store/actions/UserActions";
+import { OPEN_SIGNUP_APPLY_FLOW, SET_SINGLEHR_REDIRECT, TOGGLE_ASK_APPLIED } from "../../../store/actions/actionsTypes";
 import ManagePreferencesModal from "../preferences/ManagePreferencesModal";
-import PromoteHealthCheckAggModal from "../resume/nudges/PromoteHealthCheckAggModal";
-import PromoteTailoredAggModal from "../resume/nudges/PromoteTailoredAggModal";
 import SingleJobResumeBanner from "../resume/nudges/SingleJobResumeBanner";
 import AI_BrowserRestrictModal from "./modals/AI_BrowserRestrictModal";
 
@@ -553,51 +548,7 @@ const AssessmentCard = ({ handleCustomizeResume, item, locked, retest, hr_id, is
         }
     }
 
-    const { resumeHealthControl } = useSelector(state => state.resume);
-    // const { is_tailored_eligible } = user.resume_tailored;
-    const { is_tailored_paid: is_tailored_eligible } = user.resume_tailored; // need to remove after allowing new user to tailor
-    const [promoteHealthCheckAggModalOpen, setPromoteHealthCheckAggModalOpen] = useState(false);
-    const [promoteTransformAggModalOpen, setPromoteTransformAggModalOpen] = useState(false);
-    const [promoteTailoredAggModalOpen, setPromoteTailoredAggModalOpen] = useState(false);
-
     const handleAggApply = () => {
-        // let justTailored = sessionStorage.getItem('tailored_resume_generated_' + hrData.HR_Number);
-        // let noTransformPromo = is_tailored_eligible && justTailored;
-        // if (is_tailored_eligible && hrData.tailored_status != 2 && !justTailored) {
-        //     const interactedData = localStorage.getItem('promoTailorAggModalInteracted_' + hrData.HR_Number);
-        //     let lastInteractedDate = interactedData ? new Date(parseInt(interactedData, 10)) : '';
-        //     if (!lastInteractedDate || differenceInHours(new Date(), lastInteractedDate) > 12) {
-        //         setPromoteTailoredAggModalOpen(true);
-        //         return;
-        //     }
-        // }
-        // if (!is_tailored_eligible) {
-        //     if (resumeHealthControl.is_eligible && !resumeHealthControl.resume_healthchecked) {
-        //         const interactedData = localStorage.getItem('promoteHealthcheckAggModalInteracted');
-        //         let lastInteractedDate = interactedData ? new Date(parseInt(interactedData, 10)) : '';
-        //         if (!lastInteractedDate || differenceInHours(new Date(), lastInteractedDate) > 12) {
-        //             setPromoteHealthCheckAggModalOpen(true);
-        //             return;
-        //         }
-        //     } else {
-        //         if (resumeHealthControl.is_eligible && resumeHealthControl.resume_healthchecked && resumeHealthControl.health_check &&
-        //             resumeHealthControl.health_check.resume_score < 85 && !resumeHealthControl.is_paid) {
-        //             const interactedData = localStorage.getItem('promoteTransformAggModalInteracted');
-        //             let lastInteractedDate = interactedData ? new Date(parseInt(interactedData, 10)) : '';
-
-        //             let remindLater = localStorage.getItem('jdResumePromoRemindLater');
-        //             let remindLaterDate = new Date(parseInt(remindLater, 10));
-        //             let isRemindLater = remindLaterDate && differenceInHours(new Date(), remindLaterDate) < 2;
-
-        //             if (!isRemindLater && (!lastInteractedDate || differenceInHours(new Date(), lastInteractedDate) > 12)) {
-        //                 setPromoteHealthCheckAggModalOpen(true);
-        //                 setPromoteTransformAggModalOpen(true);
-        //                 return;
-        //             }
-        //         }
-        //     }
-        // }
-
         let payload = {
             hr_id: hrData.enc_id,
             talent_id: user?.talent_enc_id
@@ -800,20 +751,6 @@ const AssessmentCard = ({ handleCustomizeResume, item, locked, retest, hr_id, is
                     </div>
                 </>
             }
-
-            {/* <PromoteHealthCheckAggModal
-                isOpen={promoteHealthCheckAggModalOpen}
-                setIsOpen={setPromoteHealthCheckAggModalOpen}
-                isTransformModal={promoteTransformAggModalOpen}
-                onSkip={handleAggApply}
-            />
-            <PromoteTailoredAggModal
-                isOpen={promoteTailoredAggModalOpen}
-                setIsOpen={setPromoteTailoredAggModalOpen}
-                onSkip={handleAggApply}
-                hrData={hrData}
-                handleCustomizeResume={handleCustomizeResume}
-            /> */}
         </div>
     )
 }
@@ -883,255 +820,3 @@ const PublicAssessmentCard = ({ item, ctaOnly, hr_id, setIsHeaderVisible, hrData
         </div>
     )
 }
-
-
-const VideoResumeDetailsCard = () => {
-    const { hrId: HR_Number } = useParams();
-    const dispatch = useDispatch();
-    const [videoResumeData, setVideoResumeData] = useState({});
-    const [loading, setLoading] = useState(false);
-    const { data: hrData } = useSingleHrContext();
-    const [openVideoPlayerModal, setOpenVideoPlayerModal] = useState(false);
-    const [openReplaceVRModal, setOpenReplaceVRModal] = useState(false);
-
-    const [videoResumeStates, setVideoResumeStates] = useState({
-        openUploadVideoResumeModal: false,
-        openPreRecordingModal: false,
-        openRecordVideoResumeModal: false,
-        openPreviewVideoPlayerModal: false,
-        openDiscardVideoModal: false,
-
-        // permission modals
-        openPermissionDeniedModal: false,
-        openDeviceErrorModal: false,
-        openDeviceInUseModal: false,
-    })
-
-    const handleFetchVideoResume = async () => {
-        setLoading(true);
-        try {
-            await fetchVideoResume(HR_Number)(dispatch).then(res => {
-                setVideoResumeData(res?.data?.data)
-                if (vrPusherToggle) {
-                    dispatch({
-                        type: VR_PUSHER_TOGGLE,
-                        payload: false
-                    })
-                }
-                if (vrPusherSubscribe) {
-                    dispatch({
-                        type: VR_PUSHER_SUBSCRIBE,
-                        payload: false
-                    });
-                }
-            }).catch(err => {
-                console.error("Error while fetching video resume", err);
-            })
-        } catch (err) {
-            console.log(err);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    const { vrPusherToggle, vrPusherSubscribe } = useSelector(state => state.misc);
-    const { user } = useSelector(state => state.auth);
-
-
-    useEffect(() => {
-        if (!vrPusherToggle) {
-            handleFetchVideoResume();
-        }
-    }, []);
-
-
-
-    useEffect(() => {
-        let pusher = null;
-        let channel_subscription = null;
-        if (vrPusherSubscribe) {
-            pusher = new Pusher(process.env.MIX_VR_PUSHER_APP_KEY, {
-                cluster: process.env.MIX_VR_PUSHER_APP_CLUSTER,
-            });
-            channel_subscription = pusher.subscribe(
-                process.env.MIX_VR_PUSHER_CHANNEL + user.talent_enc_id,
-            );
-            console.log('channel_subscription', channel_subscription);
-            channel_subscription.bind(process.env.MIX_VR_PUSHER_EVENT, (data) => {
-                setVideoResumeData(data);
-                dispatch({
-                    type: VR_PUSHER_TOGGLE,
-                    payload: false
-                });
-            });
-        } else {
-            if (channel_subscription) {
-                channel_subscription.unbind_all();
-                pusher.unsubscribe(process.env.MIX_VR_PUSHER_CHANNEL);
-                console.log('channel unsubscribed');
-            }
-        }
-        return () => {
-            if (channel_subscription) {
-                channel_subscription.unbind_all();
-                pusher.unsubscribe(process.env.MIX_VR_PUSHER_CHANNEL);
-                pusher.disconnect();
-                console.log('channel unsubscribed');
-            }
-        };
-    }, [vrPusherSubscribe])
-
-    return (
-        <>
-            {openVideoPlayerModal && <VideoPlayerModal openVideoPlayerModal={openVideoPlayerModal} url={videoResumeData?.video_url} handleClose={() => setOpenVideoPlayerModal(false)} />}
-
-            {openReplaceVRModal &&
-                <ReplaceVRModal
-                    openReplaceVRModal={openReplaceVRModal}
-                    setOpenReplaceVRModal={setOpenReplaceVRModal}
-                    videoResumeData={videoResumeData}
-                    setVideoResumeData={setVideoResumeData}
-                    setVideoResumeStates={setVideoResumeStates}
-                    setOpenVideoPlayerModal={setOpenVideoPlayerModal}
-                    hrData={hrData}
-                />
-            }
-
-            <VideoResumeContainer
-                videoResumeStates={videoResumeStates}
-                setVideoResumeStates={setVideoResumeStates}
-                openSelectSourceModal={() => setOpenReplaceVRModal(true)}
-                vrMandatoryOnApply={false}
-                replaceResume={true}
-                handleFetchVideoResume={!vrPusherToggle && handleFetchVideoResume}
-                videoResumeData={videoResumeData}
-                data={hrData}
-            />
-
-            {vrPusherToggle ?
-                <>
-                    {/* msg here about processing */}
-                    <div className="chunkProcessLoader">
-                        <div className="videoIcon"></div>
-                        <div className="loader">
-                            <div className="spinner-parent">
-                                <div class="spinner"></div>
-                            </div>
-                            <div className="msg">
-                                <h5>Woohoo! Almost done</h5>
-                                <span>Hang on tight while we process your video recording</span>
-                            </div>
-                        </div>
-                    </div>
-                </>
-                :
-                <>
-                    {(!loading) &&
-                        <div className="videoResumeDetailsCard appliedWithoutScreening">
-                            <div className="row1">
-                                <div className="video-thumbnail">
-                                    <video src={videoResumeData?.video_url} />
-                                    <span
-                                        className="playBtn"
-                                        onClick={() => videoResumeData?.video_url && setOpenVideoPlayerModal(true)}
-                                    >
-                                        <PlayBtn />
-                                    </span>
-                                </div>
-                                <div className="content">
-                                    <h3>View your video resume</h3>
-                                    <div className="info">
-                                        <span className="date">Uploaded on: {formatDate(videoResumeData?.uploaded_at)}</span>
-                                        {/* |
-                                        <span className="view-count"><EyeIcon /> Viewed by {videoResumeData?.watch_count ?? 0}</span> */}
-                                    </div>
-                                    <p>Want to replace and add a new video?</p>
-                                    <button
-                                        className="replace-video-btn"
-                                        onClick={() => setOpenReplaceVRModal(true)}
-                                    >
-                                        Yes, Replace This Video
-                                    </button>
-                                </div>
-                            </div>
-                            {hrData.ai_mandatory != 2 &&
-                                <>
-                                    <hr />
-                                    <div className="row2">
-                                        <p>Decide whether you want this video to be visible to the client for this job opportunity or not</p>
-                                        <ClientVisibilityToggle initialState={videoResumeData?.is_visible_to_client} setVideoResumeData={setVideoResumeData} />
-                                    </div>
-                                </>
-                            }
-                        </div>
-                    }
-                </>
-            }
-        </>
-    )
-}
-
-export const ClientVisibilityToggle = ({ initialState = false, setVideoResumeData, hideWarning = false }) => {
-    const [toggle, setToggle] = useState();
-    const { data } = useSingleHrContext();
-
-    useEffect(() => {
-        setToggle(initialState);
-    }, [initialState]);
-
-    const handleToggle = (val) => {
-        setVideoResumeData((prev) => ({ ...prev, is_visible_to_client: val }));
-        videoResumeToggleTrack({ visible: val, hrData: data })
-        const payload = {
-            hr_id: data?.detail?.hr_id,
-            is_visible_to_client: val
-        }
-        try {
-            toggleVisibility(payload).then(res => {
-            }).catch(err => {
-                console.error("Error while visibility toggle", err);
-            })
-        } catch (err) {
-            console.log(err);
-        }
-
-    }
-
-    return (
-        <>
-            {toggle ?
-                <div className="client-visibilty-toggle" onClick={() => handleToggle(false)}>
-                    Visible to the client for this job
-                    <ToggleTrue />
-                </div>
-                :
-                <>
-                    <div className="client-visibilty-toggle false" onClick={() => handleToggle(true)}>
-                        <ToggleFalse />
-                        Not visible to the client for this job
-                    </div>
-                    {!hideWarning &&
-                        <div className="client-visibilty-warning"><WarningSvgIcon /> <b>Please note:</b><p>You have disabled the video sharing option with the client for this position only.</p></div>
-                    }
-                </>
-            }
-        </>
-    )
-}
-
-export const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-    const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'short' });
-    const year = date.getFullYear().toString().slice(-2);
-    const daySuffix = (day) => {
-        if (day > 3 && day < 21) return 'th';
-        switch (day % 10) {
-            case 1: return "st";
-            case 2: return "nd";
-            case 3: return "rd";
-            default: return "th";
-        }
-    };
-    return ` ${day}${daySuffix(day)} ${month}’${year}`;
-};

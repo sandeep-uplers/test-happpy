@@ -10,7 +10,7 @@ import axios from "axios";
 import { useNavigate } from '@/talent/navigation/routerCompat';
 import { toast } from "react-hot-toast";
 import DownloadResumeLoader from "../pages/app/resume/payment/DownloadResumeLoader";
-import SectionLoader from "./SectionLoader";
+import HapppyLoader from "./common/HapppyLoader";
 import { API_OUTREACH_REWRITE_MESSAGE, API_OUTREACH_STORE_MESSAGE_TEMPLATE, API_OUTREACH_SUBSCRIBE_MODAL_ACTION, API_URL } from "./Constant";
 import { GET_API, POST_API, getClientDeviceMobileOrDesktop } from "./Helper";
 import { useDispatch, useSelector } from "react-redux";
@@ -610,15 +610,7 @@ const PREVIEW_MODAL_STYLES = `
     cursor: not-allowed;
 }
 .rap-preview-drawer__footer-cta-spinner {
-    width: 14px;
-    height: 14px;
-    border: 2px solid rgba(255, 255, 255, 0.35);
-    border-top-color: #ffffff;
-    border-radius: 50%;
-    animation: rap-preview-btn-spin 0.6s linear infinite;
-}
-@keyframes rap-preview-btn-spin {
-    to { transform: rotate(360deg); }
+    display: inline-flex;
 }
 .rap-preview-drawer__loading-overlay {
     position: absolute;
@@ -630,14 +622,6 @@ const PREVIEW_MODAL_STYLES = `
     justify-content: center;
     gap: 12px;
     background: rgba(255, 255, 255, 0.92);
-}
-.rap-preview-drawer__loading-spinner {
-    width: 28px;
-    height: 28px;
-    border: 3px solid rgba(26, 26, 46, 0.15);
-    border-top-color: #1a1a2e;
-    border-radius: 50%;
-    animation: rap-preview-btn-spin 0.6s linear infinite;
 }
 .rap-preview-drawer__loading-text {
     margin: 0;
@@ -1084,7 +1068,7 @@ export default function ReferralAgentPreviewModal({
         let cancelled = false;
         setPreviewConfigLoading(true);
 
-        getOutreachAgentPreviewConfig(HR_Number)(dispatch)
+        getOutreachAgentPreviewConfig(HR_Number, true)(dispatch)
             .then((res) => {
                 if (cancelled) return;
                 const newConfigData = res.data.data;
@@ -1440,7 +1424,7 @@ export default function ReferralAgentPreviewModal({
                                 aria-busy="true"
                                 aria-label={confirmLoading ? "Sending" : "Loading preview"}
                             >
-                                <span className="rap-preview-drawer__loading-spinner" aria-hidden />
+                                <HapppyLoader size="lg" />
                                 <p className="rap-preview-drawer__loading-text">
                                     {confirmLoading ? "Sending..." : "Loading..."}
                                 </p>
@@ -1613,7 +1597,7 @@ export default function ReferralAgentPreviewModal({
                                         <div className="rap-preview-drawer__content">
                                             {!outreachAgentPreviewConfig ? (
                                                 <div className="rap-preview-drawer__messages-loading" aria-busy="true" aria-label="Loading message previews">
-                                                    <SectionLoader />
+                                                    <HapppyLoader size="lg" />
                                                 </div>
                                             ) : (
                                                 <>
@@ -1889,7 +1873,9 @@ export default function ReferralAgentPreviewModal({
                                         >
                                             {confirmLoading ? (
                                                 <>
-                                                    <span className="rap-preview-drawer__footer-cta-spinner" aria-hidden />
+                                                    <span className="rap-preview-drawer__footer-cta-spinner" aria-hidden>
+                                                        <HapppyLoader size="sm" />
+                                                    </span>
                                                     <span>Sending...</span>
                                                 </>
                                             ) : (
@@ -1922,25 +1908,32 @@ const SUBSCRIBE_MODAL_STYLES = `
 .rap-subscribe-modal-overlay.ReactModal__Overlay {
     background: rgba(25, 28, 30, 0.55) !important;
     backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     padding: 1rem;
     z-index: 100000;
-    position: fixed;
+    position: fixed !important;
     inset: 0;
+    overflow: auto;
 }
+.rap-subscribe-modal.commonModal.ReactModal__Content,
 .rap-subscribe-modal.modal {
-    position: relative;
-    inset: auto;
-    max-width: 560px;
-    width: 100%;
-    margin: auto;
-    padding: 0;
-    border: none;
-    background: transparent;
-    overflow: visible;
-    outline: none;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    inset: auto !important;
+    max-width: 560px !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: auto !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    overflow: visible !important;
+    outline: none !important;
 }
 .rap-subscribe-modal__card {
     position: relative;
@@ -2299,7 +2292,7 @@ const SubscribeModal = ({ plan, onClose }) => {
     return (
         <Modal
             isOpen={true}
-            className="modal commonModal rap-subscribe-modal"
+            className="commonModal rap-subscribe-modal"
             overlayClassName="rap-subscribe-modal-overlay"
             contentLabel={title}
         >
