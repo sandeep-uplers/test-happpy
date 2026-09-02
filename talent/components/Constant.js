@@ -206,7 +206,12 @@ export const API_PREFERRED_COMPANIES_LIST = API_URL + "talent/outreach/get-prefe
 export const API_STORE_OUTREACH_TEMPLATE = API_URL + "talent/outreach/store-message-template";
 export const API_GET_OUTREACH_TEMPLATES = API_URL + "talent/outreach/get-message-templates";
 export const API_GET_OUTREACH_STEP = API_URL + "talent/outreach/outreach-step";
+/** Happpy GTM concise onboarding (`/talent/happpy`) — BE contract; FE falls back if missing. */
+export const API_HAPPPY_GTM_ONBOARDING_STATUS = API_URL + "talent/happpy-gtm/onboarding-status";
+export const API_HAPPPY_GTM_PREFERENCES = API_URL + "talent/happpy-gtm/preferences";
 export const API_OUTREACH_TRACK_JOURNEY = API_URL + "talent/outreach/track-journey";
+export const API_HAPPPY_PUBLIC_PAGE_VISIT = API_URL + "talent/outreach/happpy-public-page-visit";
+export const API_HAPPPY_PUBLIC_PAGE_VISIT_1 = API_URL + "talent/outreach/happpy-public-page-visit-1";
 
 /** Keys for POST /talent/outreach/track-journey (TalentOutreachTracking). */
 export const OUTREACH_JOURNEY_KEY_ONBOARDING_POP_OPENED = "onboarding_pop_opened";
@@ -231,6 +236,7 @@ export const ONB_POP_OPENED_SECTIONS = {
 export const OUTREACH_JOURNEY_KEY_GMAIL_CLICKED = "gmail_clicked";
 export const OUTREACH_JOURNEY_KEY_ONB_GMAIL_CONNECTED = "onb_gmail_connected";
 export const OUTREACH_JOURNEY_KEY_LINKEDIN_CLICKED = "linkedin_clicked";
+export const OUTREACH_JOURNEY_KEY_ONB_LINKEDIN_CONNECTED = "onb_linkedin_connected";
 export const API_GET_OUTREACH_DASHBOARD_DATA = API_URL + "talent/outreach/get-outreach-dashboard-data";
 export const API_UPDATE_AUTO_RUN_HAPPPY = API_URL + "talent/outreach/consent-auto-run";
 /** Latest outreach_onboard_jobs row for the logged-in talent (saved job URLs + funnel stage). */

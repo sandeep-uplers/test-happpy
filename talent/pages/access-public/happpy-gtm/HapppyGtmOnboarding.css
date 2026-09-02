@@ -1,0 +1,74 @@
+/* Happpy GTM concise onboarding — prefs + landing-lock extras.
+   Drawer chrome reuses AgentOnboarding.css class names (imported by the drawer). */
+
+html.happy-job-agent-landing-active body.happpy-gtm-onb-body-open {
+    overflow: hidden;
+    padding-right: 0 !important;
+}
+
+.happpy-gtm-prefs-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 48px 24px;
+    min-height: 200px;
+}
+
+.happpy-gtm-prefs-loading .jad-jobs__toolbar-msg {
+    margin: 0;
+    font-family: "Rubik", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b6b6b;
+}
+
+.happpy-gtm-prefs-loading .jad-jobs__toolbar-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(35, 31, 32, 0.12);
+    border-top-color: #231f20;
+    border-radius: 50%;
+    animation: happpy-gtm-prefs-spin 0.75s linear infinite;
+}
+
+@keyframes happpy-gtm-prefs-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.happpy-gtm-callback {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: #fffef8;
+    font-family: Rubik, sans-serif;
+}
+
+.happpy-gtm-callback__card {
+    width: min(420px, 100%);
+    background: #fff;
+    border: 1px solid #ebe8dc;
+    border-radius: 12px;
+    padding: 32px 28px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(20, 20, 20, 0.08);
+}
+
+.happpy-gtm-callback__title {
+    margin: 0 0 8px;
+    font-size: 22px;
+    color: #231f20;
+}
+
+.happpy-gtm-callback__lead {
+    margin: 0;
+    font-size: 14px;
+    color: #6b6b6b;
+    line-height: 1.5;
+}

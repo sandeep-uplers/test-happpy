@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { Provider, useDispatch } from 'react-redux';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from 'react-hot-toast';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,6 +14,8 @@ import { readStoredAuth } from '@/talent/store/reducers/authReducer';
 import HappyAiAgentLayout from '@/talent/components/HappyAiAgentLayout';
 
 const GlobalPopups = dynamic(() => import('@/talent/routes/GlobalPopups'), { ssr: false });
+
+const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
 
 function AuthHydrator({ children }) {
     const dispatch = useDispatch();
@@ -25,17 +28,29 @@ function AuthHydrator({ children }) {
     return children;
 }
 
+function AppShell({ children }) {
+    const inner = (
+        <AuthHydrator>
+            <HappyAiAgentLayout>
+                {children}
+                <GlobalPopups />
+            </HappyAiAgentLayout>
+            <Toaster position="top-center" />
+            <ToastContainer position="bottom-center" theme="dark" />
+        </AuthHydrator>
+    );
+
+    if (!googleClientId) {
+        return inner;
+    }
+
+    return <GoogleOAuthProvider clientId={googleClientId}>{inner}</GoogleOAuthProvider>;
+}
+
 export default function Providers({ children }) {
     return (
         <Provider store={store}>
-            <AuthHydrator>
-                <HappyAiAgentLayout>
-                    {children}
-                    <GlobalPopups />
-                </HappyAiAgentLayout>
-                <Toaster position="top-center" />
-                <ToastContainer position="bottom-center" theme="dark" />
-            </AuthHydrator>
+            <AppShell>{children}</AppShell>
         </Provider>
     );
 }

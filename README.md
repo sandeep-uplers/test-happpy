@@ -5,6 +5,8 @@ Standalone Next.js port of the Happpy Agent pages from the Uplers ATS Laravel ap
 | Route | Page | Auth |
 | --- | --- | --- |
 | `/` | Public Happpy landing | Public |
+| `/talent/happpy` | GTM concise onboarding landing (Google sign-in → prefs → Gmail → extension) | Public |
+| `/talent/happpy/gmail-callback` | Gmail-as-auth OAuth popup return | Public |
 | `/talent/referral-ai-agent` | Authenticated agent page | Requires token |
 | `/talent/gmail-connect/:token` | Gmail OAuth callback (popup) | Requires token |
 
@@ -42,6 +44,7 @@ Start UTS on port 8001 (`php artisan serve --port=8001`) before running happpy.
 | Variable | Example (local) | Purpose |
 | --- | --- | --- |
 | `NEXT_PUBLIC_APP_URL` | `http://127.0.0.1:3000` | Happpy frontend origin (browser API + OAuth popup entry) |
+| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | *(same as UTS `MIX_ATS_GOOGLE_CLIENT_ID`)* | Google sign-in on `/talent/happpy` GTM landing |
 | `UTS_API_BASE_URL` | `http://127.0.0.1:8001` | Server-only proxy target for `/api/*` |
 | `UTS_WEB_BASE_URL` | `http://127.0.0.1:8001` | Server-only target for `/auth/*` rewrites |
 | `HAPPPY_FRONTEND_URL` (UTS) | `http://127.0.0.1:3000` | Happpy origin — only when OAuth is started with `?happpy=1` |
@@ -65,6 +68,9 @@ app/                      Next App Router entry points
   layout.js               <html>, fonts, global CSS, favicon, hero preload
   providers.js            Redux + reCAPTCHA + Toaster, auth hydration
   page.js                 /
+  talent/happpy/page.js
+  talent/happpy/gmail-callback/page.js
+  talent/auth/google-callback/page.js
   talent/referral-ai-agent/page.js
   talent/gmail-connect/[token]/page.js
 lib/

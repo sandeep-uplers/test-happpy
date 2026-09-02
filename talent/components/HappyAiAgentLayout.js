@@ -6,6 +6,13 @@ export const HAPPY_AI_AGENT_PATH_PREFIX = '/talent/happy-ai-agent';
 
 export const REFERRAL_AI_AGENT_PATH = '/talent/referral-ai-agent';
 
+/** GTM concise landing — exact `/talent/happpy` or `/talent/happpy/…` (not happpy-ai-agent). */
+export const HAPPPY_GTM_LANDING_PATH = '/talent/happpy';
+
+export function isHapppyGtmLandingPath(pathname) {
+    return pathname === HAPPPY_GTM_LANDING_PATH || pathname.startsWith(`${HAPPPY_GTM_LANDING_PATH}/`);
+}
+
 /** True for `/talent/happy-ai-agent` and nested paths (not other routes that merely contain the string). */
 export function isHappyAiAgentPublicPath(pathname) {
     return pathname === HAPPY_AI_AGENT_PATH_PREFIX || pathname.startsWith(`${HAPPY_AI_AGENT_PATH_PREFIX}/`);
@@ -26,7 +33,8 @@ export function isHappyAiAgentLayoutPath(pathname) {
         pathname === HAPPPY_AI_AGENT_PATH_PREFIX ||
         pathname.startsWith(`${HAPPPY_AI_AGENT_PATH_PREFIX}/`) ||
         pathname === REFERRAL_AI_AGENT_PATH ||
-        pathname.startsWith(`${REFERRAL_AI_AGENT_PATH}/`)
+        pathname.startsWith(`${REFERRAL_AI_AGENT_PATH}/`) ||
+        isHapppyGtmLandingPath(pathname)
     );
 }
 
@@ -38,7 +46,8 @@ export function skipsPlatformHotjar(pathname) {
     return (
         isHappyAiAgentPublicPath(pathname) ||
         pathname === REFERRAL_AI_AGENT_PATH ||
-        pathname.startsWith(`${REFERRAL_AI_AGENT_PATH}/`)
+        pathname.startsWith(`${REFERRAL_AI_AGENT_PATH}/`) ||
+        isHapppyGtmLandingPath(pathname)
     );
 }
 

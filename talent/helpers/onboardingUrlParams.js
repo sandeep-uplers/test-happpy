@@ -3,6 +3,8 @@
 /** Query-param keys emitted during the Happy Agent onboarding funnel. */
 export const ONBOARDING_URL_PARAM = {
     CONNECT_ACCOUNTS: 'connect-your-accounts',
+    /** Happpy GTM drawer opened (account created / signed in). */
+    CREATE_PROFILE: 'create-profile',
     ACCOUNT_LINKED: 'account-linked',
     PROFILE_CREATED: 'profile-created',
     EXTENSION_AWARE: 'extension-aware',
@@ -30,4 +32,24 @@ export function setOnboardingActivityUrlParam(paramName, value = 'true') {
     });
     url.searchParams.set(paramName, value);
     window.history.replaceState(window.history.state, '', url.toString());
+}
+
+/**
+ * Builds a path + query for navigation (e.g. recommended jobs with `setupcomplete=true`).
+ * Replaces any existing onboarding param so only one flag is present.
+ */
+export function pathWithOnboardingParam(pathname, paramName, value = 'true') {
+    const base = pathname || '/';
+    if (typeof window === 'undefined') {
+        const join = base.includes('?') ? '&' : '?';
+        return `${base}${join}${paramName}=${encodeURIComponent(value)}`;
+    }
+    const url = new URL(base, window.location.origin);
+    Object.values(ONBOARDING_URL_PARAM).forEach((key) => {
+        url.searchParams.delete(key);
+    });
+    if (paramName) {
+        url.searchParams.set(paramName, value);
+    }
+    return `${url.pathname}${url.search}`;
 }
