@@ -57,7 +57,7 @@ import {
     API_UPDATE_TRANSFORMED_RESUME_IN_PROFILE,
     API_SNOOZE_EMAIL,
     API_SNOOZE_EMAIL_UPDATE,
-    API_ACCOUNT_STATUS, API_LINKEDIN_CONNECT, API_LINKEDIN_VERIFY, API_LINKEDIN_DISCONNECT, API_GMAIL_VERIFY, API_GMAIL_DISCONNECT, API_OUTREACH_AGENT, API_ACCOUNT_ANALYTICS,
+    API_ACCOUNT_STATUS, API_LINKEDIN_CONNECT, API_LINKEDIN_VERIFY, API_LINKEDIN_DISCONNECT, API_GMAIL_VERIFY, API_GMAIL_DISCONNECT, API_OUTREACH_AGENT, API_AUTO_RUN_REQUEST, API_REFERRAL_AGENT_JOB_APPLY_BY_LINKS_BATCH, API_ACCOUNT_ANALYTICS,
     API_RESUME_DASHBOARD,
     API_RESUME_PREVIEW,
     API_VIEW_HEALTH_REPORT,
@@ -127,10 +127,15 @@ import {
     HAPPPY_AGENT_FAILED,
     HAPPPY_AGENT_RESET,
     HAPPPY_AGENT_DAILY_LIMIT_SET,
-    HAPPPY_AGENT_DAILY_USED_INCREMENT,
 } from './actionsTypes';
 import { format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
+import {
+    countFromAutoRunResponse,
+    countFromReferralLinksBatchResponse,
+    HAPPPY_AGENT_DASHBOARD_CACHE_KEY,
+    HAPPPY_AGENT_DAILY_RUN_RECORDED_EVENT,
+} from '../../helpers/happpyAgentDailyLimit';
 import { resumeHealthReportViewedTracking, resumeTemplateSelectedTracking, setRegisterId, trackAllCtaClickV2, updateMixpanelUserDetails } from '../../helpers/Mixpanel';
 import toast from 'react-hot-toast';
 import axios from 'axios';
@@ -3073,6 +3078,9 @@ export const startOutreachAgent = (payload) => (dispatch) => {
     return new Promise((resolve, reject) => {
         POST_API(API_OUTREACH_AGENT, payload)
             .then((res) => {
+                if (res?.data?.status === 'success') {
+                    dispatch(incrementHapppyAgentDailyUsed());
+                }
                 resolve(res);
             })
             .finally(() =>
@@ -3139,7 +3147,6 @@ export const getOutreachStep = () => (dispatch) => {
 
 /** Mirror of the localStorage cache the AgentJ layout uses for first-paint hydration. */
 const HAPPPY_AGENT_CACHE_KEY = 'job_agent_outreach_step_cache';
-const HAPPPY_AGENT_DASHBOARD_CACHE_KEY = 'happpy_agent_dashboard_data_cache';
 
 function persistHapppyAgentDashboardData(payload) {
     if (typeof window === 'undefined' || !payload || typeof payload !== 'object') return;
@@ -3270,17 +3277,26 @@ export const fetchHapppyAgentDailyLimit = ({ skip = false } = {}) => (dispatch, 
     return GET_API(API_GET_OUTREACH_DASHBOARD_DATA)
         .then((res) => {
             const payload = res?.data?.data || {};
-            persistHapppyAgentDashboardData(payload);
+            const serverUsed = Number(payload.today_agent_runs) || 0;
+            const serverLimit = Number(payload.max_limit) || 0;
+            const currentUsed = Number(getState().happpyAgent?.dailyUsed) || 0;
+            /** Keep optimistic bumps until the server catches up (tab refetch / slow writes). */
+            const mergedUsed = skip ? currentUsed : Math.max(serverUsed, currentUsed);
+            const mergedDashboard = {
+                ...payload,
+                today_agent_runs: mergedUsed,
+            };
+            persistHapppyAgentDashboardData(mergedDashboard);
             dispatch({
                 type: HAPPPY_AGENT_DAILY_LIMIT_SET,
                 payload: {
                     dailyLimitLoading: false,
-                    dashboardData: payload,
+                    dashboardData: mergedDashboard,
                     ...(skip
                         ? {}
                         : {
-                              dailyUsed: Number(payload.today_agent_runs) || 0,
-                              dailyLimit: Number(payload.max_limit) || 0,
+                              dailyUsed: mergedUsed,
+                              dailyLimit: serverLimit,
                           }),
                     agentPrefFieldsSubmitted: !!payload.agent_pref_fields_submitted,
                     dashboardPreferencesLoaded: true,
@@ -3288,19 +3304,102 @@ export const fetchHapppyAgentDailyLimit = ({ skip = false } = {}) => (dispatch, 
             });
         })
         .catch(() => {
+            const current = getState().happpyAgent;
             dispatch({
                 type: HAPPPY_AGENT_DAILY_LIMIT_SET,
                 payload: {
                     dailyLimitLoading: false,
-                    ...(skip ? {} : { dailyUsed: 0, dailyLimit: 0 }),
+                    ...(skip
+                        ? {}
+                        : {
+                              dailyUsed: current?.dailyUsed ?? 0,
+                              dailyLimit: current?.dailyLimit ?? 0,
+                          }),
                     dashboardPreferencesLoaded: true,
                 },
             });
         });
 };
 
-/** Optimistically bump today's run count after a successful outreach agent submission. */
-export const incrementHapppyAgentDailyUsed = () => ({ type: HAPPPY_AGENT_DAILY_USED_INCREMENT });
+/**
+ * Optimistically bump today's run count after a successful agent submission.
+ * Updates `dailyUsed`, `dashboardData.today_agent_runs`, and the localStorage cache
+ * so every Job Agent page and tab reads the same Redux value in real time.
+ */
+export const incrementHapppyAgentDailyUsed = (count = 1) => (dispatch, getState) => {
+    const incrementBy = Math.max(0, Number(count) || 0);
+    if (incrementBy <= 0) return;
+
+    const { happpyAgent } = getState();
+    const nextUsed = (Number(happpyAgent?.dailyUsed) || 0) + incrementBy;
+    const currentDashboard =
+        happpyAgent?.dashboardData && typeof happpyAgent.dashboardData === 'object'
+            ? happpyAgent.dashboardData
+            : {};
+    const nextDashboard = {
+        ...currentDashboard,
+        today_agent_runs: nextUsed,
+    };
+
+    persistHapppyAgentDashboardData(nextDashboard);
+    dispatch({
+        type: HAPPPY_AGENT_DAILY_LIMIT_SET,
+        payload: {
+            dailyUsed: nextUsed,
+            dashboardData: nextDashboard,
+        },
+    });
+
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+            new CustomEvent(HAPPPY_AGENT_DAILY_RUN_RECORDED_EVENT, {
+                detail: { count: incrementBy, dailyUsed: nextUsed },
+            })
+        );
+    }
+};
+
+/** Apply dashboard cache written by another browser tab (storage event). */
+export const syncHapppyAgentDailyLimitFromStorage = () => (dispatch) => {
+    if (typeof window === 'undefined') return;
+    try {
+        const raw = window.localStorage.getItem(HAPPPY_AGENT_DASHBOARD_CACHE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        if (!data || typeof data !== 'object') return;
+        dispatch({
+            type: HAPPPY_AGENT_DAILY_LIMIT_SET,
+            payload: {
+                dailyUsed: Number(data.today_agent_runs) || 0,
+                dailyLimit: Number(data.max_limit) || 0,
+                dashboardData: data,
+                dailyLimitLoading: false,
+            },
+        });
+    } catch {
+        /* ignore parse / quota errors */
+    }
+};
+
+/** POST talent/outreach/auto-run-request and record today's run count on success. */
+export const submitAutoRunRequest = (payload) => (dispatch) =>
+    POST_API(API_AUTO_RUN_REQUEST, payload).then((res) => {
+        const count = countFromAutoRunResponse(res);
+        if (count > 0) {
+            dispatch(incrementHapppyAgentDailyUsed(count));
+        }
+        return res;
+    });
+
+/** POST referral-agent/job-apply-by-links-batch and record queued runs on success. */
+export const submitReferralJobApplyByLinksBatch = (payload) => (dispatch) =>
+    POST_API(API_REFERRAL_AGENT_JOB_APPLY_BY_LINKS_BATCH, payload).then((res) => {
+        const count = countFromReferralLinksBatchResponse(res);
+        if (count > 0) {
+            dispatch(incrementHapppyAgentDailyUsed(count));
+        }
+        return res;
+    });
 
 /** Persist Auto Run toggle into dashboard cache (`dashboardData.auto_run_consent`). */
 export const setHapppyAgentAutoRunHapppy = (autoRunHapppy) => (dispatch, getState) => {

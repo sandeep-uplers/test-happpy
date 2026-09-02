@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useLocation, useNavigate } from '@/talent/navigation/routerCompat';
 import { differenceInMonths } from 'date-fns';
 import { identityReset } from '../../../helpers/Mixpanel';
-import { fetchHapppyAgentPlan, logoutUser, fetchHapppyAgentDailyLimit } from '../../../store/actions/UserActions';
+import { fetchHapppyAgentPlan, logoutUser, fetchHapppyAgentDailyLimit, syncHapppyAgentDailyLimitFromStorage } from '../../../store/actions/UserActions';
+import { HAPPPY_AGENT_DASHBOARD_CACHE_KEY } from '../../../helpers/happpyAgentDailyLimit';
 import { API_JOB_AGENT_MISSED_REPLY_FOLLOWUPS_PENDING } from '../../../components/Constant';
 import { GET_API } from '../../../components/Helper';
 import HapppyAgentLogo from '../../../components/common/HapppyAgentLogo';
@@ -1048,6 +1049,29 @@ const JobAgentDashboardLayout = ({ children }) => {
 
     useEffect(() => {
         dispatch(fetchHapppyAgentDailyLimit({ skip: lockOutreachSideNav }));
+    }, [dispatch, lockOutreachSideNav]);
+
+    /** Reconcile daily run count when another tab records a run or user returns to this tab. */
+    useEffect(() => {
+        if (lockOutreachSideNav) return undefined;
+
+        const onStorage = (e) => {
+            if (e.key === HAPPPY_AGENT_DASHBOARD_CACHE_KEY) {
+                dispatch(syncHapppyAgentDailyLimitFromStorage());
+            }
+        };
+        const onVisibility = () => {
+            if (document.visibilityState === 'visible') {
+                dispatch(fetchHapppyAgentDailyLimit({ skip: false }));
+            }
+        };
+
+        window.addEventListener('storage', onStorage);
+        document.addEventListener('visibilitychange', onVisibility);
+        return () => {
+            window.removeEventListener('storage', onStorage);
+            document.removeEventListener('visibilitychange', onVisibility);
+        };
     }, [dispatch, lockOutreachSideNav]);
 
     useEffect(() => {

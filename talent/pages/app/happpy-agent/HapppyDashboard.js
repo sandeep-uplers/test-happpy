@@ -6,14 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useSearchParams } from '@/talent/navigation/routerCompat';
 import { useJobAgentDashboardContext } from '../job-agent/JobAgentDashboardContext';
 import {
-    API_AUTO_RUN_REQUEST,
     API_GET_RECOMMENDED_JOBS,
     API_SINGLE_OPP,
     API_URL,
     IMAGE_URL,
 } from '../../../components/Constant';
 import { GET_API, POST_API } from '../../../components/Helper';
-import { incrementHapppyAgentDailyUsed } from '../../../store/actions/UserActions';
+import { submitAutoRunRequest } from '../../../store/actions/UserActions';
 import ReferralAgentPreviewModal from '../../../components/ReferralAgentPreviewModal';
 import DailyReferralLimitTopnav from '../../../components/DailyReferralLimitWidget';
 import JobAgentProfileResumeHealth from '../job-agent/JobAgentProfileResumeHealth';
@@ -993,8 +992,7 @@ const HapppyDashboard = () => {
             };
             if (linkedin_message_id) payload.linkedin_message_id = linkedin_message_id;
             if (gmail_message_id) payload.gmail_message_id = gmail_message_id;
-            await POST_API(API_AUTO_RUN_REQUEST, payload);
-            dispatch(incrementHapppyAgentDailyUsed());
+            await dispatch(submitAutoRunRequest(payload));
             setQueuedJobIds((prev) => ({ ...prev, [jobId]: true }));
         } catch {
             /* keep button enabled so the user can retry */

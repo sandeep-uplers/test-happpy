@@ -5,7 +5,6 @@ import { createPortal } from 'react-dom';
 import { Link, useSearchParams } from '@/talent/navigation/routerCompat';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    API_AUTO_RUN_REQUEST,
     API_CONSENT_EMAIL_JOB_SCAN,
     API_GET_RECOMMENDED_EMAIL_JOBS,
     API_GET_RECOMMENDED_EMAIL_JOBS_META,
@@ -16,7 +15,7 @@ import {
     isAutoRunConsentOn,
 } from '../../../components/Constant';
 import { GET_API, POST_API, DELETE_API, renderTextWithLinks } from '../../../components/Helper';
-import { incrementHapppyAgentDailyUsed } from '../../../store/actions/UserActions';
+import { submitAutoRunRequest } from '../../../store/actions/UserActions';
 import ReferralAgentPreviewModal from '../../../components/ReferralAgentPreviewModal';
 import PasteJobLinkDrawer from './configure-tabs/PasteJobLinkDrawer';
 import HapppyAllJobs from './HapppyAllJobs';
@@ -1259,9 +1258,8 @@ const HapppyRecommendedJobs = () => {
             }
             if (linkedin_message_id) payload.linkedin_message_id = linkedin_message_id;
             if (gmail_message_id) payload.gmail_message_id = gmail_message_id;
-            const response = await POST_API(API_AUTO_RUN_REQUEST, payload);
+            const response = await dispatch(submitAutoRunRequest(payload));
             const message = response?.data?.message || 'Job added to Happpy Agent queue!';
-            dispatch(incrementHapppyAgentDailyUsed());
             setQueuedJobIds((prev) => ({ ...prev, [jobId]: true }));
             showToast('success', message, {
                 title: 'Job added to referral queue!',

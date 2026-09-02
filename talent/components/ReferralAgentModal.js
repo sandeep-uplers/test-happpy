@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { startOutreachAgent, incrementHapppyAgentDailyUsed } from "../store/actions/UserActions";
+import { startOutreachAgent } from "../store/actions/UserActions";
 import { useDispatch } from "react-redux";
 import { CloseModalIcon } from "../assets/IconSVG";
 
@@ -87,7 +87,6 @@ const ReferralAgentModal = ({
         setModalStatus(STATUS.REDIRECT);
         setMessage("Please connect your Gmail and LinkedIn accounts to use the Happpy Agent.");
       } else if (res.data.status === "success") {
-        dispatch(incrementHapppyAgentDailyUsed());
         setModalStatus(STATUS.SUCCESS);
 
         setMessage((res.data.message || "Your referral request has been submitted successfully") + ` with ${payloadHtml ? "tailored" : "profile"} resume`);

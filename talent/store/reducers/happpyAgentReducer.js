@@ -174,11 +174,17 @@ export default function happpyAgentReducer(state = initialState, action) {
                         ? action.payload.dashboardData
                         : state.dashboardData,
             };
-        case HAPPPY_AGENT_DAILY_USED_INCREMENT:
+        case HAPPPY_AGENT_DAILY_USED_INCREMENT: {
+            const nextUsed = state.dailyUsed + 1;
+            const nextDashboard = state.dashboardData
+                ? { ...state.dashboardData, today_agent_runs: nextUsed }
+                : { today_agent_runs: nextUsed };
             return {
                 ...state,
-                dailyUsed: state.dailyUsed + 1,
+                dailyUsed: nextUsed,
+                dashboardData: nextDashboard,
             };
+        }
         default:
             return state;
     }
