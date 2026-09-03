@@ -14,7 +14,7 @@ const HAPPY_PUBLIC_PROFILE_FORM_ID = 'happy-onboarding-profile-form';
  * Profile preferences previously shown in HappyAgentProfileDrawer after
  * onboarding; now the second step inside AgentOnboarding.
  */
-export default function Step2ProfileCreation({ onAdvance, onBack }) {
+export default function Step2ProfileCreation({ onAdvance, onBack, showBack = true }) {
     const [saveLoading, setSaveLoading] = useState(false);
     const [prefsLoading, setPrefsLoading] = useState(true);
     const ctaDisabled = saveLoading || prefsLoading;
@@ -64,18 +64,22 @@ export default function Step2ProfileCreation({ onAdvance, onBack }) {
             </div>
 
             <div className="agent-onb-footer agent-onb-footer--profile">
-                <button
-                    type="button"
-                    className="agent-onb-footer__back"
-                    onClick={onBack}
-                    aria-label="Back to previous step"
-                    disabled={ctaDisabled}
-                >
-                    <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M25.9668 16.4004H6.83346" stroke="#231F20" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M16.4001 6.83301L6.83348 16.3997L16.4001 25.9663" stroke="#231F20" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                </button>
+                {showBack ? (
+                    <button
+                        type="button"
+                        className="agent-onb-footer__back"
+                        onClick={onBack}
+                        aria-label="Back to previous step"
+                        disabled={ctaDisabled}
+                    >
+                        <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M25.9668 16.4004H6.83346" stroke="#231F20" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M16.4001 6.83301L6.83348 16.3997L16.4001 25.9663" stroke="#231F20" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </button>
+                ) : (
+                    <span className="agent-onb-footer__back-spacer" aria-hidden="true" />
+                )}
                 <button
                     type="submit"
                     form={HAPPY_PUBLIC_PROFILE_FORM_ID}

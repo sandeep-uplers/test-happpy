@@ -142,6 +142,7 @@ const Step1AccountConnection = ({
     stepConfigLoading,
     onRefresh,
     onAdvance,
+    onBack,
 }) => {
     const dispatch = useDispatch();
     const searchParams = useSearchParams();
@@ -1254,6 +1255,18 @@ const Step1AccountConnection = ({
             </div>
 
             <div className="agent-onb-footer step1">
+                <button
+                    type="button"
+                    className="agent-onb-footer__back"
+                    onClick={onBack}
+                    aria-label="Back to previous step"
+                    disabled={stepConfigLoading || linkedinConnecting}
+                >
+                    <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M25.9668 16.4004H6.83346" stroke="#231F20" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M16.4001 6.83301L6.83348 16.3997L16.4001 25.9663" stroke="#231F20" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                </button>
                 {gmailDone ? (
                     <span
                         className="agent-onb-footer__warning agent-onb-footer__warning--hidden"

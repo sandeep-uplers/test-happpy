@@ -1235,6 +1235,11 @@ h2 .agent-onb-step-header__lede-strong {
     flex-shrink: 0;
 }
 
+.agent-onb-footer__back-spacer {
+    width: 44px;
+    flex-shrink: 0;
+}
+
 /* ============================================================
    Step 2 — "Set up your outreach message"
    ============================================================ */

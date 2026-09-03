@@ -20,7 +20,7 @@ import Step4ModeSelection from './Step4ModeSelection';
 import Step5UpgradePlan from './Step5UpgradePlan';
 import './AgentOnboarding.css';
 import { pageActivityTracker } from '../../../store/actions/UserActions';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 if (typeof document !== 'undefined' && document.getElementById('happpy-root')) {
 }
@@ -45,7 +45,7 @@ if (typeof document !== 'undefined' && document.getElementById('happpy-root')) {
  *                          signup handoff so the template drawer can open after
  *                          onboarding exits.
  */
-const STEPS = ['accounts', 'profile', 'extension', 'mode'];
+const STEPS = ['profile', 'accounts', 'extension', 'mode'];
 
 const STEP_COMPLETED_URL_PARAM = {
     accounts: ONBOARDING_URL_PARAM.ACCOUNT_LINKED,
@@ -60,7 +60,6 @@ const JOB_AGENT_DASHBOARD_ROUTE = '/talent/job-agent';
 const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.auth);
     const [currentStep, setCurrentStep] = useState(0);
     const [outreachStepConfig, setOutreachStepConfig] = useState(null);
     const [stepConfigLoading, setStepConfigLoading] = useState(false);
@@ -96,9 +95,9 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
         setShowUpgrade(false);
         fetchOutreachStep();
         trackHappyAgentMixpanel('agent_onb_popup_opened').catch(() => {});
-        setOnboardingActivityUrlParam(ONBOARDING_URL_PARAM.CONNECT_ACCOUNTS);
+        setOnboardingActivityUrlParam(ONBOARDING_URL_PARAM.CREATE_PROFILE);
         let newPath= {
-            url: "/talent/referral-connect-accounts",
+            url: "/talent/referral-create-profile",
         }
         pageActivityTracker(newPath)(dispatch)
     }, [isOpen, fetchOutreachStep]);
@@ -169,32 +168,30 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
         setCurrentStep((s) => s + 1);
     };
 
-    const goToPrevStep = (backToProfile = false) => {
+    const goToPrevStep = () => {
         trackHappyAgentMixpanel('agent_onb_prev_step', {
             from_step: STEPS[currentStep],
         }).catch(() => {});
 
-        if(backToProfile) {
-            setCurrentStep((s) => Math.max(0, s - 2));
-            return;
-        }
         setCurrentStep((s) => Math.max(0, s - 1));
     };
 
     const renderStep = () => {
         switch (STEPS[currentStep]) {
+            case 'profile':
+                return (
+                    <Step2ProfileCreation
+                        onAdvance={goToNextStep}
+                        onBack={goToPrevStep}
+                        showBack={currentStep > 0}
+                    />
+                );
             case 'accounts':
                 return (
                     <Step1AccountConnection
                         outreachStepConfig={outreachStepConfig}
                         stepConfigLoading={stepConfigLoading}
                         onRefresh={fetchOutreachStep}
-                        onAdvance={goToNextStep}
-                    />
-                );
-            case 'profile':
-                return (
-                    <Step2ProfileCreation
                         onAdvance={goToNextStep}
                         onBack={goToPrevStep}
                     />
@@ -205,7 +202,7 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
                         outreachStepConfig={outreachStepConfig}
                         onRefresh={fetchOutreachStep}
                         onAdvance={goToNextStep}
-                        onBack={() => goToPrevStep(Boolean(user?.expected_ctc))}
+                        onBack={goToPrevStep}
                     />
                 );
             case 'mode':
