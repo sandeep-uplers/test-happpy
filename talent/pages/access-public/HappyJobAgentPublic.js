@@ -1,5 +1,6 @@
 'use client';
 
+import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import Cookies from "js-cookie";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
@@ -9,8 +10,10 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
+    API_HAPPPY_PUBLIC_PAGE_VISIT_1,
     API_REFERRAL_AGENT_RESEND_OTP,
     API_REFERRAL_AGENT_VERIFY_OTP,
+    LOGIN_IMAGE_URL,
 } from "../../components/Constant";
 import { getDomain, POST_API } from "../../components/Helper";
 import {
@@ -23,7 +26,8 @@ import {
 } from "../../helpers/happyAgentPublicSignupSession";
 import { REFERRAL_AI_AGENT_ONBOARDING_PATH } from "../../helpers/onboardingUrlParams";
 import { trackHappyAgentMixpanel, trackHappyAgentPublicAuthCompleted } from "../../store/actions/happyAgentTracking";
-import { setCurrentUser, signupReferralAgent } from "../../store/actions/UserActions";
+import { socialGoogleCallback } from "../../store/actions/signupApplyActions";
+import { getProfilePercent, setCurrentUser, signupReferralAgent } from "../../store/actions/UserActions";
 import { HappyJobAgentContent } from "../app/linkedin/HappyJobAgent";
 import "./HappyJobAgentPublic.css";
 
@@ -32,12 +36,27 @@ if (typeof document !== "undefined" && document.getElementById("happpy-root")) {
 
 const CONNECT_ACCOUNTS_PATH = REFERRAL_AI_AGENT_ONBOARDING_PATH;
 
+/** Same redirect as SocialSSO — required for `new-signup/google-callback` token exchange. */
+const GOOGLE_REDIRECT_URI = `${process.env.NEXT_PUBLIC_APP_URL || ''}/talent/auth/google-callback`;
+
+const GOOGLE_OAUTH_CLIENT_ID = (process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '')
+    .replace(/^['"]|['"]$/g, '')
+    .trim();
+
 /**
  * GTM container `GTM-P6GXD64V` is served from the `<head>` in
  * `resources/views/talent/index.blade.php`, gated on the `happpy-ai-agent` path.
  */
 
-function HappyJobAgentPublicAuthDrawer({ isOpen, onClose, onAuthSuccess }) {
+export function HappyJobAgentPublicAuthDrawer({
+    isOpen,
+    onClose,
+    onAuthSuccess,
+    onGoogleSignIn,
+    googleAuthing,
+    gtagFromWhere = "referral_agent_public_landing",
+    onAuthCompleted,
+}) {
     const { executeRecaptcha } = useGoogleReCaptcha();
     const dispatch = useDispatch();
 
@@ -109,7 +128,7 @@ function HappyJobAgentPublicAuthDrawer({ isOpen, onClose, onAuthSuccess }) {
                 };
             }
             const registerEventPayload = {
-                from_where: "referral_agent_public_landing",
+                from_where: gtagFromWhere,
                 email: data.email || data.data?.email || raw,
                 new_account: data.new_account,
             };
@@ -131,10 +150,15 @@ function HappyJobAgentPublicAuthDrawer({ isOpen, onClose, onAuthSuccess }) {
             }
 
             if (data.authtoken && data.data) {
-                trackHappyAgentPublicAuthCompleted({
+                const authCompletedPayload = {
                     newAccount: typeof data.new_account === "boolean" ? data.new_account : undefined,
                     authPath: "instant",
-                }).catch(() => { });
+                };
+                if (onAuthCompleted) {
+                    onAuthCompleted(authCompletedPayload);
+                } else {
+                    trackHappyAgentPublicAuthCompleted(authCompletedPayload).catch(() => { });
+                }
                 handleClose();
                 onAuthSuccess?.();
             } else {
@@ -180,10 +204,15 @@ function HappyJobAgentPublicAuthDrawer({ isOpen, onClose, onAuthSuccess }) {
                 localStorage.setItem("token", data.authtoken);
                 localStorage.setItem("user", JSON.stringify(data.data));
                 dispatch(setCurrentUser(data.data));
-                trackHappyAgentPublicAuthCompleted({
+                const authCompletedPayload = {
                     newAccount: typeof pendingNewAccount === "boolean" ? pendingNewAccount : undefined,
                     authPath: "otp",
-                }).catch(() => { });
+                };
+                if (onAuthCompleted) {
+                    onAuthCompleted(authCompletedPayload);
+                } else {
+                    trackHappyAgentPublicAuthCompleted(authCompletedPayload).catch(() => { });
+                }
                 handleClose();
                 onAuthSuccess?.();
             } else {
@@ -259,7 +288,7 @@ function HappyJobAgentPublicAuthDrawer({ isOpen, onClose, onAuthSuccess }) {
                                     handleEmailSubmit();
                                 }
                             }}
-                            disabled={submitLoading}
+                            disabled={submitLoading || googleAuthing}
                             data-hj-allow
                         />
                         {emailError && <p className="happy-public-auth-error">{emailError}</p>}
@@ -267,10 +296,23 @@ function HappyJobAgentPublicAuthDrawer({ isOpen, onClose, onAuthSuccess }) {
                             type="button"
                             className="happy-public-auth-submit"
                             onClick={handleEmailSubmit}
-                            disabled={submitLoading}
+                            disabled={submitLoading || googleAuthing}
                             aria-busy={submitLoading}
                         >
                             {submitLoading ? "Sending code…" : "Continue"}
+                        </button>
+                        <div className="happy-public-auth-divider" aria-hidden="true">
+                            <span>or</span>
+                        </div>
+                        <button
+                            type="button"
+                            className="happy-public-auth-google-btn"
+                            onClick={onGoogleSignIn}
+                            disabled={submitLoading || googleAuthing}
+                            aria-busy={googleAuthing}
+                        >
+                            <img src={`${LOGIN_IMAGE_URL}/google-icon.svg`} alt="" aria-hidden />
+                            {googleAuthing ? "Signing in…" : "Continue with Google"}
                         </button>
                     </>
                 ) : (
@@ -348,10 +390,13 @@ function HappyJobAgentPublicAuthDrawer({ isOpen, onClose, onAuthSuccess }) {
 
 function HappyJobAgentPublicInner() {
     const router = useRouter();
+    const dispatch = useDispatch();
     const { isAuthenticated, user } = useSelector((state) => state.auth);
     const [authDrawerOpen, setAuthDrawerOpen] = useState(false);
+    const [googleAuthing, setGoogleAuthing] = useState(false);
     const searchParams = useSearchParams();
     const publicPageViewTrackedRef = useRef(false);
+    const continueAfterGoogleRef = useRef(null);
 
     /** Mixpanel funnel: anonymous public landing PV (once per mount). */
     useEffect(() => {
@@ -395,7 +440,69 @@ function HappyJobAgentPublicInner() {
         router.replace(CONNECT_ACCOUNTS_PATH);
     }, [router]);
 
+    continueAfterGoogleRef.current = async () => {
+        Cookies.set("talent", true, { domain: getDomain(), secure: true, sameSite: "Strict" });
+        setGoogleAuthing(false);
+
+        window.dataLayer = window.dataLayer || [];
+        if (typeof gtag === "undefined") {
+            window.gtag = function () {
+                window.dataLayer.push(arguments);
+            };
+        }
+        const registerEventPayload = {
+            from_where: "referral_agent_public_landing",
+            auth_path: "google",
+        };
+        gtag("event", "user_register_via_referral_agent_public_page", registerEventPayload);
+        window.dataLayer.push({
+            event: "user_register_via_referral_agent_public_page",
+            ...registerEventPayload,
+        });
+
+        await POST_API(API_HAPPPY_PUBLIC_PAGE_VISIT_1, {}).catch(() => {});
+        trackHappyAgentPublicAuthCompleted({ authPath: "google" }).catch(() => { });
+        continueToConnectAccounts();
+    };
+
+    const googleLogin = useGoogleLogin({
+        flow: "auth-code",
+        redirect_uri: GOOGLE_REDIRECT_URI,
+        onSuccess: (codeResponse) => {
+            socialGoogleCallback(codeResponse.code, "regular")(dispatch)
+                .then(() => getProfilePercent(false)(dispatch).catch(() => {}))
+                .then(() => continueAfterGoogleRef.current())
+                .catch((err) => {
+                    clearPublicSignupPending();
+                    const message = err?.response?.data?.message;
+                    toast.error(
+                        typeof message === "string" && message ? message : "Something went wrong!",
+                        { duration: 6000 }
+                    );
+                })
+                .finally(() => setGoogleAuthing(false));
+        },
+        onError: () => {
+            clearPublicSignupPending();
+            setGoogleAuthing(false);
+            toast.error("Google sign-in failed. Please try again.", { duration: 6000 });
+        },
+        onNonOAuthError: () => {
+            clearPublicSignupPending();
+            setGoogleAuthing(false);
+        },
+    });
+
+    const handleGoogleSignIn = useCallback(() => {
+        if (googleAuthing) return;
+        setAuthDrawerOpen(false);
+        setPublicSignupPending();
+        setGoogleAuthing(true);
+        googleLogin();
+    }, [googleAuthing, googleLogin]);
+
     const openAuthDrawer = useCallback(() => {
+        if (googleAuthing) return;
         if (isAuthenticated && user && Object.keys(user).length > 0) {
             if (user.expected_ctc) {
                 router.replace("/talent/referral-ai-agent");
@@ -405,7 +512,7 @@ function HappyJobAgentPublicInner() {
             return;
         }
         setAuthDrawerOpen(true);
-    }, [isAuthenticated, user, continueToConnectAccounts, router]);
+    }, [continueToConnectAccounts, googleAuthing, isAuthenticated, router, user]);
 
     const closeAuthDrawer = useCallback(() => {
         setAuthDrawerOpen(false);
@@ -416,12 +523,14 @@ function HappyJobAgentPublicInner() {
             <HappyJobAgentContent
                 publicSignupMode
                 onOpenAuthDrawer={openAuthDrawer}
-                authDrawerOpen={authDrawerOpen}
+                authDrawerOpen={authDrawerOpen || googleAuthing}
             />
             <HappyJobAgentPublicAuthDrawer
                 isOpen={authDrawerOpen}
                 onClose={closeAuthDrawer}
                 onAuthSuccess={continueToConnectAccounts}
+                onGoogleSignIn={handleGoogleSignIn}
+                googleAuthing={googleAuthing}
             />
         </>
     );
@@ -429,12 +538,21 @@ function HappyJobAgentPublicInner() {
 
 export default function HappyJobAgentPublic() {
     const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHAV3_SITEKEY;
-    if (!recaptchaKey) {
-        return <HappyJobAgentPublicInner />;
+
+    let content = <HappyJobAgentPublicInner />;
+    if (recaptchaKey) {
+        content = (
+            <GoogleReCaptchaProvider reCaptchaKey={recaptchaKey}>
+                {content}
+            </GoogleReCaptchaProvider>
+        );
     }
-    return (
-        <GoogleReCaptchaProvider reCaptchaKey={recaptchaKey}>
-            <HappyJobAgentPublicInner />
-        </GoogleReCaptchaProvider>
-    );
+    if (GOOGLE_OAUTH_CLIENT_ID) {
+        content = (
+            <GoogleOAuthProvider clientId={GOOGLE_OAUTH_CLIENT_ID}>
+                {content}
+            </GoogleOAuthProvider>
+        );
+    }
+    return content;
 }

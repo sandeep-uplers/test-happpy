@@ -11540,6 +11540,52 @@ body.happy-agent-modal-open {
     cursor: not-allowed;
 }
 
+.happy-public-auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 16px;
+    color: #9a9a9a;
+    font-size: 0.8125rem;
+    text-transform: lowercase;
+}
+
+.happy-public-auth-divider::before,
+.happy-public-auth-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #e4e2dc;
+}
+
+.happy-public-auth-google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 13px 18px;
+    border: 1px solid #e4e2dc;
+    border-radius: 999px;
+    background: #fff;
+    color: #231f20;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: "Telegraf", sans-serif !important;
+}
+
+.happy-public-auth-google-btn img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.happy-public-auth-google-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
 .happy-public-auth-hint {
     margin: 14px 0 0;
     font-size: 0.8125rem;

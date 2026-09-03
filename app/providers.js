@@ -15,7 +15,9 @@ import HappyAiAgentLayout from '@/talent/components/HappyAiAgentLayout';
 
 const GlobalPopups = dynamic(() => import('@/talent/routes/GlobalPopups'), { ssr: false });
 
-const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
+const googleClientId = (process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '')
+    .replace(/^['"]|['"]$/g, '')
+    .trim();
 
 function AuthHydrator({ children }) {
     const dispatch = useDispatch();

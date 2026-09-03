@@ -3,7 +3,9 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import HapppyGtmPublic from '@/talent/pages/access-public/happpy-gtm/HapppyGtmPublic';
 
-const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
+const googleClientId = (process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '')
+    .replace(/^['"]|['"]$/g, '')
+    .trim();
 
 export default function HapppyGtmPageClient() {
     if (!googleClientId) {
