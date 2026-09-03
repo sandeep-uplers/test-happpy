@@ -1,0 +1,212 @@
+/* HAPPPY Gmail OAuth callback — matches HapppyGtmGmailCallback + agent onboarding tokens */
+
+.ogc-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: #fffef8;
+    font-family: Rubik, sans-serif;
+}
+
+.ogc-card {
+    width: min(480px, 100%);
+    background: #ffffff;
+    border: 1px solid #ebe8dc;
+    border-radius: 12px;
+    padding: 40px 32px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(20, 20, 20, 0.08);
+    animation: ogcFadeInUp 0.4s ease-out;
+}
+
+.ogc-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ogc-icon {
+    margin-bottom: 20px;
+}
+
+.ogc-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.ogc-dots__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #46eccd;
+    animation: ogcDotPulse 1.4s ease-in-out infinite;
+}
+
+.ogc-dots__dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.ogc-dots__dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.ogc-dots__dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.ogc-icon--success {
+    color: #2c7a4b;
+    animation: ogcScaleIn 0.4s ease-out;
+}
+
+.ogc-icon--error {
+    color: #c0392b;
+    animation: ogcScaleIn 0.4s ease-out;
+}
+
+.ogc-title {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #231f20;
+    letter-spacing: -0.3px;
+}
+
+.ogc-title--success {
+    color: #2c7a4b;
+}
+
+.ogc-title--error {
+    color: #c0392b;
+}
+
+.ogc-lead {
+    margin: 0 0 28px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #6b6b6b;
+    max-width: 400px;
+}
+
+.ogc-image-wrap {
+    margin-bottom: 28px;
+    width: 100%;
+}
+
+.ogc-image {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    border-radius: 8px;
+    border: 1px solid #e4e2dc;
+}
+
+.ogc-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 200px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 56px;
+    background: #46eccd;
+    color: #231f20;
+    font-family: Rubik, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: filter 150ms ease, transform 150ms ease;
+}
+
+.ogc-cta:hover,
+.ogc-cta:focus-visible {
+    filter: brightness(0.95);
+    outline: none;
+}
+
+.ogc-cta:active {
+    transform: translateY(1px);
+}
+
+.ogc-cta svg {
+    flex-shrink: 0;
+}
+
+.ogc-progress {
+    width: 100%;
+    height: 4px;
+    margin-top: 8px;
+    background: rgba(186, 186, 186, 0.25);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.ogc-progress__bar {
+    width: 60%;
+    height: 100%;
+    background: #086d7e;
+    border-radius: 2px;
+    animation: ogcLoading 1.5s ease-in-out infinite;
+}
+
+@keyframes ogcDotPulse {
+    0%,
+    80%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+
+    40% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes ogcFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes ogcScaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes ogcLoading {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    50% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}

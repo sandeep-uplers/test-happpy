@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { verifyGmail } from '@/talent/store/actions/UserActions';
 import { notifyGmailConnectResult, buildGmailOAuthUrl } from '@/talent/helpers/gmailConnectPopup';
+import './OutreachGmailConnect.css';
 
 export default function OutreachGmailConnect() {
     const params = useParams();
@@ -13,54 +14,7 @@ export default function OutreachGmailConnect() {
     const user = useSelector((state) => state.auth)?.user;
     const [isError, setIsError] = useState({ isError: false, type: null });
     const [isSuccess, setIsSuccess] = useState(false);
-    const [buttonHover, setButtonHover] = useState(false);
     const router = useRouter();
-
-    useEffect(() => {
-        const styleId = 'outreach-gmail-connect-styles';
-        if (!document.getElementById(styleId)) {
-            const styleSheet = document.createElement('style');
-            styleSheet.id = styleId;
-            styleSheet.textContent = `
-                @keyframes spin {
-                    from { transform: rotate(0deg); }
-                    to { transform: rotate(360deg); }
-                }
-                @keyframes fadeInUp {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-                @keyframes scaleIn {
-                    from {
-                        opacity: 0;
-                        transform: scale(0.8);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: scale(1);
-                    }
-                }
-                @keyframes loading {
-                    0% {
-                        transform: translateX(-100%);
-                    }
-                    50% {
-                        transform: translateX(0%);
-                    }
-                    100% {
-                        transform: translateX(100%);
-                    }
-                }
-            `;
-            document.head.appendChild(styleSheet);
-        }
-    }, []);
 
     useEffect(() => {
         const handleGmailVerification = async () => {
@@ -125,251 +79,97 @@ export default function OutreachGmailConnect() {
         handleGmailVerification();
     }, [dispatch, router, token]);
 
-    const gmailLoginUrl = buildGmailOAuthUrl(user?.enc_id ?? '');
+    const gmailAuthUrl = buildGmailOAuthUrl(user?.enc_id ?? '');
 
     return (
-        <div style={styles.container}>
-            <div style={styles.card}>
+        <div className="ogc-page">
+            <div className="ogc-card">
                 {isSuccess && (
-                    <div style={styles.content}>
-                        <div style={styles.iconContainer}>
-                            <div style={styles.successIcon}>
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.2" />
-                                    <path d="M8 12l2 2 4-4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                            </div>
+                    <div className="ogc-content">
+                        <div className="ogc-icon ogc-icon--success">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.2" />
+                                <path d="M8 12l2 2 4-4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
                         </div>
-                        <h2 style={styles.successTitle}>Gmail Connected Successfully!</h2>
-                        <p style={styles.description}>
-                            Your Gmail account has been successfully connected. You can now use the Happpy Agent feature.
+                        <h1 className="ogc-title ogc-title--success">Gmail connected</h1>
+                        <p className="ogc-lead">
+                            Your Gmail account has been connected. You can now use the HAPPPY Agent feature.
                         </p>
-                        <div style={styles.loadingBar}>
-                            <div style={styles.loadingProgress} />
+                        <div className="ogc-progress" aria-hidden="true">
+                            <div className="ogc-progress__bar" />
                         </div>
                     </div>
                 )}
 
                 {isError.isError && isError.type === 'gmail_scope_not_granted' && (
-                    <div style={styles.content}>
-                        <div style={styles.iconContainer}>
-                            <div style={styles.errorIcon}>
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.2" />
-                                    <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                                </svg>
-                            </div>
+                    <div className="ogc-content">
+                        <div className="ogc-icon ogc-icon--error">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.2" />
+                                <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                            </svg>
                         </div>
-                        <h2 style={styles.errorTitle}>Permission Required</h2>
-                        <p style={styles.description}>
-                            To run Happpy Agent, we require permission to send and read your Gmail messages.
-                            This allows us to help you manage your outreach campaigns effectively.
+                        <h1 className="ogc-title ogc-title--error">Permission required</h1>
+                        <p className="ogc-lead">
+                            To run HAPPPY Agent, we need permission to send and read your Gmail messages.
+                            This lets us manage your outreach campaigns effectively.
                         </p>
 
-                        <div style={styles.imageContainer}>
+                        <div className="ogc-image-wrap">
                             <img
                                 src="/images/talent/outreach/permission.png"
                                 alt="Gmail permission guide"
-                                style={styles.image}
+                                className="ogc-image"
                             />
                         </div>
 
-                        <a
-                            href={gmailLoginUrl}
-                            style={{
-                                ...styles.button,
-                                ...(buttonHover ? styles.buttonHover : {}),
-                            }}
-                            onMouseEnter={() => setButtonHover(true)}
-                            onMouseLeave={() => setButtonHover(false)}
-                        >
-                            Connect Gmail Account
+                        <a href={gmailAuthUrl} className="ogc-cta">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" strokeWidth="2" fill="none" />
+                                <polyline points="22,6 12,13 2,6" stroke="currentColor" strokeWidth="2" fill="none" />
+                            </svg>
+                            Connect Gmail
                         </a>
                     </div>
                 )}
 
                 {isError.isError && isError.type === 'verification_failed' && (
-                    <div style={styles.content}>
-                        <div style={styles.iconContainer}>
-                            <div style={styles.errorIcon}>
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.2" />
-                                    <path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                                </svg>
-                            </div>
+                    <div className="ogc-content">
+                        <div className="ogc-icon ogc-icon--error">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.2" />
+                                <path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                            </svg>
                         </div>
-                        <h2 style={styles.errorTitle}>Verification Failed</h2>
-                        <p style={styles.description}>
-                            We couldn&apos;t verify your Gmail connection. This might be due to a temporary issue.
-                            Please try connecting again.
+                        <h1 className="ogc-title ogc-title--error">Verification failed</h1>
+                        <p className="ogc-lead">
+                            We couldn&apos;t verify your Gmail connection. This might be a temporary issue — please try again.
                         </p>
 
-                        <a
-                            href={gmailLoginUrl}
-                            style={{
-                                ...styles.button,
-                                ...(buttonHover ? styles.buttonHover : {}),
-                            }}
-                            onMouseEnter={() => setButtonHover(true)}
-                            onMouseLeave={() => setButtonHover(false)}
-                        >
-                            Try Again
+                        <a href={gmailAuthUrl} className="ogc-cta">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M3 12h18M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            Try again
                         </a>
                     </div>
                 )}
 
                 {!isError.isError && !isSuccess && (
-                    <div style={styles.content}>
-                        <div style={styles.iconContainer}>
-                            <div style={styles.loadingSpinner}>
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.2" />
-                                    <path
-                                        d="M12 2a10 10 0 0 1 10 10"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        style={{
-                                            strokeDasharray: '62.83',
-                                            strokeDashoffset: '31.42',
-                                            animation: 'spin 1s linear infinite',
-                                        }}
-                                    />
-                                </svg>
-                            </div>
+                    <div className="ogc-content">
+                        <div className="ogc-dots" aria-hidden="true">
+                            <span className="ogc-dots__dot" />
+                            <span className="ogc-dots__dot" />
+                            <span className="ogc-dots__dot" />
                         </div>
-                        <h2 style={styles.loadingTitle}>Connecting Gmail</h2>
-                        <p style={styles.description}>
+                        <h1 className="ogc-title">Connecting Gmail</h1>
+                        <p className="ogc-lead">
                             Please wait while we verify your Gmail connection. This may take a few moments.
                         </p>
-                        <div style={styles.loadingBar}>
-                            <div style={styles.loadingProgress} />
-                        </div>
                     </div>
                 )}
             </div>
         </div>
     );
 }
-
-const styles = {
-    container: {
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        padding: '20px',
-        position: 'relative',
-        overflow: 'hidden',
-    },
-    card: {
-        backgroundColor: '#ffffff',
-        padding: '48px 40px',
-        borderRadius: '20px',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1)',
-        maxWidth: '560px',
-        width: '100%',
-        textAlign: 'center',
-        position: 'relative',
-        zIndex: 1,
-        animation: 'fadeInUp 0.5s ease-out',
-    },
-    content: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    iconContainer: {
-        marginBottom: '24px',
-    },
-    loadingSpinner: {
-        color: '#667eea',
-        animation: 'spin 1s linear infinite',
-    },
-    successIcon: {
-        color: '#10b981',
-        animation: 'scaleIn 0.5s ease-out',
-    },
-    errorIcon: {
-        color: '#ef4444',
-        animation: 'scaleIn 0.5s ease-out',
-    },
-    loadingTitle: {
-        marginBottom: '12px',
-        fontSize: '28px',
-        fontWeight: '700',
-        color: '#1f2937',
-        letterSpacing: '-0.5px',
-    },
-    successTitle: {
-        marginBottom: '12px',
-        fontSize: '28px',
-        fontWeight: '700',
-        color: '#10b981',
-        letterSpacing: '-0.5px',
-    },
-    errorTitle: {
-        marginBottom: '12px',
-        fontSize: '28px',
-        fontWeight: '700',
-        color: '#ef4444',
-        letterSpacing: '-0.5px',
-    },
-    description: {
-        marginBottom: '32px',
-        fontSize: '16px',
-        lineHeight: '1.6',
-        color: '#6b7280',
-        maxWidth: '480px',
-    },
-    imageContainer: {
-        marginBottom: '32px',
-        width: '100%',
-    },
-    image: {
-        margin: '0 auto',
-        maxWidth: '100%',
-        borderRadius: '12px',
-        border: '1px solid #e5e7eb',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
-    },
-    button: {
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '8px',
-        padding: '14px 28px',
-        backgroundColor: '#667eea',
-        color: '#ffffff',
-        textDecoration: 'none',
-        fontWeight: '600',
-        fontSize: '16px',
-        borderRadius: '12px',
-        boxShadow: '0 4px 14px rgba(102, 126, 234, 0.4)',
-        transition: 'all 0.3s ease',
-        border: 'none',
-        cursor: 'pointer',
-        minWidth: '200px',
-    },
-    buttonHover: {
-        backgroundColor: '#5568d3',
-        transform: 'translateY(-2px)',
-        boxShadow: '0 6px 20px rgba(102, 126, 234, 0.5)',
-    },
-    loadingBar: {
-        width: '100%',
-        height: '4px',
-        backgroundColor: '#e5e7eb',
-        borderRadius: '2px',
-        overflow: 'hidden',
-        marginTop: '8px',
-    },
-    loadingProgress: {
-        height: '100%',
-        backgroundColor: '#667eea',
-        borderRadius: '2px',
-        animation: 'loading 1.5s ease-in-out infinite',
-        width: '60%',
-    },
-};
