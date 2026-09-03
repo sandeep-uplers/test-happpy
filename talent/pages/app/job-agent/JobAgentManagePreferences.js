@@ -7,7 +7,7 @@ import '../../../../styles/talent/index.css';
 import Select from 'react-select';
 import { customSelectTheme, JobFunctionGroupLabel, JobFunctionSelectStyles, ReactSelectStyles } from '../../../components/common/CustomStyleReactSelect';
 import { CheckboxInput, MoneyInput, RadioInput } from '../../../components/common/Inputs';
-import { base64ToBlob, buildFormData, convertNpToDays, formatErrors, groupOptionsByCategory, formattedCTC, getLastWorkingDayBounds, getLastWorkingDayBoundsError, getPlaceholderLWD, isLastWorkingDayInBounds, isValidDate, sanitizePayload, scrollToFirstError, isAllEmpty, formatCTCBreakdown, formatCTCBreakdownLPA, checkDirectPayUser } from '../../../components/Helper';
+import { base64ToBlob, buildFormData, convertNpToDays, formatErrors, groupOptionsByCategory, formattedCTC, getLastWorkingDayBounds, getLastWorkingDayBoundsError, getPlaceholderLWD, isLastWorkingDayInBounds, isValidDate, sanitizePayload, scrollToFirstError, isAllEmpty, formatCTCBreakdown, formatCTCBreakdownLPA, checkDirectPayUser, createRequestCancelSource } from '../../../components/Helper';
 import '../preferences/preferences.css';
 import { JAD_PREF_FIGMA_COLORS } from './preference/JobAgentManagePreferences.colors';
 import _, { debounce } from 'lodash';
@@ -618,6 +618,7 @@ export default function JobAgentManagePreferences({
 
                     setModalDataLoading(false);
                 })
+                .catch(() => setModalDataLoading(false))
         }
 
     }, [])
@@ -758,7 +759,7 @@ export default function JobAgentManagePreferences({
                 setSearchLoading(null);
                 return;
             }
-            const newSource = axios.CancelToken.source();
+            const newSource = createRequestCancelSource();
             cancelSources.current = {
                 ...cancelSources.current,
                 [locationType]: newSource // Store the new source
@@ -1492,8 +1493,8 @@ export default function JobAgentManagePreferences({
 
     return (
         <section className="containSection">
-            {(isLoading) &&
-                <div className="jad-jobs__toolbar-msg jad-jobs__toolbar-msg--loading text-center">
+            {(isLoading || modalDataLoading) &&
+                <div className="jad-jobs__toolbar-msg jad-jobs__toolbar-msg--loading text-center preferences-fetch-loading">
                     <span className="jad-jobs__toolbar-msg">Loading preferences…</span>
                     <div className="jad-jobs__toolbar-spinner" aria-hidden />
                 </div>

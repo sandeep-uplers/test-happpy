@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { POST_API } from '../../../components/Helper';
 import { API_OUTREACH_FEEDBACK } from '../../../components/Constant';
 
 /**
@@ -18,14 +18,7 @@ export async function submitOutreachFeedback(payload) {
     delete bodyPayload.negative_reasons;
     delete bodyPayload.negative_detail;
 
-    const token = localStorage.getItem('token');
-    const res = await axios.post(API_OUTREACH_FEEDBACK, bodyPayload, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-    });
+    const res = await POST_API(API_OUTREACH_FEEDBACK, bodyPayload);
 
     const body = res?.data || {};
     if (body.status !== 'success') {

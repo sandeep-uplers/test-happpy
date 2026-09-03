@@ -8,7 +8,7 @@ import Select from "react-select";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
 import { debounce } from "lodash";
-import axios from "axios";
+import { GET_API, createRequestCancelSource } from "../../../components/Helper";
 import ExperienceInput from "../../../components/common/ExperienceInput";
 import {
     customSelectTheme,
@@ -246,7 +246,7 @@ export default function HapppyGtmPreferencesStep({ onAdvance, onBack }) {
                 setSearchLoading(null);
                 return;
             }
-            const newSource = axios.CancelToken.source();
+            const newSource = createRequestCancelSource();
             cancelSources.current[locationType] = newSource;
             try {
                 const res = await getTalentLocationMaster(

@@ -6,12 +6,11 @@ ensureModalAppElement();
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Modal from "react-modal";
-import axios from "axios";
 import { useNavigate } from '@/talent/navigation/routerCompat';
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import DownloadResumeLoader from "../pages/app/resume/payment/DownloadResumeLoader";
 import HapppyLoader from "./common/HapppyLoader";
-import { API_OUTREACH_REWRITE_MESSAGE, API_OUTREACH_STORE_MESSAGE_TEMPLATE, API_OUTREACH_SUBSCRIBE_MODAL_ACTION, API_URL } from "./Constant";
+import { API_OUTREACH_DEFAULT_AUTO_TEMPLATES, API_OUTREACH_REWRITE_MESSAGE, API_OUTREACH_STORE_MESSAGE_TEMPLATE, API_OUTREACH_SUBSCRIBE_MODAL_ACTION, API_URL } from "./Constant";
 import { GET_API, POST_API, getClientDeviceMobileOrDesktop } from "./Helper";
 import { useDispatch, useSelector } from "react-redux";
 import { getOutreachAgentPreviewConfig } from "../store/actions/resumeActions";
@@ -1097,8 +1096,7 @@ export default function ReferralAgentPreviewModal({
                 if (!cancelled) setPreviewConfigLoading(false);
             });
 
-        axios
-            .get("/api/talent/outreach/default-auto-templates")
+        GET_API(API_OUTREACH_DEFAULT_AUTO_TEMPLATES)
             .then((res) => {
                 if (cancelled) return;
                 const defaults = res?.data?.data || {};

@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_OUTREACH_REFINE_MESSAGE, IMAGE_URL } from '../../../components/Constant';
+import { POST_API } from '../../../components/Helper';
 import { NEGATIVE_RATINGS, NEGATIVE_REASON_TAGS } from './interviewFeedbackConstants';
 import { isUploadAbortError } from './uploadReviewMedia';
 import { submitOutreachFeedback } from './submitOutreachFeedback';
@@ -255,18 +255,11 @@ const InterviewFeedbackModal = ({ open, companyName = 'a company', onClose, onSu
         setRefining(true);
 
         try {
-            const token = localStorage.getItem('token');
-            const res = await axios.post(
+            const res = await POST_API(
                 API_OUTREACH_REFINE_MESSAGE,
                 { message: original.trim() },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    signal: controller.signal,
-                },
+                1,
+                { signal: controller.signal },
             );
             const body = res?.data || {};
             if (body.status !== 'success' || !body.data?.message) {

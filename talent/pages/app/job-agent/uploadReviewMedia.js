@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { isRequestCanceled, postFormDataWithProgress } from '../../../components/Helper';
 import { API_OUTREACH_FEEDBACK_UPLOAD_MEDIA } from '../../../components/Constant';
 
 /**
@@ -6,9 +6,8 @@ import { API_OUTREACH_FEEDBACK_UPLOAD_MEDIA } from '../../../components/Constant
  */
 export function isUploadAbortError(err) {
     return (
-        axios.isCancel?.(err)
+        isRequestCanceled(err)
         || err?.name === 'CanceledError'
-        || err?.code === 'ERR_CANCELED'
         || err?.message === 'canceled'
     );
 }
@@ -28,16 +27,10 @@ export async function uploadReviewMedia(file, { signal, onProgress } = {}) {
 
     let res;
     try {
-        res = await axios.post(API_OUTREACH_FEEDBACK_UPLOAD_MEDIA, formData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data',
-            },
+        res = await postFormDataWithProgress(API_OUTREACH_FEEDBACK_UPLOAD_MEDIA, formData, {
+            token,
             signal,
-            onUploadProgress: (event) => {
-                if (!onProgress || !event.total) return;
-                onProgress(Math.round((event.loaded / event.total) * 100));
-            },
+            onProgress,
         });
     } catch (err) {
         if (isUploadAbortError(err)) throw err;

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import axios from 'axios';
+import { GET_API } from '../../../components/Helper';
+import { API_OUTREACH_DEFAULT_AUTO_TEMPLATES } from '../../../components/Constant';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-hot-toast';
 import {
@@ -173,8 +174,7 @@ const Step2TemplateSelection = ({
             .then((res) => res?.data?.data || {})
             .catch(() => ({}));
 
-        const loadDefaults = axios
-            .get('/api/talent/outreach/default-auto-templates')
+        const loadDefaults = GET_API(API_OUTREACH_DEFAULT_AUTO_TEMPLATES)
             .then((res) => res?.data?.data || {})
             .catch(() => ({ linkedin_template: [], gmail_template: [] }));
 

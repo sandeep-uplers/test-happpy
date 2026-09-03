@@ -3,15 +3,14 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-hot-toast';
-import axios from 'axios';
 import {
     fetchHapppyAgentPlan,
     getOutreachTemplates,
     saveOutreachTemplate,
 } from '../../../../store/actions/UserActions';
 import { GmailIcon } from '../../../../assets/IconSVG';
-import { API_OUTREACH_REWRITE_MESSAGE } from '../../../../components/Constant';
-import { POST_API } from '../../../../components/Helper';
+import { GET_API, POST_API } from '../../../../components/Helper';
+import { API_OUTREACH_DEFAULT_AUTO_TEMPLATES, API_OUTREACH_REWRITE_MESSAGE } from '../../../../components/Constant';
 import TemplateEditor from '../../linkedin/TemplateEditor';
 
 /* -------------------------------------------------------------------------- */
@@ -123,8 +122,7 @@ const MessageTemplatesTab = () => {
     /* ── Fetch default templates ────────────────────────────────────────── */
     const fetchDefaultTemplates = useCallback(() => {
         setIsFetchingDefaults(true);
-        axios
-            .get('/api/talent/outreach/default-auto-templates')
+        GET_API(API_OUTREACH_DEFAULT_AUTO_TEMPLATES)
             .then((res) => {
                 setDefaultTemplates(res?.data?.data || { linkedin_template: [], gmail_template: [] });
             })

@@ -25,7 +25,7 @@ function ensureMixpanelSessionId() {
  *
  * @param {string} eventName — Mixpanel event id (e.g. `happy_agent_page_loaded`)
  * @param {Record<string, unknown>} [reqObj] — extra properties merged into `data`
- * @returns {Promise<import("axios").AxiosResponse | { status: number, data: { message: string } }>}
+ * @returns {Promise<{ status: number, data: object } | { status: number, data: { message: string } }>}
  */
 export function trackHappyAgentMixpanel(eventName, reqObj = {}) {
     if (!eventName || typeof eventName !== "string") {

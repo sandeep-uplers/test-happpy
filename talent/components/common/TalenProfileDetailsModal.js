@@ -5,7 +5,7 @@ import CTCBreakdown from './CTCBreakdown';
 import ExperienceInput from './ExperienceInput';
 import { MoneyInput } from './Inputs';
 import { ArrowRightIcon, FireIcon, GlobalJobsIcon, ModalCloseIcon, ResumeFlashIcon, UploadIcon, CheckedRoundedIcon, IconLastUpdated } from '../../assets/IconSVG';
-import axios from 'axios';
+import { createRequestCancelSource } from '../Helper';
 import { debounce } from 'lodash';
 import toast from 'react-hot-toast';
 import { checkIfFilePasswordProtected } from '../Helper';
@@ -108,7 +108,7 @@ const TalentProfileDetailsModalContent = ({ isHRSignUp = false }) => {
                 setSearchLoading(null);
                 return;
             }
-            const newSource = axios.CancelToken.source();
+            const newSource = createRequestCancelSource();
             cancelSources.current = {
                 ...cancelSources.current,
                 [locationType]: newSource // Store the new source

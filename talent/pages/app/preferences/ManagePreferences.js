@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Select from 'react-select';
 import { customSelectTheme, JobFunctionGroupLabel, JobFunctionSelectStyles, ReactSelectStyles } from '../../../components/common/CustomStyleReactSelect';
 import { CheckboxInput, MoneyInput, RadioInput } from '../../../components/common/Inputs';
-import { base64ToBlob, buildFormData, convertNpToDays, formatErrors, groupOptionsByCategory, formattedCTC, getLastWorkingDayBounds, getLastWorkingDayBoundsError, getPlaceholderLWD, isLastWorkingDayInBounds, isValidDate, sanitizePayload, scrollToFirstError, isAllEmpty, formatCTCBreakdown, formatCTCBreakdownLPA, checkDirectPayUser } from '../../../components/Helper';
+import { base64ToBlob, buildFormData, convertNpToDays, formatErrors, groupOptionsByCategory, formattedCTC, getLastWorkingDayBounds, getLastWorkingDayBoundsError, getPlaceholderLWD, isLastWorkingDayInBounds, isValidDate, sanitizePayload, scrollToFirstError, isAllEmpty, formatCTCBreakdown, formatCTCBreakdownLPA, checkDirectPayUser, createRequestCancelSource } from '../../../components/Helper';
 import './preferences.css';
 import _, { debounce } from 'lodash';
 import { generateAwsUploadUrl, getJobFunctionMaster, getProfilePercent, getTalentLocationMaster, getTalentPreferences, profileResumeDownload, profileUpsert } from '../../../store/actions/UserActions';
@@ -323,6 +323,7 @@ export default function ManagePreferences({
 
                     setModalDataLoading(false);
                 })
+                .catch(() => setModalDataLoading(false))
         }
 
     }, [])
@@ -443,7 +444,7 @@ export default function ManagePreferences({
                 setSearchLoading(null);
                 return;
             }
-            const newSource = axios.CancelToken.source();
+            const newSource = createRequestCancelSource();
             cancelSources.current = {
                 ...cancelSources.current,
                 [locationType]: newSource // Store the new source
@@ -832,7 +833,7 @@ export default function ManagePreferences({
 
     return (
         <section className="containSection">
-            {(isLoading) && <Loader />}
+            {(isLoading || modalDataLoading) && <Loader />}
             {!isLoading && !modalDataLoading &&
                 <div className={`manage-preferences ${isModalOpen ? "preferences-modal-open" : ""} ${(isMobile && !isModalOpen) ? "mobile-profile" : ""}`}>
                     {(isMobile && !isModalOpen) ?
