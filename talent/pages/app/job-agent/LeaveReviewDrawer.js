@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { API_OUTREACH_FEEDBACK, API_OUTREACH_REFINE_MESSAGE } from '../../../components/Constant';
+import { POST_API } from '../../../components/Helper';
 import { isUploadAbortError, uploadReviewMedia } from './uploadReviewMedia';
 
 /** Figma 377:22190 — Leave a review drawer assets. */
@@ -418,18 +418,11 @@ const LeaveReviewDrawer = ({ open, onClose }) => {
         setRefining(true);
 
         try {
-            const token = localStorage.getItem('token');
-            const res = await axios.post(
+            const res = await POST_API(
                 API_OUTREACH_REFINE_MESSAGE,
                 { message: original.trim() },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    signal: controller.signal,
-                },
+                1,
+                { signal: controller.signal },
             );
             const body = res?.data || {};
             if (body.status !== 'success' || !body.data?.message) {
@@ -498,14 +491,7 @@ const LeaveReviewDrawer = ({ open, onClose }) => {
         }
 
         try {
-            const token = localStorage.getItem('token');
-            const res = await axios.post(API_OUTREACH_FEEDBACK, payload, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            });
+            const res = await POST_API(API_OUTREACH_FEEDBACK, payload);
             const body = res?.data || {};
             if (body.status !== 'success') {
                 throw new Error(body.message || 'Failed to submit feedback.');

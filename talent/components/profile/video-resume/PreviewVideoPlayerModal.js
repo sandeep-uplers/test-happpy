@@ -2,10 +2,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { CloseIcon, CloseModalIcon, BackArrowIcon, VideoPlay, ManualBook, VideoLeft, VideoRight, VideoPause, VideoVolume, PlayVideo, CancelIcon } from '../../../assets/IconSVG'
 import Modal from 'react-modal';
 import ReactPlayer from 'react-player/file';
-import { formatDate, formatFileSize, formatTime } from '../../Helper';
+import { formatDate, formatFileSize, formatTime, POST_API, createRequestCancelSource, isRequestCanceled } from '../../Helper';
 import { useDispatch, useSelector } from 'react-redux';
 import { applyMandateVr, getProfilePercent, removeUser, getIndividualHR } from '../../../store/actions/UserActions';
-import axios from 'axios';
 import { API_STORE_VIDEO_RESUME } from '../../Constant';
 import { SET_NETWORK_ERROR, UPDATE_CURRENT_USER, VR_PUSHER_SUBSCRIBE, VR_PUSHER_TOGGLE } from '../../../store/actions/actionsTypes';
 import { isVideoUploadedTrack } from '../../../helpers/Mixpanel';
@@ -33,7 +32,7 @@ const PreviewVideoPlayerModal = ({
         e.preventDefault();
         isVideoUploadedTrack({ ctaVal: 'submit', hrData, retry, video_type: source, count: videoResumeData && videoResumeData?.video_url ? 2 : 1 })
         setUploadData(prev => ({ ...prev, uploading: true }));
-        cancelTokenSource = axios.CancelToken.source();
+        cancelTokenSource = createRequestCancelSource();
         dispatch({
             type: VR_PUSHER_SUBSCRIBE,
             payload: true
@@ -76,9 +75,10 @@ const PreviewVideoPlayerModal = ({
                 formData.append('fileName', file.name);
                 formData.append('is_last', (index === lastChunk).toString());
 
-                axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
                 try {
-                    const res = await axios.post(API_STORE_VIDEO_RESUME, formData, { cancelToken: cancelTokenSource.token });
+                    const res = await POST_API(API_STORE_VIDEO_RESUME, formData, 1, {
+                        signal: cancelTokenSource.token,
+                    });
                     if (res?.data?.alluploaded) {
                         dispatch({
                             type: VR_PUSHER_TOGGLE,
@@ -113,7 +113,7 @@ const PreviewVideoPlayerModal = ({
                         type: VR_PUSHER_SUBSCRIBE,
                         payload: false
                     })
-                    if (axios.isCancel(err)) {
+                    if (isRequestCanceled(err)) {
                         errReason = "Upload canceled by user"
                         console.log('Upload canceled by user');
                     } else if (err.response && err.response.status && err.response.status === 401) {
@@ -122,10 +122,10 @@ const PreviewVideoPlayerModal = ({
                     } else {
                         console.error('Error uploading chunk #' + index + ':', err);
                     }
-                    if (err.message === 'Network Error' && retry === 1) {
+                    if ((err.message === 'Failed to fetch' || err?.name === 'TypeError') && retry === 1) {
                         return handleSubmit(e, retry + 1);
                     } else {
-                        if (err.message === 'Network Error') {
+                        if (err.message === 'Failed to fetch' || err?.name === 'TypeError') {
                             errReason = "Network error"
                             dispatch({
                                 type: SET_NETWORK_ERROR,

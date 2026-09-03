@@ -1,8 +1,6 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-
-import axios from 'axios';
 import _, { debounce } from "lodash";
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from "react-redux";
@@ -12,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { BookmarkNotification } from "../../../assets/BookmarkNotify";
 import { ArrowUpIcon, GreenCheckMarkIcon } from "../../../assets/IconSVG";
 import { API_ALL_OPP, API_VIEW_VIDEO_COUNT, IMAGE_URL } from "../../../components/Constant";
-import { MASTER_FILTERS, POST_API, formattedJobCount, isTalentHired } from "../../../components/Helper";
+import { MASTER_FILTERS, POST_API, formattedJobCount, isTalentHired, GET_API, createRequestCancelSource, isRequestCanceled } from "../../../components/Helper";
 import { jobPostedDateFilterMaster } from "../../../components/Masters";
 import { JobDetailLoader } from "../../../components/SectionLoader";
 import WaveLoader from "../../../components/WaveLoader";
@@ -39,8 +37,8 @@ const defaultAllJobsFilters = () => ({
 });
 
 
-let listCancelTokenSource = axios.CancelToken.source();
-let countCancelTokenSource = axios.CancelToken.source();
+let listCancelTokenSource = createRequestCancelSource();
+let countCancelTokenSource = createRequestCancelSource();
 let pendingCountUrl = null;
 let pendingCountPromise = null;
 
@@ -539,20 +537,19 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
         }
 
         return new Promise((resolve, reject) => {
-            axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
             const isCountRequest = is_count === 1;
             if (isCountRequest) {
                 if (pendingCountUrl && pendingCountUrl !== qryUrl) {
                     countCancelTokenSource.cancel('Request was canceled');
                 }
-                countCancelTokenSource = axios.CancelToken.source();
+                countCancelTokenSource = createRequestCancelSource();
             } else {
                 listCancelTokenSource.cancel('Request was canceled');
-                listCancelTokenSource = axios.CancelToken.source();
+                listCancelTokenSource = createRequestCancelSource();
                 setLoading(true);
             }
-            const requestPromise = axios.get(api_url + qryUrl, {
-                cancelToken: isCountRequest ? countCancelTokenSource.token : listCancelTokenSource.token
+            const requestPromise = GET_API(api_url + qryUrl, {
+                signal: isCountRequest ? countCancelTokenSource.token : listCancelTokenSource.token,
             })
                 .then((res) => {
                     if (!isCountRequest) {
@@ -562,6 +559,10 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                     resolve(res);
                 })
                 .catch((err) => {
+                    if (isRequestCanceled(err)) {
+                        reject(err);
+                        return;
+                    }
                     if (err.response && err.response.status && err.response.status == 401) {
                         removeUser()(dispatch);
                     }
@@ -571,7 +572,7 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                             payload: err.response.data.errors
                         });
                     }
-                    if (axios.isCancel(err)) {
+                    if (isRequestCanceled(err)) {
                         console.log('Request canceled');
                     } else if (!isCountRequest) {
                         setLoading(false);

@@ -100,7 +100,7 @@ import {
     API_OUTREACH_MARK_REPLY_SEEN,
 } from '../../components/Constant';
 
-import { formatErrors, GET_API, POST_API, getDomain, checkEvenUser } from '../../components/Helper';
+import { formatErrors, GET_API, GET_API_WithToken, POST_API, POST_API_WithToken, getDomain, checkEvenUser, isRequestCanceled } from '../../components/Helper';
 import {
     REMOVE_BULK_ERRORS, REMOVE_ERRORS, REMOVE_NESTED_LOCK, REMOVE_PROFILE_STATE, REMOVE_SINGLE_LOCK, SET_BULK_ERRORS, SET_CURRENT_USER,
     SET_ERRORS, SET_FORM_ERRORS, SET_LOADER, SET_OPP_MASTER, SET_PROFILE_DATA, SET_PROFILE_PERCENT, SET_PROFILE_REM_PERCENT, SET_SUCCESS, SET_TNC_MODAL, UPDATE_CURRENT_USER,
@@ -138,7 +138,6 @@ import {
 } from '../../helpers/happpyAgentDailyLimit';
 import { resumeHealthReportViewedTracking, resumeTemplateSelectedTracking, setRegisterId, trackAllCtaClickV2, updateMixpanelUserDetails } from '../../helpers/Mixpanel';
 import toast from 'react-hot-toast';
-import axios from 'axios';
 
 
 // export const talentLogin = (userInfo) => async (dispatch) => {
@@ -1323,7 +1322,7 @@ export const getFeaturedOpportnities = () => (dispatch) => {
     })
 }
 
-export const getMyOpportnities = ({ page, activeJob }, cancelToken) => (dispatch) => {
+export const getMyOpportnities = ({ page, activeJob }, signal) => (dispatch) => {
     let params = {
         pagination: 10,
         page: page
@@ -1331,17 +1330,17 @@ export const getMyOpportnities = ({ page, activeJob }, cancelToken) => (dispatch
     if (activeJob) {
         params.activeJob = activeJob
     }
-    const token = localStorage.getItem('token');
-    if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    }
     return new Promise((resolve, reject) => {
         if (page == 1) dispatch({ type: SET_LOADER, payload: true })
-        axios.get(API_MY_OPP, { params, cancelToken: cancelToken })
+        GET_API(API_MY_OPP, { params, signal })
             .then((res) => {
                 resolve(res);
             })
             .catch((err) => {
+                if (isRequestCanceled(err)) {
+                    reject(err);
+                    return;
+                }
                 if (err.response && err.response.status && err.response.status == 401) {
                     removeUser()(dispatch);
                 }
@@ -2654,7 +2653,7 @@ export const errorBoundryTrigger = (payload) => {
 }
 
 
-export const getTalentLocationMaster = ({ search, noState }, cancelToken) => {
+export const getTalentLocationMaster = ({ search, noState }, signal) => {
     return new Promise((resolve, reject) => {
         let params = {
             search: search,
@@ -2663,15 +2662,12 @@ export const getTalentLocationMaster = ({ search, noState }, cancelToken) => {
         if (noState) {
             params.search_state = 'no'
         }
-        axios.get(API_TALENT_LOCATION_MASTER, {
-            params: params,
-            cancelToken: cancelToken
-        })
+        GET_API(API_TALENT_LOCATION_MASTER, { params, signal })
             .then((res) => {
                 resolve(res);
             })
             .catch((err) => {
-                if (axios.isCancel(err)) {
+                if (isRequestCanceled(err)) {
                     console.log('Request canceled');
                 } else {
                     console.error("search location request failed:", err);
@@ -2717,7 +2713,11 @@ export const getTalentPreferences = (noLoader = false) => (dispatch) => {
                 }
                 reject(err)
             })
-            .finally(() => dispatch({ type: SET_LOADER, payload: false }))
+            .finally(() => {
+                if (!noLoader) {
+                    dispatch({ type: SET_LOADER, payload: false })
+                }
+            })
     })
 }
 
@@ -3785,11 +3785,8 @@ export const createCareerCoachProfile = (payload) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
 
     return new Promise((resolve, reject) => {
-        axios.post(API_CAREER_COACH_PROFILE, payload, {
-            headers: {
-                'Authorization': "Bearer " + localStorage.getItem('cc_token'),
-            }
-        }).then((res) => {
+        POST_API_WithToken(API_CAREER_COACH_PROFILE, payload, localStorage.getItem('cc_token'))
+            .then((res) => {
             resolve(res);
             let users = JSON.parse(localStorage.getItem('cc_profiles')) || [];
 
@@ -3813,11 +3810,8 @@ export const getCCRecentChats = () => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
 
     return new Promise((resolve, reject) => {
-        axios.get(API_CAREER_COACH_RECENT_CHATS, {
-            headers: {
-                'Authorization': "Bearer " + localStorage.getItem('cc_token'),
-            }
-        }).then((res) => {
+        GET_API_WithToken(API_CAREER_COACH_RECENT_CHATS, localStorage.getItem('cc_token'))
+            .then((res) => {
             resolve(res);
         })
             .catch((err) => {
@@ -3833,11 +3827,8 @@ export const getCCChatMessages = (payload) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
 
     return new Promise((resolve, reject) => {
-        axios.get(API_CAREER_COACH_CHAT_MESSAGES + payload?.chat_id, {
-            headers: {
-                'Authorization': "Bearer " + localStorage.getItem('cc_token'),
-            }
-        }).then((res) => {
+        GET_API_WithToken(API_CAREER_COACH_CHAT_MESSAGES + payload?.chat_id, localStorage.getItem('cc_token'))
+            .then((res) => {
             resolve(res);
         })
             .catch((err) => {
@@ -3852,12 +3843,8 @@ export const getCCChatMessages = (payload) => (dispatch) => {
 export const uploadCCResume = (payload) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
     return new Promise((resolve, reject) => {
-        axios.post(API_CAREER_COACH_UPLOAD_RESUME, payload, {
-            headers: {
-                'Authorization': "Bearer " + localStorage.getItem('cc_token'),
-                'Content-Type': 'multipart/form-data',
-            }
-        }).then((res) => {
+        POST_API_WithToken(API_CAREER_COACH_UPLOAD_RESUME, payload, localStorage.getItem('cc_token'))
+            .then((res) => {
             resolve(res);
         }).catch((err) => {
             reject(err)
@@ -3870,11 +3857,8 @@ export const uploadCCResume = (payload) => (dispatch) => {
 export const getCCUploadedResume = () => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
     return new Promise((resolve, reject) => {
-        axios.get(API_CAREER_COACH_GET_RESUME, {
-            headers: {
-                'Authorization': "Bearer " + localStorage.getItem('cc_token'),
-            }
-        }).then((res) => {
+        GET_API_WithToken(API_CAREER_COACH_GET_RESUME, localStorage.getItem('cc_token'))
+            .then((res) => {
             resolve(res);
         })
             .catch((err) => {
@@ -3889,11 +3873,8 @@ export const getCCUploadedResume = () => (dispatch) => {
 export const storeCCFeedback = (payload) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
     return new Promise((resolve, reject) => {
-        axios.post(API_CAREER_COACH_FEEDBACK, payload, {
-            headers: {
-                'Authorization': "Bearer " + localStorage.getItem('cc_token'),
-            }
-        }).then((res) => {
+        POST_API_WithToken(API_CAREER_COACH_FEEDBACK, payload, localStorage.getItem('cc_token'))
+            .then((res) => {
             resolve(res);
         })
             .catch((err) => {
@@ -3909,7 +3890,7 @@ export const storeCCFeedback = (payload) => (dispatch) => {
 export const checkJobsSpotUser = (payload) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
     return new Promise((resolve, reject) => {
-        axios.post(API_JOBS_SPOT_CHECK_USER, payload)
+        POST_API(API_JOBS_SPOT_CHECK_USER, payload)
             .then((res) => {
                 resolve(res);
             }).catch((err) => {
@@ -3923,7 +3904,7 @@ export const checkJobsSpotUser = (payload) => (dispatch) => {
 export const creatJobAlert = (payload) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
     return new Promise((resolve, reject) => {
-        axios.post(API_JOBS_SPOT_CREATE_JOB_ALERT, payload)
+        POST_API(API_JOBS_SPOT_CREATE_JOB_ALERT, payload)
             .then((res) => {
                 resolve(res);
             }).catch((err) => {

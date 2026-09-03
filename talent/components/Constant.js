@@ -279,6 +279,7 @@ export const API_OUTREACH_SUBSCRIBE_MODAL_ACTION = API_URL + "talent/outreach/su
 export const API_OUTREACH_FEEDBACK_UPLOAD_MEDIA = API_URL + "talent/outreach/feedback/upload-media";
 export const API_OUTREACH_FEEDBACK = API_URL + "talent/outreach/feedback";
 export const API_OUTREACH_REFINE_MESSAGE = API_URL + "talent/outreach/refine-message";
+export const API_OUTREACH_DEFAULT_AUTO_TEMPLATES = API_URL + "talent/outreach/default-auto-templates";
 
 
 // VIDEO RESUME 

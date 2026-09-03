@@ -1,6 +1,5 @@
 'use client';
 
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { addDays, differenceInHours, differenceInMinutes, format, subYears } from 'date-fns';
 import Cookies from 'js-cookie';
@@ -13,63 +12,188 @@ const readAuthToken = () => {
     return localStorage.getItem('token') ?? localStorage.getItem('guest_token') ?? '';
 };
 
-export const GET_API = (url) => {
-    // const dispatch=useDispatch()
-    axios.defaults.headers.common['Authorization'] = "Bearer " + readAuthToken();
-    return new Promise((resolve, reject) => {
-        axios.get(url)
-            .then((res) => resolve(res))
-            .catch((err) => reject(err))
-    })
-}
-export const DELETE_API = (url, retry = 1) => {
-    axios.defaults.headers.common['Authorization'] = "Bearer " + readAuthToken();
-    return axios.delete(url)
-        .then((res) => res)
-        .catch((err) => {
-            if (err.message === 'Network Error' && retry === 1) {
-                return DELETE_API(url, retry + 1);
-            } else {
-                if (err.message === 'Network Error') {
-                    dispatchAction({
-                        type: SET_NETWORK_ERROR,
-                        payload: {
-                            isNetworkError: true,
-                        },
-                    })
-                }
-                return Promise.reject(err);
-            }
-        })
-}
-
-export const POST_API = async (url, payload, retry = 1) => {
-    const token = readAuthToken();
-    const customHeaders = {
-        Authorization: `Bearer ${token}`,
-        utm_source: Cookies.get('utm_source'),
-        utm_medium: Cookies.get('utm_medium'),
-        utm_campaign: Cookies.get('utm_campaign'),
-        // utm_placement: Cookies.get('utm_placement'),
-        utm_content: Cookies.get('utm_content'),
-        ref_url: Cookies.get('ref_url'),
-        tpt: Cookies.get('tpt'),
-        l: Cookies.get('l'),
+function buildTrackingHeaders(token, extraHeaders = {}) {
+    const headers = {
+        Accept: 'application/json',
+        ...extraHeaders,
     };
 
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
+
+    const utm_source = Cookies.get('utm_source');
+    const utm_medium = Cookies.get('utm_medium');
+    const utm_campaign = Cookies.get('utm_campaign');
+    const utm_content = Cookies.get('utm_content');
+    const ref_url = Cookies.get('ref_url');
+    const tpt = Cookies.get('tpt');
+    const l = Cookies.get('l');
+
+    if (utm_source) headers.utm_source = utm_source;
+    if (utm_medium) headers.utm_medium = utm_medium;
+    if (utm_campaign) headers.utm_campaign = utm_campaign;
+    if (utm_content) headers.utm_content = utm_content;
+    if (ref_url) headers.ref_url = ref_url;
+    if (tpt) headers.tpt = tpt;
+    if (l) headers.l = l;
+
+    return headers;
+}
+
+async function parseFetchResponse(response) {
+    const contentType = response.headers.get('content-type');
+    let data = null;
+
+    if (contentType?.includes('application/json')) {
+        try {
+            data = await response.json();
+        } catch {
+            data = null;
+        }
+    } else {
+        try {
+            data = await response.text();
+        } catch {
+            data = null;
+        }
+    }
+
+    if (!response.ok) {
+        const error = new Error('Request failed');
+        error.response = {
+            status: response.status,
+            data,
+        };
+        throw error;
+    }
+
+    return {
+        data,
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+        ok: true,
+    };
+}
+
+function appendQueryParams(url, params) {
+    if (!params || typeof params !== 'object') {
+        return url;
+    }
+
+    const searchParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            searchParams.append(key, String(value));
+        }
+    });
+
+    const query = searchParams.toString();
+    if (!query) {
+        return url;
+    }
+
+    return `${url}${url.includes('?') ? '&' : '?'}${query}`;
+}
+
+/** AbortController wrapper with axios CancelToken-compatible shape. */
+export function createRequestCancelSource() {
+    const controller = new AbortController();
+
+    return {
+        token: controller.signal,
+        cancel: () => controller.abort(),
+    };
+}
+
+export function isRequestCanceled(err) {
+    return (
+        err?.name === 'AbortError'
+        || err?.code === 'ERR_CANCELED'
+        || err?.message === 'canceled'
+    );
+}
+
+export const GET_API = (url, options = {}) => {
+    const { params, signal } = options;
+    const finalUrl = appendQueryParams(url, params);
+    const token = readAuthToken();
+
+    return fetch(finalUrl, {
+        method: 'GET',
+        headers: buildTrackingHeaders(token),
+        signal,
+        credentials: 'include',
+    }).then(parseFetchResponse);
+};
+
+export const GET_API_WithToken = (url, token, options = {}) => {
+    const { params, signal } = options;
+    const finalUrl = appendQueryParams(url, params);
+
+    return fetch(finalUrl, {
+        method: 'GET',
+        headers: buildTrackingHeaders(token),
+        signal,
+        credentials: 'include',
+    }).then(parseFetchResponse);
+};
+
+export const DELETE_API = (url, retry = 1, options = {}) => {
+    const token = readAuthToken();
+
+    return fetch(url, {
+        method: 'DELETE',
+        headers: buildTrackingHeaders(token),
+        signal: options.signal,
+        credentials: 'include',
+    })
+        .then(parseFetchResponse)
+        .catch((err) => {
+            if (err.message === 'Failed to fetch' && retry === 1) {
+                return DELETE_API(url, retry + 1, options);
+            }
+
+            if (err.message === 'Failed to fetch' && retry > 1) {
+                dispatchAction({
+                    type: SET_NETWORK_ERROR,
+                    payload: {
+                        isNetworkError: true,
+                    },
+                });
+            }
+
+            return Promise.reject(err);
+        });
+};
+
+export const POST_API = async (url, payload, retry = 1, options = {}) => {
+    const token = readAuthToken();
+    const isFormData =
+        typeof FormData !== 'undefined' && payload instanceof FormData;
+    const customHeaders = buildTrackingHeaders(
+        token,
+        isFormData ? {} : { 'Content-Type': 'application/json' },
+    );
+
     try {
-        const response = await axios.post(url, payload, {
+        const response = await fetch(url, {
+            method: 'POST',
             headers: customHeaders,
+            body: isFormData ? payload : JSON.stringify(payload),
+            credentials: 'include',
+            signal: options.signal,
         });
 
-        return response;
+        return await parseFetchResponse(response);
     } catch (err) {
-        const isNetworkError = !err.response && err.request;
+        const isNetworkError = !err?.response && (err?.message === 'Failed to fetch' || err?.name === 'TypeError');
         const errorCode = err?.response?.status ?? null;
 
-        if (isNetworkError && retry === 1) { // Retry once after delay
-            await new Promise((resolve) => setTimeout(resolve, payload.networkDelay || 500));
-            return POST_API(url, payload, retry + 1);
+        if (isNetworkError && retry === 1) {
+            await new Promise((resolve) => setTimeout(resolve, payload?.networkDelay || 500));
+            return POST_API(url, payload, retry + 1, options);
         }
 
         if (isNetworkError && retry > 1) {
@@ -79,13 +203,15 @@ export const POST_API = async (url, payload, retry = 1) => {
                     isNetworkError: true,
                     erroObjForTracking: {
                         endpoint: url,
-                        payload: JSON.stringify(payload),
-                        userAgent: navigator.userAgent,
+                        payload: isFormData ? '[FormData]' : JSON.stringify(payload),
+                        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
                         error: err?.toString(),
                         errorCode,
                         errorMessage: err?.message,
-                        isUserOnline: navigator.onLine,
-                        requestBodySize: new Blob([JSON.stringify(payload)]).size,
+                        isUserOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
+                        requestBodySize: isFormData
+                            ? null
+                            : new Blob([JSON.stringify(payload)]).size,
                     },
                 },
             });
@@ -96,21 +222,78 @@ export const POST_API = async (url, payload, retry = 1) => {
 };
 
 /** POST with an explicit token (e.g. pending auth before OTP verify). Does not read from localStorage. */
-export const POST_API_WithToken = async (url, payload, token) => {
-    const customHeaders = {
-        Authorization: `Bearer ${token}`,
-        utm_source: Cookies.get('utm_source'),
-        utm_medium: Cookies.get('utm_medium'),
-        utm_campaign: Cookies.get('utm_campaign'),
-        // utm_placement: Cookies.get('utm_placement'),
-        utm_content: Cookies.get('utm_content'),
-        ref_url: Cookies.get('ref_url'),
-        tpt: Cookies.get('tpt'),
-        l: Cookies.get('l'),
-    };
-    const response = await axios.post(url, payload, { headers: customHeaders });
-    return response;
+export const POST_API_WithToken = async (url, payload, token, options = {}) => {
+    const isFormData =
+        typeof FormData !== 'undefined' && payload instanceof FormData;
+    const customHeaders = buildTrackingHeaders(
+        token,
+        isFormData ? {} : { 'Content-Type': 'application/json' },
+    );
+
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: customHeaders,
+        body: isFormData ? payload : JSON.stringify(payload),
+        credentials: 'include',
+        signal: options.signal,
+    });
+
+    return parseFetchResponse(response);
 };
+
+/**
+ * Multipart upload with optional progress — uses XHR (fetch has no upload progress).
+ * All requests still go through same-origin /api/* proxy to UTS.
+ */
+export function postFormDataWithProgress(url, formData, { token, signal, onProgress } = {}) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', url);
+
+        if (token) {
+            xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+        }
+        xhr.setRequestHeader('Accept', 'application/json');
+
+        if (signal) {
+            if (signal.aborted) {
+                reject(Object.assign(new Error('canceled'), { name: 'AbortError', code: 'ERR_CANCELED' }));
+                return;
+            }
+            signal.addEventListener('abort', () => xhr.abort());
+        }
+
+        xhr.upload.onprogress = (event) => {
+            if (!onProgress || !event.lengthComputable) return;
+            onProgress(Math.round((event.loaded / event.total) * 100));
+        };
+
+        xhr.onload = () => {
+            let data = null;
+            try {
+                data = xhr.responseText ? JSON.parse(xhr.responseText) : null;
+            } catch {
+                data = xhr.responseText;
+            }
+
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve({ data, status: xhr.status, ok: true });
+                return;
+            }
+
+            const error = new Error('Request failed');
+            error.response = { status: xhr.status, data };
+            reject(error);
+        };
+
+        xhr.onerror = () => reject(new Error('Network error'));
+        xhr.onabort = () => {
+            reject(Object.assign(new Error('canceled'), { name: 'AbortError', code: 'ERR_CANCELED' }));
+        };
+
+        xhr.send(formData);
+    });
+}
 
 export const POST_API_V2 = async (url, payload, retry = 1) => {
     const token = readAuthToken();

@@ -1202,6 +1202,39 @@
     justify-content: center;
 }
 
+.preferences-fetch-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 48px 24px;
+    min-height: 200px;
+}
+
+.preferences-fetch-loading .jad-jobs__toolbar-msg {
+    margin: 0;
+    font-family: "Rubik", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b6b6b;
+}
+
+.preferences-fetch-loading .jad-jobs__toolbar-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(35, 31, 32, 0.12);
+    border-top-color: #231f20;
+    border-radius: 50%;
+    animation: preferences-fetch-spin 0.75s linear infinite;
+}
+
+@keyframes preferences-fetch-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .manage-preferences-modal .containSection .manage-preferences .heading .left h2 {
     font-size: 1.125rem;
     line-height: 1;
