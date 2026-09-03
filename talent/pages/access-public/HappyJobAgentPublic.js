@@ -36,9 +36,6 @@ if (typeof document !== "undefined" && document.getElementById("happpy-root")) {
 
 const CONNECT_ACCOUNTS_PATH = REFERRAL_AI_AGENT_ONBOARDING_PATH;
 
-/** Same redirect as SocialSSO — required for `new-signup/google-callback` token exchange. */
-const GOOGLE_REDIRECT_URI = `${process.env.NEXT_PUBLIC_APP_URL || ''}/talent/auth/google-callback`;
-
 const GOOGLE_OAUTH_CLIENT_ID = (process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '')
     .replace(/^['"]|['"]$/g, '')
     .trim();
@@ -467,7 +464,6 @@ function HappyJobAgentPublicInner() {
 
     const googleLogin = useGoogleLogin({
         flow: "auth-code",
-        redirect_uri: GOOGLE_REDIRECT_URI,
         onSuccess: (codeResponse) => {
             socialGoogleCallback(codeResponse.code, "regular")(dispatch)
                 .then(() => getProfilePercent(false)(dispatch).catch(() => {}))
