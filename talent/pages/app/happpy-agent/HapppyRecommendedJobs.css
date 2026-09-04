@@ -70,14 +70,256 @@
     font-variation-settings: 'FILL' 1;
 }
 
+/* ----------------------------------------------------------------- Extension banner (Figma 2606:21153) */
+
+.hra-rec__extension-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 68px;
+    margin: -32px -32px 0;
+    padding: 16px;
+    border-radius: 24px 0 0 0;
+    background: linear-gradient(173.22deg, #d0fae0 12.29%, #ffffff 96.89%);
+    box-shadow: 0 2px 8px rgba(107, 107, 107, 0.1);
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .hra-rec__extension-banner {
+        margin: -32px -24px 0;
+    }
+}
+
+.hra-rec__extension-banner-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.hra-rec__extension-banner-icon {
+    flex-shrink: 0;
+    display: block;
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
+
+.hra-rec__extension-banner-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.hra-rec__extension-banner-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    color: var(--hra-cta-black);
+}
+
+.hra-rec__extension-banner-desc {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 300;
+    line-height: normal;
+    color: var(--hra-cta-black);
+}
+
+.hra-rec__extension-banner-desc-em {
+    font-weight: 400;
+}
+
+.hra-rec__extension-banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.hra-rec__extension-banner-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 40px;
+    background: #bdffd7;
+    color: var(--hra-cta-black);
+    font-family: 'Telegraf', 'Rubik', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: normal;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: filter 0.15s ease;
+}
+
+.hra-rec__extension-banner-cta:hover,
+.hra-rec__extension-banner-cta:focus-visible {
+    filter: brightness(0.97);
+    color: var(--hra-cta-black);
+    text-decoration: none;
+}
+
+.hra-rec__extension-banner-cta:focus-visible {
+    outline: 2px solid var(--hra-link-blue);
+    outline-offset: 2px;
+}
+
+.hra-rec__extension-banner-paste {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--hra-cta-black);
+    font-family: 'Telegraf', 'Rubik', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: normal;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-underline-position: from-font;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.hra-rec__extension-banner-paste:hover,
+.hra-rec__extension-banner-paste:focus-visible {
+    filter: brightness(0.95);
+}
+
+.hra-rec__extension-banner-paste:focus-visible {
+    outline: 2px solid var(--hra-link-blue);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.hra-rec__extension-banner-paste-icon {
+    display: block;
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+@media (min-width: 768px) {
+    .hra-rec__extension-banner {
+        padding: 20px 24px;
+    }
+}
+
+@media (max-width: 900px) {
+    .hra-rec__extension-banner {
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 767px) {
+    .hra-rec__extension-banner {
+        padding: 32px 16px 12px;
+        margin: -16px -16px 0;
+        border-radius: 0 0 16px 16px;
+    }
+
+    .hra-rec__extension-banner-title {
+        font-size: 14px;
+    }
+
+    .hra-rec__extension-banner-desc {
+        white-space: normal;
+    }
+
+    .hra-rec__extension-banner-actions {
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .hra-rec__extension-banner-cta {
+        flex: 1 1 auto;
+        min-width: 0;
+        padding-inline: 12px;
+        font-size: 11px;
+    }
+}
+
+/* ----------------------------------------------------------------- Page header shell (Figma — extension banner + Jobs title + tabs/toolbar) */
+
+.hra-rec__page-header {
+    width: 100%;
+    margin-bottom: -8px;
+}
+
+@media (max-width: 1023px) {
+    .hra-rec__page-header {
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .hra-rec__page-header {
+        margin-bottom: 0;
+        margin-top: 12px;
+    }
+}
+
+.hra-rec__tabs-toolbar-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+}
+
+.hra-rec__tabs-toolbar-row .hra-rec__tabs {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.hra-rec__all-jobs-sticky-head .hra-rec__all-jobs-toolbar-host {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hra-rec__all-jobs-sticky-head {
+    width: 100%;
+}
+
+@media (min-width: 1024px) {
+    .hra-rec__all-jobs-sticky-head {
+        position: sticky;
+        top: -32px;
+        z-index: 40;
+        background: var(--hra-page-bg);
+        padding-bottom: 4px;
+        padding-top: 16px;
+    }
+}
+
 /* ----------------------------------------------------------------- Page header (Figma 29749:12642) */
 
 .hra-rec__page-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px 24px;
+    display: block;
+    margin: 0;
+    padding: 0;
 }
 
 .hra-rec__page-intro {
@@ -810,7 +1052,7 @@
 }
 
 .hra-rec__tab-label {
-    text-transform: capitalize;
+    text-transform: none;
 }
 
 .hra-rec__tab-count {
@@ -4077,35 +4319,8 @@
     }
 
     .hra-rec__page-head {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-        padding-top: 16px;
-    }
-
-    .hra-rec__page-head-actions {
-        width: 100%;
-        flex-direction: column-reverse;
-        margin-top: 0;
-        gap: 12px;
-
-        .hra-rec__stat-pill{
-            .hra-rec__stat-pill-label{
-                font-size: 9px;
-            }
-            .hra-rec__stat-pill-value{
-                font-size: 12px;
-            }
-        }
-    }
-
-    .hra-rec__page-head-stats {
-        width: 100%;
-    }
-
-    .hra-rec__paste-link {
-        align-self: flex-end;
-        font-size: 12px;
+        padding-top: 0;
+        margin-bottom: 0;
     }
 
     .hra-rec__upgrade-btn {
@@ -4178,7 +4393,6 @@
 @media (max-width: 1023px) {
     .hra-rec__all-jobs-sticky-head {
         position: sticky;
-        top: -40px; /* main scrollport already starts below .job-agent-dashboard__topnav-spacer */
         z-index: 40;
         align-self: flex-start;
         width: 100%;
@@ -4186,7 +4400,7 @@
         padding-bottom: 0;
         box-shadow: none;
         border-bottom: 1px solid var(--hra-tab-border, #dee1e7);
-        padding-top: 32px;
+        padding-top: 0;
         margin-inline: -24px;
         width: calc(100% + 48px);
         padding-inline: 24px;
@@ -4199,7 +4413,7 @@
 
     .hra-rec__all-jobs-toolbar-host .jad-all-jobs-toolbar {
         margin-bottom: 0;
-        padding: 0 16px 10px;
+        padding: 0 16px 0;
     }
 
     .hra-rec__all-jobs-toolbar-host .jad-all-jobs-toolbar__actions {
@@ -4207,13 +4421,31 @@
     }
 }
 
+/* Tablet: sticky tabs/toolbar in main scrollport */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .hra-rec__all-jobs-sticky-head {
+        padding-top: 16px;
+        top: -32px; /* main scrollport already starts below .job-agent-dashboard__topnav-spacer */
+    }
+}
+
 /* Tablet (768–1023): one-row toolbar, meta left / actions right; sticky + list share centered column */
 @media (min-width: 768px) and (max-width: 1023px) {
-    .hra-rec__all-jobs-sticky-head .hra-rec__tabs--segmented,
-    .hra-rec__all-jobs-sticky-head .hra-rec__all-jobs-toolbar-host {
+    .hra-rec__all-jobs-sticky-head .hra-rec__tabs-toolbar-row {
         width: 100%;
         max-width: 800px;
         margin-inline: auto;
+        flex-wrap: wrap;
+        padding-bottom: 10px;
+    }
+
+    .hra-rec__extension-banner {
+        flex-wrap: wrap;
+
+        .hra-rec__extension-banner-actions {
+            width: 100%;
+            justify-content: flex-end;
+        }
     }
 
     .hra-rec__all-jobs-sticky-head .hra-rec__all-jobs-toolbar-host .jad-all-jobs-toolbar {
@@ -4258,16 +4490,29 @@
 @media (max-width: 767px) {
     .hra-rec__all-jobs-sticky-head {
         top: 0;
+        z-index: 50;
         margin-inline: -16px;
         padding-inline: 16px;
-        padding-top: 8px;
+        padding-top: 16px;
+        padding-bottom: 8px;
         width: calc(100% + 32px);
         margin-bottom: 0;
+        border-bottom: none;
+    }
+
+    .hra-rec__all-jobs-sticky-head .hra-rec__tabs-toolbar-row {
+        flex-direction: column;
+        align-items: unset;
+    }
+
+    .hra-rec__all-jobs-sticky-head .hra-rec__all-jobs-toolbar-host {
+        justify-content: space-between;
+        width: 100%;
     }
 
     .hra-rec__all-jobs-toolbar-host .jad-all-jobs-toolbar {
         padding-inline: 0;
-        padding-bottom: 10px;
+        width: 100%;
     }
 
     .hra-rec__all-jobs-toolbar-host .jad-all-jobs-toolbar__actions {
@@ -4276,6 +4521,7 @@
         justify-content: space-between;
         align-items: center;
         row-gap: 10px;
+        margin-top: -8px;
     }
 
     .hra-rec__all-jobs-toolbar-host .jad-all-jobs-toolbar__filters {

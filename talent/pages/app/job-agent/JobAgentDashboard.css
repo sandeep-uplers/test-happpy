@@ -133,7 +133,7 @@
     top: 0;
     left: 0;
     right: 0;
-    z-index: 50;
+    z-index: 51;
     height: 4rem;
     display: flex;
     align-items: center;
@@ -2054,6 +2054,10 @@ button.job-agent-dashboard__sidenav-link {
         padding-bottom: calc(var(--jad-mobile-bottom-nav-h) + 32px);
         scroll-padding-top: var(--jad-mobile-header-h);
         scroll-padding-bottom: var(--jad-mobile-bottom-nav-h);
+
+        &:has(.hra-rec){
+            padding-inline: 0 !important;
+        }
     }
 }
 
@@ -8677,7 +8681,7 @@ button.jad-cta-card__btn:hover {
         border-radius: 0 0 16px 16px;
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
-        box-shadow: 0 0 12px 12px #f9f8f4;
+        box-shadow: 0 0 12px 12px rgba(34, 191, 178, 0.4);
     }
 
     .job-agent-dashboard:has(.happpy-dash__setup) .job-agent-dashboard__topnav,
