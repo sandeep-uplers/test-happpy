@@ -30,6 +30,32 @@ function AuthHydrator({ children }) {
     return children;
 }
 
+function ReactHotToast() {
+    return (
+        <Toaster
+            toastOptions={{
+                duration: 6000,
+                style: {
+                    fontSize: '14px',
+                },
+                success: {
+                    style: {
+                        background: 'green',
+                        color: '#fff',
+                    },
+                },
+                error: {
+                    style: {
+                        background: 'red',
+                        color: '#fff',
+                    },
+                },
+            }}
+            position="top-right"
+        />
+    );
+}
+
 function AppShell({ children }) {
     const inner = (
         <AuthHydrator>
@@ -37,7 +63,7 @@ function AppShell({ children }) {
                 {children}
                 <GlobalPopups />
             </HappyAiAgentLayout>
-            <Toaster position="top-center" />
+            <ReactHotToast />
             <ToastContainer position="bottom-center" theme="dark" />
         </AuthHydrator>
     );
