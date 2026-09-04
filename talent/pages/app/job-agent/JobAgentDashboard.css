@@ -97,6 +97,17 @@
     max-height: 100%;
 }
 
+/*
+ * Next.js standalone shell (#happpy-root) — no legacy platform navbar/sidebar,
+ * but keep the viewport locked so only .job-agent-dashboard__main scrolls under
+ * the fixed topnav (same behaviour as uts PrivateRoute + .dashboard-pg).
+ */
+#happpy-root:has(.job-agent-dashboard) {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+}
+
 .job-agent-dashboard *,
 .job-agent-dashboard *::before,
 .job-agent-dashboard *::after {
@@ -189,6 +200,8 @@
     align-items: center;
     gap: 0.25rem;
     flex-shrink: 0;
+    position: relative;
+    z-index: 2;
 }
 
 /* Topnav brand + plan-pill stack — the wordmark sits on top, the plan-validity
@@ -512,13 +525,16 @@
     overflow: hidden;
     text-overflow: ellipsis;
 
-    @media (max-width: 876px) {
-        width: 90px;
+    @media (max-width: 1100px) {
+
+        width: 7rem;
+        min-width: 7rem;
+        position: relative;
         position: relative;
 
         &::after {
-            content: 'HAPPPY Extension';
-            color: #231F20;
+            content: 'Happpy Extension';
+            color: #231f20;
             position: absolute;
             top: 0;
             left: 0;
@@ -526,6 +542,45 @@
             height: 100%;
             background: #fff;
         }
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .job-agent-dashboard__topnav-extension {
+        flex-shrink: 1;
+        min-width: 0;
+        max-width: 10.5rem;
+        padding: 0.35rem 0.5rem;
+        gap: 0.35rem;
+        font-size: 0.6875rem;
+    }
+
+    .job-agent-dashboard__topnav-extension:hover span::after {
+        background: var(--jad-primary-container);
+    }
+
+    .job-agent-dashboard__topnav-chrome-icon {
+        width: 1rem;
+        height: 1rem;
+    }
+
+    .job-agent-dashboard__topnav-plan-upgrade-btn {
+        padding: 0.45rem 0.75rem;
+        font-size: 0.6875rem;
+        gap: 0.35rem;
+    }
+
+    .job-agent-dashboard__topnav-plan-upgrade-btn-icon {
+        width: 0.875rem;
+        height: 0.875rem;
+    }
+
+    .job-agent-dashboard__topnav-right {
+        gap: 0.5rem;
+    }
+
+    .job-agent-dashboard__topnav-plan-wrap {
+        max-width: min(11rem, calc(100vw - var(--jad-sidebar-w) - 20rem));
     }
 }
 
@@ -748,9 +803,12 @@
 .job-agent-dashboard__topnav-plan-wrap {
     flex: 1 1 0;
     min-width: 0;
+    max-width: 100%;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     padding: 0 0.35rem;
+    overflow: hidden;
 }
 
 @media (max-width: 767px) {
@@ -779,8 +837,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.3125rem;
-    min-width: 400px;
-    max-width: 400px;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
     box-sizing: border-box;
 }
 
@@ -870,40 +929,111 @@
     border-radius: 999px;
 }
 
-@media (max-width: 1140px) {
-    .job-agent-dashboard__daily-limit {
-        min-width: 300px;
-        max-width: 300px;
-        flex-basis: 300px;
+/*
+ * Topnav daily-limit — cap width by breakpoint but always allow shrink (min-width: 0)
+ * so the widget never overlaps the logo lockup in `.topnav-left`.
+ * On desktop (≥768px) pin the slot to the main column — flush with sidebar end.
+ */
+.job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__plan-topnav-cluster {
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-start;
+}
+
+@media (min-width: 768px) {
+    .job-agent-dashboard__topnav-plan-wrap {
+        position: absolute;
+        left: var(--jad-sidebar-w);
+        top: 0;
+        bottom: 0;
+        flex: none;
+        width: auto;
+        max-width: min(25rem, calc(100vw - var(--jad-sidebar-w) - 18rem));
+        justify-content: flex-start;
+        padding: 0 0.75rem 0 0;
+    }
+
+    .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__plan-topnav-cluster {
+        width: auto;
+        justify-content: flex-start;
+    }
+
+    .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__daily-limit {
+        flex: 0 1 auto;
+        width: auto;
     }
 }
-@media (max-width: 991px) {
-    .job-agent-dashboard__daily-limit {
-        min-width: 240px;
-        max-width: 240px;
-        flex-basis: 240px;
+
+.job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__daily-limit {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    max-width: 25rem;
+}
+
+@media (max-width: 1280px) {
+    .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__daily-limit {
+        max-width: 18.75rem;
+    }
+}
+
+@media (max-width: 1140px) {
+    .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__daily-limit {
+        max-width: 15rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .job-agent-dashboard__topnav-left {
+        min-width: 0;
+        flex-shrink: 1;
+    }
+
+    .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__daily-limit {
+        max-width: 12.5rem;
+    }
+
+    .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__daily-limit-label {
+        font-size: 0.6875rem;
+    }
+
+    .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__daily-limit-count {
+        font-size: 0.625rem;
+    }
+}
+
+@media (max-width: 920px) {
+    .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__daily-limit {
+        max-width: 10rem;
+    }
+
+    .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__daily-limit-head {
+        gap: 0.35rem;
+    }
+}
+
+@media (max-width: 880px) {
+    .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__daily-limit {
+        max-width: 8.5rem;
+    }
+
+    .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__daily-limit-label,
+    .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__daily-limit-count {
+        font-size: 0.625rem;
+    }
+
+    .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__daily-limit-head {
+        white-space: normal;
+        flex-wrap: wrap;
+        row-gap: 0.125rem;
     }
 }
 
 @media (max-width: 767px) {
-    .job-agent-dashboard__daily-limit {
-        min-width: 240px;
-        max-width: 100%;
-        flex-basis: auto;
-    }
-
     /* Upgrade CTA is reachable from the sidebar drawer ("My Plan") on mobile,
      * so we hide the topnav button to give the daily-limit widget room. */
     .job-agent-dashboard__topnav-plan-wrap .job-agent-dashboard__plan-topnav-upgrade-btn {
         display: none;
-    }
-}
-
-@media (max-width: 480px) {
-    .job-agent-dashboard__daily-limit {
-        min-width: 0;
-        max-width: 100%;
-        flex-basis: auto;
     }
 }
 /* Dashboard home: mobile hero shows the daily-limit widget beside the greeting

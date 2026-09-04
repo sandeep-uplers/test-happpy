@@ -193,7 +193,7 @@ const navItems = [
     // { to: '/talent/job-agent/missed-replies', label: 'Reminders', end: true, icon: 'notifications' },
     // { to: '/talent/job-agent/jobs', label: 'Activity', end: false, icon: 'history' },
     { to: '/talent/job-agent/my-activity', label: 'My Activity', end: false, icon: 'inventory_2' },
-    { to: RECOMMENDED_JOBS_PATH, label: 'Recommended Jobs', end: true, icon: 'work' },
+    { to: RECOMMENDED_JOBS_PATH, label: 'Jobs', end: true, icon: 'work' },
     { to: '/talent/job-agent/tailor-resume', label: 'Resumes', end: false, icon: 'edit_document' },
 ];
 
@@ -240,7 +240,7 @@ function mobileBottomNavTarget(item, lockOutreachSideNav) {
 const MOBILE_DRAWER_NAV_ITEMS = [
     { id: 'dashboard', to: '/talent/job-agent', label: 'Dashboard', end: true, icon: 'home' },
     { id: 'activity', to: '/talent/job-agent/my-activity', label: 'My Activity', end: false, icon: 'description' },
-    { id: 'jobs', to: RECOMMENDED_JOBS_PATH, label: 'Recommended Jobs', end: true, icon: 'work' },
+    { id: 'jobs', to: RECOMMENDED_JOBS_PATH, label: 'Jobs', end: true, icon: 'work' },
     { id: 'resumes', to: '/talent/job-agent/tailor-resume', label: 'My Resumes', end: false, icon: 'edit_document' },
     { id: 'configure', to: CONFIGURE_LINK_PATH, label: 'Configure', end: false, icon: 'tune' },
     { id: 'profile', to: UPDATE_PROFILE_PATH, label: 'Profile', end: false, icon: 'manage_accounts' },
