@@ -7,6 +7,7 @@ import Slider from "react-slick";
 import { toast as toastify } from "react-toastify";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
+import "../work/similarJobs.css";
 import { BookmarkNotification } from "../../../assets/BookmarkNotify";
 import { ArrowRightIcon } from "../../../assets/IconSVG";
 import { IMAGE_URL } from "../../../components/Constant";
