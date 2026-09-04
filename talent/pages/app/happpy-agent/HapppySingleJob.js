@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from '@/talent/navigation/routerCompat';
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
-import { IMAGE_URL } from '../../../components/Constant';
+import { APP_NAME, IMAGE_URL } from '../../../components/Constant';
 import { isTalentHired } from '../../../components/Helper';
 import Loader from '../../../components/Loader';
 import PageTimeLogger from '../../../components/common/PageTimeLogger';
@@ -47,7 +47,7 @@ export default function HapppySingleJob() {
         if (typeof window !== 'undefined' && localStorage.getItem('mixpanel_session_id') == null) {
             localStorage.setItem('mixpanel_session_id', uuidv4());
         }
-        document.title = `${process.env.NEXT_PUBLIC_APP_NAME} | Opportunity | Happpy Agent`;
+        document.title = `${APP_NAME || 'Happpy'} | Opportunity | Happpy Agent`;
         timeTrackEvent('Single Opportunity Page Loaded');
     }, []);
 

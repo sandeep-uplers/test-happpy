@@ -11,6 +11,7 @@ import "slick-carousel/slick/slick.css";
 import {
     API_GET_OUTREACH_STEP,
     API_REFERRAL_AGENT_JOB_APPLY_BY_LINKS_BATCH,
+    APP_NAME,
     SESSION_KEY_JOB_AGENT_DISPLAY_JOB_URLS,
     OUTREACH_JOURNEY_KEY_ONBOARDING_POP_OPENED,
     buildOnbPopOpenedSectionKey,
@@ -770,7 +771,7 @@ function HappyJobAgentContent({
 
     useLayoutEffect(() => {
         const namePart = displayFirstName ? `${displayFirstName} · ` : "";
-        document.title = `${process.env.NEXT_PUBLIC_APP_NAME} | ${namePart}Happpy Agent`;
+        document.title = `${APP_NAME || 'Happpy'} | ${namePart}Happpy Agent`;
         // const el = document.getElementById("happyJobAgentPublic");
         // if (el) el.scrollIntoView({ behavior: "instant", block: "start" });
         window.scrollTo(0, 0);

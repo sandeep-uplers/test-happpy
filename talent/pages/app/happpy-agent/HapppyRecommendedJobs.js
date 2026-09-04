@@ -914,8 +914,19 @@ const HapppyRecommendedJobs = () => {
     /** Resolve active tab from `?tab=...`, falling back to default when missing/invalid. */
     const activeTab = useMemo(() => {
         const tab = searchParams.get('tab');
-        return VALID_RECOMMENDED_JOBS_TAB_IDS.includes(tab) ? tab : DEFAULT_RECOMMENDED_JOBS_TAB;
+        const normalizedTab = tab === 'recommended' ? DEFAULT_RECOMMENDED_JOBS_TAB : tab;
+        return VALID_RECOMMENDED_JOBS_TAB_IDS.includes(normalizedTab)
+            ? normalizedTab
+            : DEFAULT_RECOMMENDED_JOBS_TAB;
     }, [searchParams]);
+
+    /** Legacy bookmarks used `?tab=recommended`; normalize to the default all-jobs URL. */
+    useEffect(() => {
+        if (searchParams.get('tab') !== 'recommended') return;
+        const next = new URLSearchParams(searchParams);
+        next.delete('tab');
+        setSearchParams(next, { replace: true });
+    }, [searchParams, setSearchParams]);
 
     const autoRunHapppy = useSelector(
         (state) => isAutoRunConsentOn(state.happpyAgent.dashboardData?.auto_run_consent_status),
@@ -1450,7 +1461,6 @@ const HapppyRecommendedJobs = () => {
             ? ''
             : `Showing ${pageStart}-${pageEnd} of ${activeJobs.length}`;
     const tabCounts = {
-        recommended: jobs.length,
         'gmail-scan': emailMeta?.total_jobs ?? emailJobs.length,
     };
     const pageTitle = isAllJobsTab
@@ -2280,11 +2290,9 @@ const HapppyRecommendedJobs = () => {
             {TABS.map((tab) => {
                 const isActive = activeTab === tab.id;
                 const count = tabCounts[tab.id];
-                const showCount = tab.id === 'recommended'
-                    ? !loading
-                    : tab.id === 'gmail-scan'
-                        ? !emailMetaLoading && Boolean(emailMeta?.has_consent)
-                        : false;
+                const showCount = tab.id === 'gmail-scan'
+                    ? !emailMetaLoading && Boolean(emailMeta?.has_consent)
+                    : false;
 
                 return (
                     <button
@@ -2295,7 +2303,7 @@ const HapppyRecommendedJobs = () => {
                         aria-current={isActive ? 'page' : undefined}
                     >
                         <span className="hra-rec__tab-label">{tab.label}</span>
-                        {showCount ? (
+                        {showCount && count != null ? (
                             <span className="hra-rec__tab-count" aria-hidden="true">
                                 {count}
                             </span>

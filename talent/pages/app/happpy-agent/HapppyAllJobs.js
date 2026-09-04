@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from 'uuid';
 import { BookmarkNotification } from "../../../assets/BookmarkNotify";
 import { ArrowUpIcon, GreenCheckMarkIcon } from "../../../assets/IconSVG";
-import { API_ALL_OPP, API_VIEW_VIDEO_COUNT, IMAGE_URL } from "../../../components/Constant";
+import { API_ALL_OPP, API_VIEW_VIDEO_COUNT, APP_NAME, IMAGE_URL } from "../../../components/Constant";
 import { MASTER_FILTERS, POST_API, formattedJobCount, isTalentHired, GET_API, createRequestCancelSource, isRequestCanceled } from "../../../components/Helper";
 import { jobPostedDateFilterMaster } from "../../../components/Masters";
 import { JobDetailLoader } from "../../../components/SectionLoader";
@@ -363,7 +363,9 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
     };
 
     useEffect(() => {
-        document.title = process.env.NEXT_PUBLIC_APP_NAME + " | All Jobs";
+        if (!embedded) {
+            document.title = `${APP_NAME || 'Happpy'} | All Jobs`;
+        }
         pageVisitLoadAndCtaTrack('All Opportunity Page Visit')
         localStorage.removeItem('new_loggedin')
         timeTrackEvent('All Opportunity Page Loaded')
@@ -387,7 +389,7 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                 window.removeEventListener('scroll', handleScroll, true);
             }
         };
-    }, [isCompact])
+    }, [embedded, isCompact])
 
 
     const handleScrollTop = (e, isPc = false) => {
