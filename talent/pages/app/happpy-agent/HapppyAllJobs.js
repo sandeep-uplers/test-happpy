@@ -688,8 +688,8 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                                 isBookmarkedActive={filters.is_saved_filter}
                                 defaultJobPostedDate={DEFAULT_JOB_POSTED_DATE}
                                 filterLayout="drawer"
-                                toolbarHost={embedded && isCompact ? toolbarHost : null}
-                                toolbarMountInHost={embedded && isCompact}
+                                toolbarHost={embedded ? toolbarHost : null}
+                                toolbarMountInHost={embedded}
                                 toolbarMeta={
                                     jobsCount !== null
                                         ? `Showing ${formattedJobCount(jobsCount)} ${Object.keys(filters).length > 0 ? 'results' : 'jobs'}`
@@ -890,11 +890,11 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                             defaultJobPostedDate={DEFAULT_JOB_POSTED_DATE}
                             isPc={true}
                             filterLayout="drawer"
-                            toolbarHost={embedded && isCompact ? toolbarHost : null}
-                            toolbarMountInHost={embedded && isCompact}
+                            toolbarHost={embedded ? toolbarHost : null}
+                            toolbarMountInHost={embedded}
                             toolbarMeta={
                                 jobsCount !== null
-                                    ? `Showing ${formattedJobCount(jobsCount)} ${Object.keys(filters).length > 0 ? 'results' : 'jobs'}`
+                                    ? `Showing ${formattedJobCount(jobsCount)} ${Object.keys(filters).length > 1 ? 'results' : 'jobs'}`
                                     : null
                             }
                             toolbarMetaLoading={jobsCount === null}

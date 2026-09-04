@@ -10,16 +10,17 @@ import {
     API_GET_RECOMMENDED_EMAIL_JOBS_META,
     API_GET_RECOMMENDED_JOBS,
     API_SINGLE_OPP,
+    API_URL,
     APP_URL,
     IMAGE_URL,
     isAutoRunConsentOn,
 } from '../../../components/Constant';
 import { GET_API, POST_API, DELETE_API, renderTextWithLinks } from '../../../components/Helper';
 import { submitAutoRunRequest } from '../../../store/actions/UserActions';
+import { trackHappyAgentMixpanel } from '../../../store/actions/happyAgentTracking';
 import ReferralAgentPreviewModal from '../../../components/ReferralAgentPreviewModal';
 import PasteJobLinkDrawer from './configure-tabs/PasteJobLinkDrawer';
 import HapppyAllJobs from './HapppyAllJobs';
-import useHapppyCompactJobsLayout from './useHapppyCompactJobsLayout';
 import './HapppyRecommendedJobs.css';
 
 const PAGE_SIZE = 20;
@@ -34,6 +35,22 @@ const DEFAULT_DESCRIPTION_FALLBACK = 'Job description is not available for this 
 const DEFAULT_RECOMMENDED_JOBS_TAB = 'all-jobs';
 const VALID_RECOMMENDED_JOBS_TAB_IDS = ['all-jobs', 'recommended', 'gmail-scan'];
 
+const CHROME_EXTENSION_URL =
+    'https://chromewebstore.google.com/detail/job-referral-agent-uplers/mbajhdldnhgbgncakknckdpnjmhemgcn?hl=en';
+const EXTENSION_STORAGE_KEY = 'outreach_chrome_extension_downloaded';
+const EXTENSION_BANNER_ICON_SRC = '/images/talent/happpy-agent/extension-banner-icon.svg';
+const EXTENSION_BANNER_PLUS_SRC = '/images/talent/happpy-agent/extension-banner-plus.svg';
+
+const markExtensionEngagement = () => {
+    try {
+        localStorage.setItem(EXTENSION_STORAGE_KEY, 'true');
+    } catch {
+        /* private mode / quota — ignore */
+    }
+    POST_API(`${API_URL}talent/outreach/extension-engagement`, {
+        chrome_extension_download: true,
+    }).catch(() => {});
+};
 
 const GMAIL_CONSENT_PLATFORMS = ['LINKEDIN', 'NAUKRI', 'GLASSDOOR', 'INDEED'];
 
@@ -948,12 +965,10 @@ const HapppyRecommendedJobs = () => {
     const [inboxAsideDrawerOpen, setInboxAsideDrawerOpen] = useState(false);
     const matchFilterRef = useRef(null);
     const sourceFilterRef = useRef(null);
-    const isCompactAllJobsLayout = useHapppyCompactJobsLayout();
 
     const TABS = [
-        { id: 'all-jobs', label: 'All Jobs' },
-        // { id: 'recommended', label: 'Recommended Jobs' },
-        { id: 'gmail-scan', label: `Recommended${isCompactAllJobsLayout ? '' : ' Jobs'} from your Inbox` },
+        { id: 'all-jobs', label: 'All jobs' },
+        { id: 'gmail-scan', label: 'Recommended Job From Your Inbox' },
     ];
 
     useEffect(() => {
@@ -1382,12 +1397,6 @@ const HapppyRecommendedJobs = () => {
     const emailTotalPages = Math.max(1, Math.ceil(filteredEmailJobs.length / PAGE_SIZE));
     const isAllJobsTab = activeTab === 'all-jobs';
     const [allJobsToolbarHost, setAllJobsToolbarHost] = useState(null);
-
-    useEffect(() => {
-        if (!isAllJobsTab || !isCompactAllJobsLayout) {
-            setAllJobsToolbarHost(null);
-        }
-    }, [isAllJobsTab, isCompactAllJobsLayout]);
     const isGmailTab = activeTab === 'gmail-scan';
     const isGmailScanInProgress = isGmailTab
         && emailMeta?.has_consent
@@ -1445,16 +1454,15 @@ const HapppyRecommendedJobs = () => {
         'gmail-scan': emailMeta?.total_jobs ?? emailJobs.length,
     };
     const pageTitle = isAllJobsTab
-        ? 'All Jobs | Happpy Agent | Uplers'
+        ? 'Jobs | Happpy Agent | Uplers'
         : isGmailTab
             ? 'Recommended jobs from inbox | Happpy Agent | Uplers'
-            : 'Recommended jobs | Happpy Agent | Uplers';
+            : 'Jobs | Happpy Agent | Uplers';
 
     useEffect(() => {
         document.title = pageTitle;
     }, [pageTitle]);
 
-    const bentoLoading = dailyLimitLoading;
     const skeletonCards = useMemo(
         () => Array.from({ length: SKELETON_CARD_COUNT }, (_, idx) => idx),
         []
@@ -2247,8 +2255,6 @@ const HapppyRecommendedJobs = () => {
         ) : null
     );
 
-    const dailyLimitLabel = bentoLoading ? null : `${dailyLimit}/day`;
-
     const renderAutoRunNudge = () => {
         if (!autoRunHapppyLoaded || autoRunHapppy) return null;
 
@@ -2300,38 +2306,86 @@ const HapppyRecommendedJobs = () => {
         </nav>
     );
 
-    const renderPageHead = () => (
-        <header className="hra-rec__page-head">
-            <div className="hra-rec__page-intro">
-                <h1 className="hra-rec__page-title">Recommended Jobs</h1>
-            </div>
-            <div className="hra-rec__page-head-actions" aria-label="Referral limits and actions">
-                <div className="hra-rec__page-head-stats">
-                    {bentoLoading ? (
-                        <>
-                            <span className="hra-rec__skel hra-rec__skel--stat-pill" aria-hidden />
-                            <span className="hra-rec__skel hra-rec__skel--stat-pill" aria-hidden />
-                        </>
-                    ) : (
-                        <>
-                            <div className={`hra-rec__stat-pill ${dailyLimitReached ? 'limit-reached' : ''}`}>
-                                <span className="hra-rec__stat-pill-label">Daily limit of Referrals</span>
-                                <span className="hra-rec__stat-pill-value">{dailyLimitLabel}</span>
-                            </div>
-                            <QueueCapacityStatPill dailyLimit={dailyLimit} />
-                        </>
-                    )}
+    const handleExtensionBannerClick = useCallback(() => {
+        markExtensionEngagement();
+        trackHappyAgentMixpanel('agent_recommended_jobs_extension_banner_clicked').catch(() => {});
+    }, []);
+
+    const handleExtensionBannerPasteClick = useCallback(() => {
+        trackHappyAgentMixpanel('agent_recommended_jobs_paste_job_link_clicked').catch(() => {});
+        setPasteJobLinkOpen(true);
+    }, []);
+
+    const renderExtensionBanner = () => (
+        <aside className="hra-rec__extension-banner" aria-label="Install Happpy Chrome extension">
+            <div className="hra-rec__extension-banner-main">
+                <img
+                    src={EXTENSION_BANNER_ICON_SRC}
+                    alt=""
+                    className="hra-rec__extension-banner-icon"
+                    width={36}
+                    height={36}
+                    aria-hidden
+                />
+                <div className="hra-rec__extension-banner-copy">
+                    <p className="hra-rec__extension-banner-title">
+                        Can&apos;t find the job you want? Take HAPPPY to that job
+                    </p>
+                    <p className="hra-rec__extension-banner-desc">
+                        Install the extension to run the agent on your favourite job boards
+                        <span className="hra-rec__extension-banner-desc-em"> (LinkedIn, Indeed, Naukri).</span>
+                    </p>
                 </div>
+            </div>
+            <div className="hra-rec__extension-banner-actions">
+                <a
+                    href={CHROME_EXTENSION_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hra-rec__extension-banner-cta"
+                    onClick={handleExtensionBannerClick}
+                >
+                    GET CHROME EXTENSION
+                </a>
                 <button
                     type="button"
-                    className="hra-rec__paste-link"
-                    onClick={() => setPasteJobLinkOpen(true)}
+                    className="hra-rec__extension-banner-paste"
+                    onClick={handleExtensionBannerPasteClick}
                 >
-                    <MatIcon name="add" className="hra-rec__paste-link-icon" aria-hidden />
-                    <span className="hra-rec__paste-link-text">paste job link</span>
+                    <span>paste job link</span>
+                    <img
+                        src={EXTENSION_BANNER_PLUS_SRC}
+                        alt=""
+                        className="hra-rec__extension-banner-paste-icon"
+                        width={17}
+                        height={17}
+                        aria-hidden
+                    />
                 </button>
             </div>
-        </header>
+        </aside>
+    );
+
+    const renderAllJobsStickyHead = () => (
+        <div className="hra-rec__all-jobs-sticky-head">
+            <div className="hra-rec__tabs-toolbar-row">
+                {renderTabsNav()}
+                <div
+                    ref={setAllJobsToolbarHost}
+                    className="hra-rec__all-jobs-toolbar-host"
+                />
+            </div>
+        </div>
+    );
+
+    const renderPageHeader = () => (
+        <>
+            {renderExtensionBanner()}
+            <header className="hra-rec__page-header">
+                <h1 className="hra-rec__page-title">Jobs</h1>
+            </header>
+            {renderAllJobsStickyHead()}
+        </>
     );
 
     const renderSectionHead = () => {
@@ -2384,11 +2438,11 @@ const HapppyRecommendedJobs = () => {
     return (
         <>
             <div className="hra-rec">
-                {renderPageHead()}
+                {renderPageHeader()}
 
                 {/* <div className={`hra-rec__bento${isPaidPlan ? ' hra-rec__bento--single' : ''}`}>
 
-                     {!isPaidPlan && !bentoLoading ? ( 
+                     {!isPaidPlan && !dailyLimitLoading ? ( 
                         <section className="hra-rec__upgrade-card" aria-label="Upgrade plan">
                             <div className="hra-rec__upgrade-card-glow" aria-hidden />
                             <div className="hra-rec__upgrade-card-content">
@@ -2434,18 +2488,6 @@ const HapppyRecommendedJobs = () => {
                     </p>
                 ) : null}
 
-                {isAllJobsTab && isCompactAllJobsLayout ? (
-                    <div className="hra-rec__all-jobs-sticky-head">
-                        {renderTabsNav()}
-                        <div
-                            ref={setAllJobsToolbarHost}
-                            className="hra-rec__all-jobs-toolbar-host"
-                        />
-                    </div>
-                ) : (
-                    renderTabsNav()
-                )}
-
                 {renderAutoRunNudge()}
 
                 {!isAllJobsTab ? renderGmailConsent() : null}
@@ -2454,7 +2496,7 @@ const HapppyRecommendedJobs = () => {
                     <section className="hra-rec__jobs-card hra-rec__jobs-card--all-jobs" aria-busy={loading}>
                         <HapppyAllJobs
                             embedded
-                            toolbarHost={isCompactAllJobsLayout ? allJobsToolbarHost : null}
+                            toolbarHost={allJobsToolbarHost}
                         />
                     </section>
                 ) : isGmailTab && emailMeta?.has_consent ? (
