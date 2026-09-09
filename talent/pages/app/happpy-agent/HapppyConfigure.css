@@ -642,9 +642,6 @@
     gap: 24px;
     flex-wrap: wrap;
     position: relative;
-    /* Reserve vertical room below the cards row for the absolute tooltip/mascot
-       that hangs under the Gmail card. */
-    padding-bottom: 110px;
 
     @media (max-width: 960px) {
         .hc-ca-card{
@@ -668,8 +665,13 @@
     }
 }
 
+/* Only when Gmail is disconnected — reserve room for the tooltip/mascot below the card. */
+.hc-ca__cards--gmail-tooltip {
+    padding-bottom: 110px;
+}
+
 .hc-ca-linkedin-connected-notice {
-    margin: 0 0 24px;
+    margin: 0 0 24px !important;
 }
 
 /* ── Card ─────────────────────────────────────────────────────────────────── */
@@ -3243,6 +3245,9 @@
     .hc-ca__cards {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .hc-ca__cards--gmail-tooltip {
         padding-bottom: 0;
     }
 
