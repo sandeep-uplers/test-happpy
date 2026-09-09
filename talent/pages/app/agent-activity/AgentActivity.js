@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from '@/talent/navigation/routerCompat';
 import { GET_API } from '../../../components/Helper';
 import { API_URL, IMAGE_URL } from '../../../components/Constant';
@@ -10,6 +10,7 @@ import JobsInQueueTab from './tabs/JobsInQueueTab';
 import AllActivityTab from './tabs/AllActivityTab';
 import InterviewBoardTab from './tabs/InterviewBoardTab';
 import MascotRepliesIntro from './MascotRepliesIntro';
+import ActivityGlobalSearch from './ActivityGlobalSearch';
 import PasteJobLinkDrawer from '../happpy-agent/configure-tabs/PasteJobLinkDrawer';
 import './AgentActivity.css';
 
@@ -48,6 +49,8 @@ const TABS = [
 
 const VALID_TAB_IDS = TABS.map((t) => t.id);
 const DEFAULT_TAB = 'activity';
+const SEARCH_DEBOUNCE_MS = 350;
+const SEARCH_QUERY_KEY = 'q';
 
 /**
  * Full-page blank state when there's no referral activity and no other tab
@@ -123,6 +126,12 @@ const AgentActivity = () => {
     const [activityBlank, setActivityBlank] = useState(null);
     const hasTargetTab = useRef(null);
 
+    const urlSearchQuery = (searchParams.get(SEARCH_QUERY_KEY) || '').trim();
+    const [qInput, setQInput] = useState(urlSearchQuery);
+    const [searchQuery, setSearchQuery] = useState(urlSearchQuery);
+    /** Skip one URL→state sync after we write ?q= ourselves (avoids clobbering in-flight typing). */
+    const skipNextUrlSyncRef = useRef(false);
+
     const activeTab = useMemo(() => {
         const t = searchParams.get('tab');
         return VALID_TAB_IDS.includes(t) ? t : DEFAULT_TAB;
@@ -145,6 +154,47 @@ const AgentActivity = () => {
             setSearchParams(next, { replace: true });
         }
     }, [activeTab, searchParams, setSearchParams]);
+
+    /** Browser back/forward or external ?q= changes — keep input + active filter in sync. */
+    useEffect(() => {
+        if (skipNextUrlSyncRef.current) {
+            skipNextUrlSyncRef.current = false;
+            return;
+        }
+        setQInput(urlSearchQuery);
+        setSearchQuery(urlSearchQuery);
+    }, [urlSearchQuery]);
+
+    /** Debounced company/role search — typing updates `searchQuery` after a short pause. */
+    useEffect(() => {
+        const trimmed = qInput.trim();
+        const timer = window.setTimeout(() => {
+            setSearchQuery((prev) => (prev === trimmed ? prev : trimmed));
+        }, SEARCH_DEBOUNCE_MS);
+        return () => window.clearTimeout(timer);
+    }, [qInput]);
+
+    /** Mirror debounced search to ?q= so the view is shareable and survives refresh. */
+    useEffect(() => {
+        if (searchQuery === urlSearchQuery) return;
+        skipNextUrlSyncRef.current = true;
+        const next = new URLSearchParams(searchParams);
+        if (searchQuery) {
+            next.set(SEARCH_QUERY_KEY, searchQuery);
+        } else {
+            next.delete(SEARCH_QUERY_KEY);
+        }
+        setSearchParams(next, { replace: true });
+    }, [searchQuery, urlSearchQuery, searchParams, setSearchParams]);
+
+    const clearSearch = useCallback(() => {
+        skipNextUrlSyncRef.current = true;
+        setQInput('');
+        setSearchQuery('');
+        const next = new URLSearchParams(searchParams);
+        next.delete(SEARCH_QUERY_KEY);
+        setSearchParams(next, { replace: true });
+    }, [searchParams, setSearchParams]);
 
     /** Open paste-job drawer from ?add-job=1 / ?paste-job=1 or #add-job, then strip trigger from URL. */
     useEffect(() => {
@@ -215,12 +265,14 @@ const AgentActivity = () => {
         //   4) All Activity — handled by the existing DEFAULT_TAB fallback, so
         //      no navigate() is needed.
         if (!hasTargetTab.current) {
+            const qParam = (searchParams.get(SEARCH_QUERY_KEY) || '').trim();
+            const qSuffix = qParam ? `&${SEARCH_QUERY_KEY}=${encodeURIComponent(qParam)}` : '';
             if (counts?.pending_interview_feedback_count > 0) {
-                navigate('/talent/job-agent/my-activity?tab=interviews');
+                navigate(`/talent/job-agent/my-activity?tab=interviews${qSuffix}`);
             } else if (counts?.total_positive_replies > 0) {
-                navigate('/talent/job-agent/my-activity?tab=replies');
+                navigate(`/talent/job-agent/my-activity?tab=replies${qSuffix}`);
             } else if (counts?.reminder_count > 0) {
-                navigate('/talent/job-agent/my-activity?tab=reminders');
+                navigate(`/talent/job-agent/my-activity?tab=reminders${qSuffix}`);
             }
         }
     };
@@ -280,14 +332,22 @@ const AgentActivity = () => {
                         <>
                             <div className="aa-shell__header">
                                 <h1 className="aa-title">Job Referral Activity</h1>
+                                <div className="aa-shell__header-actions">
+                                    <ActivityGlobalSearch
+                                        value={qInput}
+                                        onChange={setQInput}
+                                        onClear={clearSearch}
+                                        isActive={Boolean(searchQuery)}
+                                    />
                                     <button
-                                    type="button"
-                                    className="jad-jobs__add-btn"
-                                    onClick={() => setPasteJobDrawerOpen(true)}
-                                >
-                                    <MatIcon name="add" className="jad-jobs__add-btn-icon" />
-                                    Paste Job Link
-                                </button>
+                                        type="button"
+                                        className="jad-jobs__add-btn"
+                                        onClick={() => setPasteJobDrawerOpen(true)}
+                                    >
+                                        <MatIcon name="add" className="jad-jobs__add-btn-icon" />
+                                        Paste Job Link
+                                    </button>
+                                </div>
                             </div>
 
                             <nav className="aa-tabs">
@@ -339,17 +399,17 @@ const AgentActivity = () => {
                             <div className="aa-panel">
                                 {activeTab === 'replies' && (
                                     <div role="tabpanel" id="aa-panel-replies" aria-labelledby="aa-tab-replies">
-                                        <RepliesTab />
+                                        <RepliesTab searchQuery={searchQuery} />
                                     </div>
                                 )}
                                 {activeTab === 'reminders' && (
                                     <div role="tabpanel" id="aa-panel-reminders" aria-labelledby="aa-tab-reminders">
-                                        <ReminderAlertsTab />
+                                        <ReminderAlertsTab searchQuery={searchQuery} />
                                     </div>
                                 )}
                                 {activeTab === 'jobs-in-queue' && (
                                     <div role="tabpanel" id="aa-panel-queue" aria-labelledby="aa-tab-queue">
-                                        <JobsInQueueTab maxLimit={tabCounts.max_limit} />
+                                        <JobsInQueueTab maxLimit={tabCounts.max_limit} searchQuery={searchQuery} />
                                     </div>
                                 )}
                                 {activeTab === 'activity' && (
@@ -357,12 +417,14 @@ const AgentActivity = () => {
                                         <AllActivityTab
                                             onActivityFetched={handleActivityFetched}
                                             onBlankStateChange={setActivityBlank}
+                                            searchQuery={searchQuery}
                                         />
                                     </div>
                                 )}
                                 {activeTab === 'interviews' && (
                                     <div role="tabpanel" id="aa-panel-interview" aria-labelledby="aa-tab-interview">
                                         <InterviewBoardTab
+                                            searchQuery={searchQuery}
                                             onCountsFetched={(interviewCount) =>
                                                 setTabCounts((prev) => ({ ...prev, interviews: interviewCount }))
                                             }

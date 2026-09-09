@@ -5,6 +5,7 @@ import { API_URL, IMAGE_URL } from '../../../../components/Constant';
 import jobsInQueueDummyData from './_jobsInQueueDummyData';
 import { LogoSVG } from '../../../../assets/Logo';
 import VerifyOutreachPerson from '../../linkedin/VerifyOutreachPerson';
+import matchesCompanyRoleSearch from '../matchesCompanyRoleSearch';
 
 /**
  * Jobs in Queue tab — table redesign of `PendingExternalJobsQueue`, matching
@@ -301,7 +302,7 @@ function MobileQueueCard({
     );
 }
 
-const JobsInQueueTab = ({ maxLimit }) => {
+const JobsInQueueTab = ({ maxLimit, searchQuery = '' }) => {
     const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -363,14 +364,25 @@ const JobsInQueueTab = ({ maxLimit }) => {
     /* ---------------- Filter + page ---------------- */
 
     const filteredRows = useMemo(() => {
-        if (!onlyManualPending) return rows;
-        return rows.filter((r) => Boolean(r.has_pending_action));
-    }, [rows, onlyManualPending]);
+        let list = rows;
+        if (onlyManualPending) {
+            list = list.filter((r) => Boolean(r.has_pending_action));
+        }
+        if (searchQuery) {
+            list = list.filter((r) =>
+                matchesCompanyRoleSearch(r, searchQuery, {
+                    companyKeys: ['title'],
+                    roleKeys: ['job_title'],
+                })
+            );
+        }
+        return list;
+    }, [rows, onlyManualPending, searchQuery]);
 
     /** Reset paging when the filtered set changes shape. */
     useEffect(() => {
         setPage(0);
-    }, [onlyManualPending, rows.length]);
+    }, [onlyManualPending, rows.length, searchQuery]);
 
     const totalPages = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
     const safePage = Math.min(page, totalPages - 1);

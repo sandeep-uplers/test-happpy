@@ -28,6 +28,21 @@
     flex-wrap: wrap;
 }
 
+.aa-shell__header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.aa-shell__search {
+    flex: 1 1 280px;
+    min-width: 200px;
+    max-width: 320px;
+}
+
 .aa-title {
     font-family: 'Rubik', sans-serif;
     font-weight: 800;
@@ -2707,6 +2722,125 @@ a.aa-replies__job-title--link:focus-visible {
 .aa-act__filters-spacer {
     flex: 1 1 auto;
     min-width: 16px;
+}
+
+/* Company / role search (mirrors JAD jobs search, aa-act tokens) -------- */
+
+.aa-act__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.aa-act__search-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1 1 280px;
+    min-width: 200px;
+    max-width: 360px;
+}
+
+.aa-act__search-wrap {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+}
+
+.aa-act__search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px !important;
+    color: #6b6b6b;
+    pointer-events: none;
+}
+
+.aa-act__search-input {
+    width: 100%;
+    height: 36px;
+    padding: 0 32px 0 36px;
+    border: 1px solid #c9c4b5;
+    border-radius: 8px;
+    background: #fafafa;
+    font-family: 'Rubik', sans-serif;
+    font-size: 12px;
+    color: #231f20;
+    letter-spacing: -0.1504px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.aa-act__search-input::placeholder {
+    color: #6b6b6b;
+}
+
+.aa-act__search-input:hover {
+    border-color: #8a8576;
+}
+
+.aa-act__search-input:focus {
+    outline: none;
+    border-color: #231f20;
+    box-shadow: 0 0 0 2px rgba(35, 31, 32, 0.12);
+    background: #ffffff;
+}
+
+/* Global header search — filter applied (?q= set) */
+.aa-act__search-group--active .aa-act__search-input {
+    border-color: #231f20;
+    border-width: 1px;
+    outline: 1px solid #231f20;
+    background: #fff;
+    box-shadow: none;
+}
+
+.aa-act__search-group--active .aa-act__search-input:focus {
+    background: #ffffff;
+    box-shadow: 0 0 0 2px rgba(35, 31, 32, 0.12);
+}
+
+.aa-act__search-group--active .aa-act__search-icon {
+    color: #231f20;
+}
+
+.aa-act__search-clear {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #6b6b6b;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.aa-act__search-clear:hover {
+    background: rgba(35, 31, 32, 0.06);
+    color: #231f20;
+}
+
+.aa-act__search-clear:focus-visible {
+    outline: 2px solid #231f20;
+    outline-offset: 1px;
+}
+
+.aa-act__search-clear-icon {
+    font-size: 18px !important;
 }
 
 .aa-act__filter {
@@ -6060,9 +6194,22 @@ jad-jobs__pill--success.orange-pill{
        text link (no pill) on mobile. */
     .aa-shell__header {
         gap: 12px;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         align-items: center;
         margin-bottom: 16px;
+    }
+
+    .aa-shell__header-actions {
+        flex: 1 1 100%;
+        flex-wrap: wrap;
+        justify-content: stretch;
+        gap: 10px;
+    }
+
+    .aa-shell__search {
+        flex: 1 1 100%;
+        min-width: 0;
+        max-width: none;
     }
 
     .aa-title {
