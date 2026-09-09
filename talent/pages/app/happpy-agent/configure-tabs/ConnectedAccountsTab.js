@@ -497,7 +497,11 @@ const ConnectedAccountsTab = () => {
             <p className="hc-tab-content__title">Your connected accounts</p>
 
             <div className="hc-ca">
-                <div className="hc-ca__cards">
+                <div
+                    className={`hc-ca__cards${
+                        !gmailConnected ? ' hc-ca__cards--gmail-tooltip' : ''
+                    }`}
+                >
                     {/* ────────── Gmail card ────────── */}
                     <div
                         className={`hc-ca-card hc-ca-card--gmail${
