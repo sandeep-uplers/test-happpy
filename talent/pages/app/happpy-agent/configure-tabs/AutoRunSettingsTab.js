@@ -24,7 +24,7 @@ const AutoRunSettingsTab = () => {
     const savedAutoRunHapppy = useSelector(
         (state) => !!state.happpyAgent.dashboardData?.auto_run_consent,
     );
-    const isLoading = useSelector((state) => state.happpyAgent.dailyLimitLoading);
+    const isLoading = useSelector((state) => !state.happpyAgent.dashboardPreferencesLoaded);
 
     const [autoRunHapppy, setAutoRunHapppy] = useState(savedAutoRunHapppy);
     const [isSaving, setIsSaving] = useState(false);

@@ -25,6 +25,7 @@ import MatchLoader from "../../pages/app/resume/payment/MatchLoader";
 import PromoTailorExtModal from "../../pages/app/resume/nudges/PromoTailorExtModal";
 import ReferralAgentModal from "../../components/ReferralAgentModal";
 import ReferralAgentPreviewModal from "../../components/ReferralAgentPreviewModal";
+import { runOutreachAgentFromPreviewConfirm } from "../../helpers/runOutreachAgentFromPreviewConfirm";
 
 
 const getTailoredPageCount = () => {
@@ -529,11 +530,24 @@ export default function ResumeDrawer({ step, setStep, stepsData, transformLoader
         setShowPreviewModal(true);
     }
 
-    const handleAfterPreviewModal = ({ linkedin_message_id, gmail_message_id } = {}) => {
+    const handleAfterPreviewModal = (
+        { linkedin_message_id, gmail_message_id } = {},
+        { linkedinConnected } = {},
+    ) => {
+        if (location.pathname.includes('/talent/job-agent') && linkedinConnected) {
+            return runOutreachAgentFromPreviewConfirm(dispatch, {
+                hrEncId: tailor_to_job_modal,
+                source: 'job-agent-tailor-resume',
+                payloadHtml,
+                linkedin_message_id,
+                gmail_message_id,
+            });
+        }
+
         setMessageTemplateIds({ linkedin_message_id, gmail_message_id });
         openReferralModal();
         setShowPreviewModal(false);
-    }
+    };
 
 
     const [isListeningForAccountConnected, setIsListeningForAccountConnected] = useState(false);

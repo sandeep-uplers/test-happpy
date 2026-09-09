@@ -488,12 +488,11 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
                        (skeleton sub-state when `bgResumeHealthCheckId`).
     ----------------------------------------------------------- */
 
-    const isUplersCv = !!user?.is_uplers_cv;
     const profileChecked = !!resumeHealthControl?.current_profile_cv_healthchecked;
 
     let variant = 'default';
-    if (hasScore && (profileChecked || isUplersCv)) variant = 'score';
-    else if (hasScore && !profileChecked && !isUplersCv) variant = 'updated';
+    if (hasScore && (profileChecked)) variant = 'score';
+    else if (hasScore && !profileChecked) variant = 'updated';
 
     const isSkeleton = variant === 'default' && !!bgResumeHealthCheckId;
 

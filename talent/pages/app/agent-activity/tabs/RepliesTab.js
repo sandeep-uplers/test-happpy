@@ -6,6 +6,7 @@ import { GET_API } from '../../../../components/Helper';
 import { API_URL } from '../../../../components/Constant';
 import repliesDummyData from './_repliesDummyData';
 import { markReplySeen } from '../../../../store/actions/UserActions';
+import matchesCompanyRoleSearch from '../matchesCompanyRoleSearch';
 
 /**
  * Replies tab — table-based redesign of the existing JobApplicationsReplies
@@ -598,6 +599,16 @@ function filterByReplyType(rows, replyTypeFilter) {
     });
 }
 
+function filterBySearch(rows, searchQuery) {
+    if (!searchQuery) return rows;
+    return rows.filter((job) =>
+        matchesCompanyRoleSearch(job, searchQuery, {
+            companyKeys: ['companyName'],
+            roleKeys: ['jobTitle'],
+        })
+    );
+}
+
 /** Mimic Laravel's paginator response shape so the UI stays generic. */
 function paginate(rows, page, perPage) {
     const total = rows.length;
@@ -616,7 +627,7 @@ function paginate(rows, page, perPage) {
     };
 }
 
-const RepliesTab = () => {
+const RepliesTab = ({ searchQuery = '' }) => {
     const [jobs, setJobs] = useState([]);
     const [pagination, setPagination] = useState({
         total: 0,
@@ -641,6 +652,10 @@ const RepliesTab = () => {
     const [expandedContactByJob, setExpandedContactByJob] = useState({});
 
     useEffect(() => {
+        setPage(1);
+    }, [searchQuery]);
+
+    useEffect(() => {
         let cancelled = false;
 
         const applyResult = (apiData) => {
@@ -661,7 +676,8 @@ const RepliesTab = () => {
             setError(null);
             const handle = setTimeout(() => {
                 if (cancelled) return;
-                const filtered = filterByReplyType(repliesDummyData, replyTypeFilter);
+                let filtered = filterByReplyType(repliesDummyData, replyTypeFilter);
+                filtered = filterBySearch(filtered, searchQuery);
                 applyResult(paginate(filtered, page, PAGE_SIZE));
                 setLoading(false);
             }, DUMMY_LATENCY_MS);
@@ -677,6 +693,9 @@ const RepliesTab = () => {
                 params.set('per_page', String(PAGE_SIZE));
                 if (replyTypeFilter && replyTypeFilter !== 'all') {
                     params.set('reply_type', replyTypeFilter);
+                }
+                if (searchQuery) {
+                    params.set('q', searchQuery);
                 }
                 const response = await GET_API(
                     `${API_URL}talent/outreach/get-outreach-agent?${params.toString()}`
@@ -708,7 +727,7 @@ const RepliesTab = () => {
         return () => {
             cancelled = true;
         };
-    }, [page, replyTypeFilter]);
+    }, [page, replyTypeFilter, searchQuery]);
 
     const totalPages = pagination.last_page || 1;
     const isEmpty = !loading && jobs.length === 0;

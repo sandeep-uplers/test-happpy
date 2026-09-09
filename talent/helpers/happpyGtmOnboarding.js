@@ -146,6 +146,11 @@ export function resolveHapppyGtmStep(status, { desktop = isDesktopPc() } = {}) {
     return "done";
 }
 
+export function getHapppyGtmStepOrder({ accountsFirst = false, desktop = isDesktopPc() } = {}) {
+    const base = accountsFirst ? ["gmail", "prefs", "extension"] : HAPPPY_GTM_STEPS;
+    return desktop ? base : base.filter((step) => step !== "extension");
+}
+
 export function getLinearNextHapppyGtmStep(fromStep, { desktop = isDesktopPc() } = {}) {
     if (fromStep === "prefs") return "gmail";
     if (fromStep === "gmail") return desktop ? "extension" : "done";

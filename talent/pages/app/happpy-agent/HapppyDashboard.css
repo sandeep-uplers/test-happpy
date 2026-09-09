@@ -103,61 +103,28 @@
     }
 
     .happpy-dash__hero-limit .job-agent-dashboard__daily-limit {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        grid-template-rows: auto auto;
         min-width: 0;
         max-width: 100%;
-        column-gap: 0.5rem;
-        row-gap: 0.3125rem;
-    }
-
-    /* Flatten head so label / count can sit on separate grid rows. */
-    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-head {
-        display: contents;
     }
 
     .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-label {
-        grid-column: 1 / -1;
-        grid-row: 1;
         font-size: 0.625rem;
         line-height: 1.25;
         text-align: right;
         white-space: normal;
     }
 
+    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-track-row {
+        gap: 0.5rem;
+    }
+
     .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-count {
-        grid-column: 2;
-        grid-row: 2;
-        align-self: center;
         font-size: 0.625rem;
         white-space: nowrap;
     }
 
-    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-bar {
-        grid-column: 1;
-        grid-row: 2;
-        align-self: center;
+    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-segment {
         height: 6px;
-        min-width: 0;
-    }
-
-    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-skel--label {
-        grid-column: 1 / -1;
-        grid-row: 1;
-    }
-
-    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-skel--count {
-        grid-column: 2;
-        grid-row: 2;
-        align-self: center;
-    }
-
-    .happpy-dash__hero-limit .job-agent-dashboard__daily-limit-skel--bar {
-        grid-column: 1;
-        grid-row: 2;
-        align-self: center;
-        min-width: 0;
     }
 }
 

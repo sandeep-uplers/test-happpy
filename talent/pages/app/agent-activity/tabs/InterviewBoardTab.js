@@ -4,6 +4,7 @@ import {
     useJobAgentInterviewList,
 } from '../../job-agent/useJobAgentInterviewList';
 import InterviewEmailScanConsentPanel from './InterviewEmailScanConsentPanel';
+import matchesCompanyRoleSearch from '../matchesCompanyRoleSearch';
 import './InterviewBoardTab.css';
 
 /**
@@ -384,7 +385,7 @@ function SkeletonCard({ variant }) {
     );
 }
 
-const InterviewBoardTab = ({ onCountsFetched }) => {
+const InterviewBoardTab = ({ searchQuery = '', onCountsFetched }) => {
     const {
         companies,
         loading,
@@ -396,10 +397,20 @@ const InterviewBoardTab = ({ onCountsFetched }) => {
 
     const [mobileTab, setMobileTab] = useState('pending');
 
+    const filteredCompanies = useMemo(() => {
+        if (!searchQuery) return companies;
+        return companies.filter((company) =>
+            matchesCompanyRoleSearch(company, searchQuery, {
+                companyKeys: ['company_name'],
+                roleKeys: ['job_title'],
+            })
+        );
+    }, [companies, searchQuery]);
+
     const { pending, secured } = useMemo(() => {
         const p = [];
         const s = [];
-        companies.forEach((company) => {
+        filteredCompanies.forEach((company) => {
             if (company.feedback === 'yes') {
                 s.push(company);
             } else {
@@ -407,7 +418,7 @@ const InterviewBoardTab = ({ onCountsFetched }) => {
             }
         });
         return { pending: p, secured: s };
-    }, [companies]);
+    }, [filteredCompanies]);
 
     /**
      * Lift the total count up to AgentActivity so the tab badge can render

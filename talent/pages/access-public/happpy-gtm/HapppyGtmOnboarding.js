@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Modal from "react-modal";
 import { OUTREACH_JOURNEY_KEY_ONBOARDING_POP_OPENED } from "../../../components/Constant";
 import {
@@ -10,7 +10,7 @@ import {
 import { trackHappyAgentMixpanel } from "../../../store/actions/happyAgentTracking";
 import {
     applyHapppyGtmStepCompletion,
-    getLinearNextHapppyGtmStep,
+    getHapppyGtmStepOrder,
     HAPPPY_GTM_DISABLE_AUTO_SKIP,
     isDesktopPc,
     resolveHapppyGtmStep,
@@ -43,20 +43,28 @@ export default function HapppyGtmOnboarding({
     isOpen,
     onClose,
     initialStep = "prefs",
+    accountsFirst = false,
     onboardingStatus,
     onStatusChange,
     onFinish,
 }) {
+    const stepOrder = useMemo(
+        () => getHapppyGtmStepOrder({ accountsFirst, desktop: isDesktopPc() }),
+        [accountsFirst]
+    );
     const [currentStep, setCurrentStep] = useState(initialStep);
+    const currentStepIndex = stepOrder.indexOf(currentStep);
 
     useEffect(() => {
         if (!isOpen) return;
-        setCurrentStep(initialStep || "prefs");
-    }, [isOpen, initialStep]);
+        setCurrentStep(initialStep || stepOrder[0] || "prefs");
+    }, [isOpen, initialStep, stepOrder]);
 
     useEffect(() => {
         if (!isOpen) return;
-        setOnboardingActivityUrlParam(ONBOARDING_URL_PARAM.CREATE_PROFILE);
+        setOnboardingActivityUrlParam(
+            accountsFirst ? ONBOARDING_URL_PARAM.CONNECT_ACCOUNTS : ONBOARDING_URL_PARAM.CREATE_PROFILE
+        );
         trackHapppyGtmOutreachJourney(OUTREACH_JOURNEY_KEY_ONBOARDING_POP_OPENED);
         trackHappyAgentMixpanel("agent_onb_popup_opened").catch(() => {});
         trackHapppyGtm("happpy_gtm_drawer_opened", { step: initialStep || "prefs" });
@@ -92,7 +100,9 @@ export default function HapppyGtmOnboarding({
         }
 
         if (HAPPPY_GTM_DISABLE_AUTO_SKIP) {
-            applyResolvedStep(getLinearNextHapppyGtmStep(fromStep, { desktop: isDesktopPc() }));
+            const idx = stepOrder.indexOf(fromStep);
+            const next = idx >= 0 && idx + 1 < stepOrder.length ? stepOrder[idx + 1] : "done";
+            applyResolvedStep(next);
             return;
         }
 
@@ -104,12 +114,8 @@ export default function HapppyGtmOnboarding({
             from_step: AGENT_ONB_STEP_KEY[currentStep] || currentStep,
         }).catch(() => {});
 
-        if (currentStep === "extension") {
-            setCurrentStep("gmail");
-            return;
-        }
-        if (currentStep === "gmail") {
-            setCurrentStep("prefs");
+        if (currentStepIndex > 0) {
+            setCurrentStep(stepOrder[currentStepIndex - 1]);
         }
     };
 
@@ -122,6 +128,8 @@ export default function HapppyGtmOnboarding({
         if (typeof onClose === "function") onClose();
     };
 
+    const showBack = currentStepIndex > 0;
+
     const renderStep = () => {
         switch (currentStep) {
             case "gmail":
@@ -129,19 +137,22 @@ export default function HapppyGtmOnboarding({
                     <HapppyGtmGmailStep
                         gmailConnected={!!onboardingStatus?.gmail_connected}
                         onAdvance={() => goToNextFrom("gmail")}
-                        onBack={goToPrevStep}
+                        onBack={showBack ? goToPrevStep : undefined}
                     />
                 );
             case "prefs":
                 return (
-                    <HapppyGtmPreferencesStep onAdvance={() => goToNextFrom("prefs")} />
+                    <HapppyGtmPreferencesStep
+                        onAdvance={() => goToNextFrom("prefs")}
+                        onBack={showBack ? goToPrevStep : undefined}
+                    />
                 );
             case "extension":
                 return (
                     <HapppyGtmExtensionStep
                         extensionDownloaded={!!onboardingStatus?.extension_downloaded}
                         onAdvance={() => goToNextFrom("extension")}
-                        onBack={goToPrevStep}
+                        onBack={showBack ? goToPrevStep : undefined}
                     />
                 );
             default:

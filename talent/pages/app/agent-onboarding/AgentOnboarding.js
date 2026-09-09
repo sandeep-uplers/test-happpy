@@ -8,11 +8,17 @@ import { useRouter } from 'next/navigation';
 import { GET_API } from '../../../components/Helper';
 import { API_GET_OUTREACH_STEP } from '../../../components/Constant';
 import { trackHappyAgentMixpanel } from '../../../store/actions/happyAgentTracking';
-import { setOnboardingTemplatePending } from '../../../helpers/happyAgentPublicSignupSession';
+import {
+    clearPublicAuthPath,
+    getPublicAuthPath,
+    isPublicEmailAuthPath,
+    setOnboardingTemplatePending,
+} from '../../../helpers/happyAgentPublicSignupSession';
 import {
     ONBOARDING_URL_PARAM,
     setOnboardingActivityUrlParam,
 } from '../../../helpers/onboardingUrlParams';
+import { isDesktopPc } from '../../../helpers/happpyGtmOnboarding';
 import Step1AccountConnection from './Step1AccountConnection';
 import Step2ProfileCreation from './Step2ProfileCreation';
 import Step3ExtensionInstall from './Step3ExtensionInstall';
@@ -45,7 +51,14 @@ if (typeof document !== 'undefined' && document.getElementById('happpy-root')) {
  *                          signup handoff so the template drawer can open after
  *                          onboarding exits.
  */
-const STEPS = ['profile', 'accounts', 'extension', 'mode'];
+const STEPS_PROFILE_FIRST = ['profile', 'accounts', 'extension', 'mode'];
+const STEPS_ACCOUNTS_FIRST = ['accounts', 'profile', 'extension', 'mode'];
+
+/** Extension install is desktop-only (same gate as Happpy GTM onboarding). */
+const getActiveSteps = (accountsFirst = false) => {
+    const base = accountsFirst ? STEPS_ACCOUNTS_FIRST : STEPS_PROFILE_FIRST;
+    return isDesktopPc() ? base : base.filter((step) => step !== 'extension');
+};
 
 const STEP_COMPLETED_URL_PARAM = {
     accounts: ONBOARDING_URL_PARAM.ACCOUNT_LINKED,
@@ -67,6 +80,9 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
      *  pricing branch instead of the current linear step; the user returns to
      *  Step 4 via the back arrow OR auto-returns on payment success. */
     const [showUpgrade, setShowUpgrade] = useState(false);
+    const [accountsFirst, setAccountsFirst] = useState(false);
+    const steps = getActiveSteps(accountsFirst);
+    const activeStepKey = steps[currentStep];
 
     /** Pull the outreach checklist so steps can drive their CTA enabled state. */
     const fetchOutreachStep = useCallback(() => {
@@ -91,20 +107,26 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
     /** Refetch the checklist whenever the drawer is (re)opened so we never show stale state. */
     useEffect(() => {
         if (!isOpen) return;
+        const authPath = getPublicAuthPath();
+        const emailAuth = isPublicEmailAuthPath(authPath);
+        setAccountsFirst(emailAuth);
+        clearPublicAuthPath();
         setCurrentStep(0);
         setShowUpgrade(false);
         fetchOutreachStep();
         trackHappyAgentMixpanel('agent_onb_popup_opened').catch(() => {});
-        setOnboardingActivityUrlParam(ONBOARDING_URL_PARAM.CREATE_PROFILE);
+        setOnboardingActivityUrlParam(
+            emailAuth ? ONBOARDING_URL_PARAM.CONNECT_ACCOUNTS : ONBOARDING_URL_PARAM.CREATE_PROFILE
+        );
         let newPath= {
             url: "/talent/referral-create-profile",
         }
         pageActivityTracker(newPath)(dispatch)
-    }, [isOpen, fetchOutreachStep]);
+    }, [isOpen, fetchOutreachStep, dispatch]);
 
     const openUpgrade = () => {
         trackHappyAgentMixpanel('agent_onb_upgrade_opened', {
-            from_step: STEPS[currentStep],
+            from_step: activeStepKey,
         }).catch(() => {});
         setShowUpgrade(true);
     };
@@ -135,7 +157,7 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
         }
         if (!completed) {
             trackHappyAgentMixpanel('agent_onb_drawer_closed', {
-                step: STEPS[currentStep],
+                step: activeStepKey,
                 redirected_to_dashboard: wouldRedirectToDashboard && typeof onExit !== 'function',
             }).catch(() => {});
         }
@@ -154,14 +176,14 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
     };
 
     const goToNextStep = () => {
-        const completedParam = STEP_COMPLETED_URL_PARAM[STEPS[currentStep]];
+        const completedParam = STEP_COMPLETED_URL_PARAM[activeStepKey];
         if (completedParam) {
             setOnboardingActivityUrlParam(completedParam);
         }
         trackHappyAgentMixpanel('agent_onb_next_step', {
-            from_step: STEPS[currentStep],
+            from_step: activeStepKey,
         }).catch(() => {});
-        if (currentStep + 1 >= STEPS.length) {
+        if (currentStep + 1 >= steps.length) {
             finishExit(true);
             return;
         }
@@ -170,14 +192,14 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
 
     const goToPrevStep = () => {
         trackHappyAgentMixpanel('agent_onb_prev_step', {
-            from_step: STEPS[currentStep],
+            from_step: activeStepKey,
         }).catch(() => {});
 
         setCurrentStep((s) => Math.max(0, s - 1));
     };
 
     const renderStep = () => {
-        switch (STEPS[currentStep]) {
+        switch (activeStepKey) {
             case 'profile':
                 return (
                     <Step2ProfileCreation
@@ -194,6 +216,7 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
                         onRefresh={fetchOutreachStep}
                         onAdvance={goToNextStep}
                         onBack={goToPrevStep}
+                        showBack={currentStep > 0}
                     />
                 );
             case 'extension':

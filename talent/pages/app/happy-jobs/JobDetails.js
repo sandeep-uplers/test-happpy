@@ -37,6 +37,7 @@ import JobDetailsResumePromo from "../resume/nudges/JobDetailsResumePromo";
 import ReferralAgentResumeModal from "../../../components/ReferralAgentResumeModal";
 import SkipTailorOptionModal, { useSkipTailorOptionPromise } from "../../../components/SkipTailorOptionModal";
 import ReferralAgentPreviewModal from "../../../components/ReferralAgentPreviewModal";
+import { runOutreachAgentFromPreviewConfirm } from "../../../helpers/runOutreachAgentFromPreviewConfirm";
 
 export default function JobDetails({
     data, allOpportunity, setAllOpportunity, setActiveJob, bookmarkCount, setBookmarkCount,
@@ -406,11 +407,24 @@ export default function JobDetails({
         });
     }
     const [showPreviewModal, setShowPreviewModal] = useState(false);
-    const handleAfterPreviewModal = ({ linkedin_message_id, gmail_message_id } = {}) => {
+    const handleAfterPreviewModal = (
+        { linkedin_message_id, gmail_message_id } = {},
+        { linkedinConnected } = {},
+    ) => {
+        if (linkedinConnected) {
+            return runOutreachAgentFromPreviewConfirm(dispatch, {
+                hrEncId: data.enc_id,
+                source: 'job-agent-all-jobs',
+                payloadHtml,
+                linkedin_message_id,
+                gmail_message_id,
+            });
+        }
+
         setMessageTemplateIds({ linkedin_message_id, gmail_message_id });
         openReferralModal();
         setShowPreviewModal(false);
-    }
+    };
 
 
     return (

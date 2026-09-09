@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { API_JOB_AGENT_MISSED_REPLY_FOLLOWUPS, IMAGE_URL } from '../../../../components/Constant';
 import { GET_API } from '../../../../components/Helper';
+import matchesCompanyRoleSearch from '../matchesCompanyRoleSearch';
 
 /**
  * Reminder Alerts tab — table redesign of the original
@@ -322,7 +323,7 @@ function MobileReminderCard({ row, onViewThread }) {
     );
 }
 
-const ReminderAlertsTab = () => {
+const ReminderAlertsTab = ({ searchQuery = '' }) => {
     const [days, setDays] = useState(DEFAULT_DAYS);
     const [rows, setRows] = useState([]);
     const [count, setCount] = useState(0);
@@ -374,10 +375,20 @@ const ReminderAlertsTab = () => {
         };
     }, [days]);
 
-    /** Reset paging when the look-back window changes. */
+    /** Reset paging when the look-back window or search changes. */
     useEffect(() => {
         setPage(0);
-    }, [days]);
+    }, [days, searchQuery]);
+
+    const filteredRows = useMemo(() => {
+        if (!searchQuery) return rows;
+        return rows.filter((row) =>
+            matchesCompanyRoleSearch(row, searchQuery, {
+                companyKeys: ['company_name'],
+                roleKeys: ['job_title'],
+            })
+        );
+    }, [rows, searchQuery]);
 
     /** Modal: trap focus + restore on close, lock body scroll. */
     useEffect(() => {
@@ -398,15 +409,15 @@ const ReminderAlertsTab = () => {
         };
     }, [messageModal, closeModal]);
 
-    const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+    const totalPages = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
     const safePage = Math.min(page, totalPages - 1);
     const visibleRows = useMemo(() => {
         const start = safePage * PAGE_SIZE;
-        return rows.slice(start, start + PAGE_SIZE);
-    }, [rows, safePage]);
+        return filteredRows.slice(start, start + PAGE_SIZE);
+    }, [filteredRows, safePage]);
 
-    const total = count || rows.length;
-    const isEmpty = !loading && rows.length === 0;
+    const total = searchQuery ? filteredRows.length : (count || rows.length);
+    const isEmpty = !loading && filteredRows.length === 0;
     const rangeLabel = useMemo(
         () => LOOKBACK_OPTIONS.find((o) => o.value === days)?.label || `Last ${days} Days`,
         [days]
@@ -752,7 +763,7 @@ const ReminderAlertsTab = () => {
                     </button>
                     <span className="aa-pager__info">
                         Page {safePage + 1} of {totalPages}
-                        {rows.length > 0 ? ` · ${rows.length} reminders` : ''}
+                        {filteredRows.length > 0 ? ` · ${filteredRows.length} reminders` : ''}
                     </span>
                     <button
                         type="button"

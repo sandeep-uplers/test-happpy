@@ -1427,7 +1427,7 @@ const DateRangeTrigger = React.forwardRef(function DateRangeTrigger(
 const PENDING_DRAWER_QUERY_KEY = 'pendingManualReview';
 const PENDING_DRAWER_OPEN_VALUES = new Set(['1', 'true', 'yes', 'open']);
 
-const AllActivityTab = ({ onActivityFetched, onBlankStateChange }) => {
+const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChange }) => {
     const dispatch = useDispatch();
     const [searchParams, setSearchParams] = useSearchParams();
     const pendingDrawerHandledRef = useRef(false);
@@ -1589,8 +1589,16 @@ const AllActivityTab = ({ onActivityFetched, onBlankStateChange }) => {
                 return true;
             });
         }
+        if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            list = list.filter((r) => {
+                const company = String(r.company_name || '').toLowerCase();
+                const role = String(r.job_title || '').toLowerCase();
+                return company.includes(q) || role.includes(q);
+            });
+        }
         return list;
-    }, [allRows, runByFilter, tailorFilter, statusFilter, dateFrom, dateTo]);
+    }, [allRows, runByFilter, tailorFilter, statusFilter, dateFrom, dateTo, searchQuery]);
 
     const fetchData = useCallback(async () => {
         if (USE_DUMMY_DATA) {
@@ -1612,6 +1620,7 @@ const AllActivityTab = ({ onActivityFetched, onBlankStateChange }) => {
             if (statusFilter !== 'all') params.set('status', statusFilter);
             if (dateFrom) params.set('date_from', dateFrom);
             if (dateTo) params.set('date_to', dateTo);
+            if (searchQuery) params.set('q', searchQuery);
             const res = await GET_API(`${API_JOB_AGENT_AGENT_TAILOR_ACTIVITY}?${params.toString()}`);
             const data = unwrapApiData(res);
             if (!data || !Array.isArray(data.list)) {
@@ -1632,7 +1641,7 @@ const AllActivityTab = ({ onActivityFetched, onBlankStateChange }) => {
         } finally {
             setLoading(false);
         }
-    }, [page, runByFilter, tailorFilter, statusFilter, dateFrom, dateTo, refreshKey]);
+    }, [page, runByFilter, tailorFilter, statusFilter, dateFrom, dateTo, searchQuery, refreshKey]);
 
     useEffect(() => {
         fetchData();
@@ -1649,7 +1658,7 @@ const AllActivityTab = ({ onActivityFetched, onBlankStateChange }) => {
     /** Reset paging whenever a filter changes. */
     useEffect(() => {
         setPage(1);
-    }, [runByFilter, tailorFilter, statusFilter, dateFrom, dateTo]);
+    }, [runByFilter, tailorFilter, statusFilter, dateFrom, dateTo, searchQuery]);
 
     /* ---- Reached-people fetch on expand ---- */
 
@@ -1839,7 +1848,8 @@ const AllActivityTab = ({ onActivityFetched, onBlankStateChange }) => {
         tailorFilter !== 'all' ||
         statusFilter !== 'all' ||
         Boolean(dateFrom) ||
-        Boolean(dateTo);
+        Boolean(dateTo) ||
+        Boolean(searchQuery);
     const isEmpty = !loading && rows.length === 0;
     const isBlankState = isEmpty && !hasActiveFilters;
     const isFilteredEmpty = isEmpty && hasActiveFilters;

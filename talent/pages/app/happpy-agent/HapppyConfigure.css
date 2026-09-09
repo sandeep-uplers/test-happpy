@@ -427,6 +427,122 @@
     line-height: normal;
 }
 
+/* ── LinkedIn template pending notice (banner + post-connect popup) ─────────── */
+.hc-li-template-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #eef9f7;
+    border: 1px solid rgba(8, 109, 126, 0.18);
+    border-radius: 8px;
+}
+
+.hc-li-template-notice--banner {
+    max-width: 720px;
+}
+
+.hc-li-template-notice--popup {
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+.hc-li-template-notice svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.hc-li-template-notice__content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.hc-li-template-notice__title {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #086d7e;
+}
+
+.hc-li-template-notice__body {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #231f20;
+}
+
+.hc-li-template-notice__link {
+    align-self: flex-start;
+    margin-top: 2px;
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 12px;
+    font-weight: 600;
+    color: #086d7e;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+}
+
+.hc-li-template-notice__link:hover {
+    color: #065a68;
+}
+
+.hc-li-template-popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10060;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(35, 31, 32, 0.45);
+}
+
+.hc-li-template-popup {
+    width: min(100%, 420px);
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(35, 31, 32, 0.18);
+}
+
+.hc-li-template-popup__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.hc-li-template-popup__btn {
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: normal;
+    cursor: pointer;
+    border: none;
+}
+
+.hc-li-template-popup__btn--secondary {
+    background: #f5f4f0;
+    color: #231f20;
+}
+
+.hc-li-template-popup__btn--primary {
+    background: #231f20;
+    color: #ffffff;
+}
+
+.hc-li-template-popup__btn--primary:hover {
+    opacity: 0.92;
+}
+
 /* ── Footer (save button) — sits below the card ───────────────────────────── */
 .hc-footer {
     display: flex;
@@ -550,6 +666,10 @@
             align-items: flex-end;
         }
     }
+}
+
+.hc-ca-linkedin-connected-notice {
+    margin: 0 0 24px;
 }
 
 /* ── Card ─────────────────────────────────────────────────────────────────── */

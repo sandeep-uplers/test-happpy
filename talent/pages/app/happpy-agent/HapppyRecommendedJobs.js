@@ -905,7 +905,7 @@ const HapppyRecommendedJobs = () => {
     const referralPlan = useSelector((state) => state.happpyAgent);
     const dailyUsed = referralPlan.dailyUsed;
     const dailyLimit = referralPlan.dailyLimit;
-    const dailyLimitLoading = referralPlan.dailyLimitLoading;
+    const dailyLimitLoading = referralPlan.dailyReferralRunsLoading;
     const isPaidPlan = Number(referralPlan.plan) === 2 && !referralPlan.has_plan_expired;
 
     const autoRunHapppyLoaded = referralPlan.dashboardPreferencesLoaded;
@@ -1295,6 +1295,7 @@ const HapppyRecommendedJobs = () => {
             const message = err?.response?.data?.message || 'Failed to add job to Happpy Agent queue.';
             setError(message);
             showToast('error', message);
+            throw err;
         } finally {
             setQueueingJobId(null);
         }
@@ -1311,13 +1312,10 @@ const HapppyRecommendedJobs = () => {
 
     const confirmRunAgentFromPreview = useCallback((messageTemplateIds = {}) => {
         if (previewJob?.id == null) {
-            setPreviewJob(null);
-            return;
+            return Promise.resolve();
         }
-        const job = previewJob;
-        setPreviewJob(null);
-        onAddToQueue(job, messageTemplateIds);
-    }, [previewJob]);
+        return onAddToQueue(previewJob, messageTemplateIds);
+    }, [previewJob, onAddToQueue]);
 
     const openJobDescription = async (job) => {
         setJobModal({
