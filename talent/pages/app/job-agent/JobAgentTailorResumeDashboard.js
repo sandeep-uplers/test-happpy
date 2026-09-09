@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import {
     API_TAILOR_RESUME_JOB_DESCRIPTION,
     API_TAILOR_RESUME_LIST,
     API_TAILOR_RESUME_PREVIEW,
+    API_TAILOR_RESUME_PROGRESS,
     APP_URL,
 } from '@/talent/components/Constant';
 import { GET_API, POST_API } from '@/talent/components/Helper';
@@ -54,6 +55,109 @@ function getResumeCardTitle(rItem) {
     return 'Resume uploaded by you';
 }
 
+const RESUME_PROGRESS_STEP_MESSAGES = [
+    'Upload received — queuing your resume…',
+    'Reading document structure…',
+    'Scanning page layout…',
+    'Detecting sections and headings…',
+    'Extracting your name and contact info…',
+    'Parsing work experience entries…',
+    'Identifying job titles and companies…',
+    'Reading employment dates…',
+    'Extracting education history…',
+    'Parsing degree and institution details…',
+    'Scanning skills and keywords…',
+    'Identifying technical competencies…',
+    'Reading certifications and licenses…',
+    'Extracting project descriptions…',
+    'Parsing achievements and metrics…',
+    'Analyzing career progression…',
+    'Building structured profile data…',
+    'Normalizing date formats…',
+    'Resolving location information…',
+    'Mapping skills to our taxonomy…',
+    'Validating parsed content…',
+    'Cross-checking section completeness…',
+    'Enhancing readability formatting…',
+    'Optimizing for search indexing…',
+    'Preparing resume preview…',
+    'Generating thumbnail preview…',
+    'Syncing with your talent profile…',
+    'Updating profile resume reference…',
+    'Running quality checks…',
+    'Almost there — finalizing your resume…',
+    'Wrapping up — just a moment longer…',
+    'Putting finishing touches on your profile resume…',
+    'Verifying extracted work history…',
+    'Aligning experience with profile fields…',
+    'Indexing skills for job matching…',
+    'Refreshing your base resume entry…',
+    'Saving structured resume data…',
+    'Confirming profile sync status…',
+    'Completing final validation pass…',
+    'Your profile resume is nearly ready…',
+];
+
+const RESUME_PROGRESS_POLL_MS = 20000;
+const RESUME_PROGRESS_STEP_MS = 6000;
+
+function useResumeProgressStepText(active) {
+    const [stepIndex, setStepIndex] = useState(0);
+
+    useEffect(() => {
+        if (!active) {
+            setStepIndex(0);
+            return undefined;
+        }
+
+        const intervalId = setInterval(() => {
+            setStepIndex((prev) => Math.min(prev + 1, RESUME_PROGRESS_STEP_MESSAGES.length - 1));
+        }, RESUME_PROGRESS_STEP_MS);
+
+        return () => clearInterval(intervalId);
+    }, [active]);
+
+    return RESUME_PROGRESS_STEP_MESSAGES[stepIndex];
+}
+
+function ResumeProgressLoadingRow({ stepText }) {
+    return (
+        <div className="jad-trd-progress-row" role="status" aria-live="polite" aria-busy="true">
+            <div className="jad-trd-progress-row__file">
+                <span className="jad-trd-base__icon" aria-hidden>
+                    📄
+                </span>
+                <span className="resume-name">Uploading your latest resume</span>
+            </div>
+            <div className="jad-trd-progress-row__main">
+                <p className="jad-trd-progress-row__step">{stepText}</p>
+                <div className="jad-trd-progress-row__bar" aria-hidden="true">
+                    <div className="jad-trd-progress-row__bar-fill" />
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function ResumeProgressLoadingCard({ stepText }) {
+    return (
+        <article className="jad-trd-card jad-trd-progress-card" role="status" aria-live="polite" aria-busy="true">
+            <header className="jad-trd-progress-card__head">
+                <span className="jad-trd-base__icon" aria-hidden>
+                    📄
+                </span>
+                <h3 className="jad-trd-progress-card__title">Uploading your latest resume</h3>
+            </header>
+            <div className="jad-trd-progress-card__body">
+                <p className="jad-trd-progress-row__step">{stepText}</p>
+                <div className="jad-trd-progress-row__bar" aria-hidden="true">
+                    <div className="jad-trd-progress-row__bar-fill" />
+                </div>
+            </div>
+        </article>
+    );
+}
+
 const JobAgentTailorResumeDashboard = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -70,6 +174,47 @@ const JobAgentTailorResumeDashboard = () => {
     const [showJDViewModal, setShowJDViewModal] = useState(false);
     const [jobDescriptionData, setJobDescriptionData] = useState(null);
     const [showPlanExpiredBanner, setShowPlanExpiredBanner] = useState(false);
+    const [resumeInProgress, setResumeInProgress] = useState(false);
+    const pageRef = useRef(0);
+    const resumeProgressStepText = useResumeProgressStepText(resumeInProgress && page === 0);
+
+    const fetchTailoredResumeListSilently = useCallback(() => {
+        GET_API(API_TAILOR_RESUME_LIST)
+            .then((res) => {
+                const data = res?.data?.data;
+                if (!data || pageRef.current !== 0) {
+                    return;
+                }
+                setResumeData(data);
+                setResumesList(data?.resumes_list?.slice(0, 10));
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
+
+    const fetchResumeProgress = useCallback(
+        (options = {}) => {
+            const { silentListRefresh = false } = options;
+
+            return GET_API(API_TAILOR_RESUME_PROGRESS)
+                .then((res) => {
+                    const inProgress = res?.data?.data?.in_progress === 'yes';
+                    setResumeInProgress(inProgress);
+
+                    if (!inProgress && silentListRefresh && pageRef.current === 0) {
+                        fetchTailoredResumeListSilently();
+                    }
+
+                    return inProgress;
+                })
+                .catch((err) => {
+                    console.log(err);
+                    return false;
+                });
+        },
+        [fetchTailoredResumeListSilently]
+    );
 
     const fetchTailoredResumeList = useCallback(() => {
         setIsLoading(true);
@@ -80,6 +225,7 @@ const JobAgentTailorResumeDashboard = () => {
                     setResumeData(data);
                     setResumesList(data?.resumes_list?.slice(0, 10));
                     setPage(0);
+                    pageRef.current = 0;
                 }
             })
             .catch((err) => {
@@ -121,8 +267,21 @@ const JobAgentTailorResumeDashboard = () => {
 
         if (is_tailored_paid) {
             fetchTailoredResumeList();
+            fetchResumeProgress();
         }
-    }, [dispatch, fetchTailoredResumeList, is_tailored_paid, searchParams, user?.outreach?.is_outreach_paid, user?.outreach?.outreach_plan_validity]);
+    }, [dispatch, fetchResumeProgress, fetchTailoredResumeList, is_tailored_paid, searchParams, user?.outreach?.is_outreach_paid, user?.outreach?.outreach_plan_validity]);
+
+    useEffect(() => {
+        if (!resumeInProgress) {
+            return undefined;
+        }
+
+        const intervalId = setInterval(() => {
+            fetchResumeProgress({ silentListRefresh: true });
+        }, RESUME_PROGRESS_POLL_MS);
+
+        return () => clearInterval(intervalId);
+    }, [resumeInProgress, fetchResumeProgress]);
 
     const handleOpenResumeEditor = (hr_enc_id, externalJD = false) => {
         dispatch({
@@ -165,12 +324,15 @@ const JobAgentTailorResumeDashboard = () => {
 
     const handlePageChange = (selectedPage) => {
         setPage(selectedPage.selected);
+        pageRef.current = selectedPage.selected;
         const resumesArr = resumeData?.resumes_list?.slice(
             selectedPage.selected * 10,
             (selectedPage.selected + 1) * 10
         );
         setResumesList(resumesArr);
     };
+
+    const showResumeProgressRow = resumeInProgress && page === 0;
 
     const handleViewJobDescription = (rItem) => {
         setIsLoading(true);
@@ -261,6 +423,7 @@ const JobAgentTailorResumeDashboard = () => {
                         <div className="tdr-col last-modified-at-col">Last Modified</div>
                         <div className="tdr-col action-col">Action</div>
                     </div>
+                    {showResumeProgressRow && <ResumeProgressLoadingRow stepText={resumeProgressStepText} />}
                     {resumesList?.length > 0 &&
                         resumesList?.map((rItem, index) => {
                             const isTailored = rItem?.list_type == 'tailored';
@@ -353,6 +516,7 @@ const JobAgentTailorResumeDashboard = () => {
                         })}
 
                     <div className="jad-trd-card-list">
+                        {showResumeProgressRow && <ResumeProgressLoadingCard stepText={resumeProgressStepText} />}
                         {resumesList?.length > 0 &&
                             resumesList.map((rItem, index) => {
                                 const isTailored = rItem?.list_type == 'tailored';

@@ -320,6 +320,7 @@ export const API_TAILOR_RESUME_UPDATE_TAILOR_RESUME = API_URL + "talent/outreach
 export const API_REFERRAL_AGENT_UPDATE_EXTERNAL_JOB = API_URL + "talent/referral-agent/update-external-job";
 export const API_TAILOR_RESUME_UPLOAD_V2 = LRR_API_URL + "talent/tailor/upload";
 export const API_TAILOR_RESUME_LIST = API_URL + "talent/tailor/list";
+export const API_TAILOR_RESUME_PROGRESS = API_URL + "talent/tailor/resume-progress";
 export const API_TAILOR_RESUME_CREATE_ORDER = API_URL + "talent/tailor/order/create";
 export const API_TAILOR_RESUME_CAPTURE_ORDER_V2 = LRR_API_URL + "talent/tailor/order/capture";
 export const API_TAILOR_RESUME_REFUND_REQUEST = API_URL + "talent/tailor/refund-request";
