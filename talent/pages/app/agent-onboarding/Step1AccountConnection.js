@@ -29,6 +29,7 @@ import {
     OUTREACH_JOURNEY_KEY_LINKEDIN_CLICKED,
 } from '../../../components/Constant';
 import GmailPrivacyFallbackPopup from '../../../components/GmailPrivacyFallbackPopup';
+import LinkedinPasswordSecurityNote from '../../../components/LinkedinPasswordSecurityNote';
 import {
     getPublicReferralCode,
     isPublicSignupPending,
@@ -1090,6 +1091,7 @@ const Step1AccountConnection = ({
                                 {errors.password && (
                                     <span className="agent-onb-li-form__error">{errors.password}</span>
                                 )}
+                                <LinkedinPasswordSecurityNote />
                             </div>
                             <div className="agent-onb-li-form__actions">
                                 <button
