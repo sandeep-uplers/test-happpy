@@ -29,6 +29,7 @@ import SkipTailorOptionModal, { useSkipTailorOptionPromise } from "../../../comp
 import JobDetailsResumePromo from "../resume/nudges/JobDetailsResumePromo";
 import ReferralAgentResumeModal from "../../../components/ReferralAgentResumeModal";
 import ReferralAgentPreviewModal from "../../../components/ReferralAgentPreviewModal";
+import { runOutreachAgentFromPreviewConfirm } from "../../../helpers/runOutreachAgentFromPreviewConfirm";
 
 const HAPPPY_ALL_JOBS_PATH = '/talent/job-agent/recommended-jobs?tab=all-jobs';
 
@@ -139,11 +140,24 @@ export default function HapppySingleOppMobile({
     }
 
     const [showPreviewModal, setShowPreviewModal] = useState(false);
-    const handleAfterPreviewModal = ({ linkedin_message_id, gmail_message_id } = {}) => {
+    const handleAfterPreviewModal = (
+        { linkedin_message_id, gmail_message_id } = {},
+        { linkedinConnected } = {},
+    ) => {
+        if (linkedinConnected) {
+            return runOutreachAgentFromPreviewConfirm(dispatch, {
+                hrEncId: data.enc_id,
+                source: 'job-agent-single-opp-mobile',
+                payloadHtml: referralPayloadHtml,
+                linkedin_message_id,
+                gmail_message_id,
+            });
+        }
+
         setMessageTemplateIds({ linkedin_message_id, gmail_message_id });
         openReferralModal();
         setShowPreviewModal(false);
-    }
+    };
     return (
         <>
             {(Object.keys(data).length > 0) &&

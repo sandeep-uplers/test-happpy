@@ -183,15 +183,13 @@ const PasteJobLinkDrawer = ({ open, onClose }) => {
             const msg = err?.response?.data?.message || err?.message || 'Failed to add job link';
             setErrorMessage(msg);
             toast.error(msg, { duration: 5000 });
+            throw err;
         } finally {
             setSubmitting(false);
         }
     };
 
-    const handlePreviewConfirm = (messageTemplateIds = {}) => {
-        setPreviewOpen(false);
-        submitJobLinks(messageTemplateIds);
-    };
+    const handlePreviewConfirm = (messageTemplateIds = {}) => submitJobLinks(messageTemplateIds);
 
     if (!open || typeof document === 'undefined') return null;
 

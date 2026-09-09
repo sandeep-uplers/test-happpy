@@ -979,11 +979,9 @@ const HapppyDashboard = () => {
 
     const confirmRunAgent = useCallback(async ({ linkedin_message_id, gmail_message_id } = {}) => {
         if (previewJob?.id == null) {
-            setPreviewJob(null);
             return;
         }
         const jobId = previewJob.id;
-        setPreviewJob(null);
         setQueueingJobId(jobId);
         try {
             const payload = {
@@ -994,8 +992,8 @@ const HapppyDashboard = () => {
             if (gmail_message_id) payload.gmail_message_id = gmail_message_id;
             await dispatch(submitAutoRunRequest(payload));
             setQueuedJobIds((prev) => ({ ...prev, [jobId]: true }));
-        } catch {
-            /* keep button enabled so the user can retry */
+        } catch (err) {
+            throw err;
         } finally {
             setQueueingJobId(null);
         }

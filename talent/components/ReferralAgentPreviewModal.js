@@ -17,6 +17,7 @@ import { getOutreachAgentPreviewConfig } from "../store/actions/resumeActions";
 import TemplateEditor from "../pages/app/linkedin/TemplateEditor";
 import { GmailIcon } from "../assets/IconSVG";
 import TrialFeedbackModal from "./TrialFeedbackModal";
+import AgentRunSuccessModal from "./AgentRunSuccessModal";
 import "../pages/app/agent-onboarding/AgentOnboarding.css";
 
 ensureModalAppElement();
@@ -877,6 +878,7 @@ export default function ReferralAgentPreviewModal({
     const [skipPreview, setSkipPreview] = useState(false);
     const [outreachAgentPreviewConfig, setOutreachAgentPreviewConfig] = useState(null);
     const [showSubscribeModal, setShowSubscribeModal] = useState(null);
+    const [showRunSuccessModal, setShowRunSuccessModal] = useState(false);
     const [allProcessed, setAllProcessed] = useState(false);
     const [rewritingProvider, setRewritingProvider] = useState(null);
     const [confirmLoading, setConfirmLoading] = useState(false);
@@ -905,6 +907,7 @@ export default function ReferralAgentPreviewModal({
     }, []);
 
     const { downloadTailorResume } = useSelector(state => state.loader);
+    const dailyLimit = useSelector((state) => state.happpyAgent?.dailyLimit) || 0;
     const downloadLoading = downloadTailorResume;
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -981,15 +984,26 @@ export default function ReferralAgentPreviewModal({
                 }
             }
 
-            const result = (onConfirm || onClose)(messageTemplateIds);
+            const linkedinConnected = !!outreachAgentPreviewConfig?.linkedin_connected;
+            const result = (onConfirm || onClose)(messageTemplateIds, { linkedinConnected });
             if (result && typeof result.then === "function") {
                 await result;
+                if (linkedinConnected) {
+                    setShowRunSuccessModal(true);
+                } else if (typeof onClose === "function") {
+                    onClose();
+                }
             }
         } catch (err) {
             console.log(err);
         } finally {
             setConfirmLoading(false);
         }
+    };
+
+    const handleRunSuccessDismiss = () => {
+        setShowRunSuccessModal(false);
+        onClose();
     };
 
     const handleReviewTemplate = () => {
@@ -1117,15 +1131,16 @@ export default function ReferralAgentPreviewModal({
             if (outreachAgentPreviewConfig) {
                 checkEligibility(outreachAgentPreviewConfig, true);
             }
-        } else {
+        } else if (!showRunSuccessModal) {
             setAllProcessed(false);
             setDrawerStep("preview");
             setSetupSaving(false);
             setConfirmLoading(false);
+            setShowRunSuccessModal(false);
         }
-    }, [isOpen, outreachAgentPreviewConfig]);
+    }, [isOpen, outreachAgentPreviewConfig, showRunSuccessModal]);
 
-    const previewVisible = isOpen && showSubscribeModal !== true;
+    const previewVisible = isOpen && showSubscribeModal !== true && !showRunSuccessModal;
     const showPreviewLoading = previewConfigLoading || !outreachAgentPreviewConfig || confirmLoading;
 
     useEffect(() => {
@@ -1368,6 +1383,8 @@ export default function ReferralAgentPreviewModal({
     const jobLabel = (outreachAgentPreviewConfig?.hr?.job_title || "").trim();
     const gmailConnected = !!outreachAgentPreviewConfig?.gmail_connected;
     const linkedinConnected = !!outreachAgentPreviewConfig?.linkedin_connected;
+    const previewPlan = outreachAgentPreviewConfig?.plan;
+    const isFreeTrialPlan = !!previewPlan && !previewPlan.paid && !previewPlan.expired;
     const showAccountsRequiredLede = !gmailConnected && !linkedinConnected;
     const resumeFilename = selectedResume === "tailored"
         ? "Tailored Resume"
@@ -1395,6 +1412,13 @@ export default function ReferralAgentPreviewModal({
                     onClose={handleSubscribeModalClose}
                 />
             )}
+            <AgentRunSuccessModal
+                open={showRunSuccessModal}
+                linkedinConnected={linkedinConnected}
+                dailyLimit={dailyLimit}
+                isFreeTrial={isFreeTrialPlan}
+                onClose={handleRunSuccessDismiss}
+            />
             {previewVisible && typeof document !== "undefined" && createPortal(
                 <div
                     className="rap-preview-drawer"
