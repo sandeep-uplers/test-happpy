@@ -86,7 +86,11 @@ import {
     API_GET_OUTREACH_TEMPLATES,
     API_GET_OUTREACH_STEP,
     API_GET_OUTREACH_DASHBOARD_DATA,
+    API_DAILY_REFERRAL_RUNS,
     API_GET_RECOMMENDED_JOBS,
+    API_REFERRAL_AGENT_JOB_APPLY_BY_LINK,
+    AUTO_RUN_CONSENT_GIVEN,
+    AUTO_RUN_CONSENT_REMOVED,
     API_STORE_RECOMMENDED_JOBS,
     API_COMPANY_SALARY_FEEDBACK,
     API_OUTREACH_SUPPORT,
@@ -131,11 +135,15 @@ import {
 import { format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import {
-    countFromAutoRunResponse,
-    countFromReferralLinksBatchResponse,
-    HAPPPY_AGENT_DASHBOARD_CACHE_KEY,
-    HAPPPY_AGENT_DAILY_RUN_RECORDED_EVENT,
-} from '../../helpers/happpyAgentDailyLimit';
+    broadcastHapppyAgentDailyLimitSync,
+    clearHapppyAgentDailyLimitSync,
+} from '../../helpers/happpyAgentDailyLimitSync';
+import {
+    parseDailyLimitFromDashboardResponse,
+    parseDailyReferralRunsResponse,
+    shouldRefreshDailyLimitAfterAutoRun,
+} from '../../helpers/happpyAgentDailyLimitLogic';
+import { HAPPPY_AGENT_DASHBOARD_CACHE_KEY } from '../../helpers/happpyAgentDailyLimit';
 import { resumeHealthReportViewedTracking, resumeTemplateSelectedTracking, setRegisterId, trackAllCtaClickV2, updateMixpanelUserDetails } from '../../helpers/Mixpanel';
 import toast from 'react-hot-toast';
 
@@ -3079,10 +3087,12 @@ export const startOutreachAgent = (payload) => (dispatch) => {
         POST_API(API_OUTREACH_AGENT, payload)
             .then((res) => {
                 if (res?.data?.status === 'success') {
-                    dispatch(incrementHapppyAgentDailyUsed());
+                    return refreshDailyLimitAfterRun(dispatch, { broadcast: true }).then(() => res);
                 }
-                resolve(res);
+                return res;
             })
+            .then(resolve)
+            .catch(reject)
             .finally(() =>
                 dispatch({ type: SET_LOADER, payload: false })
             )
@@ -3164,6 +3174,11 @@ function clearHapppyAgentDashboardCache() {
     } catch {
         /* ignore */
     }
+}
+
+/** Remove deprecated dashboard localStorage cache (API-only sync since 2026). */
+function clearLegacyHapppyAgentDashboardCache() {
+    clearHapppyAgentDashboardCache();
 }
 
 function persistHapppyAgentConnections(d) {
@@ -3252,69 +3267,46 @@ export const fetchHapppyAgentPlan = ({ silent = false, force = false } = {}) => 
 
 export const resetHapppyAgentPlan = () => ({ type: HAPPPY_AGENT_RESET });
 
+/** Bumps on each fetch so stale in-flight responses cannot overwrite newer quota. */
+let happpyAgentDailyLimitFetchGeneration = 0;
+let dailyReferralRunsFetchGeneration = 0;
+
 /**
  * Fetch get-outreach-dashboard-data into the happpyAgent slice.
  *
- * Always stores the full API payload on `dashboardData`. Also hydrates the daily
- * run quota (`dailyUsed` / `dailyLimit`) for the topnav / mobile drawer widget
- * unless `{ skip: true }` (used when the outreach sidenav is locked).
+ * Stores dashboard stats on `dashboardData` only. Widget quota comes from
+ * `fetchDailyReferralRuns()` (daily-referral-runs endpoint).
+ *
+ * @param {boolean} silent When true, skip loading flags on cross-tab / visibility refresh.
  */
-export const fetchHapppyAgentDailyLimit = ({ skip = false } = {}) => (dispatch, getState) => {
-    const { happpyAgent } = getState();
-    const hasCachedDashboard = !!happpyAgent?.dashboardData;
-
-    if (!skip) {
-        dispatch({
-            type: HAPPPY_AGENT_DAILY_LIMIT_SET,
-            payload: {
-                dailyLimitLoading: !hasCachedDashboard,
-                dailyUsed: happpyAgent?.dailyUsed ?? 0,
-                dailyLimit: happpyAgent?.dailyLimit ?? 0,
-            },
-        });
-    }
+export const fetchHapppyAgentDailyLimit = ({ skip = false, broadcast = false, silent = false } = {}) => (dispatch) => {
+    const generation = ++happpyAgentDailyLimitFetchGeneration;
+    clearLegacyHapppyAgentDashboardCache();
 
     return GET_API(API_GET_OUTREACH_DASHBOARD_DATA)
         .then((res) => {
-            const payload = res?.data?.data || {};
-            const serverUsed = Number(payload.today_agent_runs) || 0;
-            const serverLimit = Number(payload.max_limit) || 0;
-            const currentUsed = Number(getState().happpyAgent?.dailyUsed) || 0;
-            /** Keep optimistic bumps until the server catches up (tab refetch / slow writes). */
-            const mergedUsed = skip ? currentUsed : Math.max(serverUsed, currentUsed);
-            const mergedDashboard = {
-                ...payload,
-                today_agent_runs: mergedUsed,
-            };
-            persistHapppyAgentDashboardData(mergedDashboard);
+            if (generation !== happpyAgentDailyLimitFetchGeneration) return res;
+
+            const parsed = parseDailyLimitFromDashboardResponse(res);
             dispatch({
                 type: HAPPPY_AGENT_DAILY_LIMIT_SET,
                 payload: {
-                    dailyLimitLoading: false,
-                    dashboardData: mergedDashboard,
-                    ...(skip
-                        ? {}
-                        : {
-                              dailyUsed: mergedUsed,
-                              dailyLimit: serverLimit,
-                          }),
-                    agentPrefFieldsSubmitted: !!payload.agent_pref_fields_submitted,
+                    dashboardData: parsed.dashboardData,
+                    agentPrefFieldsSubmitted: parsed.agentPrefFieldsSubmitted,
                     dashboardPreferencesLoaded: true,
                 },
             });
+            if (broadcast) {
+                broadcastHapppyAgentDailyLimitSync();
+            }
+            return res;
         })
         .catch(() => {
-            const current = getState().happpyAgent;
+            if (generation !== happpyAgentDailyLimitFetchGeneration) return;
+
             dispatch({
                 type: HAPPPY_AGENT_DAILY_LIMIT_SET,
                 payload: {
-                    dailyLimitLoading: false,
-                    ...(skip
-                        ? {}
-                        : {
-                              dailyUsed: current?.dailyUsed ?? 0,
-                              dailyLimit: current?.dailyLimit ?? 0,
-                          }),
                     dashboardPreferencesLoaded: true,
                 },
             });
@@ -3322,81 +3314,94 @@ export const fetchHapppyAgentDailyLimit = ({ skip = false } = {}) => (dispatch, 
 };
 
 /**
- * Optimistically bump today's run count after a successful agent submission.
- * Updates `dailyUsed`, `dashboardData.today_agent_runs`, and the localStorage cache
- * so every Job Agent page and tab reads the same Redux value in real time.
+ * Fetch daily-referral-runs — widget bar counts + info popover breakdown.
+ *
+ * @param {boolean} silent When true, skip the loading skeleton (cross-tab / visibility refresh).
  */
-export const incrementHapppyAgentDailyUsed = (count = 1) => (dispatch, getState) => {
-    const incrementBy = Math.max(0, Number(count) || 0);
-    if (incrementBy <= 0) return;
-
-    const { happpyAgent } = getState();
-    const nextUsed = (Number(happpyAgent?.dailyUsed) || 0) + incrementBy;
-    const currentDashboard =
-        happpyAgent?.dashboardData && typeof happpyAgent.dashboardData === 'object'
-            ? happpyAgent.dashboardData
-            : {};
-    const nextDashboard = {
-        ...currentDashboard,
-        today_agent_runs: nextUsed,
-    };
-
-    persistHapppyAgentDashboardData(nextDashboard);
-    dispatch({
-        type: HAPPPY_AGENT_DAILY_LIMIT_SET,
-        payload: {
-            dailyUsed: nextUsed,
-            dashboardData: nextDashboard,
-        },
-    });
-
-    if (typeof window !== 'undefined') {
-        window.dispatchEvent(
-            new CustomEvent(HAPPPY_AGENT_DAILY_RUN_RECORDED_EVENT, {
-                detail: { count: incrementBy, dailyUsed: nextUsed },
-            })
-        );
-    }
-};
-
-/** Apply dashboard cache written by another browser tab (storage event). */
-export const syncHapppyAgentDailyLimitFromStorage = () => (dispatch) => {
-    if (typeof window === 'undefined') return;
-    try {
-        const raw = window.localStorage.getItem(HAPPPY_AGENT_DASHBOARD_CACHE_KEY);
-        if (!raw) return;
-        const data = JSON.parse(raw);
-        if (!data || typeof data !== 'object') return;
+export const fetchDailyReferralRuns = ({ broadcast = false, silent = false } = {}) => (dispatch) => {
+    const generation = ++dailyReferralRunsFetchGeneration;
+    if (!silent) {
         dispatch({
             type: HAPPPY_AGENT_DAILY_LIMIT_SET,
-            payload: {
-                dailyUsed: Number(data.today_agent_runs) || 0,
-                dailyLimit: Number(data.max_limit) || 0,
-                dashboardData: data,
-                dailyLimitLoading: false,
-            },
+            payload: { dailyReferralRunsLoading: true },
         });
-    } catch {
-        /* ignore parse / quota errors */
     }
+
+    return GET_API(API_DAILY_REFERRAL_RUNS)
+        .then((res) => {
+            if (generation !== dailyReferralRunsFetchGeneration) return res;
+
+            const parsed = parseDailyReferralRunsResponse(res);
+            dispatch({
+                type: HAPPPY_AGENT_DAILY_LIMIT_SET,
+                payload: {
+                    dailyReferralRunsLoading: false,
+                    dailyUsed: parsed.dailyUsed,
+                    dailyLimit: parsed.dailyLimit,
+                    dailyReferralCompletedCount: parsed.completedCount,
+                    dailyReferralFailedCount: parsed.failedCount,
+                    dailyReferralPendingCount: parsed.pendingCount,
+                    dailyReferralRuns: parsed.dailyReferralRuns,
+                },
+            });
+            if (broadcast) {
+                broadcastHapppyAgentDailyLimitSync();
+            }
+            return res;
+        })
+        .catch(() => {
+            if (generation !== dailyReferralRunsFetchGeneration) return;
+
+            dispatch({
+                type: HAPPPY_AGENT_DAILY_LIMIT_SET,
+                payload: {
+                    dailyReferralRunsLoading: false,
+                },
+            });
+        });
 };
 
-/** POST talent/outreach/auto-run-request and record today's run count on success. */
+/** Refresh daily quota after a successful run; never fail the run if the GET errors. */
+function refreshDailyLimitAfterRun(dispatch, { broadcast = true } = {}) {
+    return Promise.all([
+        dispatch(fetchHapppyAgentDailyLimit({ broadcast })).catch(() => {}),
+        dispatch(fetchDailyReferralRuns({ broadcast })).catch(() => {}),
+    ]);
+}
+
+/** Other tabs: storage ping received — re-fetch quota from the API (no cached counts). */
+export const syncHapppyAgentDailyLimitFromOtherTab = () => (dispatch) =>
+    Promise.all([
+        dispatch(fetchHapppyAgentDailyLimit({ silent: true })),
+        dispatch(fetchDailyReferralRuns({ silent: true })),
+    ]);
+
+/** POST talent/referral-agent/job-apply-by-link then optionally refresh daily quota from the API. */
+export const submitReferralJobApplyByLink =
+    (payload, { broadcast = true, refresh = true } = {}) =>
+    (dispatch) =>
+        POST_API(API_REFERRAL_AGENT_JOB_APPLY_BY_LINK, payload).then((res) => {
+            if (res?.data?.status === 'success' && refresh) {
+                return refreshDailyLimitAfterRun(dispatch, { broadcast }).then(() => res);
+            }
+            return res;
+        });
+
+/** POST talent/outreach/auto-run-request then refresh daily quota from the API. */
 export const submitAutoRunRequest = (payload) => (dispatch) =>
     POST_API(API_AUTO_RUN_REQUEST, payload).then((res) => {
-        const count = countFromAutoRunResponse(res);
-        if (count > 0) {
-            dispatch(incrementHapppyAgentDailyUsed(count));
+        if (shouldRefreshDailyLimitAfterAutoRun(res)) {
+            return refreshDailyLimitAfterRun(dispatch, { broadcast: true }).then(() => res);
         }
         return res;
     });
 
-/** POST referral-agent/job-apply-by-links-batch and record queued runs on success. */
+/** POST referral-agent/job-apply-by-links-batch then refresh daily quota from the API. */
 export const submitReferralJobApplyByLinksBatch = (payload) => (dispatch) =>
     POST_API(API_REFERRAL_AGENT_JOB_APPLY_BY_LINKS_BATCH, payload).then((res) => {
-        const count = countFromReferralLinksBatchResponse(res);
-        if (count > 0) {
-            dispatch(incrementHapppyAgentDailyUsed(count));
+        const data = res?.data?.data;
+        if (res?.data?.status === 'success' && !data?.sync_only) {
+            return refreshDailyLimitAfterRun(dispatch, { broadcast: true }).then(() => res);
         }
         return res;
     });

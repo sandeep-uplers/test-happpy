@@ -17,9 +17,8 @@ import {
  * current-plan section. Hydrated from API_GET_OUTREACH_STEP via the
  * fetchHapppyAgentPlan thunk; refreshed (silent + force) after a successful
  * Razorpay payment so every subscriber re-renders without a hard reload.
- * Daily run quota (`dailyUsed` / `dailyLimit`) and full dashboard stats (`dashboardData`)
- * are hydrated from get-outreach-dashboard-data; dailyUsed is incremented optimistically
- * after a successful agent run.
+ * Daily run quota (`dailyUsed` / `dailyLimit`) and popover breakdown are loaded from
+ * daily-referral-runs via API; dashboard stats from get-outreach-dashboard-data.
  */
 const JOB_AGENT_OUTREACH_STEP_CACHE_KEY = 'job_agent_outreach_step_cache';
 const HAPPPY_AGENT_DASHBOARD_CACHE_KEY = 'happpy_agent_dashboard_data_cache';
@@ -84,10 +83,15 @@ const initialState = {
     linkedin_connected: cached?.linkedin_connected ?? false,
     /** Full outreach-step payload kept around for pages that need fields beyond plan (status, step2, outreach_mode, etc.). */
     raw: null,
-    /** Daily referral run quota — hydrated from get-outreach-dashboard-data; incremented on successful agent runs. */
-    dailyLimitLoading: !cachedDashboard,
-    dailyUsed: Number(cachedDashboard?.today_agent_runs) || 0,
-    dailyLimit: Number(cachedDashboard?.max_limit) || 0,
+    /** Daily referral run quota — from daily-referral-runs via API refresh. */
+    dailyReferralRunsLoading: true,
+    dailyReferralRuns: null,
+    dailyReferralCompletedCount: 0,
+    dailyReferralFailedCount: 0,
+    dailyReferralPendingCount: 0,
+    dailyLimitLoading: true,
+    dailyUsed: 0,
+    dailyLimit: 0,
     /** Preference completeness from get-outreach-dashboard-data — drives sidenav profile badge. */
     agentPrefFieldsSubmitted: cachedDashboard
         ? !!cachedDashboard.agent_pref_fields_submitted
@@ -149,6 +153,26 @@ export default function happpyAgentReducer(state = initialState, action) {
         case HAPPPY_AGENT_DAILY_LIMIT_SET:
             return {
                 ...state,
+                dailyReferralRunsLoading:
+                    action.payload?.dailyReferralRunsLoading !== undefined
+                        ? action.payload.dailyReferralRunsLoading
+                        : state.dailyReferralRunsLoading,
+                dailyReferralRuns:
+                    action.payload?.dailyReferralRuns !== undefined
+                        ? action.payload.dailyReferralRuns
+                        : state.dailyReferralRuns,
+                dailyReferralCompletedCount:
+                    action.payload?.dailyReferralCompletedCount !== undefined
+                        ? Number(action.payload.dailyReferralCompletedCount) || 0
+                        : state.dailyReferralCompletedCount,
+                dailyReferralFailedCount:
+                    action.payload?.dailyReferralFailedCount !== undefined
+                        ? Number(action.payload.dailyReferralFailedCount) || 0
+                        : state.dailyReferralFailedCount,
+                dailyReferralPendingCount:
+                    action.payload?.dailyReferralPendingCount !== undefined
+                        ? Number(action.payload.dailyReferralPendingCount) || 0
+                        : state.dailyReferralPendingCount,
                 dailyLimitLoading:
                     action.payload?.dailyLimitLoading !== undefined
                         ? action.payload.dailyLimitLoading

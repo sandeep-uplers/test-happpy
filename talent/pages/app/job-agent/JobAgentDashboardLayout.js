@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useLocation, useNavigate } from '@/talent/navigation/routerCompat';
 import { differenceInMonths } from 'date-fns';
 import { identityReset } from '../../../helpers/Mixpanel';
-import { fetchHapppyAgentPlan, logoutUser, fetchHapppyAgentDailyLimit, syncHapppyAgentDailyLimitFromStorage } from '../../../store/actions/UserActions';
-import { HAPPPY_AGENT_DASHBOARD_CACHE_KEY } from '../../../helpers/happpyAgentDailyLimit';
+import { fetchHapppyAgentPlan, logoutUser, fetchHapppyAgentDailyLimit, fetchDailyReferralRuns, syncHapppyAgentDailyLimitFromOtherTab } from '../../../store/actions/UserActions';
+import { HAPPPY_AGENT_DAILY_LIMIT_SYNC_KEY } from '../../../helpers/happpyAgentDailyLimitSync';
 import { API_JOB_AGENT_MISSED_REPLY_FOLLOWUPS_PENDING } from '../../../components/Constant';
 import { GET_API } from '../../../components/Helper';
 import HapppyAgentLogo from '../../../components/common/HapppyAgentLogo';
@@ -473,6 +473,10 @@ function ReferralAgentTopnavCluster({
     dailyLimitLoading,
     dailyUsed,
     dailyLimit,
+    completedCount,
+    failedCount,
+    pendingCount,
+    breakdown,
 }) {
     if (referralPlan.planLoading) return null;
 
@@ -485,6 +489,10 @@ function ReferralAgentTopnavCluster({
                 loading={dailyLimitLoading}
                 used={dailyUsed}
                 limit={dailyLimit}
+                completedCount={completedCount}
+                failedCount={failedCount}
+                pendingCount={pendingCount}
+                breakdown={breakdown}
             />
         </div>
     );
@@ -646,6 +654,10 @@ function MobileDrawerPanel({
     dailyLimitLoading,
     dailyUsed,
     dailyLimit,
+    completedCount,
+    failedCount,
+    pendingCount,
+    breakdown,
     displayName,
     userEmail,
     avatarSrc,
@@ -795,6 +807,10 @@ function MobileDrawerPanel({
                         loading={dailyLimitLoading}
                         used={dailyUsed}
                         limit={dailyLimit}
+                        completedCount={completedCount}
+                        failedCount={failedCount}
+                        pendingCount={pendingCount}
+                        breakdown={breakdown}
                     />
                 </div>
             )}
@@ -914,10 +930,14 @@ const JobAgentDashboardLayout = ({ children }) => {
     /** Single source of truth — see store/reducers/happpyAgentReducer.js. */
     const referralPlan = useSelector((state) => state.happpyAgent);
 
-    /** Daily referral-limit widget — global Redux state in `happpyAgent` slice. */
-    const dailyLimitLoading = referralPlan.dailyLimitLoading;
+    /** Daily referral-limit widget — from daily-referral-runs in `happpyAgent` slice. */
+    const dailyLimitLoading = referralPlan.dailyReferralRunsLoading;
     const dailyUsed = referralPlan.dailyUsed;
     const dailyLimit = referralPlan.dailyLimit;
+    const dailyReferralCompletedCount = referralPlan.dailyReferralCompletedCount;
+    const dailyReferralFailedCount = referralPlan.dailyReferralFailedCount;
+    const dailyReferralPendingCount = referralPlan.dailyReferralPendingCount;
+    const dailyReferralRuns = referralPlan.dailyReferralRuns;
     const agentPrefFieldsSubmitted = referralPlan.agentPrefFieldsSubmitted;
     const dashboardPreferencesLoaded = referralPlan.dashboardPreferencesLoaded;
 
@@ -1044,25 +1064,27 @@ const JobAgentDashboardLayout = ({ children }) => {
     }, [mobileDrawerOpen]);
 
     useEffect(() => {
+        if (lockOutreachSideNav) return;
+        dispatch(fetchHapppyAgentDailyLimit());
+        dispatch(fetchDailyReferralRuns());
+    }, [dispatch, lockOutreachSideNav]);
+
+    useEffect(() => {
         dispatch(fetchHapppyAgentPlan());
     }, [dispatch]);
 
-    useEffect(() => {
-        dispatch(fetchHapppyAgentDailyLimit({ skip: lockOutreachSideNav }));
-    }, [dispatch, lockOutreachSideNav]);
-
-    /** Reconcile daily run count when another tab records a run or user returns to this tab. */
+    /** Cross-tab + visibility: re-fetch from the API (no cached counts). */
     useEffect(() => {
         if (lockOutreachSideNav) return undefined;
 
         const onStorage = (e) => {
-            if (e.key === HAPPPY_AGENT_DASHBOARD_CACHE_KEY) {
-                dispatch(syncHapppyAgentDailyLimitFromStorage());
+            if (e.key === HAPPPY_AGENT_DAILY_LIMIT_SYNC_KEY && e.newValue) {
+                dispatch(syncHapppyAgentDailyLimitFromOtherTab());
             }
         };
         const onVisibility = () => {
             if (document.visibilityState === 'visible') {
-                dispatch(fetchHapppyAgentDailyLimit({ skip: false }));
+                dispatch(syncHapppyAgentDailyLimitFromOtherTab());
             }
         };
 
@@ -1194,6 +1216,10 @@ const JobAgentDashboardLayout = ({ children }) => {
                             dailyLimitLoading={dailyLimitLoading}
                             dailyUsed={dailyUsed}
                             dailyLimit={dailyLimit}
+                            completedCount={dailyReferralCompletedCount}
+                            failedCount={dailyReferralFailedCount}
+                            pendingCount={dailyReferralPendingCount}
+                            breakdown={dailyReferralRuns}
                         />
                     </div>
                     <div className="job-agent-dashboard__topnav-mobile-plan">
@@ -1361,6 +1387,10 @@ const JobAgentDashboardLayout = ({ children }) => {
                         dailyLimitLoading={dailyLimitLoading}
                         dailyUsed={dailyUsed}
                         dailyLimit={dailyLimit}
+                        completedCount={dailyReferralCompletedCount}
+                        failedCount={dailyReferralFailedCount}
+                        pendingCount={dailyReferralPendingCount}
+                        breakdown={dailyReferralRuns}
                         displayName={displayName}
                         userEmail={userEmail}
                         avatarSrc={topNavAvatarSrc}

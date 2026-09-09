@@ -159,6 +159,7 @@ export const API_REFERRAL_AGENT_VERIFY_OTP = API_URL + "new-signup/referral-agen
 export const API_REFERRAL_AGENT_RESEND_OTP = API_URL + "new-signup/referral-agent-resend-otp";
 /** Authenticated batch queue for public landing (logged-in users) — same TempHr flow as job-apply-by-link */
 export const API_REFERRAL_AGENT_JOB_APPLY_BY_LINKS_BATCH = API_URL + "talent/referral-agent/job-apply-by-links-batch";
+export const API_REFERRAL_AGENT_JOB_APPLY_BY_LINK = API_URL + "talent/referral-agent/job-apply-by-link";
 
 /** sessionStorage JSON array of job URLs to queue via referral-agent/job-apply-by-link after Happy.ai public onboarding */
 export const SESSION_KEY_PUBLIC_AGENT_PENDING_JOB_LINKS = 'uts_public_agent_pending_job_links';
@@ -238,6 +239,7 @@ export const OUTREACH_JOURNEY_KEY_ONB_GMAIL_CONNECTED = "onb_gmail_connected";
 export const OUTREACH_JOURNEY_KEY_LINKEDIN_CLICKED = "linkedin_clicked";
 export const OUTREACH_JOURNEY_KEY_ONB_LINKEDIN_CONNECTED = "onb_linkedin_connected";
 export const API_GET_OUTREACH_DASHBOARD_DATA = API_URL + "talent/outreach/get-outreach-dashboard-data";
+export const API_DAILY_REFERRAL_RUNS = API_URL + "talent/outreach/daily-referral-runs";
 export const API_UPDATE_AUTO_RUN_HAPPPY = API_URL + "talent/outreach/consent-auto-run";
 /** Latest outreach_onboard_jobs row for the logged-in talent (saved job URLs + funnel stage). */
 export const API_GET_ONBOARD_JOBS = API_URL + "talent/outreach/onboard-jobs";

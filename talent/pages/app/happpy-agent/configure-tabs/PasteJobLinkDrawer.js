@@ -2,10 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
-import { POST_API, renderTextWithLinks } from '../../../../components/Helper';
-import { API_URL } from '../../../../components/Constant';
+import { renderTextWithLinks } from '../../../../components/Helper';
 import ReferralAgentPreviewModal from '../../../../components/ReferralAgentPreviewModal';
-import { incrementHapppyAgentDailyUsed } from '../../../../store/actions/UserActions';
+import { fetchDailyReferralRuns, fetchHapppyAgentDailyLimit, submitReferralJobApplyByLink } from '../../../../store/actions/UserActions';
 import { trackHappyAgentMixpanel } from '../../../../store/actions/happyAgentTracking';
 import JobPlatformIconRow from './JobPlatformIconRow';
 
@@ -148,19 +147,32 @@ const PasteJobLinkDrawer = ({ open, onClose }) => {
 
         setSubmitting(true);
         try {
+            let submitted = 0;
             for (const url of urls) {
                 const payload = { url };
                 if (linkedin_message_id) payload.linkedin_message_id = linkedin_message_id;
                 if (gmail_message_id) payload.gmail_message_id = gmail_message_id;
-                const res = await POST_API(`${API_URL}talent/referral-agent/job-apply-by-link`, payload);
+                const res = await dispatch(
+                    submitReferralJobApplyByLink(payload, { broadcast: false, refresh: false }),
+                );
                 if (res?.data?.status !== 'success') {
+                    if (submitted > 0) {
+                        await Promise.all([
+                            dispatch(fetchHapppyAgentDailyLimit({ broadcast: true })).catch(() => {}),
+                            dispatch(fetchDailyReferralRuns({ broadcast: true })).catch(() => {}),
+                        ]);
+                    }
                     const msg = res?.data?.message || 'Failed to add job link';
                     setErrorMessage(msg);
                     toast.error(msg, { duration: 5000 });
-                    return;
+                    throw new Error(msg);
                 }
-                dispatch(incrementHapppyAgentDailyUsed());
+                submitted += 1;
             }
+            await Promise.all([
+                dispatch(fetchHapppyAgentDailyLimit({ broadcast: true })).catch(() => {}),
+                dispatch(fetchDailyReferralRuns({ broadcast: true })).catch(() => {}),
+            ]);
             setSuccessMessage(ADD_JOB_SUCCESS_MESSAGE);
             setJobUrls(['']);
             window.dispatchEvent(new CustomEvent(JOB_LINK_ADDED_EVENT));

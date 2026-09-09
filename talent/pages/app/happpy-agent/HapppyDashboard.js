@@ -1212,9 +1212,13 @@ const HapppyDashboard = () => {
                 {!happpyAgent?.planLoading ? (
                     <div className="happpy-dash__hero-limit">
                         <DailyReferralLimitTopnav
-                            loading={happpyAgent?.dailyLimitLoading}
+                            loading={happpyAgent?.dailyReferralRunsLoading}
                             used={happpyAgent?.dailyUsed}
                             limit={happpyAgent?.dailyLimit}
+                            completedCount={happpyAgent?.dailyReferralCompletedCount}
+                            failedCount={happpyAgent?.dailyReferralFailedCount}
+                            pendingCount={happpyAgent?.dailyReferralPendingCount}
+                            breakdown={happpyAgent?.dailyReferralRuns}
                         />
                     </div>
                 ) : null}

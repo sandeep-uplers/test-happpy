@@ -11,6 +11,7 @@ import {
     disconnectLinkedin,
     getAccountStatus,
     getOpenAiStatus,
+    fetchDailyReferralRuns,
     submitResumeHealthCheck,
     verifyLinkedin,
 } from '../../../store/actions/UserActions';
@@ -252,6 +253,11 @@ const Step1AccountConnection = ({
             fetchAccountStatus();
         }
     }, [gmailParam]);
+
+    useEffect(() => {
+        if (linkedinStatus?.status !== 2) return;
+        dispatch(fetchDailyReferralRuns({ silent: true })).catch(() => {});
+    }, [dispatch, linkedinStatus?.status]);
 
     const validateConnectForm = () => {
         const next = {};

@@ -823,81 +823,416 @@
     }
 }
 
-/* Daily referral-limit widget (topnav). Figma:
- *  - default (28447:29414): green fill `#22A757` while under cap
- *  - full    (28366:28274): blue fill `#384AD7` once `used >= limit`
+/* Daily referral-limit widget (topnav). Figma 2634:33427 — segmented block bar.
  * Always rendered inside the topnav-plan-wrap. Hidden when the layout still
  * hasn't received a positive `max_limit` (renderer returns null). */
 .job-agent-dashboard__daily-limit {
-    --daily-limit-track: #e5e7eb;
-    --daily-limit-fill: #22a757;
-    --daily-limit-fill-full: #384ad7;
-    --daily-limit-label: #384ad7;
+    --daily-limit-label: #231f20;
     --daily-limit-count: #6b6b6b;
+    --daily-limit-segment-used: #22c55e;
+    --daily-limit-segment-red: #ef4444;
+    --daily-limit-segment-pending: #94a3b8;
+    --daily-limit-segment-empty: #e2e8f0;
     display: flex;
     flex-direction: column;
     gap: 0.3125rem;
     min-width: 0;
+    width: fit-content;
     max-width: 100%;
-    width: 100%;
     box-sizing: border-box;
-}
-
-.job-agent-dashboard__daily-limit-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.75rem;
-    line-height: 1.2;
-    white-space: nowrap;
 }
 
 .job-agent-dashboard__daily-limit-label {
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 0.75rem;
+    line-height: normal;
     color: var(--daily-limit-label);
     letter-spacing: 0;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.job-agent-dashboard__daily-limit-label-strong {
-    font-weight: 700;
-    color: var(--daily-limit-label);
+.job-agent-dashboard__daily-limit-track-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.job-agent-dashboard__daily-limit-segments {
+    display: flex;
+    align-items: center;
+    gap: 0.1875rem;
+    min-width: 0;
+    flex: 0 1 auto;
+}
+
+.job-agent-dashboard__daily-limit-segment {
+    flex: 0 0 1rem;
+    width: 1rem;
+    height: 0.5rem;
+    border-radius: 0.09375rem;
+    background: var(--daily-limit-segment-empty);
+}
+
+.job-agent-dashboard__daily-limit-segment--used {
+    background: var(--daily-limit-segment-used);
+}
+
+.job-agent-dashboard__daily-limit-segment--red {
+    background: var(--daily-limit-segment-red);
+}
+
+.job-agent-dashboard__daily-limit-segment--pending {
+    background: var(--daily-limit-segment-pending);
+}
+
+.job-agent-dashboard__daily-limit-segment--empty {
+    background: var(--daily-limit-segment-empty);
+}
+
+.job-agent-dashboard__daily-limit-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.1875rem;
+    flex-shrink: 0;
+    margin-left: auto;
 }
 
 .job-agent-dashboard__daily-limit-count {
     font-family: 'Rubik', sans-serif;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 0.6875rem;
+    line-height: normal;
     color: var(--daily-limit-count);
     font-variant-numeric: tabular-nums;
     text-align: right;
+    white-space: nowrap;
+}
+
+.job-agent-dashboard__daily-limit-info-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    line-height: 0;
     flex-shrink: 0;
 }
 
-.job-agent-dashboard__daily-limit-bar {
+.job-agent-dashboard__daily-limit-info-btn:focus-visible {
+    outline: 2px solid var(--jad-primary, #384ad7);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+.job-agent-dashboard__daily-limit-info-icon {
+    display: block;
+    width: 0.75rem;
+    height: 0.75rem;
+    flex-shrink: 0;
+    pointer-events: none;
+}
+
+/* Daily referral runs breakdown popover — Figma 2634:34397 */
+.job-agent-dashboard__daily-limit-popover-wrap {
+    position: fixed;
+    z-index: 10060;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+.job-agent-dashboard__daily-limit-popover-arrow {
+    position: absolute;
+    width: 0.75rem;
+    height: 0.75rem;
+    background: #000;
+    transform: translateX(-50%) rotate(45deg);
+    box-shadow: 2px 2px 2px rgba(129, 127, 127, 0.18);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.job-agent-dashboard__daily-limit-popover-wrap--bottom .job-agent-dashboard__daily-limit-popover-arrow {
+    top: calc(-1 * 0.375rem);
+}
+
+.job-agent-dashboard__daily-limit-popover-wrap--top .job-agent-dashboard__daily-limit-popover-arrow {
+    bottom: calc(-1 * 0.375rem);
+}
+
+.job-agent-dashboard__daily-limit-popover {
     position: relative;
-    height: 8px;
+    z-index: 1;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    background: #000;
+    color: #fff;
+    box-shadow: 2px 4px 4px rgba(129, 127, 127, 0.24);
+    max-height: min(32rem, calc(100vh - 1.25rem));
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    pointer-events: auto;
+}
+
+@media (max-width: 767px) {
+    .job-agent-dashboard__daily-limit-popover {
+        max-height: min(70vh, calc(100vh - 5rem));
+    }
+    .job-agent-dashboard__daily-limit-popover-row-text {
+        white-space: normal;
+        flex-wrap: wrap;
+    }
+}
+
+.job-agent-dashboard__daily-limit-popover-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.job-agent-dashboard__daily-limit-popover-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.job-agent-dashboard__daily-limit-popover-section-head-main {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.job-agent-dashboard__daily-limit-popover-section-icon {
+    font-size: 0.875rem !important;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.job-agent-dashboard__daily-limit-popover-section-head--completed .job-agent-dashboard__daily-limit-popover-section-icon {
+    color: #16a34a;
+}
+
+.job-agent-dashboard__daily-limit-popover-section-head--failed .job-agent-dashboard__daily-limit-popover-section-icon {
+    color: #ef4444;
+}
+
+.job-agent-dashboard__daily-limit-popover-section-head--pending .job-agent-dashboard__daily-limit-popover-section-icon {
+    color: #838383;
+}
+
+.job-agent-dashboard__daily-limit-popover-section-title {
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.006px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.job-agent-dashboard__daily-limit-popover-section-head--completed .job-agent-dashboard__daily-limit-popover-section-title {
+    color: #16a34a;
+}
+
+.job-agent-dashboard__daily-limit-popover-section-head--failed .job-agent-dashboard__daily-limit-popover-section-title {
+    color: #ef4444;
+}
+
+.job-agent-dashboard__daily-limit-popover-section-head--pending .job-agent-dashboard__daily-limit-popover-section-title {
+    color: #838383;
+}
+
+.job-agent-dashboard__daily-limit-popover-section-rule {
+    flex: 1 1 auto;
+    min-width: 0.75rem;
+    height: 1px;
+    margin-left: 0.375rem;
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.job-agent-dashboard__daily-limit-popover-section-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.job-agent-dashboard__daily-limit-popover-section-chevron {
+    font-size: 0.875rem !important;
+    transition: transform 160ms ease;
+}
+
+.job-agent-dashboard__daily-limit-popover-section-chevron--open {
+    transform: rotate(180deg);
+}
+
+.job-agent-dashboard__daily-limit-popover-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.job-agent-dashboard__daily-limit-popover-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.job-agent-dashboard__daily-limit-popover-row-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
     width: 100%;
-    border-radius: 999px;
-    background: var(--daily-limit-track);
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.job-agent-dashboard__daily-limit-popover-row-main:hover .job-agent-dashboard__daily-limit-popover-row-action,
+.job-agent-dashboard__daily-limit-popover-view-all:hover {
+    text-decoration: underline;
+}
+
+.job-agent-dashboard__daily-limit-popover-row-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.job-agent-dashboard__daily-limit-popover-row-dot {
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.job-agent-dashboard__daily-limit-popover-row-dot--completed {
+    background: #16a34a;
+}
+
+.job-agent-dashboard__daily-limit-popover-row-dot--failed {
+    background: #ef4444;
+}
+
+.job-agent-dashboard__daily-limit-popover-row-dot--pending {
+    background: #838383;
+}
+
+.job-agent-dashboard__daily-limit-popover-row-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-width: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.6875rem;
+    line-height: normal;
+    white-space: nowrap;
     overflow: hidden;
-    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.04);
 }
 
-.job-agent-dashboard__daily-limit-bar-fill {
-    height: 100%;
-    min-width: 8px;
-    border-radius: 999px;
-    background: var(--daily-limit-fill);
-    transition: width 240ms ease, background-color 200ms ease;
+.job-agent-dashboard__daily-limit-popover-row-role {
+    font-weight: 600;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.job-agent-dashboard__daily-limit-bar--full .job-agent-dashboard__daily-limit-bar-fill {
-    background: var(--daily-limit-fill-full);
+.job-agent-dashboard__daily-limit-popover-row-sep,
+.job-agent-dashboard__daily-limit-popover-row-company {
+    color: #adadad;
+    font-weight: 400;
+    flex-shrink: 0;
+}
+
+.job-agent-dashboard__daily-limit-popover-row-company {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.job-agent-dashboard__daily-limit-popover-row-action {
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #46eccd;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.job-agent-dashboard__daily-limit-popover-failure-details {
+    padding-left: 0.875rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.job-agent-dashboard__daily-limit-popover-failure-reason {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.75rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: normal;
+    color: #ef4444;
+}
+
+.job-agent-dashboard__daily-limit-popover-failure-note {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 400;
+    line-height: normal;
+    color: #727984;
+}
+
+.job-agent-dashboard__daily-limit-popover-view-all {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #18c3c8;
+    cursor: pointer;
+    text-align: left;
+}
+
+.job-agent-dashboard__daily-limit-popover-empty {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #adadad;
 }
 
 .job-agent-dashboard__daily-limit-skel {
@@ -914,19 +1249,23 @@
 }
 
 .job-agent-dashboard__daily-limit-skel--label {
-    width: 10rem;
+    width: 7.5rem;
     height: 0.75rem;
+    border-radius: 0.25rem;
+}
+
+.job-agent-dashboard__daily-limit-skel--segments {
+    width: 5rem;
+    flex: 0 0 auto;
+    height: 0.5rem;
+    border-radius: 0.09375rem;
 }
 
 .job-agent-dashboard__daily-limit-skel--count {
-    width: 3rem;
+    width: 3.75rem;
     height: 0.6875rem;
-}
-
-.job-agent-dashboard__daily-limit-skel--bar {
-    width: 100%;
-    height: 8px;
-    border-radius: 999px;
+    border-radius: 0.25rem;
+    flex-shrink: 0;
 }
 
 /*
@@ -9363,34 +9702,21 @@ button.jad-cta-card__btn:hover {
         max-width: none;
         flex-basis: auto;
         gap: 8px;
-        padding: 8px;
-        border-radius: 8px;
-        background: #e9ecff;
     }
 
     .job-agent-dashboard__mobile-drawer-limit-wrap .job-agent-dashboard__daily-limit-label {
-        color: #384ad7;
+        color: #231f20;
         font-size: 12px;
-    }
-
-    .job-agent-dashboard__mobile-drawer-limit-wrap .job-agent-dashboard__daily-limit-label-strong {
-        font-weight: 700;
     }
 
     .job-agent-dashboard__mobile-drawer-limit-wrap .job-agent-dashboard__daily-limit-count {
         font-size: 11px;
-        font-weight: 600;
+        font-weight: 500;
         color: #6b6b6b;
     }
 
-    .job-agent-dashboard__mobile-drawer-limit-wrap .job-agent-dashboard__daily-limit-bar {
+    .job-agent-dashboard__mobile-drawer-limit-wrap .job-agent-dashboard__daily-limit-segment {
         height: 10px;
-        border-radius: 8px;
-        background: #d3d7ec;
-    }
-
-    .job-agent-dashboard__mobile-drawer-limit-wrap .job-agent-dashboard__daily-limit-bar-fill {
-        border-radius: 8px;
     }
 
     .job-agent-dashboard__mobile-drawer-lock {

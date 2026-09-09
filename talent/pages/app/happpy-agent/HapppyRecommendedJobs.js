@@ -905,7 +905,7 @@ const HapppyRecommendedJobs = () => {
     const referralPlan = useSelector((state) => state.happpyAgent);
     const dailyUsed = referralPlan.dailyUsed;
     const dailyLimit = referralPlan.dailyLimit;
-    const dailyLimitLoading = referralPlan.dailyLimitLoading;
+    const dailyLimitLoading = referralPlan.dailyReferralRunsLoading;
     const isPaidPlan = Number(referralPlan.plan) === 2 && !referralPlan.has_plan_expired;
 
     const autoRunHapppyLoaded = referralPlan.dashboardPreferencesLoaded;
