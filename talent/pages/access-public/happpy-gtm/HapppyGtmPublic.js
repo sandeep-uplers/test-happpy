@@ -11,7 +11,13 @@ import { useSearchParams } from "@/talent/navigation/routerCompat";
 import { HappyJobAgentContent } from "../../app/linkedin/HappyJobAgent";
 import { HappyJobAgentPublicAuthDrawer } from "../HappyJobAgentPublic";
 import HapppyGtmOnboarding from "./HapppyGtmOnboarding";
-import { setPublicReferralCode } from "../../../helpers/happyAgentPublicSignupSession";
+import {
+    clearPublicAuthPath,
+    getPublicAuthPath,
+    isPublicEmailAuthPath,
+    setPublicAuthPath,
+    setPublicReferralCode,
+} from "../../../helpers/happyAgentPublicSignupSession";
 import {
     ONBOARDING_URL_PARAM,
     pathWithOnboardingParam,
@@ -53,6 +59,7 @@ function HapppyGtmPublicInner() {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [status, setStatus] = useState(null);
     const [initialStep, setInitialStep] = useState("prefs");
+    const [accountsFirstFlow, setAccountsFirstFlow] = useState(false);
     const [googleAuthing, setGoogleAuthing] = useState(false);
     const pageViewTrackedRef = useRef(false);
     const openAfterGoogleRef = useRef(null);
@@ -81,12 +88,13 @@ function HapppyGtmPublicInner() {
     );
 
     const openDrawerWithStatus = useCallback(
-        (known) => {
-            const step = resolveHapppyGtmStep(known);
+        (known, { accountsFirst = false } = {}) => {
+            const step = accountsFirst ? "gmail" : resolveHapppyGtmStep(known);
             if (step === "done" && !HAPPPY_GTM_DISABLE_AUTO_SKIP) {
                 navigate(HAPPPY_GTM_FINISH_JOBS_PATH, { replace: true });
                 return false;
             }
+            setAccountsFirstFlow(accountsFirst);
             setInitialStep(step === "done" ? "prefs" : step);
             if (known) {
                 patchHapppyGtmOnboardingStatus(known);
@@ -109,7 +117,6 @@ function HapppyGtmPublicInner() {
                 }
                 patchHapppyGtmOnboardingStatus(next);
                 setStatus(next);
-                setInitialStep(step === "done" ? "prefs" : step);
                 return next;
             }),
         [loadStatusAndPrefetch, navigate]
@@ -124,8 +131,12 @@ function HapppyGtmPublicInner() {
         setGoogleAuthing(false);
         setAuthDrawerOpen(false);
 
+        const authPath = getPublicAuthPath();
+        const accountsFirst = isPublicEmailAuthPath(authPath);
+        clearPublicAuthPath();
+
         const optimistic = optimisticStatusFromUser(authUser);
-        openDrawerWithStatus(optimistic);
+        openDrawerWithStatus(optimistic, { accountsFirst });
 
         getProfilePercent(false)(dispatch).catch(() => {});
         refreshOnboardingInBackground(authUser, { force: true });
@@ -224,6 +235,7 @@ function HapppyGtmPublicInner() {
             ...registerEventPayload,
         });
 
+        setPublicAuthPath("google");
         handleAuthCompleted({ authPath: "google" });
         continueAfterAuth();
     };
@@ -297,6 +309,7 @@ function HapppyGtmPublicInner() {
                 isOpen={drawerOpen}
                 onClose={() => setDrawerOpen(false)}
                 initialStep={initialStep}
+                accountsFirst={accountsFirstFlow}
                 onboardingStatus={status}
                 onStatusChange={handleStatusChange}
                 onFinish={finishToJobs}

@@ -20,6 +20,7 @@ import {
     clearPublicOnbSection,
     clearPublicSignupPending,
     isPublicSignupPending,
+    setPublicAuthPath,
     setPublicOnbSection,
     setPublicReferralCode,
     setPublicSignupPending,
@@ -151,6 +152,7 @@ export function HappyJobAgentPublicAuthDrawer({
                     newAccount: typeof data.new_account === "boolean" ? data.new_account : undefined,
                     authPath: "instant",
                 };
+                setPublicAuthPath("instant");
                 if (onAuthCompleted) {
                     onAuthCompleted(authCompletedPayload);
                 } else {
@@ -205,6 +207,7 @@ export function HappyJobAgentPublicAuthDrawer({
                     newAccount: typeof pendingNewAccount === "boolean" ? pendingNewAccount : undefined,
                     authPath: "otp",
                 };
+                setPublicAuthPath("otp");
                 if (onAuthCompleted) {
                     onAuthCompleted(authCompletedPayload);
                 } else {
@@ -458,6 +461,7 @@ function HappyJobAgentPublicInner() {
         });
 
         await POST_API(API_HAPPPY_PUBLIC_PAGE_VISIT_1, {}).catch(() => {});
+        setPublicAuthPath("google");
         trackHappyAgentPublicAuthCompleted({ authPath: "google" }).catch(() => { });
         continueToConnectAccounts();
     };

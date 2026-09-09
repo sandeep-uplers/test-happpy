@@ -13,6 +13,8 @@ export const SESSION_KEY_PUBLIC_REFERRAL_CODE = 'happy_agent_public_referral_cod
 export const SESSION_KEY_PUBLIC_ONB_SECTION = 'happy_agent_public_onb_section';
 /** Set when onboarding is fully completed; dashboard opens the template drawer. */
 export const SESSION_KEY_ONBOARDING_TEMPLATE_PENDING = 'happy_agent_onboarding_template_pending';
+/** Auth method from public landing (`otp`, `instant`, `google`) — drives onboarding step order. */
+export const SESSION_KEY_PUBLIC_AUTH_PATH = 'happy_agent_public_auth_path';
 
 export function setPublicSignupPending() {
     try {
@@ -92,11 +94,44 @@ export function clearPublicOnbSection() {
     }
 }
 
-/** Clears pending flag, referral code, and any stored onboarding section. */
+export function setPublicAuthPath(authPath) {
+    if (!authPath || typeof authPath !== 'string') return;
+    const trimmed = authPath.trim();
+    if (!trimmed) return;
+    try {
+        sessionStorage.setItem(SESSION_KEY_PUBLIC_AUTH_PATH, trimmed);
+    } catch {
+        /* ignore */
+    }
+}
+
+export function getPublicAuthPath() {
+    try {
+        return sessionStorage.getItem(SESSION_KEY_PUBLIC_AUTH_PATH) || null;
+    } catch {
+        return null;
+    }
+}
+
+export function clearPublicAuthPath() {
+    try {
+        sessionStorage.removeItem(SESSION_KEY_PUBLIC_AUTH_PATH);
+    } catch {
+        /* ignore */
+    }
+}
+
+/** True when public signup used email OTP or instant login (accounts step first). */
+export function isPublicEmailAuthPath(authPath) {
+    return authPath === 'otp' || authPath === 'instant';
+}
+
+/** Clears pending flag, referral code, auth path, and any stored onboarding section. */
 export function clearPublicSignupHandoff() {
     clearPublicSignupPending();
     clearPublicReferralCode();
     clearPublicOnbSection();
+    clearPublicAuthPath();
 }
 
 export function setOnboardingTemplatePending() {
