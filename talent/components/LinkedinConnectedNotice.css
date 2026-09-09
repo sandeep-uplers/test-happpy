@@ -1,0 +1,64 @@
+.linkedin-connected-notice {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 718px;
+    margin: 0 auto;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background: #e2fdf2;
+    font-family: 'Rubik', sans-serif;
+    color: #086d7e;
+}
+
+.linkedin-connected-notice__header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.linkedin-connected-notice__icon {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+}
+
+.linkedin-connected-notice__title {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.linkedin-connected-notice__title strong {
+    font-weight: 500;
+}
+
+.linkedin-connected-notice__list {
+    margin: 0;
+    padding: 0 0 0 15px;
+    list-style: disc;
+    list-style-position: outside;
+}
+
+.linkedin-connected-notice__list li {
+    display: list-item;
+    list-style-type: disc;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 17px;
+}
+
+.linkedin-connected-notice__list li::marker {
+    color: #086d7e;
+}
+
+.linkedin-connected-notice__list li + li {
+    margin-top: 0;
+}
+
+@media screen and (max-width: 767px) {
+    .linkedin-connected-notice {
+        max-width: none;
+    }
+}

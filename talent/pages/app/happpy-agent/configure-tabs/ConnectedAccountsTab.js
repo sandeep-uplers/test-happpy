@@ -2,18 +2,26 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from '@/talent/navigation/routerCompat';
+import { useLocation, useSearchParams } from '@/talent/navigation/routerCompat';
 import { toast } from 'react-hot-toast';
 import {
     connectLinkedin,
     disconnectGmail,
     disconnectLinkedin,
+    fetchHapppyAgentPlan,
     getAccountStatus,
     verifyLinkedin,
 } from '../../../../store/actions/UserActions';
 import { GmailIcon } from '../../../../assets/IconSVG';
 import { IMAGE_URL } from '../../../../components/Constant';
 import GmailPrivacyFallbackPopup from '../../../../components/GmailPrivacyFallbackPopup';
+import LinkedinAppApprovalCallout, {
+    linkedinAppApprovalSubmitLabel,
+} from '../../../../components/LinkedinAppApprovalCallout';
+import LinkedinConnectedNotice from '../../../../components/LinkedinConnectedNotice';
+import LinkedinPasswordSecurityNote from '../../../../components/LinkedinPasswordSecurityNote';
+import LinkedinTemplatePendingNotice from './LinkedinTemplatePendingNotice';
+import { isLinkedinTemplatePending } from './linkedinTemplatePending';
 import '../../linkedin/AccountConnection.css';
 
 /* -------------------------------------------------------------------------- */
@@ -79,9 +87,14 @@ const RequiredBadge = () => (
 const ConnectedAccountsTab = () => {
     const dispatch = useDispatch();
     const location = useLocation();
+    const [searchParams, setSearchParams] = useSearchParams();
     const user = useSelector((state) => state.auth)?.user;
+    const dailyLimit = useSelector((state) => state.happpyAgent?.dailyLimit) || 0;
+    const happpyAgentPlan = useSelector((state) => state.happpyAgent?.plan);
+    const happpyAgentPlanExpired = useSelector((state) => state.happpyAgent?.has_plan_expired);
 
     const [isLoading, setIsLoading] = useState(false);
+    const [showLinkedinTemplatePopup, setShowLinkedinTemplatePopup] = useState(false);
     const [linkedinStatus, setLinkedinStatus] = useState(null);
     const [gmailStatus, setGmailStatus] = useState(null);
 
@@ -109,6 +122,27 @@ const ConnectedAccountsTab = () => {
 
     const gmailParam = new URLSearchParams(location.search).get('gmail');
 
+    const goToMessageTemplates = () => {
+        setShowLinkedinTemplatePopup(false);
+        const next = new URLSearchParams(searchParams);
+        next.set('tab', 'message-templates');
+        setSearchParams(next, { replace: false });
+    };
+
+    /** After a fresh LinkedIn connect, prompt template setup when none is saved yet. */
+    const maybePromptLinkedinTemplateSetup = async () => {
+        try {
+            const plan = await dispatch(fetchHapppyAgentPlan({ silent: true, force: true }));
+            if (!mountedRef.current || !plan) return;
+            const linkedinTemplate = plan?.raw?.step2?.linkedin_template;
+            if (isLinkedinTemplatePending(true, linkedinTemplate)) {
+                setShowLinkedinTemplatePopup(true);
+            }
+        } catch {
+            /* Non-blocking — connection still succeeded. */
+        }
+    };
+
     /* ── Fetch account status ───────────────────────────────────────────── */
     const fetchAccountStatus = () => {
         setIsLoading(true);
@@ -126,6 +160,7 @@ const ConnectedAccountsTab = () => {
 
     useEffect(() => {
         fetchAccountStatus();
+        dispatch(fetchHapppyAgentPlan({ silent: true })).catch(() => {});
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -184,6 +219,7 @@ const ConnectedAccountsTab = () => {
             setLinkedinStatus(response?.data?.data);
             if (response?.data?.data?.status === 2) {
                 setFormMessage({ type: 'success', text: 'LinkedIn account connected successfully!' });
+                maybePromptLinkedinTemplateSetup();
                 setTimeout(() => {
                     if (!mountedRef.current) return;
                     setShowLinkedinForm(false);
@@ -227,6 +263,7 @@ const ConnectedAccountsTab = () => {
                     text: 'LinkedIn account verified and connected successfully!',
                 });
                 setLinkedinStatus(response?.data?.data);
+                maybePromptLinkedinTemplateSetup();
                 setTimeout(() => {
                     if (!mountedRef.current) return;
                     setShowLinkedinForm(false);
@@ -255,9 +292,11 @@ const ConnectedAccountsTab = () => {
             if (response?.data?.status === 'success') {
                 setLinkedinStatus(null);
                 setShowLinkedinForm(false);
+                setShowLinkedinTemplatePopup(false);
                 setFormData({ email: '', password: '', code: '' });
                 setFormMessage({ type: null, text: '' });
                 toast.success(successToast);
+                dispatch(fetchHapppyAgentPlan({ silent: true, force: true })).catch(() => {});
             } else {
                 toast.error(response?.data?.message || 'Something went wrong. Please try again.');
             }
@@ -448,6 +487,8 @@ const ConnectedAccountsTab = () => {
     const gmailConnected = gmailStatus?.status === 2;
     const linkedinConnected = linkedinStatus?.status === 2;
     const linkedinNeedsVerification = linkedinStatus?.status === 1;
+    const isLinkedinAppApproval = linkedinStatus?.auth_type === 'linkedin_app_approval';
+    const isFreeTrialPlan = Number(happpyAgentPlan) === 1 && !happpyAgentPlanExpired;
 
     /* ── Render ─────────────────────────────────────────────────────────── */
     return (
@@ -511,19 +552,20 @@ const ConnectedAccountsTab = () => {
                             )}
                         </div>
 
-                        {/* Tooltip + mascot — positioned absolutely BELOW the Gmail card */}
-                        <aside className="hc-ca-tooltip-wrap">
-                            <span className="hc-ca-mascot" aria-hidden="true">
-                                <img src={`${IMAGE_URL}outreach/mascot-neutral.svg`} alt="" />
-                            </span>
-                            <div className="hc-ca-tooltip" role="note">
-                                <p>
-                                    Gmail access is needed to send outreach emails.{' '}
-                                    <strong>Don&apos;t worry the agent only accesses emails it sends</strong>
-                                </p>
-                                <span className="hc-ca-tooltip__pointer" aria-hidden="true" />
-                            </div>
-                        </aside>
+                        {!gmailConnected && (
+                            <aside className="hc-ca-tooltip-wrap">
+                                <span className="hc-ca-mascot" aria-hidden="true">
+                                    <img src={`${IMAGE_URL}outreach/mascot-neutral.svg`} alt="" />
+                                </span>
+                                <div className="hc-ca-tooltip" role="note">
+                                    <p>
+                                        Gmail access is needed to send outreach emails.{' '}
+                                        <strong>Don&apos;t worry the agent only accesses emails it sends</strong>
+                                    </p>
+                                    <span className="hc-ca-tooltip__pointer" aria-hidden="true" />
+                                </div>
+                            </aside>
+                        )}
                     </div>
 
                     {/* ────────── LinkedIn card ────────── */}
@@ -586,6 +628,14 @@ const ConnectedAccountsTab = () => {
                     </div>
                 </div>
 
+                {linkedinConnected && (
+                    <LinkedinConnectedNotice
+                        dailyLimit={dailyLimit}
+                        isFreeTrial={isFreeTrialPlan}
+                        className="hc-ca-linkedin-connected-notice"
+                    />
+                )}
+
                 {/* ────────── LinkedIn inline connect form ────────── */}
                 {showLinkedinForm && (linkedinStatus == null || linkedinStatus?.status === 0) && (
                     <div className="hc-ca-form" role="region" aria-label="Connect LinkedIn">
@@ -632,6 +682,7 @@ const ConnectedAccountsTab = () => {
                                     disabled={linkedinConnecting}
                                 />
                                 {errors.password && <span className="hc-ca-form__error">{errors.password}</span>}
+                                <LinkedinPasswordSecurityNote />
                             </div>
                             <div className="hc-ca-form__actions">
                                 <button
@@ -661,12 +712,15 @@ const ConnectedAccountsTab = () => {
                 {showLinkedinForm && linkedinNeedsVerification && (
                     <div className="hc-ca-form" role="region" aria-label="Verify LinkedIn">
                         <h3 className="hc-ca-form__title">Verify LinkedIn</h3>
-                        <p className="hc-ca-form__hint">
-                            {linkedinStatus?.email}
-                            {linkedinStatus?.auth_type === 'linkedin_app_approval'
-                                ? ' — kindly approve the request in your LinkedIn app.'
-                                : ' — enter the verification code sent to your email, phone, or authentication app.'}
-                        </p>
+                        {isLinkedinAppApproval ? (
+                            <LinkedinAppApprovalCallout email={linkedinStatus?.email} />
+                        ) : (
+                            <p className="hc-ca-form__hint">
+                                {linkedinStatus?.email
+                                    ? `${linkedinStatus.email} — enter the verification code sent to your email, phone, or authentication app.`
+                                    : 'Enter the verification code sent to your email, phone, or authentication app.'}
+                            </p>
+                        )}
 
                         {formMessage.type && !formMessage.text.includes('Verification code sent!') && (
                             <div
@@ -710,10 +764,8 @@ const ConnectedAccountsTab = () => {
                                     className="hc-ca-form__btn hc-ca-form__btn--primary"
                                     disabled={linkedinConnecting}
                                 >
-                                    {linkedinStatus?.auth_type === 'linkedin_app_approval'
-                                        ? linkedinConnecting
-                                            ? 'Approving…'
-                                            : 'Approved in LinkedIn'
+                                    {isLinkedinAppApproval
+                                        ? linkedinAppApprovalSubmitLabel(linkedinConnecting)
                                         : linkedinConnecting
                                         ? 'Verifying…'
                                         : 'Verify Code'}
@@ -728,6 +780,13 @@ const ConnectedAccountsTab = () => {
         <GmailPrivacyFallbackPopup
             open={gmailErrorPopup.open}
             onClose={() => setGmailErrorPopup({ open: false, message: '' })}
+        />
+
+        <LinkedinTemplatePendingNotice
+            variant="popup"
+            open={showLinkedinTemplatePopup}
+            onConfigure={goToMessageTemplates}
+            onDismiss={() => setShowLinkedinTemplatePopup(false)}
         />
 
         {disconnectModal && (

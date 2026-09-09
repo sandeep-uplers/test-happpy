@@ -12,6 +12,8 @@ import { GmailIcon } from '../../../../assets/IconSVG';
 import { GET_API, POST_API } from '../../../../components/Helper';
 import { API_OUTREACH_DEFAULT_AUTO_TEMPLATES, API_OUTREACH_REWRITE_MESSAGE } from '../../../../components/Constant';
 import TemplateEditor from '../../linkedin/TemplateEditor';
+import LinkedinTemplatePendingNotice from './LinkedinTemplatePendingNotice';
+import { isLinkedinTemplatePending } from './linkedinTemplatePending';
 
 /* -------------------------------------------------------------------------- */
 /* Constants                                                                   */
@@ -318,6 +320,10 @@ const MessageTemplatesTab = () => {
     const templateKey = templateType === LINKEDIN ? 'linkedin_template' : 'gmail_template';
     const availableDefaults = defaultTemplates[templateKey] || [];
     const isLinkedinConnected = referralPlan?.linkedin_connected;
+    const linkedinTemplatePending = isLinkedinTemplatePending(
+        isLinkedinConnected,
+        templates.linkedin_template,
+    );
 
     const isLoading = isFetchingTemplates || isFetchingDefaults;
     const isMobile = window.matchMedia('(max-width: 767px)').matches;
@@ -326,6 +332,17 @@ const MessageTemplatesTab = () => {
     return (
         <div className="hc-tab-content">
             <p className="hc-tab-content__title">Set up your outreach message</p>
+
+            {!isLoading && linkedinTemplatePending ? (
+                <LinkedinTemplatePendingNotice
+                    variant="banner"
+                    onFocusLinkedinTemplate={
+                        templateType === LINKEDIN
+                            ? undefined
+                            : () => setTemplateType(LINKEDIN)
+                    }
+                />
+            ) : null}
 
             <div className="hc-card">
                 {/* Sub-tab header */}
