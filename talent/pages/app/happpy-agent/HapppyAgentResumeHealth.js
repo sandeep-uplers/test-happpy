@@ -726,6 +726,17 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
                                 )}
                             </div>
 
+                            {step === STEP.LOADER && (
+                                <div
+                                    className="jad-resume-health-modal__health-check-loading"
+                                    role="status"
+                                    aria-live="polite"
+                                    aria-busy="true"
+                                >
+                                    <HealthCheckLoaderModal isOpen embedded />
+                                </div>
+                            )}
+
                             {isTransforming && step === STEP.REPORT && (
                                 <div
                                     className="jad-resume-health-modal__transforming"
@@ -740,11 +751,6 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
                             )}
                         </div>
                     </Modal>
-
-                    {/* The LoaderStep above is a static section. The actual animated loader is the modal
-                that drives the LOADER step; we render it overlaying the popup so closing the popup
-                still leaves the Pusher subscription intact (it lives at section level). */}
-                    <HealthCheckLoaderModal isOpen={popupOpen && step === STEP.LOADER} />
 
                     {isResumePreviewOpen && (
                         <ResumeModal

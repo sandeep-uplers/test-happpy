@@ -8,7 +8,7 @@ ensureModalAppElement();
  * Animated "Analyzing Your Resume" modal previously co-located in ResumeHealth.js.
  * Extracted so both ResumeHealth and the AgentJ dashboard popup can reuse the same UX.
  */
-export default function HealthCheckLoaderModal({ isOpen }) {
+export default function HealthCheckLoaderModal({ isOpen, embedded = false }) {
     const [activeStep, setActiveStep] = useState(1);
     const [openControl, setOpenControl] = useState(false);
 
@@ -16,13 +16,15 @@ export default function HealthCheckLoaderModal({ isOpen }) {
         setActiveStep(1)
         if (isOpen) {
             setOpenControl(true);
+        } else if (embedded) {
+            setOpenControl(false);
         } else {
             setActiveStep(5);
             setTimeout(() => {
                 setOpenControl(false);
             }, 2000);
         }
-    }, [isOpen])
+    }, [isOpen, embedded])
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -34,15 +36,7 @@ export default function HealthCheckLoaderModal({ isOpen }) {
         }
     }, [])
 
-    return (
-        <Modal
-            isOpen={openControl}
-            portalClassName="react-modal-portal"
-            className={`modal commonModal health-check-loader`}
-            shouldCloseOnEsc={false}
-            onRequestClose={() => { }}
-            shouldCloseOnOverlayClick={false}
-        >
+    const loaderContent = (
             <div className="modal-dialog modal-dialog-centered" role="document">
                 <div className="modal-content ">
                     <div className="header">
@@ -113,6 +107,26 @@ export default function HealthCheckLoaderModal({ isOpen }) {
                     </div>
                 </div>
             </div>
+    );
+
+    if (embedded) {
+        return (
+            <div className="health-check-loader health-check-loader--embedded">
+                {loaderContent}
+            </div>
+        );
+    }
+
+    return (
+        <Modal
+            isOpen={openControl}
+            portalClassName="react-modal-portal"
+            className={`modal commonModal health-check-loader`}
+            shouldCloseOnEsc={false}
+            onRequestClose={() => { }}
+            shouldCloseOnOverlayClick={false}
+        >
+            {loaderContent}
         </Modal>
     )
 }

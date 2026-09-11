@@ -8234,6 +8234,34 @@ button.jad-cta-card__btn:hover {
     }
 }
 
+/* Health-check step loader — pinned to the drawer shell so it centers within
+   the panel, not the full viewport (embedded HealthCheckLoaderModal). */
+.jad-resume-health-modal__health-check-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: jadResumeHealthTransformingIn 220ms ease both;
+}
+
+.jad-resume-health-modal__health-check-loading .health-check-loader--embedded {
+    width: 100%;
+    max-width: 566px;
+    margin: 0;
+}
+
+.jad-resume-health-modal__health-check-loading .health-check-loader--embedded .modal-dialog {
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+}
+
 /* Loader is rendered as a sibling of the modal body so the underlying REPORT
    stays visible (and the score banner / verdict don't disappear) while the
    transformation is in flight. Pinned to the shell, sits below the close
