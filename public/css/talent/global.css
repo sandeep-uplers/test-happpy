@@ -7955,7 +7955,8 @@ textarea.err {
 }
 
 
-.commonModal.ReactModal__Content.health-check-loader {
+.commonModal.ReactModal__Content.health-check-loader,
+.health-check-loader--embedded {
     width: 566px;
     max-width: 100%;
 

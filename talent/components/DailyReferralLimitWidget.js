@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { APP_URL } from './Constant';
 import {
     buildDailyLimitSegmentStates,
@@ -22,8 +22,28 @@ export default function DailyReferralLimitTopnav({
     failedCount = null,
     breakdown = null,
 }) {
-    const infoBtnRef = useRef(null);
+    const anchorRef = useRef(null);
+    const closeTimerRef = useRef(null);
     const [popoverOpen, setPopoverOpen] = useState(false);
+
+    const clearCloseTimer = () => {
+        if (closeTimerRef.current) {
+            clearTimeout(closeTimerRef.current);
+            closeTimerRef.current = null;
+        }
+    };
+
+    const openPopover = () => {
+        clearCloseTimer();
+        setPopoverOpen(true);
+    };
+
+    const scheduleClose = () => {
+        clearCloseTimer();
+        closeTimerRef.current = setTimeout(() => setPopoverOpen(false), 200);
+    };
+
+    useEffect(() => () => clearCloseTimer(), []);
     const safeLimit = Number(limit) || 0;
     const safeUsed = Math.max(0, Number(used) || 0);
     const displayUsed = displayDailyUsed(safeUsed, safeLimit);
@@ -55,59 +75,69 @@ export default function DailyReferralLimitTopnav({
     );
 
     return (
-        <div
-            className="job-agent-dashboard__daily-limit"
-            role="group"
-            aria-label="Daily referral runs"
-        >
-            <span className="job-agent-dashboard__daily-limit-label">Daily referral runs</span>
-            <div className="job-agent-dashboard__daily-limit-track-row">
-                <div
-                    className="job-agent-dashboard__daily-limit-segments"
-                    role="progressbar"
-                    aria-valuemin={0}
-                    aria-valuemax={safeLimit}
-                    aria-valuenow={displayUsed}
-                    aria-valuetext={`${displayUsed} of ${safeLimit} daily referral ${
-                        safeLimit === 1 ? 'run' : 'runs'
-                    } used`}
-                >
-                    {segmentStates.map((state, index) => (
-                        <span
-                            key={index}
-                            className={`job-agent-dashboard__daily-limit-segment job-agent-dashboard__daily-limit-segment--${state}`}
-                            aria-hidden
-                        />
-                    ))}
-                </div>
-                <div className="job-agent-dashboard__daily-limit-meta">
-                    <span className="job-agent-dashboard__daily-limit-count" aria-live="polite">
-                        {displayUsed}/{safeLimit} today
-                    </span>
-                    <button
-                        ref={infoBtnRef}
-                        type="button"
-                        className="job-agent-dashboard__daily-limit-info-btn"
-                        aria-label="View today's referral run breakdown"
-                        aria-expanded={popoverOpen}
-                        aria-controls="daily-referral-limit-popover"
-                        onClick={() => setPopoverOpen((open) => !open)}
+        <div className="job-agent-dashboard__daily-limit">
+            <div
+                ref={anchorRef}
+                className={`job-agent-dashboard__daily-limit-trigger${
+                    popoverOpen ? ' job-agent-dashboard__daily-limit-trigger--open' : ''
+                }`}
+                role="button"
+                tabIndex={0}
+                aria-label="View today's referral run breakdown"
+                aria-expanded={popoverOpen}
+                aria-controls="daily-referral-limit-popover"
+                onClick={openPopover}
+                onMouseEnter={openPopover}
+                onMouseLeave={scheduleClose}
+                onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        openPopover();
+                    }
+                }}
+            >
+                <span className="job-agent-dashboard__daily-limit-label">Daily referral runs</span>
+                <div className="job-agent-dashboard__daily-limit-track-row">
+                    <div
+                        className="job-agent-dashboard__daily-limit-segments"
+                        role="progressbar"
+                        aria-valuemin={0}
+                        aria-valuemax={safeLimit}
+                        aria-valuenow={displayUsed}
+                        aria-valuetext={`${displayUsed} of ${safeLimit} daily referral ${
+                            safeLimit === 1 ? 'run' : 'runs'
+                        } used`}
                     >
-                        <img
-                            className="job-agent-dashboard__daily-limit-info-icon"
-                            src={DAILY_LIMIT_INFO_ICON_SRC}
-                            alt=""
-                            aria-hidden
-                        />
-                    </button>
+                        {segmentStates.map((state, index) => (
+                            <span
+                                key={index}
+                                className={`job-agent-dashboard__daily-limit-segment job-agent-dashboard__daily-limit-segment--${state}`}
+                                aria-hidden
+                            />
+                        ))}
+                    </div>
+                    <div className="job-agent-dashboard__daily-limit-meta">
+                        <span className="job-agent-dashboard__daily-limit-count" aria-live="polite">
+                            {displayUsed}/{safeLimit} today
+                        </span>
+                        <span className="job-agent-dashboard__daily-limit-info-icon-wrap" aria-hidden>
+                            <img
+                                className="job-agent-dashboard__daily-limit-info-icon"
+                                src={DAILY_LIMIT_INFO_ICON_SRC}
+                                alt=""
+                            />
+                        </span>
+                    </div>
                 </div>
             </div>
             <DailyReferralLimitPopover
                 open={popoverOpen}
                 onClose={() => setPopoverOpen(false)}
-                anchorRef={infoBtnRef}
+                anchorRef={anchorRef}
                 data={popoverData}
                 loading={loading}
+                onMouseEnter={openPopover}
+                onMouseLeave={scheduleClose}
             />
         </div>
     );

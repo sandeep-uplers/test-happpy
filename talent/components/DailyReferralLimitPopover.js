@@ -6,9 +6,7 @@ const POPOVER_WIDTH = 400;
 const DESKTOP_VIEWPORT_MARGIN = 10;
 const MOBILE_VIEWPORT_MARGIN = 16;
 const MOBILE_MAX_WIDTH = 767;
-const ANCHOR_GAP = 8;
-const ARROW_OUTSET = 6;
-const ARROW_EDGE_INSET = 20;
+const HOVER_BRIDGE_GAP = 8;
 
 function getPopoverLayout(windowWidth) {
     const isMobile = windowWidth <= MOBILE_MAX_WIDTH;
@@ -117,14 +115,16 @@ export default function DailyReferralLimitPopover({
     anchorRef,
     data = null,
     loading = false,
+    onMouseEnter,
+    onMouseLeave,
 }) {
     const breakdown = data || { completed: [], failed: [], pending: [] };
+    const wrapRef = useRef(null);
     const popRef = useRef(null);
     const [pos, setPos] = useState({
         top: 0,
         left: 0,
         width: POPOVER_WIDTH,
-        arrowLeft: POPOVER_WIDTH / 2,
         placement: 'bottom',
     });
     const [completedCollapsed, setCompletedCollapsed] = useState(false);
@@ -134,27 +134,22 @@ export default function DailyReferralLimitPopover({
         if (!anchor) return;
 
         const pop = popRef.current;
-        const { margin, width } = getPopoverLayout(window.innerWidth);
+        const { isMobile, margin, width } = getPopoverLayout(window.innerWidth);
         const rect = anchor.getBoundingClientRect();
-        const anchorCenterX = rect.left + rect.width / 2;
 
-        let left = anchorCenterX - width / 2;
+        let left = isMobile
+            ? rect.left + rect.width / 2 - width / 2
+            : rect.left;
         left = Math.max(margin, Math.min(left, window.innerWidth - width - margin));
 
-        let arrowLeft = anchorCenterX - left;
-        arrowLeft = Math.max(
-            ARROW_EDGE_INSET,
-            Math.min(arrowLeft, width - ARROW_EDGE_INSET)
-        );
-
         let placement = 'bottom';
-        let top = rect.bottom + ANCHOR_GAP + ARROW_OUTSET;
+        let top = rect.bottom;
 
         if (pop) {
             const popHeight = pop.getBoundingClientRect().height;
-            const fitsBelow = top + popHeight <= window.innerHeight - margin;
+            const fitsBelow = top + HOVER_BRIDGE_GAP + popHeight <= window.innerHeight - margin;
             if (!fitsBelow) {
-                const topPlacement = rect.top - popHeight - ANCHOR_GAP - ARROW_OUTSET;
+                const topPlacement = rect.top - HOVER_BRIDGE_GAP - popHeight;
                 if (topPlacement >= margin) {
                     placement = 'top';
                     top = topPlacement;
@@ -164,7 +159,7 @@ export default function DailyReferralLimitPopover({
             }
         }
 
-        setPos({ top, left, width, arrowLeft, placement });
+        setPos({ top, left, width, placement });
     }, [anchorRef]);
 
     useLayoutEffect(() => {
@@ -199,7 +194,7 @@ export default function DailyReferralLimitPopover({
         const onDown = (event) => {
             const target = event.target;
             if (anchorRef?.current?.contains(target)) return;
-            if (popRef.current?.contains(target)) return;
+            if (wrapRef.current?.contains(target)) return;
             onClose();
         };
         document.addEventListener('mousedown', onDown);
@@ -220,14 +215,12 @@ export default function DailyReferralLimitPopover({
 
     return createPortal(
         <div
+            ref={wrapRef}
             className={`job-agent-dashboard__daily-limit-popover-wrap job-agent-dashboard__daily-limit-popover-wrap--${pos.placement}`}
             style={{ top: pos.top, left: pos.left, width: pos.width }}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
         >
-            <span
-                className="job-agent-dashboard__daily-limit-popover-arrow"
-                style={{ left: pos.arrowLeft }}
-                aria-hidden
-            />
             <div
                 ref={popRef}
                 id="daily-referral-limit-popover"

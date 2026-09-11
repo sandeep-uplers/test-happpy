@@ -59,6 +59,7 @@ export default function Step2ProfileCreation({ onAdvance, onBack, showBack = tru
                         onSaveLoadingChange={setSaveLoading}
                         onPreferencesLoadingChange={setPrefsLoading}
                         centeredResumeUpload
+                        linkedinOptional
                     />
                 </div>
             </div>
