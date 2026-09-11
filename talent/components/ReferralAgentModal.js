@@ -1,30 +1,18 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { startOutreachAgent } from "../store/actions/UserActions";
 import { useDispatch } from "react-redux";
-import { CloseModalIcon } from "../assets/IconSVG";
+import { ensureModalAppElement } from "@/talent/helpers/setModalAppElement";
+import "./ReferralAgentModal.css";
 
+ensureModalAppElement();
 
-const modalStyles = {
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
-    zIndex: 9999,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  content: {
-    position: "relative",
-    inset: "auto",
-    maxWidth: "440px",
-    width: "90%",
-    padding: "0",
-    border: "none",
-    borderRadius: "16px",
-    background: "#fff",
-    overflow: "hidden",
-    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-  },
+const MASCOT = {
+  loading: "/images/talent/outreach/mascot-neutral.svg",
+  success: "/images/talent/happpy-agent/agent-run-success-mascot.svg",
+  error: "/images/talent/outreach/mascot-exclaim.svg",
+  redirect: "/images/talent/outreach/mascot-gmail-concern.svg",
+  plan_expired: "/images/talent/outreach/mascot-exclaim.svg",
 };
 
 const STATUS = {
@@ -49,6 +37,7 @@ const ReferralAgentModal = ({
   payloadHtml = "",
   linkedin_message_id = null,
   gmail_message_id = null,
+  custom_resume_id = null,
 }) => {
   const [reason, setReason] = useState("");
   const [modalStatus, setModalStatus] = useState(STATUS.LOADING);
@@ -80,7 +69,8 @@ const ReferralAgentModal = ({
         ...(payloadHtml ? { html: payloadHtml } : {}),
         ...(linkedin_message_id ? { linkedin_message_id } : {}),
         ...(gmail_message_id ? { gmail_message_id } : {}),
-      }
+        ...(custom_resume_id ? { custom_resume_id } : {}),
+      };
       const res = await startOutreachAgent(payload)(dispatch);
 
       if (res.data.status === "redirect") {
@@ -89,7 +79,10 @@ const ReferralAgentModal = ({
       } else if (res.data.status === "success") {
         setModalStatus(STATUS.SUCCESS);
 
-        setMessage((res.data.message || "Your referral request has been submitted successfully") + ` with ${payloadHtml ? "tailored" : "profile"} resume`);
+        setMessage(
+          (res.data.message || "Your referral request has been submitted successfully") +
+            ` with ${payloadHtml ? "tailored" : "profile"} resume`
+        );
       } else {
         const msg = res.data.message || "Something went wrong. Please try again.";
         if (isPlanExpiredMessage(msg)) {
@@ -102,7 +95,8 @@ const ReferralAgentModal = ({
       }
     } catch (err) {
       console.log({ err });
-      const msg = err.response?.data?.message || err.message || "An unexpected error occurred. Please try again.";
+      const msg =
+        err.response?.data?.message || err.message || "An unexpected error occurred. Please try again.";
       if (isPlanExpiredMessage(msg)) {
         setModalStatus(STATUS.PLAN_EXPIRED);
         setMessage(msg);
@@ -134,57 +128,6 @@ const ReferralAgentModal = ({
     }
   }, [isOpen]);
 
-  const renderIcon = () => {
-    if (modalStatus === STATUS.LOADING) {
-      return (
-        <div style={styles.iconWrapper}>
-          <div style={styles.spinner}></div>
-        </div>
-      );
-    }
-    if (modalStatus === STATUS.SUCCESS) {
-      return (
-        <div style={{ ...styles.iconWrapper, background: "linear-gradient(135deg, #10b981 0%, #059669 100%)" }}>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </div>
-      );
-    }
-    if (modalStatus === STATUS.ERROR) {
-      return (
-        <div style={{ ...styles.iconWrapper, background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)" }}>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </div>
-      );
-    }
-    if (modalStatus === STATUS.REDIRECT) {
-      return (
-        <div style={{ ...styles.iconWrapper, background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)" }}>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
-        </div>
-      );
-    }
-    if (modalStatus === STATUS.PLAN_EXPIRED) {
-      return (
-        <div style={{ ...styles.iconWrapper, background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)" }}>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-            <line x1="1" y1="10" x2="23" y2="10"></line>
-          </svg>
-        </div>
-      );
-    }
-    return null;
-  };
-
   const getTitle = () => {
     switch (modalStatus) {
       case STATUS.LOADING:
@@ -202,197 +145,139 @@ const ReferralAgentModal = ({
     }
   };
 
+  const getMascotSrc = () => {
+    switch (modalStatus) {
+      case STATUS.LOADING:
+        return MASCOT.loading;
+      case STATUS.SUCCESS:
+        return MASCOT.success;
+      case STATUS.ERROR:
+        return MASCOT.error;
+      case STATUS.REDIRECT:
+        return MASCOT.redirect;
+      case STATUS.PLAN_EXPIRED:
+        return MASCOT.plan_expired;
+      default:
+        return MASCOT.loading;
+    }
+  };
+
+  const loadingMessage = "Please wait while we process your referral request...";
+
   return (
     <Modal
       isOpen={isOpen}
+      className="modal commonModal referral-agent-modal"
+      overlayClassName="referral-agent-modal-overlay"
+      contentLabel={getTitle()}
       onRequestClose={modalStatus !== STATUS.LOADING ? handleClose : undefined}
-      style={modalStyles}
       shouldCloseOnOverlayClick={modalStatus !== STATUS.LOADING}
     >
-      <style>
-        {`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-          @keyframes fadeInUp {
-            from {
-              opacity: 0;
-              transform: translateY(10px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-          @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-          }
-        `}
-      </style>
-
-      <div style={styles.container}>
+      <div className="referral-agent-modal__card">
         {modalStatus !== STATUS.LOADING && (
-          <button onClick={handleClose} style={styles.closeButton} aria-label="Close modal">
-            <CloseModalIcon />
+          <button
+            type="button"
+            className="referral-agent-modal__close"
+            aria-label="Close"
+            onClick={handleClose}
+          >
+            ✕
           </button>
         )}
 
-        <div style={styles.content}>
-          {renderIcon()}
+        <div className="referral-agent-modal__body">
+          <div className="referral-agent-modal__mascot-wrap">
+            <img
+              src={getMascotSrc()}
+              alt=""
+              aria-hidden="true"
+              className="referral-agent-modal__mascot"
+            />
+          </div>
 
-          <h2 style={styles.title}>{getTitle()}</h2>
+          <div className="referral-agent-modal__content">
+            <div className="referral-agent-modal__intro">
+              <h2 className="referral-agent-modal__title">{getTitle()}</h2>
+              {modalStatus === STATUS.LOADING ? (
+                <>
+                  <p
+                    className="referral-agent-modal__message referral-agent-modal__message--loading"
+                  >
+                    {loadingMessage}
+                  </p>
+                  <div className="referral-agent-modal__spinner" aria-hidden="true" />
+                </>
+              ) : (
+                <p
+                  className="referral-agent-modal__message"
+                  dangerouslySetInnerHTML={{ __html: message }}
+                />
+              )}
+            </div>
 
-          {modalStatus === STATUS.LOADING ? (
-            <p style={styles.loadingText}>Please wait while we process your referral request...</p>
-          ) : (
-            <p style={styles.message} dangerouslySetInnerHTML={{ __html: message }}></p>
-          )}
+            {modalStatus !== STATUS.LOADING && (
+              <div className="referral-agent-modal__actions">
+                {modalStatus === STATUS.SUCCESS && (
+                  <button type="button" className="referral-agent-modal__cta" onClick={handleClose}>
+                    Done
+                  </button>
+                )}
 
-          <div style={styles.buttonContainer}>
-            {modalStatus === STATUS.SUCCESS && (
-              <button onClick={handleClose} style={styles.primaryButton}>
-                Done
-              </button>
-            )}
+                {modalStatus === STATUS.ERROR && (
+                  <div className="referral-agent-modal__button-row">
+                    <button
+                      type="button"
+                      className="referral-agent-modal__cta referral-agent-modal__cta--secondary"
+                      onClick={handleClose}
+                    >
+                      Close
+                    </button>
+                    <button type="button" className="referral-agent-modal__cta" onClick={handleSubmit}>
+                      Try Again
+                    </button>
+                  </div>
+                )}
 
-            {modalStatus === STATUS.ERROR && (
-              <>
-                <button onClick={handleClose} style={styles.secondaryButton}>
-                  Close
-                </button>
-                <button onClick={handleSubmit} style={styles.primaryButton}>
-                  Try Again
-                </button>
-              </>
-            )}
+                {modalStatus === STATUS.REDIRECT && (
+                  <div className="referral-agent-modal__button-row">
+                    <button
+                      type="button"
+                      className="referral-agent-modal__cta referral-agent-modal__cta--secondary"
+                      onClick={handleClose}
+                    >
+                      Cancel
+                    </button>
+                    <button type="button" className="referral-agent-modal__cta" onClick={handleRedirect}>
+                      Connect Accounts
+                    </button>
+                  </div>
+                )}
 
-            {modalStatus === STATUS.REDIRECT && (
-              <>
-                <button onClick={handleClose} style={styles.secondaryButton}>
-                  Cancel
-                </button>
-                <button onClick={handleRedirect} style={styles.primaryButton}>
-                  Connect Accounts
-                </button>
-              </>
-            )}
-
-            {modalStatus === STATUS.PLAN_EXPIRED && (
-              <>
-                <button onClick={handleClose} style={styles.secondaryButton}>
-                  Close
-                </button>
-                <button onClick={handleGoToOutreachAgent} style={styles.primaryButton}>
-                  Subscribe & Continue
-                </button>
-              </>
+                {modalStatus === STATUS.PLAN_EXPIRED && (
+                  <div className="referral-agent-modal__button-row">
+                    <button
+                      type="button"
+                      className="referral-agent-modal__cta referral-agent-modal__cta--secondary"
+                      onClick={handleClose}
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="button"
+                      className="referral-agent-modal__cta"
+                      onClick={handleGoToOutreachAgent}
+                    >
+                      Subscribe & Continue
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
       </div>
     </Modal>
   );
-};
-
-const styles = {
-  container: {
-    position: "relative",
-    padding: "32px 24px",
-  },
-  closeButton: {
-    position: "absolute",
-    top: "16px",
-    right: "16px",
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    padding: "8px",
-    borderRadius: "8px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "background-color 0.2s ease",
-  },
-  content: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    textAlign: "center",
-    animation: "fadeInUp 0.3s ease-out",
-  },
-  iconWrapper: {
-    width: "72px",
-    height: "72px",
-    borderRadius: "50%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: "20px",
-    background: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
-  },
-  spinner: {
-    width: "32px",
-    height: "32px",
-    border: "3px solid rgba(255, 255, 255, 0.3)",
-    borderTop: "3px solid #fff",
-    borderRadius: "50%",
-    animation: "spin 1s linear infinite",
-  },
-  title: {
-    fontSize: "20px",
-    fontWeight: "600",
-    color: "#1f2937",
-    marginBottom: "12px",
-    margin: "0 0 12px 0",
-  },
-  message: {
-    fontSize: "15px",
-    color: "#6b7280",
-    lineHeight: "1.6",
-    marginBottom: "24px",
-    maxWidth: "320px",
-    margin: "0 0 24px 0",
-  },
-  loadingText: {
-    fontSize: "15px",
-    color: "#6b7280",
-    lineHeight: "1.6",
-    marginBottom: "8px",
-    animation: "pulse 2s ease-in-out infinite",
-    margin: "0 0 8px 0",
-  },
-  buttonContainer: {
-    display: "flex",
-    gap: "12px",
-    width: "100%",
-    justifyContent: "center",
-    marginTop: "8px",
-  },
-  primaryButton: {
-    padding: "12px 28px",
-    fontSize: "15px",
-    fontWeight: "500",
-    color: "#fff",
-    background: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-    boxShadow: "0 4px 14px 0 rgba(99, 102, 241, 0.39)",
-  },
-  secondaryButton: {
-    padding: "12px 28px",
-    fontSize: "15px",
-    fontWeight: "500",
-    color: "#4b5563",
-    background: "#f3f4f6",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-  },
 };
 
 export default ReferralAgentModal;
