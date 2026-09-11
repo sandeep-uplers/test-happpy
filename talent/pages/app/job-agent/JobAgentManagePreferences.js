@@ -160,6 +160,8 @@ export default function JobAgentManagePreferences({
     onCanSubmitChange,
     /** Centered card empty-state for resume upload (public profile drawer). */
     centeredResumeUpload = false,
+    /** When true, LinkedIn URL is optional (e.g. agent onboarding step 2). Default: required. */
+    linkedinOptional = false,
 }) {
     const { resumeHealthControl } = useSelector(state => state.resume);
     const dispatch = useDispatch()
@@ -282,13 +284,14 @@ export default function JobAgentManagePreferences({
             newErrors.contact_number = 'Please enter your 10 digit contact number';
         }
 
-        if (!formData.linkedin_id) {
+        const linkedinId = String(formData.linkedin_id || '').trim();
+        if (!linkedinOptional && !linkedinId) {
             isValid = false;
             newErrors.linkedin_id = "Linkedin profile url is a required field"
-        } else if (formData.linkedin_id && (!validateURL(formData.linkedin_id) || !formData.linkedin_id?.toLowerCase()?.split("linkedin.com/")[1])) {
+        } else if (linkedinId && (!validateURL(linkedinId) || !linkedinId?.toLowerCase()?.split("linkedin.com/")[1])) {
             isValid = false;
             newErrors.linkedin_id = "Please enter valid linkedin url. eg: https://www.linkedin.com/in/username";
-            if (!formData.linkedin_id.includes("https://")) {
+            if (!linkedinId.includes("https://")) {
                 newErrors.linkedin_id = "Linkedin profile url must start with https://";
             }
         }
@@ -1617,7 +1620,7 @@ export default function JobAgentManagePreferences({
                         </div>
 
                         <div className='form-group linkedin'>
-                            <label className='required_label sectionTitle'>LinkedIn Profile</label>
+                            <label className={`sectionTitle${linkedinOptional ? '' : ' required_label'}`}>LinkedIn Profile</label>
                             <div className='form-input'>
                                 <input
                                     type={"text"}
