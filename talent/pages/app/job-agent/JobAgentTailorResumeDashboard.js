@@ -4,12 +4,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import { useDispatch, useSelector } from 'react-redux';
-import { ArrowDropDownIcon, WhiteStarsIcon } from '@/talent/assets/IconSVG';
+import { ArrowDropDownIcon, EditIcon, WhiteStarsIcon } from '@/talent/assets/IconSVG';
 import {
     API_TAILOR_RESUME_JOB_DESCRIPTION,
     API_TAILOR_RESUME_LIST,
     API_TAILOR_RESUME_PREVIEW,
     API_TAILOR_RESUME_PROGRESS,
+    API_TAILOR_RESUME_RENAME,
     APP_URL,
 } from '@/talent/components/Constant';
 import { GET_API, POST_API } from '@/talent/components/Helper';
@@ -19,6 +20,7 @@ import JobDescriptionViewModal from '@/talent/sections/resume-editor/JobDescript
 import { SET_TAILOR_DASHBOARD_RESUME, SET_TAILOR_MODAL_OPEN } from '@/talent/store/actions/actionsTypes';
 import { tailorResumeExtensionUninstall } from '@/talent/store/actions/resumeActions';
 import { trackExternalJDPopupOpen, trackTailorPricePopupOpen } from '@/talent/store/actions/trackingActions';
+import TailorResumeRenameModal from './TailorResumeRenameModal';
 import './JobAgentSubscription.css';
 import './JobAgentTailorResumeDashboard.css';
 
@@ -53,6 +55,46 @@ function getResumeCardTitle(rItem) {
         return rItem?.tailored_resume || 'Tailored resume';
     }
     return 'Resume uploaded by you';
+}
+
+function patchTailoredResumeName(listItem, updated) {
+    if (listItem?.list_type !== 'tailored') {
+        return listItem;
+    }
+    if (listItem?.id != null && updated?.id != null && listItem.id !== updated.id) {
+        return listItem;
+    }
+    if (
+        listItem?.tailored_resume_id &&
+        updated?.tailored_resume_id &&
+        listItem.tailored_resume_id !== updated.tailored_resume_id
+    ) {
+        return listItem;
+    }
+    return {
+        ...listItem,
+        tailored_resume: updated.tailored_resume,
+        display_name: updated.display_name,
+        default_tailored_resume: updated.default_tailored_resume,
+        is_renamed: updated.is_renamed,
+    };
+}
+
+function TailoredResumeNameRow({ rItem, onRenameClick, disabled }) {
+    return (
+        <div className="jad-trd-name-row">
+            <span className="tr-name">{rItem?.tailored_resume}</span>
+            <button
+                type="button"
+                className="jad-trd-rename-btn"
+                onClick={() => onRenameClick(rItem)}
+                disabled={disabled}
+                aria-label="Rename tailored resume"
+            >
+                <EditIcon />
+            </button>
+        </div>
+    );
 }
 
 const RESUME_PROGRESS_STEP_MESSAGES = [
@@ -175,6 +217,9 @@ const JobAgentTailorResumeDashboard = () => {
     const [jobDescriptionData, setJobDescriptionData] = useState(null);
     const [showPlanExpiredBanner, setShowPlanExpiredBanner] = useState(false);
     const [resumeInProgress, setResumeInProgress] = useState(false);
+    const [renameTarget, setRenameTarget] = useState(null);
+    const [renameSaving, setRenameSaving] = useState(false);
+    const [renameError, setRenameError] = useState('');
     const pageRef = useRef(0);
     const resumeProgressStepText = useResumeProgressStepText(resumeInProgress && page === 0);
 
@@ -334,6 +379,68 @@ const JobAgentTailorResumeDashboard = () => {
 
     const showResumeProgressRow = resumeInProgress && page === 0;
 
+    const handleOpenRenameModal = (rItem) => {
+        if (isLoading || renameSaving) {
+            return;
+        }
+        setRenameError('');
+        setRenameTarget(rItem);
+    };
+
+    const handleCloseRenameModal = () => {
+        if (renameSaving) {
+            return;
+        }
+        setRenameTarget(null);
+        setRenameError('');
+    };
+
+    const handleRenameSave = (displayName) => {
+        if (!renameTarget?.tailored_resume_id) {
+            return;
+        }
+
+        setRenameSaving(true);
+        setRenameError('');
+
+        POST_API(API_TAILOR_RESUME_RENAME, {
+            tailored_resume_id: renameTarget.tailored_resume_id,
+            display_name: displayName,
+        })
+            .then((res) => {
+                const data = res?.data?.data;
+                if (!data) {
+                    setRenameError('Unable to save name. Please try again.');
+                    return;
+                }
+
+                const updated = {
+                    ...renameTarget,
+                    tailored_resume: data.tailored_resume,
+                    display_name: data.display_name,
+                    default_tailored_resume: data.default_tailored_resume ?? renameTarget.default_tailored_resume,
+                    is_renamed: data.is_renamed,
+                };
+
+                setResumeData((prev) => ({
+                    ...prev,
+                    resumes_list: (prev?.resumes_list || []).map((item) => patchTailoredResumeName(item, updated)),
+                }));
+                setResumesList((prev) => prev.map((item) => patchTailoredResumeName(item, updated)));
+                setRenameTarget(null);
+            })
+            .catch((err) => {
+                const message =
+                    err?.response?.data?.message ||
+                    err?.response?.data?.errors?.display_name?.[0] ||
+                    'Unable to save name. Please try again.';
+                setRenameError(message);
+            })
+            .finally(() => {
+                setRenameSaving(false);
+            });
+    };
+
     const handleViewJobDescription = (rItem) => {
         setIsLoading(true);
         if (tailor_dashboard_resume?.[rItem?.id]) {
@@ -464,7 +571,11 @@ const JobAgentTailorResumeDashboard = () => {
                                     <div className="tdr-col tailored-resume-col">
                                         {isTailored ? (
                                             <>
-                                                <span className="tr-name">{rItem?.tailored_resume}</span>
+                                                <TailoredResumeNameRow
+                                                    rItem={rItem}
+                                                    onRenameClick={handleOpenRenameModal}
+                                                    disabled={isLoading || renameSaving}
+                                                />
                                                 {rItem?.hr_number ? (
                                                     <a
                                                         className="tr-info link"
@@ -528,7 +639,22 @@ const JobAgentTailorResumeDashboard = () => {
                                 return (
                                     <article className="jad-trd-card" key={cardKey}>
                                         <header className="jad-trd-card__head">
-                                            <h3 className="jad-trd-card__title">{getResumeCardTitle(rItem)}</h3>
+                                            {isTailored ? (
+                                                <div className="jad-trd-card__title-row">
+                                                    <h3 className="jad-trd-card__title">{getResumeCardTitle(rItem)}</h3>
+                                                    <button
+                                                        type="button"
+                                                        className="jad-trd-rename-btn jad-trd-rename-btn--card"
+                                                        onClick={() => handleOpenRenameModal(rItem)}
+                                                        disabled={isLoading || renameSaving}
+                                                        aria-label="Rename tailored resume"
+                                                    >
+                                                        <EditIcon />
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <h3 className="jad-trd-card__title">{getResumeCardTitle(rItem)}</h3>
+                                            )}
                                         </header>
                                         <div className="jad-trd-card__body">
                                             <div className="jad-trd-card__base">
@@ -668,6 +794,15 @@ const JobAgentTailorResumeDashboard = () => {
                     data={jobDescriptionData}
                 />
             )}
+            <TailorResumeRenameModal
+                isOpen={Boolean(renameTarget)}
+                onClose={handleCloseRenameModal}
+                initialName={renameTarget?.tailored_resume || ''}
+                defaultName={renameTarget?.default_tailored_resume || ''}
+                onSave={handleRenameSave}
+                saving={renameSaving}
+                error={renameError}
+            />
         </>
     );
 };
