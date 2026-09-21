@@ -3,6 +3,25 @@
 export const JOB_AGENT_RECOMMENDED_JOBS_PATH = '/talent/job-agent/recommended-jobs';
 export const JOB_AGENT_JOB_DETAIL_PATH = '/talent/job-agent/job';
 
+export const HAPPPY_AGENT_INFO_QUERY = 'happpy_agent_info=1';
+export const HAPPPY_AGENT_ALL_JOBS_QUERY = 'aggregated_jobs=1&happpy_agent_info=1';
+
+function appendQueryParams(url, queryString) {
+    if (!queryString) return url;
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}${queryString}`;
+}
+
+/** Append `happpy_agent_info=1` for job-agent job fetch APIs (except all-jobs list). */
+export function withHapppyAgentInfoQuery(url) {
+    return appendQueryParams(url, HAPPPY_AGENT_INFO_QUERY);
+}
+
+/** Append `aggregated_jobs=1&happpy_agent_info=1` for the all-jobs opportunities list. */
+export function withHapppyAgentAllJobsQuery(url) {
+    return appendQueryParams(url, HAPPPY_AGENT_ALL_JOBS_QUERY);
+}
+
 /** Matches `useHapppyCompactJobsLayout` — split pane only at ≥1024px. */
 const JOB_AGENT_COMPACT_MEDIA_QUERY = '(max-width: 1023px)';
 

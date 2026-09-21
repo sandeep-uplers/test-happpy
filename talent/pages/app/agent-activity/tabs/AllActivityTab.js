@@ -40,7 +40,6 @@ import VerifyOutreachPerson from '../../linkedin/VerifyOutreachPerson';
 const USE_DUMMY_DATA = false;
 const DUMMY_LATENCY_MS = 220;
 const PAGE_SIZE = 10;
-
 /**
  * Page-level "Paste Job Link" dispatches this custom event after a
  * successful submit so this tab can refetch its rows. Owned by
@@ -59,6 +58,7 @@ const OUTREACH_STATUS = {
     SCRAPPING_FAILED: 5,
     DISCARDED: 6,
     QUEUED: 7,
+    CONFIRMATION_REQUIRED: 8,
 };
 
 const RUN_BY = {
@@ -88,6 +88,7 @@ const STATUS_VARIANT = {
     // SCRAPPING_FAILED: 5,
     DISCARDED: 6,
     QUEUED: 7,
+    CONFIRMATION_REQUIRED: 8,
 };
 
 const STATUS_FILTER_OPTIONS = [
@@ -98,6 +99,7 @@ const STATUS_FILTER_OPTIONS = [
     { value: STATUS_VARIANT.CANCELLED, label: 'Cancelled' },
     { value: STATUS_VARIANT.QUEUED, label: 'Queued' },
     { value: STATUS_VARIANT.DISCARDED, label: 'Discarded' },
+    { value: STATUS_VARIANT.CONFIRMATION_REQUIRED, label: 'Confirmation Required' },
 ];
 
 /* ---------------- Helpers ---------------- */
@@ -1308,7 +1310,336 @@ function normalizeOutreachedPeople(response) {
             jobTitle: typeof p.job_title === 'string' ? p.job_title : '',
             gmailSent: Boolean(p.gmail_sent),
             linkedinSent: Boolean(p.linkedin_sent),
+            linkedinConnectionSent: Boolean(p.linkedin_connection_sent),
+            linkedinConnectionAccept: Boolean(p.linkedin_connection_accept),
+            linkedinMessageSent: Boolean(p.linkedin_message_sent),
+            gmailFollowUpSent: Boolean(p.gmail_follow_up_sent),
+            linkedinFollowUpSent: Boolean(p.linkedin_follow_up_sent),
+            linkedinMessage: typeof p.linkedin_message === 'string' ? p.linkedin_message : '',
+            gmailMessage: typeof p.gmail_message === 'string' ? p.gmail_message : '',
         }));
+}
+
+function stripMessageHtml(raw) {
+    if (typeof raw !== 'string' || !raw.trim()) return '';
+    return raw
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<\/p>/gi, '\n')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/&amp;/gi, '&')
+        .replace(/&lt;/gi, '<')
+        .replace(/&gt;/gi, '>')
+        .replace(/&quot;/gi, '"')
+        .replace(/[ \t]+\n/g, '\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .replace(/[^\S\n]+/g, ' ')
+        .trim();
+}
+
+function truncateWords(text, maxWords = 4) {
+    const raw = typeof text === 'string' ? text.trim() : '';
+    if (!raw) return { display: '', full: '' };
+    const words = raw.split(/\s+/).filter(Boolean);
+    if (words.length <= maxWords) return { display: raw, full: raw };
+    return { display: `${words.slice(0, maxWords).join(' ')}…`, full: raw };
+}
+
+function GmailChipIcon() {
+    return (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#6b6b6b" aria-hidden>
+            <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" />
+        </svg>
+    );
+}
+
+function LinkedInChipIcon() {
+    return (
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden focusable="false">
+            <path fill="#0A66C2" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.554V9h3.565v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+        </svg>
+    );
+}
+
+function StatusCheckIcon() {
+    return (
+        <svg className="aa-act__via-status" width="16" height="16" viewBox="0 0 16 16" aria-hidden>
+            <circle cx="8" cy="8" r="8" fill="#22c55e" />
+            <path d="M4.6 8.2l2.1 2.1 4.7-5" fill="none" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+}
+
+function StatusPendingIcon() {
+    return (
+        <svg className="aa-act__via-status" width="16" height="16" viewBox="0 0 16 16" aria-hidden>
+            <circle cx="8" cy="8" r="8" fill="#f5a623" />
+            <path d="M8 4.4v4.1l2.6 1.5" fill="none" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+}
+
+function StatusWaitingIcon() {
+    return (
+        <svg className="aa-act__via-tip-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden>
+            <circle cx="8" cy="8" r="6.2" fill="none" stroke="#c8c8c8" strokeWidth="1.5" />
+        </svg>
+    );
+}
+
+function viaStageIcon(state) {
+    if (state === 'done') return <StatusCheckIcon />;
+    if (state === 'pending') return <StatusPendingIcon />;
+    return <StatusWaitingIcon />;
+}
+
+function viaStageStatusLabel(state) {
+    if (state === 'done') return 'Done';
+    if (state === 'pending') return 'Pending';
+    return 'Not yet';
+}
+
+function gmailViaStages(p) {
+    const messageDone = Boolean(p.gmailSent || p.gmailFollowUpSent);
+    const followDone = Boolean(p.gmailFollowUpSent);
+    return [
+        { label: 'Message sent', state: messageDone ? 'done' : 'waiting' },
+        { label: 'Follow-up', state: followDone ? 'done' : messageDone ? 'pending' : 'waiting' },
+    ];
+}
+
+function linkedinViaStages(p) {
+    const sent = Boolean(p.linkedinConnectionSent || p.linkedinConnectionAccept || p.linkedinMessageSent);
+    const accepted = Boolean(p.linkedinConnectionAccept || p.linkedinMessageSent);
+    const messaged = Boolean(p.linkedinMessageSent);
+    const follow = Boolean(p.linkedinFollowUpSent);
+    const inviteStarted = Boolean(p.linkedinSent || sent);
+    return [
+        { label: 'Connection sent', state: sent ? 'done' : inviteStarted ? 'pending' : 'waiting' },
+        { label: 'Connection accepted', state: accepted ? 'done' : sent ? 'pending' : 'waiting' },
+        { label: 'Message sent', state: messaged ? 'done' : accepted ? 'pending' : 'waiting' },
+        { label: 'Follow-up', state: follow ? 'done' : messaged ? 'pending' : 'waiting' },
+    ];
+}
+
+function ContactViaPill({ variant, href, label, stages, icon, onToggle, hasMessage, messageOpen, message }) {
+    const anchorRef = useRef(null);
+    const popRef = useRef(null);
+    const closeTimerRef = useRef(null);
+    const [open, setOpen] = useState(false);
+    const [pos, setPos] = useState({ top: 0, left: 0, width: 320 });
+
+    const className = `aa-act__via-pill aa-act__via-pill--${variant}${hasMessage ? ' is-clickable' : ''}`;
+    const statusIcon = variant === 'pending' ? <StatusPendingIcon /> : <StatusCheckIcon />;
+
+    const clearCloseTimer = () => {
+        if (closeTimerRef.current != null) {
+            clearTimeout(closeTimerRef.current);
+            closeTimerRef.current = null;
+        }
+    };
+
+    const placePopover = useCallback(() => {
+        const anchor = anchorRef.current;
+        if (!anchor) return;
+        const pop = popRef.current;
+        const margin = 10;
+        const gap = 6;
+        const maxW = Math.min(message ? 360 : 240, window.innerWidth - margin * 2);
+        const br = anchor.getBoundingClientRect();
+        let left = br.left + br.width / 2 - maxW / 2;
+        left = Math.max(margin, Math.min(left, window.innerWidth - maxW - margin));
+        let top = br.bottom + gap;
+        if (pop) {
+            const ph = pop.getBoundingClientRect().height;
+            if (top + ph > window.innerHeight - margin) {
+                top = Math.max(margin, br.top - ph - gap);
+            }
+        }
+        setPos({ top, left, width: maxW });
+    }, [message]);
+
+    useLayoutEffect(() => {
+        if (!open) return undefined;
+        placePopover();
+        const id = requestAnimationFrame(() => placePopover());
+        return () => cancelAnimationFrame(id);
+    }, [open, placePopover, stages, message]);
+
+    useEffect(() => {
+        if (!open) return undefined;
+        const onMove = () => placePopover();
+        window.addEventListener('scroll', onMove, true);
+        window.addEventListener('resize', onMove);
+        return () => {
+            window.removeEventListener('scroll', onMove, true);
+            window.removeEventListener('resize', onMove);
+        };
+    }, [open, placePopover]);
+
+    const scheduleClose = () => {
+        clearCloseTimer();
+        closeTimerRef.current = window.setTimeout(() => setOpen(false), STATUS_TIP_CLOSE_MS);
+    };
+
+    const show = () => {
+        clearCloseTimer();
+        setOpen(true);
+    };
+
+    const inner = (
+        <>
+            {icon}
+            <span className="aa-act__via-pill-label">{label}</span>
+            {statusIcon}
+        </>
+    );
+
+    const tooltip =
+        open &&
+        typeof document !== 'undefined' &&
+        createPortal(
+            <div
+                ref={popRef}
+                role="tooltip"
+                className="aa-act__via-tip"
+                style={{ top: pos.top, left: pos.left, width: pos.width }}
+                onMouseEnter={clearCloseTimer}
+                onMouseLeave={scheduleClose}
+            >
+                <ul className="aa-act__via-tip-list">
+                    {(stages || []).map((step) => (
+                        <li key={step.label} className={`aa-act__via-tip-row is-${step.state}`}>
+                            {viaStageIcon(step.state)}
+                            <span className="aa-act__via-tip-label">{step.label}</span>
+                            <span className="aa-act__via-tip-state">{viaStageStatusLabel(step.state)}</span>
+                        </li>
+                    ))}
+                </ul>
+                {message ? (
+                    <div className="aa-act__via-tip-message">
+                        <span className="aa-act__via-tip-message-label">Message</span>
+                        <p className="aa-act__via-tip-message-body">{message}</p>
+                    </div>
+                ) : null}
+                {hasMessage ? (
+                    <p className="aa-act__via-tip-hint">{messageOpen ? 'Click to hide full message' : 'Click to pin full message'}</p>
+                ) : null}
+            </div>,
+            document.body
+        );
+
+    const hoverProps = {
+        ref: anchorRef,
+        className,
+        onMouseEnter: show,
+        onMouseLeave: scheduleClose,
+        onFocus: show,
+        onBlur: scheduleClose,
+    };
+
+    return (
+        <>
+            {hasMessage ? (
+                <button type="button" {...hoverProps} onClick={onToggle}>
+                    {inner}
+                </button>
+            ) : href ? (
+                <a
+                    {...hoverProps}
+                    href={href}
+                    target={href.startsWith('mailto:') ? undefined : '_blank'}
+                    rel="noopener noreferrer"
+                >
+                    {inner}
+                </a>
+            ) : (
+                <span {...hoverProps} tabIndex={0}>
+                    {inner}
+                </span>
+            )}
+            {tooltip}
+        </>
+    );
+}
+
+function gmailViaState(p) {
+    if (!(p.gmailSent || p.gmailFollowUpSent || p.gmailMessage)) return null;
+    return { variant: 'done', stages: gmailViaStages(p) };
+}
+
+function linkedinViaState(p) {
+    const done = p.linkedinMessageSent || p.linkedinConnectionAccept;
+    const pending = !done && (p.linkedinConnectionSent || p.linkedinSent);
+    if (!done && !pending && !p.linkedinMessage) return null;
+    return { variant: done ? 'done' : 'pending', stages: linkedinViaStages(p) };
+}
+
+function ReachedPersonRow({ person: p, idx }) {
+    const [openMsg, setOpenMsg] = useState(null);
+    const name =
+        p.fullName ||
+        (p.email ? p.email.split('@')[0] : '') ||
+        (p.linkedinUrl ? p.linkedinUrl.split('/').filter(Boolean).pop() : '') ||
+        `Contact ${idx + 1}`;
+    const role = truncateWords(p.jobTitle, 4);
+    const gmail = gmailViaState(p);
+    const linkedin = linkedinViaState(p);
+    const gmailText = stripMessageHtml(p.gmailMessage);
+    const linkedinText = stripMessageHtml(p.linkedinMessage);
+    const openText = openMsg === 'gmail' ? gmailText : openMsg === 'linkedin' ? linkedinText : '';
+
+    return (
+        <li className="aa-act__reached-row">
+            <div className="aa-act__reached-main">
+                <div className="aa-act__reached-identity">
+                    <span className="aa-act__reached-num">{String(idx + 1).padStart(2, '0')}</span>
+                    <div className="aa-act__reached-meta">
+                        <span className="aa-act__reached-name">{name}</span>
+                        {role.display ? (
+                            <span className="aa-act__reached-role" title={role.full}>
+                                {role.display}
+                            </span>
+                        ) : null}
+                    </div>
+                </div>
+                {gmail || linkedin ? (
+                    <div className="aa-act__reached-via">
+                        <span className="aa-act__via-label">Contacted Via:</span>
+                        {gmail ? (
+                            <ContactViaPill
+                                variant={gmail.variant}
+                                href={p.email ? `mailto:${p.email}` : null}
+                                label={p.email || 'Gmail'}
+                                stages={gmail.stages}
+                                icon={<GmailChipIcon />}
+                                hasMessage={Boolean(gmailText)}
+                                message={gmailText}
+                                messageOpen={openMsg === 'gmail'}
+                                onToggle={() => setOpenMsg((cur) => (cur === 'gmail' ? null : 'gmail'))}
+                            />
+                        ) : null}
+                        {linkedin ? (
+                            <ContactViaPill
+                                variant={linkedin.variant}
+                                href={p.linkedinUrl || null}
+                                label="Linkedin"
+                                stages={linkedin.stages}
+                                icon={<LinkedInChipIcon />}
+                                hasMessage={Boolean(linkedinText)}
+                                message={linkedinText}
+                                messageOpen={openMsg === 'linkedin'}
+                                onToggle={() => setOpenMsg((cur) => (cur === 'linkedin' ? null : 'linkedin'))}
+                            />
+                        ) : null}
+                    </div>
+                ) : (
+                    <span className="aa-act__reached-na">No channel</span>
+                )}
+            </div>
+            {openText ? <p className="aa-act__track-message">{openText}</p> : null}
+        </li>
+    );
 }
 
 function ReachedPeopleInline({ people, loading, error }) {
@@ -1332,57 +1663,9 @@ function ReachedPeopleInline({ people, loading, error }) {
     return (
         <div className="aa-act__reached">
             <ol className="aa-act__reached-list">
-                {people.map((p, idx) => {
-                    const name =
-                        p.fullName ||
-                        (p.email ? p.email.split('@')[0] : '') ||
-                        (p.linkedinUrl ? p.linkedinUrl.split('/').filter(Boolean).pop() : '') ||
-                        `Contact ${idx + 1}`;
-                    return (
-                        <li key={`${p.outreachEmployeeId ?? idx}-${idx}`} className="aa-act__reached-row">
-                            <span className="aa-act__reached-num">{String(idx + 1).padStart(2, '0')}</span>
-                            <div className="aa-act__reached-meta">
-                                <span className="aa-act__reached-name">{name}</span>
-                                {p.jobTitle ? (
-                                    <span className="aa-act__reached-role">{p.jobTitle}</span>
-                                ) : null}
-                            </div>
-                            <div className="aa-act__reached-channels">
-                                {p.gmailSent && p.email ? (
-                                    <a className="aa-act__reached-chip aa-act__reached-chip--gmail" href={`mailto:${p.email}`}>
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="#6c757d" aria-hidden>
-                                            <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" />
-                                        </svg>
-                                        {p.email}
-                                    </a>
-                                ) : null}
-                                {p.linkedinSent && p.linkedinUrl ? (
-                                    <a
-                                        className="aa-act__reached-chip aa-act__reached-chip--linkedin"
-                                        href={p.linkedinUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        <svg
-                                            className="aa-act__reached-chip-icon"
-                                            width="12"
-                                            height="12"
-                                            viewBox="0 0 24 24"
-                                            aria-hidden="true"
-                                            focusable="false"
-                                        >
-                                            <path fill="#0A66C2" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.554V9h3.565v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                                        </svg>
-                                        LinkedIn
-                                    </a>
-                                ) : null}
-                                {!p.gmailSent && !p.linkedinSent ? (
-                                    <span className="aa-act__reached-chip aa-act__reached-chip--muted">No channel</span>
-                                ) : null}
-                            </div>
-                        </li>
-                    );
-                })}
+                {people.map((p, idx) => (
+                    <ReachedPersonRow key={`${p.outreachEmployeeId ?? idx}-${idx}`} person={p} idx={idx} />
+                ))}
             </ol>
         </div>
     );
@@ -1712,6 +1995,13 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
                                 jobTitle: 'Hiring Manager',
                                 gmailSent: true,
                                 linkedinSent: true,
+                                linkedinConnectionSent: true,
+                                linkedinConnectionAccept: true,
+                                linkedinMessageSent: true,
+                                gmailFollowUpSent: true,
+                                linkedinFollowUpSent: false,
+                                gmailMessage: 'Hi, following up on the role we discussed.',
+                                linkedinMessage: 'Thanks for connecting — sharing the job details here.',
                             },
                         ],
                     }));
@@ -1957,8 +2247,6 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
                         options={STATUS_FILTER_OPTIONS}
                         onChange={setStatusFilter}
                     />
-
-                    <div className="aa-act__filters-spacer" aria-hidden />
 
                     <div className="aa-act__filter aa-act__filter--daterange">
                         <span className="aa-act__filter-label">Last Activity</span>

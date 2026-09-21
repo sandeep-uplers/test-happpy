@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+
+import axios from 'axios';
 import _, { debounce } from "lodash";
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from "react-redux";
@@ -9,15 +11,17 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from 'uuid';
 import { BookmarkNotification } from "../../../assets/BookmarkNotify";
 import { ArrowUpIcon, GreenCheckMarkIcon } from "../../../assets/IconSVG";
-import { API_ALL_OPP, API_VIEW_VIDEO_COUNT, APP_NAME, IMAGE_URL } from "../../../components/Constant";
-import { MASTER_FILTERS, POST_API, formattedJobCount, isTalentHired, GET_API, createRequestCancelSource, isRequestCanceled } from "../../../components/Helper";
+import { API_ALL_OPP, API_VIEW_VIDEO_COUNT, IMAGE_URL } from "../../../components/Constant";
+import { MASTER_FILTERS, POST_API, formattedJobCount, isTalentHired } from "../../../components/Helper";
 import { jobPostedDateFilterMaster } from "../../../components/Masters";
 import { JobDetailLoader } from "../../../components/SectionLoader";
 import WaveLoader from "../../../components/WaveLoader";
 import PageTimeLogger from "../../../components/common/PageTimeLogger";
+import { withHapppyAgentAllJobsQuery } from '../../../helpers/jobPath';
+import { ensureModalAppElement } from '../../../helpers/setModalAppElement';
 import { allOppoPageLoaded, filterUsedTracking, pageVisitLoadAndCtaTrack, talentBookMarkTrack, timeTrackEvent, trackAllOpportunitiesSearch } from '../../../helpers/Mixpanel';
 import { oppBookmark, removeUser } from "../../../store/actions/UserActions";
-import { HR_UPDATE_COMPLETED, SET_ALL_JOBS, SET_BOOKMARK_COUNT, SET_LOADER, SET_TRIGGER_ALL_JOBS_RESET } from "../../../store/actions/actionsTypes";
+import { HR_UPDATE_COMPLETED, SET_ALL_JOBS, SET_BOOKMARK_COUNT, SET_ERRORS, SET_LOADER, SET_TRIGGER_ALL_JOBS_RESET } from "../../../store/actions/actionsTypes";
 import JobCard from "../happy-jobs/JobCard";
 import JobDetails from "../happy-jobs/JobDetails";
 import OpportunitiesFilter from "../happy-jobs/OpportunitiesFilter";
@@ -36,9 +40,9 @@ const defaultAllJobsFilters = () => ({
     job_posted_date: { [DEFAULT_JOB_POSTED_DATE.value]: DEFAULT_JOB_POSTED_DATE },
 });
 
-
-let listCancelTokenSource = createRequestCancelSource();
-let countCancelTokenSource = createRequestCancelSource();
+ensureModalAppElement();
+let listCancelTokenSource = axios.CancelToken.source();
+let countCancelTokenSource = axios.CancelToken.source();
 let pendingCountUrl = null;
 let pendingCountPromise = null;
 
@@ -234,8 +238,6 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
 
     const filterData = useCallback( // load 1st page
         debounce(() => {
-            const activeFilters = filtersRef.current;
-            lastFetchFiltersKeyRef.current = filtersCacheKey(activeFilters);
             const generation = ++fetchGenerationRef.current
             countFetchKeyRef.current = null
             timeTrackEvent('All Opportunity Page Loaded');
@@ -247,6 +249,7 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
             setJobsCount(null)
             listRef.current?.children[0]?.scrollIntoView({ behavior: 'instant', block: 'center' });
             let perPage = 10;
+            const activeFilters = filtersRef.current;
 
             getAllOpportnities(1, activeFilters, 0)(dispatch)
                 .then((res) => {
@@ -299,7 +302,6 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
     const { allOppMasterValue } = useSelector(state => state.work);
 
     const filterMasterData = useSelector(state => state.work)?.oppFilterMaster;
-    const masterDataKeyCount = Object.keys(filterMasterData).length;
 
     useEffect(() => {
         if (searchParams.has("is_saved_filter")) {
@@ -318,22 +320,20 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
         }
         const filtersKey = filtersCacheKey(filters)
         const mastersReady =
-            masterDataKeyCount > 1 ||
+            Object.keys(filterMasterData).length > 1 ||
             !MASTER_FILTERS.some((item) => searchParams.has(item))
 
-        if (!mastersReady) {
+        if (!mastersReady || lastFetchFiltersKeyRef.current === filtersKey) {
+            if (firstUpdate.current) { firstUpdate.current = false; }
             return () => filterData.cancel()
         }
 
-        if (lastFetchFiltersKeyRef.current === filtersKey) {
-            return () => filterData.cancel()
-        }
-
+        lastFetchFiltersKeyRef.current = filtersKey
         filterData();
         if (firstUpdate.current) { firstUpdate.current = false; }
         setShowFiltered(false)
-        return () => filterData.cancel()
-    }, [filters, masterDataKeyCount])
+        return filterData.cancel
+    }, [filters])
 
     useEffect(() => { // load 2nd page onwards
         if (lastPage >= currentPage && !loading && currentPage > 1) {
@@ -364,7 +364,7 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
 
     useEffect(() => {
         if (!embedded) {
-            document.title = `${APP_NAME || 'Happpy'} | All Jobs`;
+            document.title = 'All Jobs | Happpy Agent | Uplers';
         }
         pageVisitLoadAndCtaTrack('All Opportunity Page Visit')
         localStorage.removeItem('new_loggedin')
@@ -389,7 +389,7 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                 window.removeEventListener('scroll', handleScroll, true);
             }
         };
-    }, [embedded, isCompact])
+    }, [isCompact])
 
 
     const handleScrollTop = (e, isPc = false) => {
@@ -524,7 +524,7 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
             })
         }
 
-        qryUrl = qryUrl + '&aggregated_jobs=1'
+        qryUrl = withHapppyAgentAllJobsQuery(qryUrl)
 
         let api_url = API_ALL_OPP;
         // if (loosen) {
@@ -539,19 +539,20 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
         }
 
         return new Promise((resolve, reject) => {
+            axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
             const isCountRequest = is_count === 1;
             if (isCountRequest) {
                 if (pendingCountUrl && pendingCountUrl !== qryUrl) {
                     countCancelTokenSource.cancel('Request was canceled');
                 }
-                countCancelTokenSource = createRequestCancelSource();
+                countCancelTokenSource = axios.CancelToken.source();
             } else {
                 listCancelTokenSource.cancel('Request was canceled');
-                listCancelTokenSource = createRequestCancelSource();
+                listCancelTokenSource = axios.CancelToken.source();
                 setLoading(true);
             }
-            const requestPromise = GET_API(api_url + qryUrl, {
-                signal: isCountRequest ? countCancelTokenSource.token : listCancelTokenSource.token,
+            const requestPromise = axios.get(api_url + qryUrl, {
+                cancelToken: isCountRequest ? countCancelTokenSource.token : listCancelTokenSource.token
             })
                 .then((res) => {
                     if (!isCountRequest) {
@@ -561,10 +562,6 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                     resolve(res);
                 })
                 .catch((err) => {
-                    if (isRequestCanceled(err)) {
-                        reject(err);
-                        return;
-                    }
                     if (err.response && err.response.status && err.response.status == 401) {
                         removeUser()(dispatch);
                     }
@@ -574,7 +571,7 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                             payload: err.response.data.errors
                         });
                     }
-                    if (isRequestCanceled(err)) {
+                    if (axios.isCancel(err)) {
                         console.log('Request canceled');
                     } else if (!isCountRequest) {
                         setLoading(false);

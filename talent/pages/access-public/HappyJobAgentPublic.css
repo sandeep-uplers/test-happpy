@@ -3,27 +3,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat+Brush&family=JetBrains+Mono:wght@500&display=swap');
 
 .happy-job-agent-landing {
-    --happy-yellow: var(--happpy-legacy-yellow);
-    --happy-yellow-deep: var(--happpy-legacy-yellow-deep);
-    --happy-yellow-soft: var(--happpy-legacy-yellow-soft);
-    --happy-yellow-container: var(--happpy-legacy-yellow-container);
-    --happy-on-yellow: var(--happpy-on-brand);
+    --happy-yellow: var(--brandYellow, var(--Uplers-Yellow, #ffda30));
+    --happy-yellow-deep: #e6c41a;
+    --happy-yellow-soft: var(--brandYellowSoft, #fff9e6);
+    --happy-yellow-container: #fff3b8;
+    --happy-on-yellow: var(--primary-black, var(--Uplers-Black, #232323));
 
     /* Readable amber on white (links, borders, eyebrow text) */
-    --happy-purple: var(--happpy-legacy-yellow-deep);
+    --happy-purple: #e6c41a;
     --happy-purple-dark: #c9ae14;
 
     --happy-ink: #1a1a1a;
     --happy-muted: #5c5c5c;
-    --happy-bg: var(--happpy-white);
-    --happy-card: var(--happpy-white);
+    --happy-bg: #ffffff;
+    --happy-card: #ffffff;
     --happy-border: #ebe8dc;
-    --happy-footer: var(--happpy-white);
+    --happy-footer: #ffffff;
     --happy-lavender: var(--happy-yellow-soft);
     --happy-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: var(--happy-ink);
-    background: linear-gradient(180deg, var(--happpy-white) 0%, #fffef8 38%, var(--happpy-white) 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #fffef8 38%, #ffffff 100%);
     min-height: 100vh;
     min-height: 100dvh;
     overflow-x: clip;
@@ -142,7 +142,7 @@ html.happy-job-agent-landing-active #app {
     font-variant-numeric: tabular-nums;
     line-height: 1;
     color: var(--happy-ink);
-    background: var(--happpy-white);
+    background: #fff;
     text-align: center;
     caret-color: var(--happy-ink);
     outline: none;
@@ -270,7 +270,7 @@ html.happy-job-agent-landing-active #app {
     padding: 13px 20px;
     border: 2px solid var(--happy-border);
     border-radius: 12px;
-    background: var(--happpy-white);
+    background: #fff;
     color: var(--happy-ink);
     font-size: 1rem;
     font-weight: 600;
@@ -284,7 +284,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-loggedin-setup-card--info {
-    background: linear-gradient(165deg, #fffdf6 0%, var(--happpy-white) 52%);
+    background: linear-gradient(165deg, #fffdf6 0%, #ffffff 52%);
     border: 1px solid rgba(230, 196, 26, 0.35);
     box-shadow: 0 20px 44px rgba(42, 35, 14, 0.12);
 }
@@ -387,7 +387,7 @@ html.happy-job-agent-landing-active #app {
     gap: 12px;
     padding: 16px 18px 14px;
     border-bottom: 1px solid var(--happy-border);
-    background: linear-gradient(180deg, var(--happpy-white) 0%, var(--happy-yellow-soft) 180%);
+    background: linear-gradient(180deg, #fff 0%, var(--happy-yellow-soft) 180%);
 }
 
 .happy-how-video-modal-title {
@@ -729,7 +729,7 @@ html.happy-job-agent-landing-active #app {
     padding: 18px 18px 16px;
     border-radius: 14px;
     border: 1px solid var(--happy-border);
-    background: linear-gradient(180deg, var(--happy-yellow-soft) 0%, var(--happpy-white) 48%);
+    background: linear-gradient(180deg, var(--happy-yellow-soft) 0%, #ffffff 48%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 
@@ -1141,7 +1141,7 @@ html.happy-job-agent-landing-active #app {
 .happy-job-board-chip:hover {
     border-color: var(--happy-purple);
     color: var(--happy-purple-dark);
-    background: var(--happpy-white);
+    background: #fff;
 }
 
 .happy-job-board-chip:focus-visible {
@@ -1320,7 +1320,7 @@ html.happy-job-agent-landing-active #app {
 
 /* Platforms */
 .happy-platforms {
-    background: var(--happpy-white);
+    background: #fff;
     border-top: 1px solid var(--happy-border);
     border-bottom: 1px solid var(--happy-border);
 }
@@ -2319,7 +2319,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-lp-btn-secondary {
-    background: var(--happpy-white);
+    background: #fff;
     color: var(--happy-ink);
     border: 1.5px solid var(--happy-border);
 }
@@ -2331,7 +2331,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-lp-btn-white {
-    background: var(--happpy-white);
+    background: #fff;
     color: var(--happy-purple-dark);
     font-weight: 800;
 }
@@ -2347,7 +2347,7 @@ html.happy-job-agent-landing-active #app {
     font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 0.14em;
-    color: var(--happpy-brand-mid);
+    color: #2a9b9f;
     text-transform: uppercase;
     margin-bottom: 10px;
 }
@@ -2371,7 +2371,7 @@ html.happy-job-agent-landing-active #app {
     position: relative;
     overflow: hidden;
     background: var(--happy-on-yellow);
-    color: var(--happpy-white);
+    color: #ffffff;
     padding: 48px 0 52px;
     border-top: 4px solid var(--happy-yellow);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -2515,7 +2515,7 @@ html.happy-job-agent-landing-active #app {
 
 .happy-interview-wall {
     padding: 48px 0 24px;
-    background: var(--happpy-white);
+    background: #fff;
     /* border-top: 1px solid var(--happy-border); */
 }
 
@@ -2661,7 +2661,7 @@ html.happy-job-agent-landing-active #app {
             0 0 0 1px rgba(70, 236, 205, 0.35),
             0 10px 36px rgba(70, 236, 205, 0.2),
             0 0 48px rgba(70, 236, 205, 0.12);
-        background: linear-gradient(165deg, rgb(173, 255, 217, 0.92) 0%, var(--happpy-white) 65%);
+        background: linear-gradient(165deg, rgb(173, 255, 217, 0.92) 0%, #ffffff 65%);
         transform: translateY(-3px);
     }
 
@@ -2670,7 +2670,7 @@ html.happy-job-agent-landing-active #app {
         box-shadow:
             0 0 0 4px rgba(70, 236, 205, 0.12),
             0 14px 44px rgba(42, 35, 14, 0.08);
-        background: linear-gradient(180deg, rgba(173, 255, 217, 0.45) 0%, var(--happpy-white) 100%);
+        background: linear-gradient(180deg, rgba(173, 255, 217, 0.45) 0%, #ffffff 100%);
         transform: translateY(-2px);
     }
 
@@ -2757,7 +2757,7 @@ html.happy-job-agent-landing-active #app {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    background: var(--happpy-white);
+    background: #fff;
     border: none;
     margin-bottom: 10px;
     box-shadow: none;
@@ -2784,8 +2784,8 @@ html.happy-job-agent-landing-active #app {
     position: relative;
     overflow: hidden;
     padding: 8px 0 28px;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0, var(--happpy-black) 32px, var(--happpy-black) calc(100% - 32px), transparent 100%);
-    mask-image: linear-gradient(90deg, transparent 0, var(--happpy-black) 32px, var(--happpy-black) calc(100% - 32px), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
 }
 
 .happy-interview-logo-marquee__track {
@@ -2920,7 +2920,7 @@ html.happy-job-agent-landing-active #app {
 
 .happy-who-card-good {
     border-color: rgba(70, 236, 205, 0.42);
-    background: linear-gradient(165deg, rgba(173, 255, 217, 0.85) 0%, var(--happpy-white) 52%);
+    background: linear-gradient(165deg, rgba(173, 255, 217, 0.85) 0%, #ffffff 52%);
     box-shadow: 0 18px 44px rgba(42, 35, 14, 0.07);
 }
 
@@ -2931,7 +2931,7 @@ html.happy-job-agent-landing-active #app {
 
 .happy-who-card-bad {
     border-color: rgba(0, 0, 0, 0.06);
-    background: linear-gradient(180deg, #fafafa 0%, var(--happpy-white) 100%);
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
 }
 
 .happy-who-card-bad:hover {
@@ -3069,7 +3069,7 @@ html.happy-job-agent-landing-active #app {
     overflow: hidden;
     background:
         radial-gradient(ellipse 90% 55% at 50% -12%, rgba(70, 236, 205, 0.16), transparent 52%),
-        linear-gradient(180deg, var(--happpy-white) 0%, var(--happy-yellow-soft) 42%, var(--happpy-white) 100%);
+        linear-gradient(180deg, #ffffff 0%, var(--happy-yellow-soft) 42%, #ffffff 100%);
     border-top: 1px solid var(--happy-border);
     border-bottom: 1px solid var(--happy-border);
 }
@@ -3147,7 +3147,7 @@ html.happy-job-agent-landing-active #app {
     font-family: inherit;
     text-align: left;
     color: var(--happy-ink);
-    background: linear-gradient(145deg, var(--happpy-white) 0%, rgba(173, 255, 217, 0.85) 100%);
+    background: linear-gradient(145deg, #ffffff 0%, rgba(173, 255, 217, 0.85) 100%);
     box-shadow: 0 12px 36px rgba(42, 35, 14, 0.08);
     transition:
         transform 0.18s ease,
@@ -3349,7 +3349,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-text-on-dark {
-    color: var(--happpy-white);
+    color: #fff;
 }
 
 /* ═══ 90-day paths — polished comparison (Uplers yellow “with” column) ═══ */
@@ -3361,7 +3361,7 @@ html.happy-job-agent-landing-active #app {
     border-bottom: 1px solid var(--happy-border);
     background:
         radial-gradient(ellipse 95% 70% at 50% -25%, rgba(70, 236, 205, 0.2), transparent 55%),
-        linear-gradient(185deg, #fafbfc 0%, var(--happpy-white) 46%, rgba(173, 255, 217, 0.55) 100%);
+        linear-gradient(185deg, #fafbfc 0%, #ffffff 46%, rgba(173, 255, 217, 0.55) 100%);
     color: var(--happy-ink);
 }
 
@@ -3512,11 +3512,11 @@ html.happy-job-agent-landing-active #app {
     padding: 16px 18px 20px;
     list-style: none;
     flex: 1;
-    background: linear-gradient(180deg, #fafafa 0%, var(--happpy-white) 100%);
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
 }
 
 .happy-contrast-lines--plus {
-    background: linear-gradient(180deg, rgba(173, 255, 217, 0.55) 0%, var(--happpy-white) 100%);
+    background: linear-gradient(180deg, rgba(173, 255, 217, 0.55) 0%, #ffffff 100%);
 }
 
 .happy-contrast-lines-row {
@@ -3897,7 +3897,7 @@ html.happy-job-agent-landing-active #app {
     border-radius: 16px;
     text-align: center;
     border: 1px solid rgba(70, 236, 205, 0.28);
-    background: linear-gradient(165deg, rgba(173, 255, 217, 0.65) 0%, var(--happpy-white) 72%);
+    background: linear-gradient(165deg, rgba(173, 255, 217, 0.65) 0%, #ffffff 72%);
     box-shadow: 0 12px 36px rgba(42, 35, 14, 0.05);
 }
 
@@ -3928,7 +3928,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-pricing-section {
-    background: var(--happpy-white);
+    background: #fff;
 }
 
 .happy-pricing-grid {
@@ -4138,7 +4138,7 @@ html.happy-job-agent-landing-active #app {
     padding: 6px 10px;
     border-radius: 8px;
     border: 1px solid var(--happy-border);
-    background: var(--happpy-white);
+    background: #fff;
     color: var(--happy-muted);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -4188,7 +4188,7 @@ html.happy-job-agent-landing-active #app {
     height: 36px;
     border-radius: 8px;
     background: #1a73e8;
-    color: var(--happpy-white);
+    color: #fff;
     font-weight: 800;
     display: flex;
     align-items: center;
@@ -4281,7 +4281,7 @@ html.happy-job-agent-landing-active #app {
     position: relative;
     padding: 72px 24px 80px;
     background: var(--happy-on-yellow);
-    color: var(--happpy-white);
+    color: #ffffff;
     overflow: hidden;
     border-top: 4px solid var(--happy-yellow);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -4334,7 +4334,7 @@ html.happy-job-agent-landing-active #app {
     margin: 0 0 12px;
     font-size: clamp(1.6rem, 3vw, 2.2rem);
     font-weight: 800;
-    color: var(--happpy-white);
+    color: #ffffff;
 }
 
 .happy-final-cta-accent {
@@ -4382,9 +4382,9 @@ html.happy-job-agent-landing-active #app {
     position: relative;
     display: flex;
     flex-direction: column;
-    background: var(--happpy-white);
+    background: #ffffff;
     border-radius: 10px;
-    border: 1px solid var(--happpy-slate-200);
+    border: 1px solid #e2e8f0;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
     padding: 22px 22px 20px;
 }
@@ -4441,7 +4441,7 @@ html.happy-job-agent-landing-active #app {
 
     .happy-pricing-html-ribbon--value span {
         background: #0f172a;
-        color: var(--happpy-white);
+        color: #ffffff;
     }
 }
 
@@ -4492,7 +4492,7 @@ html.happy-job-agent-landing-active #app {
 
 .happy-pricing-html-rule {
     border: none;
-    border-top: 1px solid var(--happpy-slate-100);
+    border-top: 1px solid #f1f5f9;
     margin: 0 0 18px;
 }
 
@@ -4543,7 +4543,7 @@ html.happy-job-agent-landing-active #app {
 
 .happy-pricing-html-btn-outline {
     border: 2px solid #1b1c1c;
-    background: var(--happpy-white);
+    background: #ffffff;
     color: #1b1c1c;
 
     &.disabled {
@@ -4553,7 +4553,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-pricing-html-btn-outline:hover {
-    background: var(--happpy-slate-50);
+    background: #f8fafc;
 }
 
 .happy-pricing-html-btn-primary {
@@ -4577,7 +4577,7 @@ html.happy-job-agent-landing-active #app {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--happpy-slate-400);
+    color: #94a3b8;
 }
 
 .happy-pricing-html-foot--accent {
@@ -4613,6 +4613,39 @@ html.happy-job-agent-landing-active #app {
             margin-bottom: 2.5rem !important;
         }
     }
+
+    /* Beats OutreachAgent.css base 3.375rem — long title must wrap on narrow screens */
+    .testimonials-slider__title {
+        @media screen and (max-width: 800px) {
+            font-size: 2.25rem;
+            line-height: 1.15;
+            letter-spacing: -0.7px;
+        }
+
+        @media screen and (max-width: 767px) {
+            font-size: 1.75rem;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        @media screen and (max-width: 480px) {
+            font-size: 1.5rem;
+            line-height: 1.25;
+            letter-spacing: -0.35px;
+        }
+    }
+
+    .testimonials-slider__title-word {
+        @media screen and (max-width: 767px) {
+            white-space: normal;
+        }
+    }
+
+    .testimonials-slider__title-underline {
+        @media screen and (max-width: 767px) {
+            width: min(200px, 100%);
+        }
+    }
 }
 
 .happy-job-agent-landing .happy-interview-emails-section .testimonials-slider .section-header {
@@ -4643,14 +4676,14 @@ html.happy-job-agent-landing-active #app {
 
 /* Happpy Agent — hero photo header (Figma: referral hero) */
 .happy-job-agent-landing .happy-agent-hero-mesh {
-    --happy-hero-mesh-ink: var(--happpy-ink);
+    --happy-hero-mesh-ink: #231f20;
     --happy-hero-mesh-accent: #09ffb9;
-    --happy-hero-mesh-mint: var(--happpy-mint-bg);
+    --happy-hero-mesh-mint: #e9ffff;
 
     position: relative;
     overflow: hidden;
     border-radius: 0 !important;
-    background: var(--happpy-black);
+    background: #000;
     min-height: min(960px, 100vh);
     display: flex;
     flex-direction: column;
@@ -4670,6 +4703,10 @@ html.happy-job-agent-landing-active #app {
     display: block;
     width: 100%;
     height: 100%;
+
+    @media screen and (max-width: 767px) {
+        filter: brightness(0.7);
+    }
 }
 
 .happy-job-agent-landing .happy-agent-hero-mesh__bg-photo {
@@ -4802,6 +4839,10 @@ html.happy-job-agent-landing-active #app {
     gap: 0.2em;
 }
 
+.happy-job-agent-landing .happy-agent-live-results__eyebrow-copy--mobile {
+    display: none;
+}
+
 /* Must beat the generic .happy-agent-live-results__companies max-width rule below */
 .happy-job-agent-landing .happy-agent-live-results--hero .happy-agent-live-results__companies--hero {
     width: 100vw;
@@ -4816,8 +4857,8 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-agent-live-results--hero .happy-agent-live-results__marquee-row {
     width: 100vw;
     max-width: 100vw;
-    -webkit-mask-image: linear-gradient(90deg, transparent, var(--happpy-black) 4%, var(--happpy-black) 96%, transparent);
-    mask-image: linear-gradient(90deg, transparent, var(--happpy-black) 4%, var(--happpy-black) 96%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
 }
 
 .happy-job-agent-landing .happy-agent-live-results--hero .happy-agent-live-results__pill {
@@ -4857,7 +4898,7 @@ html.happy-job-agent-landing-active #app {
     font-family: "Rubik", sans-serif;
     font-size: 12px;
     font-weight: 500;
-    color: var(--happpy-white);
+    color: #fff;
 }
 
 .happy-job-agent-landing .happy-agent-live-results--hero .happy-agent-live-results__pill:hover {
@@ -4881,11 +4922,11 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-agent-hero-mesh__title-prefix {
     display: block;
     font-family: "Rubik", sans-serif;
-    font-size: clamp(2.25rem, 5.42vw, 4.875rem);
+    font-size: clamp(2.25rem, 5.42vw, 4rem);
     font-weight: 500;
     line-height: normal;
     letter-spacing: -0.78px;
-    color: var(--happpy-white);
+    color: #fff;
     text-wrap: balance;
 }
 
@@ -4923,11 +4964,11 @@ html.happy-job-agent-landing-active #app {
     gap: 0;
     max-width: 524px;
     margin: 0;
-    color: var(--happpy-white);
+    color: #fff;
     font-family: "Rubik", sans-serif;
-    font-size: clamp(1rem, 1.39vw, 1.25rem);
+    font-size: clamp(1rem, 1.39vw, 1rem);
     font-weight: 400;
-    line-height: 24px;
+    line-height: 1.6;
     letter-spacing: normal;
     text-align: center;
 
@@ -5022,30 +5063,32 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-agent-section-cta__pill {
     width: auto;
     max-width: 634px;
-    background: var(--happpy-ink) !important;
+    background: #231f20 !important;
 
     &.how-it-works {
         @media screen and (max-width: 768px) {
+            outline: 1px solid #231f20 !important;
             background-color: transparent !important;
-            color: var(--happpy-ink) !important;
+            color: #231f20 !important;
             box-shadow: none !important;
             margin: -16px 0;
     
             svg path {
-                fill: var(--happpy-ink);
+                fill: #231f20;
             }
     
             &:hover{
+                outline: none !important;
                 svg path {
-                    fill: var(--happpy-white);
+                    fill: #fff;
                 }
             }
         }
     }
 
     &:hover {
-        background: var(--happpy-brand-dark) !important;
-        color: var(--happpy-white) !important;
+        background: #175f5d !important;
+        color: #fff !important;
         transform: translateY(-1px);
     }
 }
@@ -5053,8 +5096,8 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-agent-section-cta--align-start{
     .happy-agent-section-cta__pill {
         max-width: 350px;
-        background: var(--happpy-brand) !important; 
-        color: var(--happpy-ink) !important;
+        background: #46ECCD !important; 
+        color: #231f20 !important;
         font-size: 1.125rem !important;
         transition: transform 0.15s ease;
         min-height: 40px;
@@ -5067,19 +5110,19 @@ html.happy-job-agent-landing-active #app {
             width: 1.125rem;
             height: 1.125rem;
             path{
-                fill: var(--happpy-ink) !important;
+                fill: #231f20 !important;
                 stroke: none !important;
             }
         }
 
         @media screen and (max-width: 767px) {
             background: transparent !important; 
-            color: var(--happpy-brand) !important;
-            border: 1px solid var(--happpy-brand) !important;
+            color: #46ECCD !important;
+            border: 1px solid #46ECCD !important;
             max-width: 227px;
 
             svg path{
-                fill: var(--happpy-brand) !important;
+                fill: #46ECCD !important;
                 stroke: none !important;
             }
         }
@@ -5103,7 +5146,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .happy-agent-hero-mesh__pill--primary {
-    color: var(--happpy-white);
+    color: #fff;
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
     width: 100%;
     justify-content: center;
@@ -5117,7 +5160,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .happy-agent-hero-mesh__pill--primary.HERO {
-    background: var(--happpy-white) !important;
+    background: #46eccd !important;
     color: var(--happy-hero-mesh-ink) !important;
     
     svg path {
@@ -5126,7 +5169,7 @@ html.happy-job-agent-landing-active #app {
     }
 
     &:hover {
-        background: var(--happpy-brand) !important;
+        background: #3ad4b8 !important;
         svg path {
             fill: var(--happy-hero-mesh-ink);
         }
@@ -5181,7 +5224,7 @@ html.happy-job-agent-landing-active #app {
     width: 39px;
     height: 39px;
     border-radius: 50%;
-    background: var(--happpy-white);
+    background: #ffffff;
     flex-shrink: 0;
     color: var(--happy-hero-mesh-ink);
 }
@@ -5194,6 +5237,38 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-agent-hero-mesh__pill-icon--play svg {
     width: 16px;
     height: 16px;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__eyebrow {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0;
+    padding: 8px 16px;
+    border: 1px solid #ADFFD9;
+    border-radius: 9999px;
+    color: #09FFB9;
+    font-family: "Rubik", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 0;
+    white-space: nowrap;
+    background: rgba(157, 250, 213, 0.16);
+    margin-bottom: -12px;
+    margin-top: -24px;
+    border: none;
+    background: none;
+    padding: 0 !important;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__eyebrow-sparkle {
+    display: block;
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+    filter: brightness(0) saturate(100%) invert(86%) sepia(24%) saturate(704%) hue-rotate(109deg) brightness(97%) contrast(92%);
 }
 
 .happy-job-agent-landing .happy-agent-hero-mesh__trust {
@@ -5209,7 +5284,7 @@ html.happy-job-agent-landing-active #app {
     font-weight: 400;
     line-height: normal;
     text-transform: none;
-    color: var(--happpy-white);
+    color: #fff;
     text-shadow: none;
     opacity: 1;
 }
@@ -5242,6 +5317,10 @@ html.happy-job-agent-landing-active #app {
     opacity: 0.4;
 }
 
+.happy-job-agent-landing .happy-agent-hero-mesh__trust-stats {
+    display: none;
+}
+
 @media (max-width: 767px) {
     .happy-job-agent-landing .happy-agent-hero-mesh {
         border-radius: 0;
@@ -5251,6 +5330,8 @@ html.happy-job-agent-landing-active #app {
     .happy-job-agent-landing .happy-agent-hero-mesh__inner {
         padding: 120px 20px 32px;
         gap: 24px;
+        align-items: flex-start;
+        text-align: left;
     }
 
     /* Must come after the shorthand above — that rule was wiping showPublicNavbar
@@ -5262,23 +5343,58 @@ html.happy-job-agent-landing-active #app {
     .happy-job-agent-landing .happy-agent-live-results__stack--hero {
         padding: 0 20px 36px;
         gap: 24px;
+        align-items: flex-start;
+    }
+
+    .happy-job-agent-landing .happy-agent-live-results__header--hero {
+        justify-content: flex-start;
     }
 
     .happy-job-agent-landing .happy-agent-live-results__eyebrow--hero {
         font-size: 12px;
-        letter-spacing: 1px;
-        gap: 10px;
-        flex-wrap: wrap;
-        white-space: normal;
+        font-weight: 500;
+        letter-spacing: 0;
+        gap: 8px;
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        text-transform: none;
+        justify-content: flex-start;
+    }
+
+    .happy-job-agent-landing .happy-agent-live-results__eyebrow--hero .happy-agent-live-results__eyebrow-label,
+    .happy-job-agent-landing .happy-agent-live-results__eyebrow--hero .happy-agent-live-results__eyebrow-copy--desktop {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-live-results__eyebrow--hero .happy-agent-live-results__eyebrow-copy--mobile {
+        display: inline;
+    }
+
+    .happy-job-agent-landing .happy-agent-live-results__eyebrow--hero .happy-agent-live-results__eyebrow-dot {
+        width: 8px;
+        height: 8px;
+        background: #46eccd;
     }
 
     .happy-job-agent-landing .happy-agent-live-results__eyebrow-label,
     .happy-job-agent-landing .happy-agent-live-results__eyebrow-stat {
-        white-space: normal;
+        white-space: nowrap;
+        justify-content: flex-start;
     }
 
     .happy-job-agent-landing .happy-agent-hero-mesh__bg-fade-bottom {
         height: 140px;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__eyebrow {
+        display: inline-flex;
+        font-size: 0.8125rem;
+        padding: 7px 14px;
+        gap: 8px;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__title {
+        align-items: flex-start;
     }
 
     .happy-job-agent-landing .happy-agent-hero-mesh__title-prefix {
@@ -5289,24 +5405,70 @@ html.happy-job-agent-landing-active #app {
         letter-spacing: -0.5px;
     }
 
+    .happy-job-agent-landing .happy-agent-hero-mesh__lead {
+        align-items: flex-start;
+        text-align: left;
+        font-size: 11px;
+    }
+
     .happy-job-agent-landing .happy-agent-hero-mesh__lead-primary,
     .happy-job-agent-landing .happy-agent-hero-mesh__lead-secondary-line {
         white-space: normal;
     }
 
-    .happy-job-agent-landing .happy-agent-hero-mesh__trust {
-        flex-direction: row;
-        align-items: center;
-        gap: 8px;
-        max-width: 100%;
-        padding: 0 8px;
-        font-size: 0.75rem;
-        color: var(--happpy-white);
+    .happy-job-agent-landing .happy-agent-hero-mesh__actions {
+        align-items: flex-start;
+        justify-content: flex-start;
     }
 
-    .happy-job-agent-landing .happy-agent-hero-mesh__trust-line {
-        justify-content: center;
-        flex-wrap: wrap;
+    .happy-job-agent-landing .happy-agent-hero-mesh__trust--desktop {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__trust-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: start;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 12px 0;
+        margin-inline: -10px;
+        width: calc(100% + 20px);
+        border-top: 1px solid rgba(255, 255, 255, 0.18);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__trust-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 4px;
+        padding: 0 8px;
+        text-align: center;
+        color: #fff;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__trust-stat + .happy-agent-hero-mesh__trust-stat {
+        border-left: 1px solid rgba(255, 255, 255, 0.28);
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__trust-stat-value {
+        font-family: "Rubik", sans-serif;
+        font-size: 1.25rem;
+        font-weight: 500;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        color: #fff;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__trust-stat-label {
+        font-family: "Rubik", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 400;
+        line-height: 1.25;
+        color: rgba(255, 255, 255, 0.72);
     }
 }
 
@@ -5318,7 +5480,6 @@ html.happy-job-agent-landing-active #app {
 
     .happy-job-agent-landing .happy-agent-hero-mesh__pill {
         width: 100%;
-        max-width: 360px;
         justify-content: center;
         min-height: 48px;
         padding: 12px 20px;
@@ -5339,19 +5500,19 @@ html.happy-job-agent-landing-active #app {
 
 @media screen and (max-width: 480px) {
     .happy-job-agent-landing .happy-agent-hero-mesh__title-prefix {
-        font-size: 2rem;
+        font-size: 3rem;
     }
 
     .happy-job-agent-landing .happy-agent-hero-mesh__title-highlight {
-        font-size: 2.25rem;
+        font-size: 3rem;
     }
 }
 
 /* Happpy Agent — Live Results band (Figma: Section 2) */
 .happy-job-agent-landing .happy-agent-live-results {
-    --happy-live-results-teal: var(--happpy-brand-mid);
-    --happy-live-results-ink: var(--happpy-ink);
-    --happy-live-results-muted: var(--happpy-ink-muted);
+    --happy-live-results-teal: #2a9b9f;
+    --happy-live-results-ink: #231f20;
+    --happy-live-results-muted: #6b6b6b;
     --happy-live-results-body: #4c4c4c;
 
     position: relative;
@@ -5382,6 +5543,10 @@ html.happy-job-agent-landing-active #app {
     flex-direction: column;
     align-items: center;
     width: 100%;
+
+    @media (max-width: 767px) {
+        align-items: flex-start;
+    }
 }
 
 .happy-job-agent-landing .happy-agent-live-results__eyebrow {
@@ -5450,8 +5615,8 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-agent-live-results__marquee-row {
     overflow: hidden;
     width: 100%;
-    -webkit-mask-image: linear-gradient(90deg, transparent, var(--happpy-black) 6%, var(--happpy-black) 94%, transparent);
-    mask-image: linear-gradient(90deg, transparent, var(--happpy-black) 6%, var(--happpy-black) 94%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
     padding: 2px 0;
     contain: layout style;
 }
@@ -5527,7 +5692,7 @@ html.happy-job-agent-landing-active #app {
     margin-right: 10px;
     border-radius: 9999px;
     border: 1px solid rgba(0, 0, 0, 0.24);
-    background: var(--happpy-white);
+    background: #fff;
     text-decoration: none;
     color: inherit;
     flex-shrink: 0;
@@ -5629,11 +5794,11 @@ html.happy-job-agent-landing-active #app {
 
 /* Happpy Agent — How It Works (Figma Section 3) */
 .happy-job-agent-landing .happy-agent-hiw-figma {
-    --happy-hiw-teal: var(--happpy-brand-mid);
+    --happy-hiw-teal: #2a9b9f;
     --happy-hiw-border: #2dc9a7;
-    --happy-hiw-ink: var(--happpy-ink);
-    --happy-hiw-title: var(--happpy-ink);
-    --happy-hiw-muted: var(--happpy-ink-muted);
+    --happy-hiw-ink: #231f20;
+    --happy-hiw-title: #231f20;
+    --happy-hiw-muted: #6b6b6b;
 
     background: #f3f0e8;
     padding: 80px 100px;
@@ -5843,12 +6008,13 @@ html.happy-job-agent-landing-active #app {
 
 @media (max-width: 767px) {
     .happy-job-agent-landing .happy-agent-hiw-figma__demo-frame {
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 9 / 16;
+        object-fit: cover;
     }
 }
 
 .happy-job-agent-landing .happy-agent-works-anywhere {
-    --happy-wa-ink: var(--happpy-ink);
+    --happy-wa-ink: #231f20;
     --happy-wa-title: #202020;
     --happy-wa-muted: #575757;
     --happy-wa-chip-border: #fff5f5;
@@ -5929,43 +6095,39 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .happy-agent-works-anywhere__title {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
     margin: 0;
-    padding-bottom: 2px;
     font-family: "Rubik", sans-serif;
-    font-size: 54px;
-    font-weight: 600;
     line-height: normal;
-    letter-spacing: -0.6px;
-    color: var(--happy-wa-ink);
+    text-align: center;
 }
 
-.happy-job-agent-landing .happy-agent-works-anywhere__title-text {
+.happy-job-agent-landing .happy-agent-works-anywhere__title-kicker {
+    position: relative;
     display: inline-block;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.6px;
+    color: #4c4c4c;
 }
 
 .happy-job-agent-landing .happy-agent-works-anywhere__title-underline {
     position: absolute;
-    right: -16px;
+    right: -12px;
     bottom: 0;
-    width: 277px;
-    max-width: 72%;
+    width: 243px;
+    max-width: 68%;
     height: auto;
     pointer-events: none;
 }
 
-.happy-job-agent-landing .happy-agent-works-anywhere__lead {
-    margin: 0;
-    font-family: Montserrat, "Rubik", sans-serif;
-    font-size: 14px;
+.happy-job-agent-landing .happy-agent-works-anywhere__title-text {
+    font-size: 40px;
     font-weight: 400;
-    line-height: normal;
-    color: var(--happy-wa-muted);
-}
-
-.happy-job-agent-landing .happy-agent-works-anywhere__lead strong {
-    font-weight: 600;
-    color: var(--happy-wa-title);
+    color: #231f20;
 }
 
 .happy-job-agent-landing .happy-agent-works-anywhere__chips {
@@ -5988,6 +6150,21 @@ html.happy-job-agent-landing-active #app {
     border-radius: 48px;
     border: 1px solid var(--happy-wa-chip-border);
     background: linear-gradient(179.68deg, rgba(255, 255, 255, 0.4) 0.75%, rgba(255, 255, 255, 0) 196.52%);
+
+    @media (max-width: 767px) {
+        &.large{
+            padding: 12px 20px;
+
+            .happy-agent-works-anywhere__chip-icon {
+                width: 20px;
+                height: 20px;
+                flex-shrink: 0;
+            }
+            .happy-agent-works-anywhere__chip-label{
+                font-size: 16px;
+            }
+        }
+    }
 }
 
 .happy-job-agent-landing .happy-agent-works-anywhere__chip-icon {
@@ -6035,19 +6212,30 @@ html.happy-job-agent-landing-active #app {
     font-size: 24px;
     line-height: 1.1;
     letter-spacing: 0.5px;
-    color: #666666;
+    color: #2a9b9f;
     white-space: nowrap;
+    padding-top: 4px;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere__footer-text {
+    display: inline-block;
+    font-size: 14px;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
+    color: #6b6b6b;
+    text-align: center;
+    padding: 16px 16px 0;
 }
 
 /* Manual vs Happpy Agent comparison */
 .happy-job-agent-landing .happy-agent-manual-vs-figma {
     overflow-x: clip;
-    --happy-mv-ink: var(--happpy-ink);
-    --happy-mv-muted: var(--happpy-ink-muted);
-    --happy-mv-stat-label: var(--happpy-brand-muted);
+    --happy-mv-ink: #231f20;
+    --happy-mv-muted: #6b6b6b;
+    --happy-mv-stat-label: #6a7e82;
     --happy-mv-manual-pill: #dbe3ec;
     --happy-mv-manual-text: #4f545b;
-    --happy-mv-agent-pill: var(--happpy-brand);
+    --happy-mv-agent-pill: #46eccd;
     --happy-mv-stripe: #f6f6f6;
     --happy-mv-stat-bg: #fdfcf9;
 
@@ -6084,11 +6272,6 @@ html.happy-job-agent-landing-active #app {
     font-size: clamp(1.75rem, 4vw, 40px);
     font-weight: 700;
     color: var(--happy-mv-muted);
-
-    @media (max-width: 767px) {
-        font-size: 14px;
-        line-height: 2;
-    }
 }
 
 .happy-job-agent-landing .happy-agent-manual-vs-figma__title-emphasis {
@@ -6097,8 +6280,16 @@ html.happy-job-agent-landing-active #app {
     color: var(--happy-mv-ink);
 
     @media (max-width: 767px) {
-        font-size: 18px;
+        font-size: 28px;
+        line-height: 34px;
+        letter-spacing: -0.8px;
     }
+}
+
+.happy-job-agent-landing .happy-agent-manual-vs-figma__title-emphasis-mobile,
+.happy-job-agent-landing .happy-agent-manual-vs-figma__compare-rule,
+.happy-job-agent-landing .happy-agent-manual-vs-figma__compare-strip {
+    display: none;
 }
 
 .happy-job-agent-landing .happy-agent-manual-vs-figma__body {
@@ -6126,7 +6317,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .happy-agent-manual-vs-figma__panel--manual {
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid #e5e1d8;
     overflow-x: clip;
 }
@@ -6156,7 +6347,7 @@ html.happy-job-agent-landing-active #app {
 
 .happy-job-agent-landing .happy-agent-manual-vs-figma__agent-logo-lockup {
     --happpy-logo-text-size: 22px;
-    color: var(--happpy-white);
+    color: #ffffff;
 }
 
 .happy-job-agent-landing .happy-agent-manual-vs-figma__panel-title {
@@ -6173,7 +6364,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .happy-agent-manual-vs-figma__panel--agent .happy-agent-manual-vs-figma__panel-title {
-    color: var(--happpy-white);
+    color: #ffffff;
 }
 
 .happy-job-agent-landing .happy-agent-manual-vs-figma__rows {
@@ -6268,6 +6459,24 @@ html.happy-job-agent-landing-active #app {
     will-change: transform;
 }
 
+
+.happy-job-agent-landing .happy-landing-enter--agent-row:last-child .happy-agent-manual-vs-figma__pill--agent {
+    background: white;
+    outline: 2px solid var(--happy-mv-agent-pill);
+
+    .happy-agent-manual-vs-figma__pill-num{
+        background: var(--happy-mv-agent-pill);
+        color: black;
+    }
+    .happy-agent-manual-vs-figma__pill-icon-wrap{
+        background: var(--happy-mv-agent-pill);
+        img{
+            filter: contrast(5);
+        }
+    }
+}
+
+
 .happy-job-agent-landing .happy-agent-manual-vs-figma__pill--agent .happy-agent-manual-vs-figma__pill-main,
 .happy-job-agent-landing .happy-agent-manual-vs-figma__pill--agent .happy-agent-manual-vs-figma__pill-icon-wrap {
     position: relative;
@@ -6324,7 +6533,7 @@ html.happy-job-agent-landing-active #app {
     height: 40px;
     flex-shrink: 0;
     border-radius: 40px;
-    background: var(--happpy-white);
+    background: #ffffff;
     font-family: "Rubik", sans-serif;
     font-size: 14px;
     font-weight: 400;
@@ -6358,7 +6567,7 @@ html.happy-job-agent-landing-active #app {
     height: 44px;
     flex-shrink: 0;
     border-radius: 44px;
-    background: var(--happpy-white);
+    background: #ffffff;
     transition: transform 0.52s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -6443,32 +6652,173 @@ html.happy-job-agent-landing-active #app {
 
 @media (max-width: 767px) {
     .happy-job-agent-landing .happy-agent-manual-vs-figma {
-        padding: 56px 20px;
-    }
-    .happy-job-agent-landing .happy-agent-manual-vs-figma__panel{
-        padding: 24px 16px 16px;
+        padding: 56px 16px;
     }
 
     .happy-job-agent-landing .happy-agent-manual-vs-figma__inner {
-        gap: 28px;
+        gap: 32px;
     }
 
-    .happy-job-agent-landing .happy-agent-manual-vs-figma__row-stripe {
-        left: 0;
-        right: 0;
-        border-radius: 12px;
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        max-width: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__title {
+        width: 100%;
+        letter-spacing: -0.8px;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__title-muted {
+        font-size: 20px;
+        line-height: 34px;
+        letter-spacing: -0.8px;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__title-emphasis-desktop {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__title-emphasis-mobile {
+        display: inline;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__title-highlight {
+        color: #04ac7c;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__compare-rule {
+        display: block;
+        width: 100%;
+        max-width: 358px;
+        height: 1px;
+        background: #e5e1d8;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__compare-strip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 32px;
+        width: 100%;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__compare-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        text-align: center;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__compare-value,
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__compare-label {
+        margin: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__compare-value {
+        font-family: "Telegraf", sans-serif;
+        font-size: 16px;
+        font-weight: 800;
+        line-height: normal;
+        color: #4c4c4c;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__compare-item.is-accent .happy-agent-manual-vs-figma__compare-value {
+        color: #087153;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__compare-label {
+        font-family: "Rubik", sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: normal;
+        color: #6b6b6b;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__compare-arrow {
+        display: block;
+        width: 20px;
+        height: 11px;
+        flex-shrink: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__compare {
+        gap: 24px;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__panel {
+        gap: 20px;
+        min-height: 0;
+        padding: 20px;
+        border-radius: 16px;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__panel-header {
+        gap: 12px;
     }
 
     .happy-job-agent-landing .happy-agent-manual-vs-figma__panel-title {
+        font-size: 18px;
         white-space: normal;
     }
 
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__rows,
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__rows--manual,
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__rows--agent {
+        gap: 12px;
+        min-height: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__row--manual {
+        min-height: 0;
+        margin-top: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__row-stripe {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__row--manual:nth-child(odd) .happy-agent-manual-vs-figma__pill,
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__row--manual:nth-child(even) .happy-agent-manual-vs-figma__pill {
+        transform: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__pill {
+        justify-content: flex-start;
+        min-height: 52px;
+    }
+
     .happy-job-agent-landing .happy-agent-manual-vs-figma__pill-text {
-        font-size: 13px;
+        font-size: 14px;
+        line-height: 1.3;
+        white-space: normal;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__pill-icon-wrap {
+        display: none;
     }
 
     .happy-job-agent-landing .happy-agent-manual-vs-figma__stats {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+    .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row--manual:nth-child(odd) .happy-agent-manual-vs-figma__pill,
+    .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row--manual:nth-child(even) .happy-agent-manual-vs-figma__pill,
+    .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row-stripe,
+    .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row--manual .happy-agent-manual-vs-figma__pill-icon-wrap img,
+    .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row--manual:nth-child(1) .happy-agent-manual-vs-figma__pill-icon-wrap img,
+    .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row--manual:nth-child(2) .happy-agent-manual-vs-figma__pill-icon-wrap img,
+    .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row--manual:nth-child(3) .happy-agent-manual-vs-figma__pill-icon-wrap img,
+    .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row--manual:nth-child(4) .happy-agent-manual-vs-figma__pill-icon-wrap img,
+    .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row--manual:nth-child(5) .happy-agent-manual-vs-figma__pill-icon-wrap img {
+        animation: none;
+        transform: none;
     }
 }
 
@@ -6684,18 +7034,22 @@ html.happy-job-agent-landing-active #app {
 
 @media (max-width: 767px) {
     .happy-job-agent-landing .happy-agent-works-anywhere {
-        padding: 56px 20px;
+        padding: 56px 0;
     }
 
-    .happy-job-agent-landing .happy-agent-works-anywhere__title {
-        font-size: clamp(2rem, 7vw, 54px);
+    .happy-job-agent-landing .happy-agent-works-anywhere__title-kicker {
+        font-size: clamp(1.375rem, 4.5vw, 32px);
         letter-spacing: -0.4px;
     }
 
     .happy-job-agent-landing .happy-agent-works-anywhere__title-underline {
-        right: 0;
-        width: min(200px, 70%);
-        max-width: 70%;
+        left: 24%;
+        width: min(200px, 68%);
+        max-width: 68%;
+    }
+
+    .happy-job-agent-landing .happy-agent-works-anywhere__title-text {
+        font-size: clamp(1.625rem, 5vw, 40px);
     }
 
     .happy-job-agent-landing .happy-agent-works-anywhere__inner {
@@ -6773,12 +7127,12 @@ html.happy-job-agent-landing-active #app {
 /* Outreach.js–style conversion blocks on Happpy Agent start page */
 .happy-job-agent-landing .happy-outreach-reference-blocks {
     width: 100%;
-    background: linear-gradient(180deg, #fffef8 0%, var(--happpy-white) 42%, var(--happpy-legacy-yellow-soft) 100%);
+    background: linear-gradient(180deg, #fffef8 0%, #ffffff 42%, #fff9e6 100%);
 }
 
 /* How it works (.hiw-big) — yellow & white on Happpy Agent (overrides Outreach purple / slate) */
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big {
-    background: linear-gradient(180deg, #fffef8 0%, var(--happpy-white) 38%, var(--happpy-legacy-yellow-soft) 100%);
+    background: linear-gradient(180deg, #fffef8 0%, #ffffff 38%, #fff9e6 100%);
     padding: 72px 20px 80px;
     border-bottom: 1px solid rgba(230, 196, 26, 0.22);
 }
@@ -6789,7 +7143,7 @@ html.happy-job-agent-landing-active #app {
     padding-bottom: 92px;
     background:
         radial-gradient(ellipse 125% 85% at 50% -18%, rgba(70, 236, 205, 0.16) 0%, transparent 52%),
-        linear-gradient(180deg, #fffef8 0%, var(--happpy-white) 36%, var(--happpy-legacy-yellow-soft) 100%);
+        linear-gradient(180deg, #fffef8 0%, #ffffff 36%, #fff9e6 100%);
 }
 
 .happy-job-agent-landing .hiw-big-inner--happy-flow {
@@ -6852,7 +7206,7 @@ html.happy-job-agent-landing-active #app {
 
 .happy-job-agent-landing .hiw-big-panel--steps {
     padding: 1.35rem 1.3rem 1.5rem;
-    background: linear-gradient(165deg, var(--happpy-white) 0%, #fffdf8 50%, #fff8ec 100%);
+    background: linear-gradient(165deg, #ffffff 0%, #fffdf8 50%, #fff8ec 100%);
     border: 1px solid rgba(230, 196, 26, 0.3);
     box-shadow:
         0 1px 2px rgba(15, 23, 42, 0.04),
@@ -6862,7 +7216,7 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .hiw-big-panel--live {
     position: relative;
     padding: 1.2rem 1.2rem 1.35rem;
-    background: linear-gradient(180deg, var(--happpy-white) 0%, #faf8f3 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #faf8f3 100%);
     border: 1px solid rgba(235, 232, 220, 0.98);
     box-shadow:
         0 1px 2px rgba(15, 23, 42, 0.05),
@@ -6918,7 +7272,7 @@ html.happy-job-agent-landing-active #app {
     box-sizing: border-box;
     border: 2px solid rgba(92, 92, 92, 0.45);
     border-radius: 0.25rem;
-    background: var(--happpy-white);
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -6929,7 +7283,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .hiw-full-workflow-input:checked + .hiw-full-workflow-box {
-    background: linear-gradient(145deg, var(--happy-yellow, var(--happpy-legacy-yellow)) 0%, var(--happy-yellow-deep, var(--happpy-legacy-yellow-deep)) 100%);
+    background: linear-gradient(145deg, var(--happy-yellow, #ffda30) 0%, var(--happy-yellow-deep, #e6c41a) 100%);
     border-color: var(--happy-yellow-deep, #c9ae14);
     box-shadow: 0 1px 4px rgba(230, 196, 26, 0.45);
 }
@@ -6940,7 +7294,7 @@ html.happy-job-agent-landing-active #app {
     width: 0.28rem;
     height: 0.52rem;
     margin-bottom: 0.08rem;
-    border: solid var(--happy-on-yellow, var(--happpy-on-brand));
+    border: solid var(--happy-on-yellow, #232323);
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
@@ -6950,7 +7304,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .hiw-full-workflow-input:focus-visible + .hiw-full-workflow-box {
-    outline: 2px solid var(--happy-yellow-deep, var(--happpy-legacy-yellow-deep));
+    outline: 2px solid var(--happy-yellow-deep, #e6c41a);
     outline-offset: 2px;
 }
 
@@ -7076,8 +7430,8 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big-label {
-    color: var(--happy-on-yellow, var(--happpy-on-brand));
-    background: var(--happy-yellow-soft, var(--happpy-legacy-yellow-soft));
+    color: var(--happy-on-yellow, #232323);
+    background: var(--happy-yellow-soft, #fff9e6);
     border: 1px solid rgba(230, 196, 26, 0.45);
 }
 
@@ -7306,7 +7660,7 @@ html.happy-job-agent-landing-active #app {
     position: relative;
     padding: 0.85rem 0.75rem;
     border-radius: 0.75rem;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid var(--happy-border);
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
     transition:
@@ -7383,8 +7737,8 @@ html.happy-job-agent-landing-active #app {
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 9999px;
-    background: var(--happy-yellow-container, var(--happpy-legacy-yellow-container));
-    color: var(--happy-on-yellow, var(--happpy-on-brand));
+    background: var(--happy-yellow-container, #fff3b8);
+    color: var(--happy-on-yellow, #232323);
 }
 
 .happy-job-agent-landing .happy-agent-run__ic {
@@ -7435,7 +7789,7 @@ html.happy-job-agent-landing-active #app {
 
 .happy-job-agent-landing .happy-agent-run__dot--on {
     width: 1.25rem;
-    background: var(--happy-yellow-deep, var(--happpy-legacy-yellow-deep));
+    background: var(--happy-yellow-deep, #e6c41a);
 }
 
 .happy-job-agent-landing .happy-agent-run__step--clickable {
@@ -7459,7 +7813,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .happy-agent-run__step-hit:focus-visible {
-    outline: 2px solid var(--happy-yellow-deep, var(--happpy-legacy-yellow-deep));
+    outline: 2px solid var(--happy-yellow-deep, #e6c41a);
     outline-offset: 3px;
 }
 
@@ -7511,8 +7865,8 @@ html.happy-job-agent-landing-active #app {
     --jad-on-surface: var(--happy-ink);
     --jad-on-surface-variant: var(--happy-muted);
     --jad-outline-variant: var(--happy-border);
-    --jad-primary-container: var(--happy-yellow-container, var(--happpy-legacy-yellow-container));
-    --jad-on-primary-container: var(--happy-on-yellow, var(--happpy-on-brand));
+    --jad-primary-container: var(--happy-yellow-container, #fff3b8);
+    --jad-on-primary-container: var(--happy-on-yellow, #232323);
 
     max-width: min(36rem, 100%);
     width: 100%;
@@ -7569,7 +7923,7 @@ html.happy-job-agent-landing-active #app {
     gap: 1rem;
     padding: 1rem 1.1rem;
     border-radius: 0.75rem;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid var(--happy-border);
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
 }
@@ -7581,8 +7935,8 @@ html.happy-job-agent-landing-active #app {
     justify-content: center;
     padding: 0.5rem;
     border-radius: 0.5rem;
-    background: var(--happy-yellow-container, var(--happpy-legacy-yellow-container));
-    color: var(--happy-on-yellow, var(--happpy-on-brand));
+    background: var(--happy-yellow-container, #fff3b8);
+    color: var(--happy-on-yellow, #232323);
 }
 
 .happy-job-agent-landing .jad-howto__ra-target-icin {
@@ -7672,7 +8026,7 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .jad-howto__ra-you {
     padding: 0.9rem 1rem;
     border-radius: 0.75rem;
-    background: linear-gradient(135deg, #fffef6 0%, var(--happpy-white) 55%, var(--happpy-legacy-yellow-soft) 100%);
+    background: linear-gradient(135deg, #fffef6 0%, #ffffff 55%, #fff9e6 100%);
     border: 1px solid rgba(230, 196, 26, 0.45);
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
 }
@@ -7713,12 +8067,12 @@ html.happy-job-agent-landing-active #app {
     width: 2.75rem;
     height: 2.75rem;
     border-radius: 9999px;
-    background: var(--happy-yellow-container, var(--happpy-legacy-yellow-container));
+    background: var(--happy-yellow-container, #fff3b8);
     border: 2px solid rgba(230, 196, 26, 0.5);
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: -0.02em;
-    color: var(--happy-on-yellow, var(--happpy-on-brand));
+    color: var(--happy-on-yellow, #232323);
     font-family: Inter, system-ui, sans-serif;
 }
 
@@ -7772,13 +8126,13 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .jad-howto__ra-you-reply {
     padding: 0.65rem 0.75rem;
     border-radius: 0.5rem;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid var(--happy-border);
 }
 
 .happy-job-agent-landing .jad-howto__ra-you-reply--inbound {
     border-left: 3px solid rgba(37, 99, 235, 0.45);
-    background: var(--happpy-slate-50);
+    background: #f8fafc;
 }
 
 .happy-job-agent-landing .jad-howto__ra-you-reply-note {
@@ -7847,7 +8201,7 @@ html.happy-job-agent-landing-active #app {
     min-width: 0;
     padding: 0.75rem 0.85rem;
     border-radius: 0.75rem;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid var(--happy-border);
 }
 
@@ -7897,7 +8251,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .jad-howto__ra-chip-ic--mail {
-    color: var(--happpy-danger);
+    color: #ef4444;
 }
 
 .happy-job-agent-landing .jad-howto__ra-chip-ic--li {
@@ -7938,7 +8292,7 @@ html.happy-job-agent-landing-active #app {
     font-size: 0.65rem !important;
     font-weight: 700 !important;
     line-height: 1 !important;
-    color: var(--happpy-white) !important;
+    color: #ffffff !important;
 }
 
 .happy-job-agent-landing .jad-howto__ra-avatar {
@@ -7947,7 +8301,7 @@ html.happy-job-agent-landing-active #app {
     height: 2.5rem;
     border-radius: 9999px;
     object-fit: cover;
-    border: 2px solid var(--happy-yellow-container, var(--happpy-legacy-yellow-container));
+    border: 2px solid var(--happy-yellow-container, #fff3b8);
 }
 
 .happy-job-agent-landing .jad-howto__ra-avatar--initial {
@@ -7964,8 +8318,8 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .jad-howto__ra-avatar--tone-0 {
-    background: var(--happy-yellow-container, var(--happpy-legacy-yellow-container));
-    color: var(--happy-on-yellow, var(--happpy-on-brand));
+    background: var(--happy-yellow-container, #fff3b8);
+    color: var(--happy-on-yellow, #232323);
     border-color: rgba(230, 196, 26, 0.45);
 }
 
@@ -7976,8 +8330,8 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .jad-howto__ra-avatar--tone-2 {
-    background: var(--happpy-success-soft);
-    color: var(--happpy-success-darkest);
+    background: #d1fae5;
+    color: #065f46;
     border-color: rgba(5, 150, 105, 0.28);
 }
 
@@ -8038,7 +8392,7 @@ html.happy-job-agent-landing-active #app {
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 9999px;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid var(--happy-border);
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
 }
@@ -8049,7 +8403,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .jad-howto__ra-node-ic--mail {
-    color: var(--happpy-danger);
+    color: #ef4444;
 }
 
 .happy-job-agent-landing .jad-howto__ra-node-ic--li {
@@ -8067,7 +8421,7 @@ html.happy-job-agent-landing-active #app {
     height: 1.15rem;
     border-radius: 9999px;
     background: #22c55e;
-    border: 2px solid var(--happpy-white);
+    border: 2px solid #ffffff;
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12);
 }
 
@@ -8075,7 +8429,7 @@ html.happy-job-agent-landing-active #app {
     font-size: 0.7rem;
     font-weight: 700;
     line-height: 1;
-    color: var(--happpy-white);
+    color: #ffffff;
 }
 
 .happy-job-agent-landing .jad-howto__ra-ch-t {
@@ -8114,8 +8468,8 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big-card-icon {
-    background: linear-gradient(135deg, var(--happy-yellow, var(--happpy-legacy-yellow)) 0%, var(--happy-yellow-deep, var(--happpy-legacy-yellow-deep)) 100%);
-    color: var(--happy-on-yellow, var(--happpy-on-brand));
+    background: linear-gradient(135deg, var(--happy-yellow, #ffda30) 0%, var(--happy-yellow-deep, #e6c41a) 100%);
+    color: var(--happy-on-yellow, #232323);
     box-shadow: 0 10px 26px rgba(255, 196, 26, 0.35);
 }
 
@@ -8128,12 +8482,12 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big-card-highlight {
-    background: linear-gradient(145deg, #fffef5 0%, var(--happpy-legacy-yellow-container) 55%, var(--happpy-white) 100%);
+    background: linear-gradient(145deg, #fffef5 0%, #fff3b8 55%, #ffffff 100%);
     border-color: rgba(230, 196, 26, 0.55);
 }
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big-card-highlight .hiw-big-card-icon {
-    background: linear-gradient(135deg, #ffe566 0%, var(--happy-yellow, var(--happpy-legacy-yellow)) 100%);
+    background: linear-gradient(135deg, #ffe566 0%, var(--happy-yellow, #ffda30) 100%);
     box-shadow: 0 10px 26px rgba(255, 196, 26, 0.4);
 }
 
@@ -8143,7 +8497,7 @@ html.happy-job-agent-landing-active #app {
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big-stat {
     border: 1px solid rgba(230, 196, 26, 0.22);
-    background: var(--happpy-white);
+    background: #ffffff;
 }
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big-stat-value {
@@ -8159,7 +8513,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big-stat-highlight {
-    background: linear-gradient(135deg, var(--happy-yellow, var(--happpy-legacy-yellow)) 0%, var(--happy-yellow-deep, var(--happpy-legacy-yellow-deep)) 100%);
+    background: linear-gradient(135deg, var(--happy-yellow, #ffda30) 0%, var(--happy-yellow-deep, #e6c41a) 100%);
     border: 1px solid rgba(180, 140, 0, 0.35);
     box-shadow: 0 12px 32px rgba(255, 196, 26, 0.28);
 }
@@ -8167,7 +8521,7 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big-stat-highlight .hiw-big-stat-value,
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big-stat-highlight .hiw-big-stat-label,
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big-stat-highlight .hiw-big-stat-label span {
-    color: var(--happy-on-yellow, var(--happpy-on-brand));
+    color: var(--happy-on-yellow, #232323);
 }
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big-platforms > p {
@@ -8175,14 +8529,14 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big-platform-tags span {
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid rgba(230, 196, 26, 0.35);
     color: var(--happy-ink);
 }
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .hiw-big-platform-tags span:hover {
-    background: var(--happy-yellow, var(--happpy-legacy-yellow));
-    color: var(--happy-on-yellow, var(--happpy-on-brand));
+    background: var(--happy-yellow, #ffda30);
+    color: var(--happy-on-yellow, #232323);
     border-color: transparent;
 }
 
@@ -8204,7 +8558,7 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-outreach-reference-blocks .happy-agent-value-strip {
     width: 100%;
     padding: 48px 16px 56px;
-    background: linear-gradient(180deg, var(--happpy-white) 0%, var(--happpy-slate-50) 42%, var(--happpy-slate-100) 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 42%, #f1f5f9 100%);
     border-bottom: 1px solid rgba(15, 23, 42, 0.06);
 }
 
@@ -8253,7 +8607,7 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-outreach-reference-blocks .happy-agent-value-card {
     margin: 0;
     padding: 22px 20px 20px;
-    background: var(--happpy-white);
+    background: #fff;
     border: 1px solid rgba(15, 23, 42, 0.08);
     border-radius: 16px;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
@@ -8284,12 +8638,12 @@ html.happy-job-agent-landing-active #app {
     height: 48px;
     margin-bottom: 14px;
     border-radius: 14px;
-    background: var(--happy-yellow-soft, var(--happpy-legacy-yellow-soft));
-    color: var(--happy-on-yellow, var(--happpy-on-brand));
+    background: var(--happy-yellow-soft, #fff9e6);
+    color: var(--happy-on-yellow, #232323);
 }
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .happy-agent-value-card--featured .happy-agent-value-icon {
-    background: linear-gradient(145deg, var(--happpy-legacy-yellow-container) 0%, var(--happy-yellow, var(--happpy-legacy-yellow)) 100%);
+    background: linear-gradient(145deg, #fff3b8 0%, var(--happy-yellow, #ffda30) 100%);
 }
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .happy-agent-value-card h3 {
@@ -8317,8 +8671,8 @@ html.happy-job-agent-landing-active #app {
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    background: var(--happy-yellow-container, var(--happpy-legacy-yellow-container));
-    color: var(--happy-on-yellow, var(--happpy-on-brand));
+    background: var(--happy-yellow-container, #fff3b8);
+    color: var(--happy-on-yellow, #232323);
     border: 1px solid rgba(230, 196, 26, 0.45);
 }
 
@@ -8352,7 +8706,7 @@ html.happy-job-agent-landing-active #app {
     border-radius: 999px;
     font-size: 0.8rem;
     font-weight: 600;
-    background: var(--happpy-white);
+    background: #fff;
     border: 1px solid rgba(15, 23, 42, 0.1);
     color: var(--happy-ink);
 }
@@ -8366,7 +8720,7 @@ html.happy-job-agent-landing-active #app {
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--happy-yellow-deep, var(--happpy-legacy-yellow-deep));
+    color: var(--happy-yellow-deep, #e6c41a);
 }
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .happy-agent-value-platforms-title {
@@ -8401,7 +8755,7 @@ html.happy-job-agent-landing-active #app {
     padding: 22px 20px 20px;
     border-radius: 16px;
     border: 2px solid rgba(70, 236, 205, 0.72);
-    background: linear-gradient(165deg, rgba(173, 255, 217, 0.95) 0%, var(--happpy-white) 55%);
+    background: linear-gradient(165deg, rgba(173, 255, 217, 0.95) 0%, #ffffff 55%);
     box-shadow: 0 14px 36px rgba(15, 23, 42, 0.07);
     box-sizing: border-box;
 }
@@ -8424,7 +8778,7 @@ html.happy-job-agent-landing-active #app {
     font-weight: 800;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--happy-on-yellow, var(--happpy-on-brand));
+    color: var(--happy-on-yellow, #232323);
     background: rgba(70, 236, 205, 0.45);
     border: 1px solid rgba(230, 196, 26, 0.5);
 }
@@ -8471,7 +8825,7 @@ html.happy-job-agent-landing-active #app {
     font-weight: 650;
     letter-spacing: -0.02em;
     color: var(--happy-ink);
-    background: var(--happpy-white);
+    background: #fff;
     border: 1px solid rgba(15, 23, 42, 0.1);
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
 }
@@ -8490,7 +8844,7 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-outreach-reference-blocks .happy-agent-platform-chip-logo--raster {
     object-fit: contain;
     border-radius: 6px;
-    background: var(--happpy-white);
+    background: #fff;
     box-sizing: border-box;
 }
 
@@ -8547,7 +8901,7 @@ html.happy-job-agent-landing-active #app {
     font-weight: 700;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--happy-yellow, var(--happpy-legacy-yellow));
+    color: var(--happy-yellow, #ffda30);
 }
 
 .happy-job-agent-landing .happy-agent-works-anywhere--page-end .happy-agent-value-platforms-title {
@@ -8664,7 +9018,7 @@ html.happy-job-agent-landing-active #app {
     margin: 0 auto;
     padding: 0 0 40px;
     box-sizing: border-box;
-    background: var(--happpy-white);
+    background: #fff;
     overflow-x: clip;
 }
 
@@ -8688,14 +9042,14 @@ html.happy-job-agent-landing-active #app {
     font-size: 0.95rem;
     cursor: pointer;
     border: 2px solid rgba(15, 23, 42, 0.18);
-    background: var(--happpy-white);
+    background: #fff;
     color: var(--happy-ink, #0f172a);
     transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .happy-btn-watch-demo:hover {
     border-color: rgba(230, 196, 26, 0.55);
-    background: var(--happy-yellow-soft, var(--happpy-legacy-yellow-soft));
+    background: var(--happy-yellow-soft, #fff9e6);
 }
 
 .happy-btn-watch-demo svg {
@@ -8723,7 +9077,7 @@ html.happy-job-agent-landing-active #app {
     line-height: normal;
     letter-spacing: 1.2px;
     text-transform: uppercase;
-    color: var(--happpy-brand-mid);
+    color: #2a9b9f;
 }
 
 .happy-job-agent-landing .happy-agent-demo-figma__title {
@@ -8733,7 +9087,7 @@ html.happy-job-agent-landing-active #app {
     font-weight: 700;
     line-height: normal;
     letter-spacing: -1.7px;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 @media (max-width: 767px) {
@@ -8747,7 +9101,7 @@ html.happy-job-agent-landing-active #app {
     padding-top: 48px;
     padding-bottom: 56px;
     gap: 3rem;
-    background: var(--happpy-white);
+    background: #fff;
 }
 
 .happy-job-agent-landing .happy-outreach-reference-blocks .use-case-video-section .section-header {
@@ -8768,7 +9122,7 @@ html.happy-job-agent-landing-active #app {
     height: auto;
     overflow: hidden;
     border-radius: 16px;
-    /* background: linear-gradient(145deg, var(--happpy-legacy-yellow-soft) 0%, var(--happpy-white) 45%, var(--happpy-legacy-yellow-container) 100%); */
+    /* background: linear-gradient(145deg, #fff9e6 0%, #ffffff 45%, #fff3b8 100%); */
     /* border: 1px solid #cecccc; */
     box-shadow: 0px 1px 6px 0px rgba(107, 107, 107, 0.12);
 }
@@ -8801,13 +9155,13 @@ html.happy-job-agent-landing-active #app {
 /* Logged-in landing — Connect Accounts (Figma Section 5) */
 .happy-job-agent-landing .happy-agent-setup-figma {
     --happy-setup-cream: #f3f0e8;
-    --happy-setup-ink: var(--happpy-ink);
+    --happy-setup-ink: #231f20;
     --happy-setup-title: #202020;
-    --happy-setup-muted: var(--happpy-ink-muted);
-    --happy-setup-teal: var(--happpy-brand);
+    --happy-setup-muted: #6b6b6b;
+    --happy-setup-teal: #46eccd;
     --happy-setup-teal-shadow: 2px 4px 2px rgba(129, 127, 127, 0.24);
     --happy-setup-mint-banner: rgba(157, 250, 213, 0.08);
-    --happy-setup-mint-border: var(--happpy-mint-border);
+    --happy-setup-mint-border: #adffd9;
     --happy-setup-card-top: #202020;
     --happy-setup-connected: #2b9a66;
     --happy-setup-danger: #b3261e;
@@ -8924,6 +9278,10 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .outreach-step--happy-setup-figma .step-header {
     text-align: center;
     margin: 0 auto 40px;
+
+    @media (max-width: 767px) {
+        margin: 0 auto 24px;
+    }
 }
 
 .happy-job-agent-landing .outreach-step--happy-setup-figma .step-header h2 {
@@ -8960,7 +9318,7 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .account-connection--happy-setup-figma .account-card {
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 16px;
-    background: var(--happpy-white);
+    background: #ffffff;
     box-shadow: none;
     overflow: hidden;
     display: flex;
@@ -8980,14 +9338,19 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .account-connection--happy-setup-figma .card-header {
-    padding: 28px 28px 21px;
+    padding: 24px 28px 16px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    align-items: flex-start;
+    align-items: center;
 }
 
 .happy-job-agent-landing .account-connection--happy-setup-figma .linkedin .card-header {
     padding-top: 32px;
     padding-bottom: 25px;
+
+    @media (max-width: 767px) {
+        padding-top: 24px;
+        padding-bottom: 16px;
+    }
 }
 
 .happy-job-agent-landing .account-connection--happy-setup-figma .jad-card-heading__title {
@@ -9011,7 +9374,7 @@ html.happy-job-agent-landing-active #app {
     border-radius: 9999px;
     background: rgba(10, 102, 194, 0.08);
     border: 1px solid rgba(10, 102, 194, 0.3);
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1;
     letter-spacing: 0.4px;  
     color: #0a66c2;
@@ -9020,7 +9383,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .account-connection--happy-setup-figma .jad-card-heading__pill-text--linkedin {
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .happy-job-agent-landing .account-connection--happy-setup-figma .header-content > p {
@@ -9046,6 +9409,11 @@ html.happy-job-agent-landing-active #app {
     line-height: 1.35;
     color: var(--happy-setup-muted);
     margin-bottom: 0;
+
+    @media (max-width: 767px) {
+        font-size: 12px;
+        padding: 2px 0;
+    }
 }
 
 .happy-job-agent-landing .account-connection--happy-setup-figma .benefit-item + .benefit-item {
@@ -9069,7 +9437,10 @@ html.happy-job-agent-landing-active #app {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    margin-top: auto;
+
+    @media (max-width: 767px) {
+        padding: 0 0 24px;
+    }
 
 }
 
@@ -9156,7 +9527,7 @@ html.happy-job-agent-landing-active #app {
     margin: 0 auto;
     padding: 13px 24px;
     border-radius: 9999px;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid rgba(179, 38, 30, 0.35);
     box-shadow: none;
     min-height: 48px;
@@ -9164,7 +9535,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .account-connection--happy-setup-figma .btn-danger__handwriting {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-family: 'Telegraf', sans-serif;
     line-height: 1;
     letter-spacing: 0.5px;
@@ -9183,7 +9554,7 @@ html.happy-job-agent-landing-active #app {
     background: var(--happy-setup-teal);
     border: none;
     color: var(--happy-setup-ink);
-    font-size: 1.25rem;
+    font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 1.2px;
     line-height: normal;
@@ -9202,11 +9573,11 @@ html.happy-job-agent-landing-active #app {
     }
 
     &:hover:not(:disabled) {
-        background: var(--happpy-brand-dark);
-        color: var(--happpy-white);
+        background: #175F5D;
+        color: #fff;
 
         svg path{
-            stroke: var(--happpy-white);
+            stroke: #fff;
         }
     }
 }
@@ -9297,7 +9668,7 @@ html.happy-job-agent-landing-active #app {
 /* Legacy setup section classes (modal / other surfaces) */
 .happy-job-agent-landing .happy-agent-setup-section {
     padding: 40px 0 48px;
-    background: linear-gradient(180deg, #fffef8 0%, var(--happpy-white) 55%, var(--happpy-legacy-yellow-soft) 100%);
+    background: linear-gradient(180deg, #fffef8 0%, #ffffff 55%, #fff9e6 100%);
     border-top: 1px solid rgba(230, 196, 26, 0.18);
 }
 
@@ -9490,13 +9861,13 @@ html.happy-job-agent-landing-active #app {
     font-size: 0.95rem;
     cursor: pointer;
     border: 2px solid rgba(15, 23, 42, 0.15);
-    background: var(--happpy-white);
+    background: #fff;
     color: var(--happy-ink);
 }
 
 .happy-btn-secondary-outline:hover {
     border-color: rgba(15, 23, 42, 0.28);
-    background: var(--happpy-slate-50);
+    background: #f8fafc;
 }
 
 /* Kinetic results — Figma */
@@ -9547,7 +9918,7 @@ html.happy-job-agent-landing-active #app {
     font-weight: 700;
     line-height: normal;
     letter-spacing: -1.7px;
-    color: var(--happpy-white);
+    color: #ffffff;
 }
 
 .happy-job-agent-landing .happy-agent-kinetic-figma__sparkles {
@@ -9603,11 +9974,17 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-agent-kinetic-figma__step {
     display: grid;
     grid-template-columns: 150px 24px minmax(0, 1fr);
-    gap: 20px;
+    column-gap: 20px;
     align-items: start;
 }
 
+.happy-job-agent-landing .happy-agent-kinetic-figma__main {
+    display: contents;
+}
+
 .happy-job-agent-landing .happy-agent-kinetic-figma__time {
+    grid-column: 1;
+    grid-row: 1;
     padding-top: 1.5px;
     font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 13px;
@@ -9622,6 +9999,8 @@ html.happy-job-agent-landing-active #app {
     display: flex;
     flex-direction: column;
     align-items: center;
+    grid-column: 2;
+    grid-row: 1 / span 2;
     width: 24px;
     padding-top: 4px;
 }
@@ -9642,22 +10021,20 @@ html.happy-job-agent-landing-active #app {
     background: rgba(255, 255, 255, 0.2);
 }
 
-.happy-job-agent-landing .happy-agent-kinetic-figma__content {
-    padding-bottom: 36px;
-}
-
 .happy-job-agent-landing .happy-agent-kinetic-figma__step-title {
+    grid-column: 3;
     margin: 0 0 3px;
     font-family: "Rubik", sans-serif;
     font-size: 18px;
     font-weight: 600;
     line-height: 28px;
     letter-spacing: -0.45px;
-    color: var(--happpy-white);
+    color: #ffffff;
 }
 
 .happy-job-agent-landing .happy-agent-kinetic-figma__step-body {
-    margin: 0;
+    grid-column: 3;
+    margin: 0 0 36px;
     font-family: "Rubik", sans-serif;
     font-size: 14px;
     font-weight: 400;
@@ -9665,8 +10042,22 @@ html.happy-job-agent-landing-active #app {
     color: rgba(255, 255, 255, 0.7);
 }
 
+
 .happy-job-agent-landing .happy-agent-kinetic-figma__step-body-line {
     display: block;
+}
+
+.happy-job-agent-landing .happy-agent-kinetic-figma__em {
+    font-weight: 700;
+    color: inherit;
+}
+
+.happy-job-agent-landing .happy-agent-kinetic-figma__step-body .happy-agent-kinetic-figma__em {
+    color: #ffffff;
+}
+
+.happy-job-agent-landing .happy-agent-kinetic-figma__conclusion-body .happy-agent-kinetic-figma__em {
+    color: #231f20;
 }
 
 .happy-job-agent-landing .happy-agent-kinetic-figma__conclusion {
@@ -9675,7 +10066,7 @@ html.happy-job-agent-landing-active #app {
     border: 1px solid #4891ff;
     border-top-width: 3px;
     border-radius: 0 0 16px 16px;
-    background: var(--happpy-white);
+    background: #ffffff;
     margin-left: 8.75rem;
 
     @media screen and (max-width: 900px) {
@@ -9696,7 +10087,7 @@ html.happy-job-agent-landing-active #app {
     font-size: 28px;
     line-height: normal;
     letter-spacing: 2px;
-    color: var(--happpy-ink);
+    color: #231f20;
     width: fit-content;
 }
 
@@ -9743,7 +10134,7 @@ html.happy-job-agent-landing-active #app {
 
     .happy-job-agent-landing .happy-agent-kinetic-figma__step {
         grid-template-columns: 88px 20px minmax(0, 1fr);
-        gap: 14px;
+        column-gap: 14px;
     }
 
     .happy-job-agent-landing .happy-agent-kinetic-figma__time {
@@ -9757,47 +10148,118 @@ html.happy-job-agent-landing-active #app {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
     .happy-job-agent-landing .happy-agent-kinetic-figma {
-        padding: 48px 16px;
+        padding: 56px 16px;
+    }
+
+    .happy-job-agent-landing .happy-agent-kinetic-figma__inner {
+        gap: 32px;
+    }
+
+    .happy-job-agent-landing .happy-agent-kinetic-figma__header {
+        max-width: none;
+        gap: 12px;
     }
 
     .happy-job-agent-landing .happy-agent-kinetic-figma__title {
+        font-size: 32px;
         letter-spacing: -0.8px;
+        line-height: 1.15;
+    }
+
+    .happy-job-agent-landing .happy-agent-kinetic-figma__sparkles {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-kinetic-figma__sub {
+        font-size: 14px;
+        line-height: 1.45;
+    }
+
+    .happy-job-agent-landing .happy-agent-kinetic-figma__timeline {
+        padding-top: 8px;
+        max-width: none;
     }
 
     .happy-job-agent-landing .happy-agent-kinetic-figma__step {
-        grid-template-columns: 1fr;
-        gap: 8px;
+        grid-template-columns: 16px minmax(0, 1fr);
+        column-gap: 12px;
+        align-items: stretch;
+    }
+
+    .happy-job-agent-landing .happy-agent-kinetic-figma__main {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        min-width: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-kinetic-figma__time,
+    .happy-job-agent-landing .happy-agent-kinetic-figma__rail,
+    .happy-job-agent-landing .happy-agent-kinetic-figma__step-title,
+    .happy-job-agent-landing .happy-agent-kinetic-figma__step-body {
+        grid-column: auto;
+        grid-row: auto;
     }
 
     .happy-job-agent-landing .happy-agent-kinetic-figma__time {
         text-align: left;
-        white-space: normal;
+        white-space: nowrap;
+        padding-top: 0;
+        font-size: 13px;
+        line-height: 16px;
     }
 
     .happy-job-agent-landing .happy-agent-kinetic-figma__rail {
-        flex-direction: row;
-        width: auto;
-        padding-top: 0;
-        gap: 8px;
+        width: 16px;
+        padding-top: 2px;
+        align-self: stretch;
+    }
+
+    .happy-job-agent-landing .happy-agent-kinetic-figma__dot {
+        width: 12px;
+        height: 12px;
     }
 
     .happy-job-agent-landing .happy-agent-kinetic-figma__line {
-        width: auto;
+        width: 2px;
         min-height: 0;
-        height: 1px;
-        flex: 1;
-        margin-top: 6px;
+        flex: 1 1 auto;
+        margin-top: 4px;
+        margin-bottom: 2px;
+        background: #46eccd;
     }
 
-    .happy-job-agent-landing .happy-agent-kinetic-figma__content {
-        padding-bottom: 28px;
+    .happy-job-agent-landing .happy-agent-kinetic-figma__step-title {
+        margin-top: 6px;
+        font-size: 18px;
+        line-height: 24px;
+        letter-spacing: -0.3px;
+    }
+
+    .happy-job-agent-landing .happy-agent-kinetic-figma__step-body {
+        margin-bottom: 28px;
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .happy-job-agent-landing .happy-agent-kinetic-figma__step:last-child .happy-agent-kinetic-figma__step-body {
+        margin-bottom: 8px;
     }
 
     .happy-job-agent-landing .happy-agent-kinetic-figma__conclusion {
-        padding: 28px 20px 24px;
-        overflow-x: clip;
+        margin-left: 0;
+        max-width: none;
+        padding: 24px 20px;
+        border: none;
+        border-radius: 24px;
+        background: #f9f8f4;
+        overflow: hidden;
+    }
+
+    .happy-job-agent-landing .happy-agent-kinetic-figma__conclusion-title-wrap {
+        margin-bottom: 12px;
     }
 
     .happy-job-agent-landing .happy-agent-kinetic-figma__conclusion-underline--primary {
@@ -9808,6 +10270,16 @@ html.happy-job-agent-landing-active #app {
     .happy-job-agent-landing .happy-agent-kinetic-figma__conclusion-underline--secondary {
         left: 48px;
         width: min(77px, 30%);
+    }
+
+    .happy-job-agent-landing .happy-agent-kinetic-figma__conclusion-body {
+        font-size: 14px;
+        line-height: 22px;
+        color: #3a3a3a;
+    }
+
+    .happy-job-agent-landing .happy-agent-kinetic-figma .happy-agent-section-cta {
+        display: none;
     }
 }
 
@@ -9840,7 +10312,7 @@ html.happy-job-agent-landing-active #app {
     line-height: 1.4;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--happpy-brand-mid);
+    color: #2a9b9f;
 }
 
 .happy-job-agent-landing .happy-agent-pricing-figma__title {
@@ -9850,7 +10322,13 @@ html.happy-job-agent-landing-active #app {
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: -1.08px;
-    color: var(--happpy-ink);
+    color: #231f20;
+
+    @media screen and (max-width: 767px) {
+        line-height: 1.4;
+        max-width: 256px;
+        text-align: center;
+    }
 }
 
 .happy-job-agent-landing .happy-agent-pricing-figma__cards.job-agent-dashboard {
@@ -9883,14 +10361,14 @@ html.happy-job-agent-landing-active #app {
     }
 
     .happy-job-agent-landing .happy-agent-pricing-figma__inner {
-        gap: 36px;
+        gap: 24px;
     }
 }
 
 /* Privacy & data security — Figma Section 8 */
 .happy-job-agent-landing .happy-agent-privacy-figma {
     padding: 80px 24px;
-    background: var(--happpy-white);
+    background: #ffffff;
 }
 
 .happy-job-agent-landing .happy-agent-privacy-figma__inner {
@@ -9920,7 +10398,7 @@ html.happy-job-agent-landing-active #app {
     line-height: normal;
     letter-spacing: 1.2px;
     text-transform: uppercase;
-    color: var(--happpy-brand-mid);
+    color: #2a9b9f;
 }
 
 .happy-job-agent-landing .happy-agent-privacy-figma__title {
@@ -9930,7 +10408,7 @@ html.happy-job-agent-landing-active #app {
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: -1.7px;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .happy-job-agent-landing .happy-agent-privacy-figma__title-highlight {
@@ -9947,6 +10425,12 @@ html.happy-job-agent-landing-active #app {
     max-width: 233px;
     height: auto;
     pointer-events: none;
+}
+
+.happy-job-agent-landing .happy-agent-privacy-figma__title-first,
+.happy-job-agent-landing .happy-agent-privacy-figma__mobile,
+.happy-job-agent-landing .happy-agent-privacy-figma__badge-label--mobile {
+    display: none;
 }
 
 .happy-job-agent-landing .happy-agent-privacy-figma__body {
@@ -9973,7 +10457,7 @@ html.happy-job-agent-landing-active #app {
     padding: 24px;
     border-radius: 16px;
     border: 1px solid #e5e4e4;
-    background: var(--happpy-white);
+    background: #ffffff;
     box-sizing: border-box;
 }
 
@@ -9983,7 +10467,7 @@ html.happy-job-agent-landing-active #app {
     font-size: 20px;
     font-weight: 600;
     line-height: normal;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .happy-job-agent-landing .happy-agent-privacy-figma__list {
@@ -10051,7 +10535,7 @@ html.happy-job-agent-landing-active #app {
     font-size: 14px;
     line-height: 1;
     letter-spacing: 0.4px;
-    color: var(--happpy-ink);
+    color: #231f20;
     white-space: nowrap;
     text-transform: uppercase;
 }
@@ -10111,10 +10595,222 @@ html.happy-job-agent-landing-active #app {
     }
 }
 
+@media (max-width: 767px) {
+    .happy-job-agent-landing .happy-agent-privacy-figma {
+        padding: 56px 16px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__inner {
+        gap: 28px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__header {
+        gap: 8px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__eyebrow {
+        font-weight: 700;
+        letter-spacing: 1.5px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__title {
+        font-size: 28px;
+        line-height: 34px;
+        letter-spacing: -0.8px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__title-underline {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__title-first {
+        display: inline;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__body {
+        gap: 28px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__cards--desktop {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-card,
+    .happy-job-agent-landing .happy-agent-privacy-figma__security-card {
+        width: 100%;
+        border-radius: 16px;
+        background: #fff;
+        box-sizing: border-box;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-card {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        padding: 20px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-block {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-divider {
+        width: 100%;
+        height: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        margin: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-logo svg,
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-logo img {
+        display: block;
+        width: 24px;
+        height: 24px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-title {
+        margin: 0;
+        font-family: "Rubik", sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.2;
+        color: #231f20;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-highlight {
+        margin: 0;
+        padding: 8px;
+        border-radius: 8px;
+        background: rgba(157, 250, 213, 0.3);
+        font-family: "Rubik", sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        line-height: normal;
+        color: #4c4c4c;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-list,
+    .happy-job-agent-landing .happy-agent-privacy-figma__security-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-item,
+    .happy-job-agent-landing .happy-agent-privacy-figma__security-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: "Rubik", sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-item {
+        color: #6b6b6b;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__security-item {
+        color: rgba(35, 31, 32, 0.6);
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__access-sparkle {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        filter: brightness(0) saturate(100%) invert(67%) sepia(16%) saturate(1048%) hue-rotate(118deg) brightness(92%) contrast(88%);
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__security-card {
+        border: 1px solid #2dc9a7;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__security-card .happy-agent-privacy-figma__check {
+        width: 12px;
+        height: 12px;
+        margin-top: 0;
+        object-fit: contain;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__badges {
+        padding-top: 16px;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__badge-wrap {
+        min-width: 0;
+        min-height: 0;
+        padding: 4px 12px;
+        border-radius: 99px;
+        border: 1px solid rgba(0, 0, 0, 0.13);
+        background: #fffefc;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__badge-underline {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__badge-label--desktop {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__badge-label--mobile {
+        display: inline;
+        white-space: nowrap;
+        font-size: 10px;
+        letter-spacing: 1px;
+        line-height: normal;
+        text-align: center;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__badge-sparkle {
+        top: -6px;
+        right: -8px;
+        width: 16px;
+        height: 16px;
+    }
+}
+
 /* FAQ — Figma Section 11 */
 .happy-job-agent-landing .happy-agent-faq-figma {
     padding: 80px 32px;
-    background: var(--happpy-white);
+    background: #ffffff;
 }
 
 .happy-job-agent-landing .happy-agent-faq-figma__inner {
@@ -10143,7 +10839,7 @@ html.happy-job-agent-landing-active #app {
     font-weight: 700;
     line-height: normal;
     letter-spacing: -1.7px;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .happy-job-agent-landing .happy-agent-faq-figma__sub {
@@ -10152,10 +10848,35 @@ html.happy-job-agent-landing-active #app {
     font-size: 14px;
     font-weight: 400;
     line-height: normal;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
 }
 
 .happy-job-agent-landing .happy-agent-faq-figma__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    width: 100%;
+}
+
+.happy-job-agent-landing .happy-agent-faq-figma__group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.happy-job-agent-landing .happy-agent-faq-figma__group-heading {
+    font-family: 'Rubik', sans-serif;
+    margin: 0;;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #2a9b9f;
+}
+
+.happy-job-agent-landing .happy-agent-faq-figma__group-items {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
@@ -10166,14 +10887,14 @@ html.happy-job-agent-landing-active #app {
     align-self: start;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 16px;
-    background: var(--happpy-white);
+    background: #ffffff;
     overflow: hidden;
     transition: border-color 0.4s var(--happy-ease-out), box-shadow 0.4s var(--happy-ease-out);
 }
 
 .happy-job-agent-landing .happy-agent-faq-figma__item--open {
-    border-color: rgba(42, 155, 159, 0.28);
-    box-shadow: 0 8px 24px rgba(35, 31, 32, 0.06);
+    border-color: #46eccd;
+    box-shadow: none;
 }
 
 .happy-job-agent-landing .happy-agent-faq-figma__trigger {
@@ -10194,7 +10915,7 @@ html.happy-job-agent-landing-active #app {
 
 .happy-job-agent-landing .happy-agent-faq-figma__trigger:focus-visible {
     outline: none;
-    box-shadow: inset 0 0 0 2px var(--happpy-brand-mid);
+    box-shadow: inset 0 0 0 2px #2a9b9f;
 }
 
 .happy-job-agent-landing .happy-agent-faq-figma__q {
@@ -10205,7 +10926,7 @@ html.happy-job-agent-landing-active #app {
     font-weight: 500;
     line-height: 24px;
     letter-spacing: -0.412px;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .happy-job-agent-landing .happy-agent-faq-figma__toggle {
@@ -10213,6 +10934,8 @@ html.happy-job-agent-landing-active #app {
     flex-shrink: 0;
     width: 24px;
     height: 24px;
+    border-radius: 50%;
+    background: #f3f3f3;
 }
 
 .happy-job-agent-landing .happy-agent-faq-figma__toggle-icon {
@@ -10238,7 +10961,15 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-agent-faq-figma__toggle-icon--visible {
     opacity: 1;
     transform: scale(1) rotate(0deg);
-    color: var(--happpy-ink);
+    color: #8d8d8d;
+}
+
+.happy-job-agent-landing .happy-agent-faq-figma__item--open .happy-agent-faq-figma__toggle {
+    background: #46eccd;
+}
+
+.happy-job-agent-landing .happy-agent-faq-figma__item--open .happy-agent-faq-figma__toggle-icon--minus {
+    color: #231f20;
 }
 
 .happy-job-agent-landing .happy-agent-faq-figma__toggle-icon--plus:not(.happy-agent-faq-figma__toggle-icon--visible) {
@@ -10282,7 +11013,7 @@ html.happy-job-agent-landing-active #app {
     font-size: 14px;
     font-weight: 400;
     line-height: 1.55;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
 }
 
 @media (max-width: 900px) {
@@ -10294,8 +11025,40 @@ html.happy-job-agent-landing-active #app {
         gap: 40px;
     }
 
-    .happy-job-agent-landing .happy-agent-faq-figma__grid {
+    .happy-job-agent-landing .happy-agent-faq-figma__group-items {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 767px) {
+    .happy-job-agent-landing .happy-agent-faq-figma {
+        padding: 40px 16px;
+        background: #f9f8f4;
+    }
+
+    .happy-job-agent-landing .happy-agent-faq-figma__header {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-faq-figma__inner {
+        gap: 24px;
+        align-items: stretch;
+    }
+
+    .happy-job-agent-landing .happy-agent-faq-figma__grid {
+        gap: 24px;
+    }
+
+    .happy-job-agent-landing .happy-agent-faq-figma__item {
+        border-radius: 16px;
     }
 }
 
@@ -10351,11 +11114,11 @@ html.happy-job-agent-landing-active #app {
 
 /* Try free CTA — Figma Section 12 */
 .happy-job-agent-landing .happy-agent-try-free-figma {
-    --happy-try-free-ink: var(--happpy-ink);
+    --happy-try-free-ink: #231f20;
     position: relative;
     overflow: hidden;
     border-radius: 0;
-    background: var(--happpy-white);
+    background: #ffffff;
 }
 
 .happy-job-agent-landing .happy-agent-try-free-figma__bg {
@@ -10441,17 +11204,17 @@ html.happy-job-agent-landing-active #app {
     @media (max-width: 767px) {
         background-color: transparent !important;
         box-shadow: none !important;
-        border: 1px solid var(--happpy-ink) !important;
+        border: 1px solid #231f20 !important;
 
         .happy-agent-try-free-figma__pill-text{
-            color: var(--happpy-ink) !important;
+            color: #231f20 !important;
         }
         .happy-agent-try-free-figma__pill-icon{
             background: rgba(0, 0, 0, 0.1) !important;
-            outline: 1px solid var(--happpy-ink) !important;
+            outline: 1px solid #231f20 !important;
 
             svg path{
-                fill: var(--happpy-ink) !important;
+                fill: #231f20 !important;
                 stroke: none !important;
             }
         }
@@ -10459,7 +11222,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .happy-agent-try-free-figma__pill:hover {
-    background: var(--happpy-brand-dark);
+    background: #175f5d;
     transform: translateY(-1px);
 }
 
@@ -10478,7 +11241,7 @@ html.happy-job-agent-landing-active #app {
     font-size: 1.25rem;
     line-height: 1;
     letter-spacing: 1px;
-    color: var(--happpy-white);
+    color: #ffffff;
     white-space: nowrap;
     font-family: 'Telegraf', sans-serif;
 }
@@ -10492,7 +11255,7 @@ html.happy-job-agent-landing-active #app {
     line-height: normal;
     text-transform: uppercase;
     white-space: nowrap;
-    color: var(--happpy-white);
+    color: #ffffff;
 }
 
 .happy-job-agent-landing .happy-agent-try-free-figma__pill-text b {
@@ -10506,7 +11269,7 @@ html.happy-job-agent-landing-active #app {
     width: 39px;
     height: 39px;
     border-radius: 50%;
-    background: var(--happpy-white);
+    background: #ffffff;
     flex-shrink: 0;
     color: var(--happy-try-free-ink);
 }
@@ -10515,12 +11278,12 @@ html.happy-job-agent-landing-active #app {
     width: 24px;
     height: 24px;
     path {
-        fill: var(--happpy-ink) !important;
+        fill: #231f20 !important;
     }
 }
 
 .happy-job-agent-landing .happy-agent-try-free-figma__pill:hover .happy-agent-try-free-figma__pill-icon {
-    color: var(--happpy-brand-dark);
+    color: #175f5d;
 }
 
 @media (max-width: 900px) {
@@ -10532,7 +11295,7 @@ html.happy-job-agent-landing-active #app {
 
 @media screen and (max-width: 767px) {
     .happy-job-agent-landing .happy-agent-try-free-figma__pill-label {
-        color: var(--happpy-ink) !important;
+        color: #231f20 !important;
     }
 }
 
@@ -10570,7 +11333,7 @@ html.happy-job-agent-landing-active #app {
 
 /* Footer — Figma Section 13 */
 .happy-job-agent-landing .happy-agent-footer-figma {
-    background: var(--happpy-black);
+    background: #000000;
     color: rgba(255, 255, 255, 0.96);
 }
 
@@ -10670,7 +11433,7 @@ html.happy-job-agent-landing-active #app {
     font-size: 14px;
     font-weight: 400;
     line-height: 18px;
-    color: var(--happpy-white);
+    color: #ffffff;
     white-space: nowrap;
 }
 
@@ -10690,7 +11453,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .happy-agent-footer-figma__social-link:focus-visible {
-    outline: 2px solid var(--happpy-white);
+    outline: 2px solid #ffffff;
     outline-offset: 2px;
 }
 
@@ -10751,7 +11514,7 @@ html.happy-job-agent-landing-active #app {
 
 .happy-job-agent-landing .happy-agent-footer-figma__link:hover,
 .happy-job-agent-landing .happy-agent-footer-figma__link:focus-visible {
-    color: var(--happpy-white);
+    color: #ffffff;
 }
 
 .happy-job-agent-landing .happy-agent-footer-figma__link:focus-visible {
@@ -10855,7 +11618,7 @@ body.happy-agent-modal-open {
     max-width: 1280px;
     height: 100vh;
     max-height: 100vh;
-    background: var(--happpy-white);
+    background: #ffffff;
     border-radius: 18px 0 0 18px !important;
     box-shadow:
         -30px 0 80px -20px rgba(15, 17, 27, 0.45),
@@ -10906,7 +11669,7 @@ body.happy-agent-modal-open {
 .happy-agent-modal-portal .happy-agent-modal-close:hover,
 .happy-agent-modal-portal .happy-agent-modal-close:focus-visible {
     background: #1a1a1a;
-    color: var(--happpy-white);
+    color: #ffffff;
     transform: scale(1.04);
     outline: none;
 }
@@ -10959,8 +11722,8 @@ body.happy-agent-modal-open {
     aspect-ratio: 16 / 9;
     border-radius: 12px;
     overflow: hidden;
-    background: var(--happpy-ink);
-    border: 1px solid var(--happpy-ink);
+    background: #231f20;
+    border: 1px solid #231f20;
     box-shadow:
         0 4px 16px -1px rgba(67, 180, 172, 0.12),
         0 20px 16px -12px rgba(67, 180, 172, 0.14); 
@@ -11066,7 +11829,7 @@ body.happy-agent-modal-open {
 }
 
 .happy-agent-modal-portal .happy-agent-setup-chip--trial .happy-agent-setup-chip-icon {
-    color: var(--happpy-on-brand);
+    color: #232323;
 }
 
 .happy-agent-modal-portal .happy-agent-setup-chip--payment .happy-agent-setup-chip-icon-wrap {
@@ -11225,12 +11988,12 @@ body.happy-agent-modal-open {
     display: inline-flex;
     flex-shrink: 0;
     text-decoration: none;
-    color: var(--happpy-white);
+    color: #fff;
 }
 
 .happy-agent-landing-navbar__logo.happpy-agent-logo {
     --happpy-logo-text-size: 20px;
-    color: var(--happpy-white);
+    color: #fff;
 }
 
 .happy-agent-landing-navbar__actions {
@@ -11258,14 +12021,14 @@ body.happy-agent-modal-open {
 }
 
 .happy-agent-landing-navbar__btn:focus-visible {
-    outline: 2px solid var(--happpy-brand);
+    outline: 2px solid #46eccd;
     outline-offset: 2px;
 }
 
 .happy-agent-landing-navbar__btn--login {
     background: #a8a8a8;
-    border: 1px solid var(--happpy-white);
-    color: var(--happpy-white);
+    border: 1px solid #fff;
+    color: #fff;
 }
 
 .happy-agent-landing-navbar__btn--login:hover {
@@ -11273,8 +12036,8 @@ body.happy-agent-modal-open {
 }
 
 .happy-agent-landing-navbar__btn--primary {
-    background: var(--happpy-brand);
-    color: var(--happpy-ink);
+    background: #46eccd;
+    color: #231f20;
 }
 
 .happy-agent-landing-navbar__btn--primary:hover {
@@ -11337,6 +12100,7 @@ body.happy-agent-modal-open {
 
     .happy-agent-landing-navbar__btn--primary {
         padding: 10px 20px;
+        display: none;
     }
 
     .happy-agent-landing-navbar__profile {
@@ -11389,7 +12153,7 @@ body.happy-agent-modal-open {
 
 .happy-public-auth-drawer {
     position: relative;
-    background: var(--happpy-white);
+    background: #fff;
     margin: 0 !important;
     width: 480px;
     max-width: calc(100vw - 64px);
@@ -11429,7 +12193,7 @@ body.happy-agent-modal-open {
     border: none;
     border-radius: 50%;
     background: rgba(20, 20, 20, 0.06);
-    color: var(--happpy-ink);
+    color: #231f20;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -11466,7 +12230,7 @@ body.happy-agent-modal-open {
     margin: 0 0 10px;
     font-size: 1.5rem;
     font-weight: 800;
-    color: var(--happpy-ink-strong);
+    color: #141414;
     line-height: 1.2;
 }
 
@@ -11474,7 +12238,7 @@ body.happy-agent-modal-open {
     margin: 0 0 24px;
     font-size: 0.95rem;
     line-height: 1.5;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
 }
 
 .happy-public-auth-label {
@@ -11482,7 +12246,7 @@ body.happy-agent-modal-open {
     margin-bottom: 8px;
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .happy-public-auth-input {
@@ -11492,20 +12256,20 @@ body.happy-agent-modal-open {
     border: 1px solid #e4e2dc;
     border-radius: 10px;
     font-size: 1rem;
-    color: var(--happpy-ink-strong);
+    color: #141414;
     margin-bottom: 8px;
 }
 
 .happy-public-auth-input:focus, .happy-public-auth-input:focus-visible, .happy-public-auth-input:focus-within {
-    outline: none;
-    border-color: var(--happpy-ink);
+    outline: 1px solid #231f20;
+    border-color: #231f20;
     box-shadow: 0 0 0 3px rgba(35, 31, 32, 0.08);
 }
 
 
 .happy-public-auth-otp-input:focus, .happy-public-auth-otp-input:focus-visible, .happy-public-auth-otp-input:focus-within {
     outline: none;
-    border-color: var(--happpy-ink);
+    border-color: #231f20;
     box-shadow: 0 0 0 3px rgba(35, 31, 32, 0.08);
 }
 
@@ -11519,6 +12283,7 @@ body.happy-agent-modal-open {
     margin: 0 0 12px;
     font-size: 0.875rem;
     color: #2e7d32;
+    text-align: center;
 }
 
 .happy-public-auth-submit {
@@ -11527,8 +12292,8 @@ body.happy-agent-modal-open {
     padding: 14px 18px;
     border: none;
     border-radius: 999px;
-    background: var(--happpy-brand);
-    color: var(--happpy-ink);
+    background: #46eccd;
+    color: #231f20;
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
@@ -11590,16 +12355,23 @@ body.happy-agent-modal-open {
     margin: 14px 0 0;
     font-size: 0.8125rem;
     line-height: 1.45;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
 }
 
 .happy-public-auth-hint--otp {
     margin-top: -12px;
     margin-bottom: 18px;
+    text-align: center;
 }
 
 .happy-public-auth-otp-wrap {
     margin-bottom: 12px;
+
+    @media (max-width: 374px) {
+        >div{
+            justify-content: flex-start !important;
+        }
+    }
 }
 
 .happy-public-auth-otp-wrap--error .happy-public-auth-otp-input {
@@ -11614,14 +12386,20 @@ body.happy-agent-modal-open {
     font-size: 1.125rem;
     font-weight: 600;
     text-align: center;
-    color: var(--happpy-ink-strong);
+    color: #141414;
     padding: 0.5rem;
+
+    @media (max-width: 374px) {
+        width: 40px !important;
+        height: 42px !important;
+    }
 }
 
 .happy-public-auth-resend {
     margin: 0 0 16px;
     font-size: 0.875rem;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
+    text-align: center;
 }
 
 .happy-public-auth-resend-btn {
@@ -11641,7 +12419,7 @@ body.happy-agent-modal-open {
     padding: 10px;
     border: none;
     background: none;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
     font-size: 0.875rem;
     cursor: pointer;
 
@@ -11684,6 +12462,303 @@ body.happy-agent-modal-open {
     }
 }
 
+/* Public landing — auth side-panel drawer (Figma 2864:26627) */
+.happy-public-auth-overlay.happy-public-auth-overlay--side-panel {
+    justify-content: flex-end;
+    align-items: stretch;
+    padding: 0;
+    background: rgba(15, 17, 27, 0.62);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.happy-public-auth-drawer.happy-public-auth-drawer--side-panel {
+    width: min(809px, 85vw);
+    max-width: 809px;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    border-radius: 18px 0 0 18px !important;
+    box-shadow:
+        -30px 0 80px -20px rgba(15, 17, 27, 0.45),
+        -10px 0 30px -10px rgba(15, 17, 27, 0.25);
+    transform: translateX(100%);
+    opacity: 1;
+    animation: happyPublicAuthSidePanelIn 260ms cubic-bezier(0.22, 0.61, 0.36, 1) 40ms forwards;
+}
+
+@keyframes happyPublicAuthSidePanelIn {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.happy-public-auth-close.happy-public-auth-close--side-panel {
+    top: 24px;
+    right: 24px;
+    width: 32px;
+    height: 32px;
+    border-radius: 0;
+    background: transparent;
+    color: #231f20;
+}
+
+.happy-public-auth-close.happy-public-auth-close--side-panel:hover {
+    background: rgba(35, 31, 32, 0.06);
+    border-radius: 8px;
+}
+
+.happy-public-auth-drawer__body.happy-public-auth-drawer__body--side-panel {
+    padding: 40px 48px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.happy-public-auth-drawer__header {
+    text-align: center;
+    margin: 0 auto 46px;
+    max-width: 420px;
+}
+
+.happy-public-auth-title.happy-public-auth-title--side-panel {
+    margin: 0 0 4px;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.36px;
+    color: #231f20;
+    text-transform: capitalize;
+}
+
+.happy-public-auth-lead.happy-public-auth-lead--side-panel {
+    margin: 0;
+    font-size: 12px;
+    line-height: normal;
+    color: #6b6b6b;
+}
+
+.happy-public-auth-email-card {
+    background: #f3f0e8;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.happy-public-auth-label.happy-public-auth-label--side-panel {
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #231f20;
+}
+
+.happy-public-auth-email-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.happy-public-auth-input.happy-public-auth-input--side-panel {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 40px;
+    margin-bottom: 0;
+    padding: 0 12px;
+    border: 1.5px solid #dee1e7;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #231f20;
+    background: #fff;
+}
+
+.happy-public-auth-input.happy-public-auth-input--side-panel::placeholder {
+    color: rgba(107, 107, 107, 0.6);
+}
+
+.happy-public-auth-email-card .happy-public-auth-error {
+    margin: 8px 0 0;
+}
+
+.happy-public-auth-continue-btn {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 40px;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 56px;
+    background: #46eccd;
+    color: #231f20;
+    font-family: "Telegraf", sans-serif !important;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.happy-public-auth-continue-btn img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.happy-public-auth-continue-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.happy-public-auth-divider.happy-public-auth-divider--side-panel {
+    margin: 0 0 24px;
+    gap: 0;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(107, 107, 107, 0.6);
+    text-transform: uppercase;
+}
+
+.happy-public-auth-divider.happy-public-auth-divider--side-panel::before,
+.happy-public-auth-divider.happy-public-auth-divider--side-panel::after {
+    background: #cecccc;
+}
+
+.happy-public-auth-divider.happy-public-auth-divider--side-panel span {
+    padding: 0 8px;
+    background: #fff;
+    line-height: 17px;
+}
+
+.happy-public-auth-google-btn.happy-public-auth-google-btn--side-panel {
+    height: 50px;
+    padding: 13px 18px;
+    border: 1px solid #d4d2d2;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 0;
+}
+
+.happy-public-auth-google-btn.happy-public-auth-google-btn--side-panel img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Figma 2864:32456 */
+.happy-public-auth-gmail-promo {
+    width: 100%;
+    margin-top: 20px;
+    flex-shrink: 0;
+}
+
+.happy-public-auth-gmail-promo__banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 41px;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    background: rgba(157, 250, 213, 0.3);
+    overflow: visible;
+}
+
+.happy-public-auth-gmail-promo__mascot {
+    position: relative;
+    flex-shrink: 0;
+    width: 68px;
+    height: 64px;
+    object-fit: contain;
+    pointer-events: none;
+    margin-top: -23px;
+    margin-bottom: -23px;
+}
+
+.happy-public-auth-gmail-promo__text {
+    margin: 0;
+    color: #2c7a4b;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-align: center;
+}
+
+.happy-public-auth-gmail-promo__text strong {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+@media (max-width: 767px) {
+    .happy-public-auth-overlay.happy-public-auth-overlay--side-panel {
+        justify-content: center;
+        align-items: flex-end;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .happy-public-auth-drawer.happy-public-auth-drawer--side-panel {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        max-height: calc(100vh - 48px - env(safe-area-inset-top, 0px));
+        max-height: calc(100dvh - 48px - env(safe-area-inset-top, 0px));
+        border-radius: 16px 16px 0 0 !important;
+        box-shadow: 0 -6px 24px rgba(20, 20, 20, 0.18);
+        transform: translateY(100%);
+        animation: happyPublicAuthDrawerInMobile 240ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+
+    .happy-public-auth-drawer__body.happy-public-auth-drawer__body--side-panel {
+        padding: 40px 20px 28px;
+    }
+
+    .happy-public-auth-drawer__header {
+        margin-bottom: 28px;
+    }
+
+    .happy-public-auth-email-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .happy-public-auth-continue-btn {
+        width: 100%;
+    }
+
+    .happy-public-auth-gmail-promo {
+        margin-top: 16px;
+    }
+
+    .happy-public-auth-gmail-promo__banner {
+        gap: 6px;
+        min-height: 36px;
+        padding: 10px 12px;
+    }
+
+    .happy-public-auth-gmail-promo__mascot {
+        width: 48px;
+        height: 45px;
+        margin-top: -18px;
+        margin-bottom: -18px;
+    }
+
+    .happy-public-auth-gmail-promo__text {
+        font-size: 11px;
+    }
+
+    .happy-public-auth-gmail-promo__text strong {
+        font-size: 13px;
+    }
+}
+
 /* Public landing — post-signup profile drawer (Figma 622:24614 / 622:23411) */
 .happy-public-profile-portal {
     position: relative;
@@ -11720,7 +12795,7 @@ body.happy-agent-modal-open {
 
 .happy-public-profile-drawer {
     position: relative;
-    background: var(--happpy-white);
+    background: #fff;
     margin: 0 !important;
     width: 814px;
     max-width: calc(100vw - 64px);
@@ -11765,6 +12840,7 @@ body.happy-agent-modal-open {
     gap: 16px;
     min-width: 0;
     padding-right: 40px;
+    margin-inline: auto;
 
     @media (max-width: 767px) {
         gap: 8px;
@@ -11785,7 +12861,7 @@ body.happy-agent-modal-open {
     font-size: 24px;
     font-weight: 600;
     line-height: 1.25;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .happy-public-profile-drawer__title-word {
@@ -11812,7 +12888,7 @@ body.happy-agent-modal-open {
     border: none;
     border-radius: 50%;
     background: rgba(20, 20, 20, 0.06);
-    color: var(--happpy-ink);
+    color: #231f20;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -11826,7 +12902,7 @@ body.happy-agent-modal-open {
 }
 
 .happy-public-profile-drawer__close:focus-visible {
-    outline: 2px solid var(--happpy-brand-alt);
+    outline: 2px solid #059599;
     outline-offset: 2px;
 }
 
@@ -11923,15 +12999,15 @@ body.happy-agent-modal-open {
 
 /* Keep company-type checkbox selection visible inside the public profile drawer */
 .happy-public-profile-drawer__prefs.jad-update-profile-wrap .manage-preferences form .checkboxInput .checkbox:checked ~ .checkmark {
-    background: var(--jad-pref-teal, var(--happpy-brand-deep));
-    border-color: var(--jad-pref-teal, var(--happpy-brand-deep));
+    background: var(--jad-pref-teal, #086d7e);
+    border-color: var(--jad-pref-teal, #086d7e);
 }
 
 .happy-public-profile-drawer__prefs.jad-update-profile-wrap .manage-preferences form .checkboxInput .checkbox:checked ~ .checkmark::after {
     visibility: visible;
     opacity: 1;
-    border-left-color: var(--jad-pref-white, var(--happpy-white));
-    border-bottom-color: var(--jad-pref-white, var(--happpy-white));
+    border-left-color: var(--jad-pref-white, #ffffff);
+    border-bottom-color: var(--jad-pref-white, #ffffff);
 }
 
 .happy-public-profile-drawer__prefs .form-group.resume--centered-upload .resumeUploadSection {
@@ -11942,16 +13018,41 @@ body.happy-agent-modal-open {
 }
 
 .happy-public-profile-drawer__prefs .form-group.resume--centered-upload .resume-btn--centered-upload {
-    background: var(--happpy-white);
+    background: #fff;
     align-items: center;
     padding: 0;
 }
 
 .happy-public-profile-drawer__prefs .manage-preferences .resumeUploadSection {
     border-color: #c9c4b5;
-    background: var(--happpy-white);
+    background: #fff;
     border-radius: 12px;
     box-shadow: 1px 0 6px rgba(107, 107, 107, 0.12);
+}
+
+.happy-public-profile-drawer__prefs .resume-flex--upload-prompt {
+    display: flex;
+    cursor: pointer;
+    padding-right: 0.5rem;
+    margin: 0;
+}
+
+.happy-public-profile-drawer__prefs .resume-flex--upload-prompt .title {
+    color: #231f20;
+}
+
+.happy-public-profile-drawer__prefs .resume-flex--upload-prompt-loading {
+    pointer-events: none;
+    opacity: 0.72;
+}
+
+.happy-public-profile-drawer__prefs .resume-flex__file-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
 }
 
 .happy-public-profile-drawer__prefs .form-group.resume--centered-upload {
@@ -11978,7 +13079,7 @@ body.happy-agent-modal-open {
     font-size: 16px;
     font-weight: 600;
     line-height: 1.25;
-    color: var(--happpy-ink);
+    color: #231f20;
     letter-spacing: -0.076px;
 }
 
@@ -12018,10 +13119,10 @@ body.happy-agent-modal-open {
     min-height: 34px;
     padding: 9px 13px;
     box-sizing: border-box;
-    border: 1px solid var(--happpy-brand-alt);
+    border: 1px solid #059599;
     border-radius: 999px;
-    background: var(--happpy-white);
-    color: var(--happpy-brand-alt);
+    background: #fff;
+    color: #059599;
     font-family: "Rubik", sans-serif;
     font-size: 12px;
     font-weight: 600;
@@ -12046,7 +13147,7 @@ body.happy-agent-modal-open {
     min-height: 80px;
     padding: 18px 56px;
     box-sizing: border-box;
-    background: var(--happpy-white);
+    background: #fff;
     border-top: 1px solid rgba(222, 225, 231, 0.8);
     box-shadow: 0 -4px 16px rgba(107, 107, 107, 0.08);
 }
@@ -12059,10 +13160,10 @@ body.happy-agent-modal-open {
     min-width: 258px;
     height: 44px;
     padding: 0 28px;
-    border: 1px solid var(--happpy-ink);
+    border: 1px solid #231f20;
     border-radius: 999px;
-    background: var(--happpy-ink);
-    color: var(--happpy-white);
+    background: #231f20;
+    color: #fff;
     font-family: "Rubik", sans-serif;
     font-size: 14px;
     font-weight: 500;
@@ -12080,7 +13181,7 @@ body.happy-agent-modal-open {
 }
 
 .happy-public-profile-drawer__cta:focus-visible:not(:disabled) {
-    outline: 2px solid var(--happpy-brand-alt);
+    outline: 2px solid #059599;
     outline-offset: 2px;
 }
 
@@ -12248,6 +13349,7 @@ body.happy-agent-modal-open {
     }
 
     /* Hero mesh — staggered entrance after #initial-loader */
+    .happy-job-agent-landing .happy-agent-hero-mesh.happy-landing-section--revealed .happy-agent-hero-mesh__eyebrow.happy-landing-enter,
     .happy-job-agent-landing .happy-agent-hero-mesh.happy-landing-section--revealed .happy-agent-hero-mesh__trust.happy-landing-enter {
         transition-delay: calc(var(--happy-stagger-i, 0) * var(--happy-enter-stagger));
     }
@@ -12260,7 +13362,8 @@ body.happy-agent-modal-open {
         transition-delay: calc(var(--happy-stagger-i, 0) * var(--happy-enter-stagger));
     }
 
-    .happy-job-agent-landing .happy-agent-hero-mesh.happy-landing-section--revealed .happy-agent-hero-mesh__actions.happy-landing-enter {
+    .happy-job-agent-landing .happy-agent-hero-mesh.happy-landing-section--revealed .happy-agent-hero-mesh__actions.happy-landing-enter,
+    .happy-job-agent-landing .happy-agent-hero-mesh.happy-landing-section--revealed .happy-agent-hero-mesh__trust-stats.happy-landing-enter {
         transition-delay: calc(var(--happy-stagger-i, 0) * var(--happy-enter-stagger));
     }
 
@@ -12312,7 +13415,7 @@ body.happy-agent-modal-open {
      * Manual row hover — placed after .happy-landing-enter reset so scale isn't
      * locked at scale(1) on rows that carry happy-landing-enter.
      */
-    @media (hover: hover) {
+    @media (hover: hover) and (min-width: 768px) {
         .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row--manual.happy-landing-enter:hover {
             z-index: 3;
         }
@@ -12351,7 +13454,7 @@ body.happy-agent-modal-open {
         .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row--agent.happy-landing-enter:hover .happy-agent-manual-vs-figma__pill--agent {
             animation: none;
             transform: scale(1.06);
-            border-color: var(--happpy-brand-deep);
+            border-color: #086d7e;
             box-shadow: 2px 4px 4px 0 rgba(129, 127, 127, 0.24);
             transition:
                 transform 0.68s cubic-bezier(0.16, 1, 0.3, 1),
@@ -12393,7 +13496,7 @@ body.happy-agent-modal-open {
         }
 
         .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row--agent.happy-landing-enter:hover .happy-agent-manual-vs-figma__pill--agent {
-            border-color: var(--happpy-brand-deep);
+            border-color: #086d7e;
             box-shadow: 2px 4px 4px 0 rgba(129, 127, 127, 0.24);
         }
     }
@@ -12405,6 +13508,10 @@ body.happy-agent-modal-open {
 }
 
 @media (max-width: 767px) {
+    .happy-job-agent-landing {
+        transition: padding-bottom 0.4s var(--happy-ease-out);
+    }
+
     .happy-job-agent-landing.happy-job-agent-landing--sticky-cta {
         padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
     }
@@ -12416,12 +13523,28 @@ body.happy-agent-modal-open {
         right: 0;
         bottom: 0;
         z-index: 90;
-        padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+        padding: 12px 16px calc(10px + env(safe-area-inset-bottom, 0px));
         background: rgba(255, 255, 255, 0.92);
         -webkit-backdrop-filter: blur(8px);
         backdrop-filter: blur(8px);
         border-top: 1px solid rgba(20, 20, 20, 0.08);
         box-shadow: 0 -8px 24px rgba(20, 20, 20, 0.08);
+        border-radius: 12px 12px 0 0;
+        transform: translate3d(0, calc(100% + 16px), 0);
+        pointer-events: none;
+        visibility: hidden;
+        transition:
+            transform 0.4s var(--happy-ease-out),
+            visibility 0s linear 0.4s;
+    }
+
+    .happy-job-agent-landing .happy-agent-sticky-mobile-cta.is-visible {
+        transform: translate3d(0, 0, 0);
+        pointer-events: auto;
+        visibility: visible;
+        transition:
+            transform 0.4s var(--happy-ease-out),
+            visibility 0s linear 0s;
     }
 
     .happy-job-agent-landing .happy-agent-sticky-mobile-cta__btn {
@@ -12434,8 +13557,8 @@ body.happy-agent-modal-open {
         padding: 12px 20px;
         border: none;
         border-radius: 9999px;
-        background: var(--happpy-ink);
-        color: var(--happpy-white);
+        background: #46eccd;
+        color: #231f20;
         font-family: "Telegraf", sans-serif;
         font-size: 15px;
         font-weight: 700;
@@ -12449,7 +13572,7 @@ body.happy-agent-modal-open {
     }
 
     .happy-job-agent-landing .happy-agent-sticky-mobile-cta__btn:focus-visible {
-        outline: 2px solid var(--happpy-brand-mid);
+        outline: 2px solid #2a9b9f;
         outline-offset: 2px;
     }
 
@@ -12460,6 +13583,14 @@ body.happy-agent-modal-open {
     }
 }
 
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+    .happy-job-agent-landing,
+    .happy-job-agent-landing .happy-agent-sticky-mobile-cta,
+    .happy-job-agent-landing .happy-agent-sticky-mobile-cta.is-visible {
+        transition: none;
+    }
+}
+
 /* ?show_jobs_listing=true — wrapper for the standalone job board (JobsBoard.js) */
 /* z-index keeps the cards' referral button above the hero's decorative layers below it. */
 .happy-job-agent-landing .happy-agent-jobs-listing {
@@ -12467,7 +13598,7 @@ body.happy-agent-modal-open {
     z-index: 2;
     width: 100%;
     padding: 56px 24px;
-    background: var(--happpy-white);
+    background: #fff;
 }
 
 @media screen and (max-width: 767px) {

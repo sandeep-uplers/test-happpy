@@ -37,6 +37,10 @@ export default function RootLayout({ children }) {
                     rel="stylesheet"
                     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
                 />
+                <link
+                    rel="stylesheet"
+                    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+                />
                 <link rel="preload" href="/fonts/Montserrat-Font.ttf" as="font" type="font/ttf" crossOrigin="" />
                 <link rel="preload" href="/fonts/Montserrat-Italic.ttf" as="font" type="font/ttf" crossOrigin="" />
                 <link rel="preload" href="/fonts/Rubik.ttf" as="font" type="font/ttf" crossOrigin="" />

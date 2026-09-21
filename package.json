@@ -6,7 +6,12 @@
     "dev": "next dev -H 127.0.0.1",
     "build": "next build",
     "start": "next start -H 127.0.0.1",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:assets": "node scripts/check-assets.mjs",
+    "test:smoke": "node scripts/smoke-test.mjs",
+    "test": "npm run test:assets && npm run test:smoke",
+    "sync:assets": "node scripts/sync-assets-from-uts.mjs",
+    "prebuild": "npm run test:assets"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

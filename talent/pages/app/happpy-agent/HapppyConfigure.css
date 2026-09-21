@@ -367,41 +367,6 @@
     color: #a09b93;
 }
 
-/* Message editor wrapper — Figma card is 378px tall */
-.hc-field__editor-wrap {
-    border: 1.5px solid #e4e2dc;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #ffffff;
-    min-height: 378px;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease, outline-color 0.15s ease;
-
-    &:focus-within {
-        border-color: #231f20;
-        box-shadow: 0 0 0 3px rgba(35, 31, 32, 0.08);
-    }
-}
-
-.hc-field__editor-wrap .rsw-editor {
-    border: none !important;
-    border-radius: 0 !important;
-    min-height: 340px;
-}
-
-.hc-field__editor-wrap .rsw-ce {
-    font-size: 12px !important;
-    line-height: 1.5;
-    
-    color: #231f20;
-}
-
-.hc-field__editor-wrap .rsw-ce p,
-.hc-field__editor-wrap .rsw-ce li,
-.hc-field__editor-wrap .rsw-ce span,
-.hc-field__editor-wrap .rsw-ce div {
-    font-size: 12px;
-}
-
 .hc-field__error {
     font-size: 11px;
     color: #c1272d;
@@ -671,7 +636,7 @@
 }
 
 .hc-ca-linkedin-connected-notice {
-    margin: 0 0 24px !important;
+    margin: 0 0 24px;
 }
 
 /* ── Card ─────────────────────────────────────────────────────────────────── */
@@ -1064,6 +1029,7 @@
 .hc-ca-form__actions {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 12px;
     margin-top: 8px;
 }
@@ -1105,6 +1071,20 @@
 .hc-ca-form__btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+@media (min-width: 768px) {
+    .hc-ca-form {
+        max-width: 680px;
+    }
+
+    .hc-ca-form .linkedin-password-security-note__content {
+        flex-wrap: nowrap;
+    }
+
+    .hc-ca-form .linkedin-password-security-note__text {
+        white-space: nowrap;
+    }
 }
 
 /* =============================================================================
@@ -2969,6 +2949,51 @@
     flex-shrink: 0;
 }
 
+.hc-bc--section {
+    margin-top: 24px;
+}
+
+.hc-bc-email-row {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.hc-bc-email-row__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-left: 12px;
+}
+
+.hc-bc-email-row__add {
+    flex-shrink: 0;
+    padding: 0 16px;
+    border: 1px solid #231f20;
+    border-radius: 8px;
+    background: #231f20;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 120ms ease;
+}
+
+.hc-bc-email-row__add:hover:not(:disabled),
+.hc-bc-email-row__add:focus-visible {
+    opacity: 0.9;
+    outline: none;
+}
+
+.hc-bc-email-row__add:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.hc-bc-chip--email {
+    padding: 6px 8px 6px 12px;
+}
+
 /* ── Responsive tweaks ────────────────────────────────────────────────────── */
 @media (max-width: 767px) {
     /* Figma 28806:32259 — title + pill tabs in a horizontal scroll row below 768px. */
@@ -3137,63 +3162,6 @@
         padding: 0 6.5px;
         font-size: 11px;
         border-color: #dee1e7;
-    }
-
-    .hc-field__editor-wrap {
-        min-height: 335px;
-        border-color: #dee1e7;
-    }
-
-    .hc-field__editor-wrap .rsw-editor {
-        min-height: 303px;
-        resize: none !important;
-    }
-
-    .hc-field__editor-wrap .rsw-toolbar {
-        background: #f2f2f3;
-        border-bottom: 1px solid #e4e1dc;
-        flex-wrap: wrap;
-        gap: 6px;
-        padding: 4px 6px;
-
-        .rsw-btn{
-            width: 16px;
-            min-width: 16px;
-            height: 16px;   
-            min-height: 16px;         
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-
-            svg{
-                width: 16px;
-                height: 16px;
-            }
-            s{
-                font-size: 14px;
-            }
-
-            &[title="Link"] {
-                font-size: 10px;
-            }
-        }
-    }
-
-    .hc-field__editor-wrap .rsw-ce {
-        min-height: 260px;
-        max-height: 305px;
-        overflow-y: auto;
-        padding: 12px 6.5px;
-        font-size: 11px !important;
-        line-height: normal;
-    }
-
-    .hc-field__editor-wrap .rsw-ce p,
-    .hc-field__editor-wrap .rsw-ce li,
-    .hc-field__editor-wrap .rsw-ce span,
-    .hc-field__editor-wrap .rsw-ce div {
-        font-size: 11px;
     }
 
     .hc-info-bar {

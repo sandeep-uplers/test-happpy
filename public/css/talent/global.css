@@ -14516,6 +14516,12 @@ textarea.err {
             }
         }
     }
+
+    @media screen and (max-width: 767px) {
+        width: min(27.5rem, calc(100vw - 1.5rem));
+        max-width: calc(100vw - 1.5rem);
+        border-radius: 24px 0 0 24px;
+    }
 }
 
 @keyframes slidein {

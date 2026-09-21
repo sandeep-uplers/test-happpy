@@ -12,6 +12,7 @@ import {
     IMAGE_URL,
 } from '../../../components/Constant';
 import { GET_API, POST_API } from '../../../components/Helper';
+import { withHapppyAgentInfoQuery } from '../../../helpers/jobPath';
 import { submitAutoRunRequest } from '../../../store/actions/UserActions';
 import ReferralAgentPreviewModal from '../../../components/ReferralAgentPreviewModal';
 import DailyReferralLimitTopnav from '../../../components/DailyReferralLimitWidget';
@@ -40,6 +41,8 @@ import PasteJobLinkDrawer from './configure-tabs/PasteJobLinkDrawer';
 
 const CHROME_EXTENSION_URL =
     'https://chromewebstore.google.com/detail/job-referral-agent-uplers/mbajhdldnhgbgncakknckdpnjmhemgcn?hl=en';
+/** Figma 2781:9033 — extension stat empty: mascot + “Get the Extension” link */
+const EXTENSION_STAT_EMPTY_MASCOT_SRC = `${IMAGE_URL}outreach/mascot-insight.svg`;
 const EXTENSION_STORAGE_KEY = 'outreach_chrome_extension_downloaded';
 const RECOMMENDED_JOBS_LIMIT = 4;
 const QUEUE_ENDPOINT_SOURCE = 'happpy-dashboard';
@@ -495,7 +498,7 @@ const HapppyDashboard = () => {
     const [positiveResponses, setPositiveResponses] = useState(0);
     const [unseenReplies, setUnseenReplies] = useState(0);
     const [queueCount, setQueueCount] = useState(0);
-    const [tailoredCount, setTailoredCount] = useState(0);
+    const [extensionJobsRunCount, setExtensionJobsRunCount] = useState(0);
     const [totalJobsRunCount, setTotalJobsRunCount] = useState(0);
     const [reminderCount, setReminderCount] = useState(0);
     /** From get-outreach-dashboard-data — false when skills, target roles, or company types are missing. */
@@ -626,7 +629,7 @@ const HapppyDashboard = () => {
                 setPositiveResponses(Number(d.total_positive_replies) || 0);
                 setUnseenReplies(Number(d.total_unseen_replies) || 0);
                 setQueueCount(Number(d.jobs_in_queue) || 0);
-                setTailoredCount(Number(d.total_tailored_resumes) || 0);
+                setExtensionJobsRunCount(Number(d.jobs_run_via_extension) || 0);
                 setTotalJobsRunCount(Number(d.total_jobs_run) || 0);
                 setReminderCount(Number(d.reminder_count) || 0);
                 setAgentPrefFieldsSubmitted(d.agent_pref_fields_submitted);
@@ -684,7 +687,7 @@ const HapppyDashboard = () => {
         const load = async () => {
             setJobsLoading(true);
             try {
-                const res = await GET_API(`${API_GET_RECOMMENDED_JOBS}?limit=${RECOMMENDED_JOBS_LIMIT}`);
+                const res = await GET_API(withHapppyAgentInfoQuery(`${API_GET_RECOMMENDED_JOBS}?limit=${RECOMMENDED_JOBS_LIMIT}`));
                 if (cancelled) return;
                 const data = unwrapApiData(res);
                 setJobs(Array.isArray(data) ? data.slice(0, RECOMMENDED_JOBS_LIMIT) : []);
@@ -917,8 +920,8 @@ const HapppyDashboard = () => {
             navigate('/talent/job-agent/my-activity?tab=replies');
         } else if (key === 'jobs-in-queue' && queueCount > 0) {
             navigate('/talent/job-agent/my-activity?tab=jobs-in-queue');
-        } else if (key === 'tailored-resumes' && tailoredCount > 0) {
-            navigate('/talent/job-agent/tailor-resume');
+        } else if (key === 'extension-jobs' && extensionJobsRunCount > 0) {
+            navigate('/talent/job-agent/my-activity?tab=activity');
         } else if (key === 'total-referrals' && totalJobsRunCount > 0) {
             navigate('/talent/job-agent/my-activity?tab=activity');
         }
@@ -951,7 +954,7 @@ const HapppyDashboard = () => {
                 setJobModal((prev) => ({ ...prev, loading: false }));
                 return;
             }
-            const response = await GET_API(`${API_SINGLE_OPP}?hr_number=${encodeURIComponent(hrNumber)}`);
+            const response = await GET_API(withHapppyAgentInfoQuery(`${API_SINGLE_OPP}?hr_number=${encodeURIComponent(hrNumber)}`));
             const payload = response?.data || {};
             const descriptionRaw =
                 payload?.JobDescription ??
@@ -977,7 +980,10 @@ const HapppyDashboard = () => {
         setJobModal((prev) => ({ ...prev, open: false }));
     }, []);
 
-    const confirmRunAgent = useCallback(async ({ linkedin_message_id, gmail_message_id } = {}) => {
+    const confirmRunAgent = useCallback(async (
+        { linkedin_message_id, gmail_message_id } = {},
+        { custom_resume_id } = {},
+    ) => {
         if (previewJob?.id == null) {
             return;
         }
@@ -990,6 +996,7 @@ const HapppyDashboard = () => {
             };
             if (linkedin_message_id) payload.linkedin_message_id = linkedin_message_id;
             if (gmail_message_id) payload.gmail_message_id = gmail_message_id;
+            if (custom_resume_id) payload.custom_resume_id = custom_resume_id;
             await dispatch(submitAutoRunRequest(payload));
             setQueuedJobIds((prev) => ({ ...prev, [jobId]: true }));
         } catch (err) {
@@ -1471,16 +1478,28 @@ const HapppyDashboard = () => {
                 >
                     Your journey with Happpy Agent
                 </h2>
-                <div
-                    className={`happpy-dash__stats${user?.is_product ? '' : ' happpy-dash__stats--three'}`}
-                    aria-busy={statsLoading}
-                >
+                <div className="happpy-dash__stats" aria-busy={statsLoading}>
                     <StatCard
-                        label="Jobs ran by HAPPPY"
+                        label="Jobs run on HAPPPY"
                         value={totalJobsRunCount}
                         loading={statsLoading}
                         onClick={() => handleStatClick('total-referrals')}
                         clickable={totalJobsRunCount > 0}
+                    />
+                    <StatCard
+                        label="Jobs run via extension"
+                        value={extensionJobsRunCount}
+                        loading={statsLoading}
+                        onClick={() => handleStatClick('extension-jobs')}
+                        clickable={extensionJobsRunCount > 0}
+                        emptyState={
+                            !statsLoading && extensionJobsRunCount === 0
+                                ? {
+                                      mascotSrc: EXTENSION_STAT_EMPTY_MASCOT_SRC,
+                                      linkHref: CHROME_EXTENSION_URL,
+                                  }
+                                : null
+                        }
                     />
                     <StatCard
                         label="Jobs in Queue"
@@ -1496,15 +1515,6 @@ const HapppyDashboard = () => {
                         onClick={() => handleStatClick('positive-responses')}
                         clickable={positiveResponses > 0}
                     />
-                    {user?.is_product ? (
-                        <StatCard
-                            label="Resumes Tailored & Transformed"
-                            value={tailoredCount}
-                            loading={statsLoading}
-                            onClick={() => handleStatClick('tailored-resumes')}
-                            clickable={tailoredCount > 0}
-                        />
-                    ) : null}
                 </div>
             </section>
 
@@ -1820,20 +1830,61 @@ const HapppyDashboard = () => {
     );
 };
 
-const StatCard = ({ label, value, loading, onClick, clickable }) => {
+const ExtensionStatEmptyHint = ({ mascotSrc, linkHref }) => (
+    <div className="happpy-dash__stat-extension-hint" role="note">
+        <img
+            className="happpy-dash__stat-extension-mascot"
+            src={mascotSrc}
+            alt=""
+            width={23}
+            height={24}
+            decoding="async"
+            aria-hidden="true"
+        />
+        <a
+            className="happpy-dash__stat-extension-link jad-font-body"
+            href={linkHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(event) => event.stopPropagation()}
+        >
+            <span className="happpy-dash__stat-extension-link-line">Get the Extension - </span>
+            <span className="happpy-dash__stat-extension-link-line">Works on Any Job Page!</span>
+        </a>
+    </div>
+);
+
+const StatCard = ({ label, value, loading, onClick, clickable, emptyState }) => {
     const Wrapper = clickable && onClick ? 'button' : 'div';
+    const showExtensionEmptyHint =
+        emptyState && !loading && Number(value) === 0;
+    const wrapperClassName = [
+        'happpy-dash__stat',
+        clickable && onClick ? 'happpy-dash__stat--clickable' : '',
+        showExtensionEmptyHint ? 'happpy-dash__stat--extension-empty' : '',
+    ]
+        .filter(Boolean)
+        .join(' ');
     const wrapperProps =
         clickable && onClick
             ? {
                 type: 'button',
                 onClick,
-                className: 'happpy-dash__stat happpy-dash__stat--clickable',
+                className: wrapperClassName,
             }
-            : { className: 'happpy-dash__stat' };
+            : { className: wrapperClassName };
     return (
         <Wrapper {...wrapperProps}>
             {loading ? (
                 <span className="happpy-dash__skel happpy-dash__skel--value" aria-hidden />
+            ) : showExtensionEmptyHint ? (
+                <div className="happpy-dash__stat-value-row">
+                    <span className="happpy-dash__stat-value jad-font-headline">{value}</span>
+                    <ExtensionStatEmptyHint
+                        mascotSrc={emptyState.mascotSrc}
+                        linkHref={emptyState.linkHref}
+                    />
+                </div>
             ) : (
                 <span className="happpy-dash__stat-value jad-font-headline">{value}</span>
             )}

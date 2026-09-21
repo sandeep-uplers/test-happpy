@@ -14,7 +14,7 @@ export const ONBOARDING_URL_PARAM = {
 
 /** Logged-in landing handoff after public signup — opens AgentOnboarding on load. */
 export const REFERRAL_AI_AGENT_ONBOARDING_PATH =
-    `/talent/referral-ai-agent?${ONBOARDING_URL_PARAM.CONNECT_ACCOUNTS}=true`;
+    `/talent/referral-ai-agent?${ONBOARDING_URL_PARAM.CREATE_PROFILE}=true`;
 
 /**
  * Sets a Happy Agent onboarding activity flag on the current page URL without

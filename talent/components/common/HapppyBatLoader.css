@@ -1,0 +1,121 @@
+/* Happpy page loader — flying bat mascot with streaking air lines.
+   Air-line motion adapted from Uiverse.io by anand_4957. */
+
+.happpy-bat-overlay {
+    /* Must match the pose/bob duration in happpy-bat-fly.svg. */
+    --happpy-bat-flap: 0.58s;
+    --happpy-bat-line: #231f20;
+
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+/* Bat + HAPPPY sit as one centered column. Air lines stay in the bands
+   above (16%/28%) and below (72%/84%) so they never cross this group. */
+.happpy-bat__lockup {
+    --happpy-lockup-scale: 1;
+    --happpy-bat-size: calc(160px * var(--happpy-lockup-scale));
+    --happpy-logo-text-size: calc(28px * var(--happpy-lockup-scale));
+
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Wing flap lives inside happpy-bat-fly.svg, so Blade and React match. */
+.happpy-bat__flier {
+    display: block;
+    width: var(--happpy-bat-size);
+    height: auto;
+}
+
+.happpy-bat__lockup .happpy-agent-logo {
+    --happpy-logo-text-size: calc(28px * var(--happpy-lockup-scale));
+    font-size: var(--happpy-logo-text-size);
+}
+
+.happpy-bat__lockup .happpy-agent-logo__wordmark {
+    font-size: 1em;
+}
+
+.happpy-bat__lockup .happpy-agent-logo__mark {
+    width: calc(1em + 16px);
+    height: calc(1em + 16px);
+}
+
+.happpy-bat__lines {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.happpy-bat__lines span {
+    position: absolute;
+    height: 2px;
+    width: 14%;
+    background: var(--happpy-bat-line);
+    /* Four flap-beats per line: rest, then one whoosh. Staggered by
+       one flap so a streak lands with a downstroke. */
+    animation: happpy-bat-lf calc(var(--happpy-bat-flap) * 4) linear infinite;
+}
+
+.happpy-bat__lines span:nth-child(1) {
+    top: 16%;
+    animation-delay: 0s;
+}
+
+.happpy-bat__lines span:nth-child(2) {
+    top: 28%;
+    animation-delay: calc(var(--happpy-bat-flap) * -1);
+}
+
+.happpy-bat__lines span:nth-child(3) {
+    top: 72%;
+    animation-delay: calc(var(--happpy-bat-flap) * -2);
+}
+
+.happpy-bat__lines span:nth-child(4) {
+    top: 84%;
+    animation-delay: calc(var(--happpy-bat-flap) * -3);
+}
+
+@keyframes happpy-bat-lf {
+    0%,
+    48% {
+        left: 110%;
+        opacity: 0;
+    }
+    54% {
+        opacity: 0.85;
+    }
+    86% {
+        left: -28%;
+        opacity: 0.2;
+    }
+    100% {
+        left: -36%;
+        opacity: 0;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .happpy-bat__lockup {
+        --happpy-lockup-scale: 0.78;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .happpy-bat__lines {
+        display: none;
+    }
+}

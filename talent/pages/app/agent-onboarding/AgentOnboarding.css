@@ -5,19 +5,19 @@
    Step 1: "Connect your accounts" (Gmail required + LinkedIn optional)
 
    Design tokens (from Figma — RA x Client):
-     white               var(--happpy-white)
-     uplers black        var(--happpy-ink)
-     near-black          var(--happpy-ink-strong)
-     secondary text      var(--happpy-ink-muted)
+     white               #FFFFFF
+     uplers black        #231F20
+     near-black          #141414
+     secondary text      #6B6B6B
      muted text          #4F79A3
-     yellow CTA          var(--happpy-legacy-yellow)
+     yellow CTA          #FFDA30
      yellow hover        #F6CB1A
      required badge bg   #FFDF9B
      optional badge bg   #F3ECDD
      card border         #E4E2DC
      divider             rgba(186,186,186,0.2)
      warning bg          #FFF2F2
-     warning text        var(--happpy-ink-strong)
+     warning text        #141414
    ========================================================= */
 
 /* ---------- React-modal portal / overlay ----------------- */
@@ -60,7 +60,7 @@
 
 .agent-onb-drawer {
     position: relative;
-    background: var(--happpy-white);
+    background: #ffffff;
     margin: 0 0 0 auto !important;
     width: min(820px, 100vw);
     max-width: min(820px, 100vw);
@@ -105,7 +105,7 @@
     height: 44px;
     border: none;
     background: transparent;
-    color: var(--happpy-ink);
+    color: #231f20;
     border-radius: 999px;
     cursor: pointer;
     display: inline-flex;
@@ -137,7 +137,7 @@
     overflow-y: auto;
     padding: 40px 48px 32px;
     box-sizing: border-box;
-    background: var(--happpy-white);
+    background: #ffffff;
 
     &.step1 {
         display: flex;
@@ -181,16 +181,19 @@
     text-align: center;
     margin: 0 auto 2rem;
     max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .agent-onb-step-header__title--join {
     font-weight: 800;
-    color: var(--happpy-ink);
+    color: #231f20;
     margin-bottom: 4px;
 }
 
 .agent-onb-step-header__lede--join {
-    color: var(--happpy-ink);
+    color: #231f20;
     max-width: 516px;
     margin-inline: auto;
 }
@@ -213,7 +216,7 @@
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: var(--happpy-brand-muted);
+    background: #6a7e82;
     flex-shrink: 0;
 }
 
@@ -222,7 +225,7 @@
     font-weight: 600;
     font-size: 10px;
     line-height: 1;
-    color: var(--happpy-brand-muted);
+    color: #6a7e82;
     white-space: nowrap;
 }
 
@@ -235,7 +238,7 @@
     font-weight: 700;
     font-size: 24px;
     line-height: 1.4;
-    color: var(--happpy-ink-strong);
+    color: #141414;
     letter-spacing: -0.36px;
     margin: 0;
     display: flex;
@@ -272,7 +275,7 @@
     font-weight: 400;
     font-size: 12px;
     line-height: 1.5;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
     margin: 0;
 
     @media (max-width: 767px) {
@@ -285,7 +288,7 @@
 .agent-onb-step-header__lede-strong {
     font-weight: 600;
     color: #505050;
-    border-bottom: 2px solid var(--happpy-brand);
+    border-bottom: 2px solid #46ECCD;
     padding-bottom: 1px;
 
     @media (max-width: 767px) {
@@ -300,7 +303,7 @@
 h2 .agent-onb-step-header__lede-strong {
     color: inherit;
     font-weight: inherit;
-    border-bottom: 3px solid var(--happpy-brand);
+    border-bottom: 3px solid #46ECCD;
 }
 
 /* ---------- Card row (Gmail + LinkedIn) ------------------ */
@@ -311,12 +314,16 @@ h2 .agent-onb-step-header__lede-strong {
     justify-content: center;
     align-items: stretch;
     flex-wrap: wrap;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
+}
+
+.agent-onb-linkedin-connected-notice {
+    margin: 0 auto 24px;
 }
 
 .agent-onb-card {
     position: relative;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid #c9c4b5;
     border-radius: 12px;
     width: 100%;
@@ -363,7 +370,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-weight: 500;
     font-size: 10px;
     line-height: 1;
-    color: var(--happpy-ink-strong);
+    color: #141414;
     white-space: nowrap;
 }
 
@@ -373,7 +380,7 @@ h2 .agent-onb-step-header__lede-strong {
 }
 
 .agent-onb-card__badge--needed .agent-onb-card__badge-dot {
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .agent-onb-card__badge--required {
@@ -387,7 +394,7 @@ h2 .agent-onb-step-header__lede-strong {
 
 .agent-onb-card__badge--connected {
     background: #c0ff9b;
-    color: var(--happpy-success-alt);
+    color: #2c7a4b;
     font-weight: 700;
     padding-left: 6px;
 }
@@ -404,8 +411,8 @@ h2 .agent-onb-step-header__lede-strong {
     width: 12px;
     height: 12px;
     border-radius: 999px;
-    background: var(--happpy-success-alt);
-    color: var(--happpy-white);
+    background: #2c7a4b;
+    color: #ffffff;
     font-family: 'Inter', 'Rubik', sans-serif;
     font-weight: 800;
     font-size: 9px;
@@ -439,7 +446,7 @@ h2 .agent-onb-step-header__lede-strong {
 
 .agent-onb-card__avatar--linkedin {
     background: #0a66c2;
-    color: var(--happpy-white);
+    color: #ffffff;
     font-family: 'Inter', 'Rubik', sans-serif;
     font-weight: 800;
     font-size: 24px;
@@ -458,7 +465,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-weight: 700;
     font-size: 22px;
     line-height: 1.1;
-    color: var(--happpy-ink);
+    color: #231f20;
     margin: 0;
 }
 
@@ -467,7 +474,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-weight: 600;
     font-size: 10px;
     line-height: 1.3;
-    color: var(--happpy-brand-muted);
+    color: #6a7e82;
     margin: 0;
 }
 
@@ -489,7 +496,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-weight: 500;
     font-size: 11px;
     line-height: 1.35;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .agent-onb-card__footnote {
@@ -499,7 +506,11 @@ h2 .agent-onb-step-header__lede-strong {
     font-weight: 400;
     font-size: 9px;
     line-height: 1.3;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
+
+    &.hidden {
+        visibility: hidden;
+    }
 }
 
 .agent-onb-card__benefit-icon {
@@ -532,8 +543,8 @@ h2 .agent-onb-step-header__lede-strong {
     padding: 12px 24px;
     border: none;
     border-radius: 56px;
-    background: var(--happpy-brand);
-    color: var(--happpy-ink);
+    background: #46ECCD;
+    color: #231f20;
     font-family: 'Rubik', sans-serif;
     font-weight: 700;
     font-size: 14px;
@@ -542,6 +553,13 @@ h2 .agent-onb-step-header__lede-strong {
     cursor: pointer;
     transition: background 150ms ease, transform 150ms ease, filter 150ms ease;
     gap: 8px;
+
+    @media (max-width: 360px) {
+        font-size: 12px;
+        svg{
+            display: none;
+        }
+    }
 }
 
 .agent-onb-card__cta:hover:not(:disabled),
@@ -565,9 +583,9 @@ h2 .agent-onb-step-header__lede-strong {
 }
 
 .agent-onb-card__cta--disconnect {
-    background: var(--happpy-white);
-    border: 0.5px solid var(--happpy-ink);
-    color: var(--happpy-ink);
+    background: #ffffff;
+    border: 0.5px solid #231f20;
+    color: #231f20;
 }
 
 .agent-onb-card__cta--disconnect:hover:not(:disabled),
@@ -598,13 +616,13 @@ h2 .agent-onb-step-header__lede-strong {
     font-weight: 600;
     font-size: 14px;
     line-height: 1.3;
-    color: var(--happpy-ink-strong);
+    color: #141414;
     text-align: center;
 }
 
 .agent-onb-privacy__lock {
     display: inline-flex;
-    color: var(--happpy-success-alt);
+    color: #2c7a4b;
     flex-shrink: 0;
 }
 
@@ -631,7 +649,7 @@ h2 .agent-onb-step-header__lede-strong {
 .agent-onb-privacy__check {
     flex-shrink: 0;
     margin-top: 2px;
-    color: var(--happpy-success-alt);
+    color: #2c7a4b;
 }
 
 /* ---------- Trust badge strip --------------------------- */
@@ -656,7 +674,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-size: 10px;
     letter-spacing: 0.06em;
     line-height: 1;
-    color: var(--happpy-brand-deep);
+    color: #086d7e;
     text-transform: uppercase;
 }
 
@@ -679,21 +697,6 @@ h2 .agent-onb-step-header__lede-strong {
     .agent-onb-trust-badges__item:not(:last-child)::after {
         margin: 0 7px;
     }
-}
-
-/* ---------- Gmail callback stat banner (Figma 1701:21916) -------- */
-
-.agent-onb-callback-banner {
-    margin: 0 0 1.5rem;
-    padding: 12px;
-    background: rgba(157, 250, 213, 0.3);
-    border: none;
-    border-radius: 8px;
-    color: var(--happpy-success-alt);
-    font-family: 'Rubik', sans-serif;
-    font-weight: 600;
-    font-size: 11px;
-    line-height: 1.4;
 }
 
 /* ---------- Trust badge strip (below cards) ------------- */
@@ -727,14 +730,14 @@ h2 .agent-onb-step-header__lede-strong {
     font-size: 9px;
     letter-spacing: 1.1px;
     line-height: 1;
-    color: var(--happpy-brand-muted);
+    color: #6a7e82;
     text-transform: uppercase;
 }
 
 .agent-onb-trust-strip__badge:not(:last-child)::after {
     content: '·';
     margin-left: 8px;
-    color: var(--happpy-brand-muted);
+    color: #6a7e82;
     font-weight: 400;
 }
 
@@ -786,14 +789,14 @@ h2 .agent-onb-step-header__lede-strong {
     font-weight: 500;
     font-size: 12px;
     line-height: 1;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
     padding-bottom: 2px;
     transition: color 200ms ease;
 }
 
 .agent-onb-privacy-toggle:hover .agent-onb-privacy-toggle__label,
 .agent-onb-privacy-toggle:focus-visible .agent-onb-privacy-toggle__label {
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .agent-onb-privacy-toggle__chevron {
@@ -807,6 +810,7 @@ h2 .agent-onb-step-header__lede-strong {
 
 .agent-onb-privacy-toggle-wrap .data-secure-container {
     margin-top: 0;
+    margin-bottom: 1rem;
 }
 
 /* ---------- Shared accordion panel (referral + privacy) ---- */
@@ -872,7 +876,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-weight: 600;
     font-size: 1rem;
     line-height: normal;
-    color: var(--happpy-brand-deep);
+    color: #086d7e;
 }
 
 .agent-onb-gmail-assurance__list {
@@ -901,7 +905,7 @@ h2 .agent-onb-step-header__lede-strong {
     height: 6px;
     margin-top: 4px;
     border-radius: 50%;
-    background: var(--happpy-brand-deep);
+    background: #086D7E;
 }
 
 .data-secure-container{
@@ -921,13 +925,13 @@ h2 .agent-onb-step-header__lede-strong {
         align-items: center;
         gap: 8px;
         font-weight: 600;
-        color: var(--happpy-brand-deep);
+        color: #086D7E;
         font-size: 12px;
         line-height: normal;
     }
     ul.agent-onb-trust-badges{
         margin: 0;
-        color: var(--happpy-brand-muted);
+        color: #6A7E82;
         font-weight: 600;
         font-size: 10px;
         letter-spacing: 0.06em;
@@ -945,7 +949,7 @@ h2 .agent-onb-step-header__lede-strong {
     margin: 16px auto 0;
     width: 100%;
     max-width: 720px;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid #e4e2dc;
     border-radius: 12px;
     padding: 20px 22px;
@@ -970,7 +974,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 700;
     font-size: 14px;
-    color: var(--happpy-ink);
+    color: #231f20;
     margin: 0 0 12px;
 }
 
@@ -993,17 +997,17 @@ h2 .agent-onb-step-header__lede-strong {
     padding: 10px 12px;
     border: 1px solid #dee1e7;
     border-radius: 8px;
-    background: var(--happpy-white);
+    background: #ffffff;
     font-family: 'Rubik', sans-serif;
     font-size: 13px;
-    color: var(--happpy-ink);
+    color: #231f20;
     box-sizing: border-box;
     transition: border-color 120ms ease, box-shadow 120ms ease;
 }
 
 .agent-onb-li-form__input:focus {
     outline: none;
-    border-color: var(--happpy-ink) !important;
+    border-color: #231f20 !important;
     box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12) !important;
 }
 
@@ -1044,6 +1048,7 @@ h2 .agent-onb-step-header__lede-strong {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
+    flex-wrap: wrap;
     margin-top: 4px;
 }
 
@@ -1063,7 +1068,7 @@ h2 .agent-onb-step-header__lede-strong {
 
 .agent-onb-li-form__btn--primary {
     background: #0a66c2;
-    color: var(--happpy-white);
+    color: #ffffff;
 }
 
 .agent-onb-li-form__btn--primary:hover:not(:disabled) {
@@ -1077,7 +1082,7 @@ h2 .agent-onb-step-header__lede-strong {
 
 .agent-onb-li-form__btn--secondary {
     background: transparent;
-    color: var(--happpy-ink);
+    color: #231f20;
     border: 1px solid #d6d6d6;
 }
 
@@ -1088,7 +1093,7 @@ h2 .agent-onb-step-header__lede-strong {
 .agent-onb-li-form__hint {
     font-family: 'Rubik', sans-serif;
     font-size: 11px;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
     margin: 0 0 10px;
     line-height: 1.4;
 }
@@ -1102,7 +1107,7 @@ h2 .agent-onb-step-header__lede-strong {
     justify-content: space-between;
     gap: 16px;
     padding: 16px 48px;
-    background: var(--happpy-white);
+    background: #ffffff;
     border-top: 1px solid rgba(186, 186, 186, 0.35);
     box-shadow: 0 -2px 8px rgba(107, 107, 107, 0.08);
     position: relative;
@@ -1110,7 +1115,7 @@ h2 .agent-onb-step-header__lede-strong {
 
     &.step1{
         @media screen and (max-width: 767px) {
-            flex-direction: column;
+            flex-direction: row;
         }
     }
 }
@@ -1157,8 +1162,8 @@ h2 .agent-onb-step-header__lede-strong {
     padding: 12px 28px;
     border: none;
     border-radius: 999px;
-    background: var(--happpy-ink);
-    color: var(--happpy-white);
+    background: #231f20;
+    color: #fff;
     font-family: 'Telegraf', sans-serif;
     font-weight: 700;
     font-size: 14px;
@@ -1191,14 +1196,14 @@ h2 .agent-onb-step-header__lede-strong {
 
 /* Dark CTA variant — used by Step 2 footer. */
 .agent-onb-footer__cta--dark {
-    background: var(--happpy-ink);
-    color: var(--happpy-white);
+    background: #231f20;
+    color: #ffffff;
 }
 
 .agent-onb-footer__cta--dark:hover:not(:disabled),
 .agent-onb-footer__cta--dark:focus-visible:not(:disabled) {
     background: #0d0c0d;
-    color: var(--happpy-white);
+    color: #ffffff;
 }
 
 .agent-onb-footer__cta--dark:disabled {
@@ -1214,7 +1219,7 @@ h2 .agent-onb-step-header__lede-strong {
     border-radius: 999px;
     background: #F4F4F4;
     border: none;
-    color: var(--happpy-ink);
+    color: #231f20;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1240,6 +1245,32 @@ h2 .agent-onb-step-header__lede-strong {
     flex-shrink: 0;
 }
 
+/* Step 1 — when back is shown, stack Gmail hint above the back button */
+.agent-onb-footer__start {
+    flex-shrink: 0;
+    width: 44px;
+}
+
+.agent-onb-footer.step1:has(.agent-onb-footer__start .agent-onb-footer__warning) {
+    padding-top: 48px;
+    align-items: flex-end;
+}
+
+.agent-onb-footer__start .agent-onb-footer__warning {
+    position: absolute;
+    top: 16px;
+    left: 48px;
+    right: 48px;
+    width: auto;
+    max-width: none;
+    justify-content: center;
+    text-align: center;
+}
+
+.agent-onb-footer.step1:has(.agent-onb-footer__start) .agent-onb-footer__cta {
+    margin-left: auto;
+}
+
 /* ============================================================
    Step 2 — "Set up your outreach message"
    ============================================================ */
@@ -1252,10 +1283,10 @@ h2 .agent-onb-step-header__lede-strong {
 
 /* Bordered card that wraps the tabs + editor + info banner */
 .agent-onb-tpl-card {
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid #c9c4b5;
     border-radius: 8px;
-    overflow: hidden;
+    overflow: visible;
     display: flex;
     flex-direction: column;
 }
@@ -1283,7 +1314,7 @@ h2 .agent-onb-step-header__lede-strong {
     border-radius: 6px;
     cursor: pointer;
     padding: 4px 8px;
-    color: var(--happpy-ink-strong);
+    color: #141414;
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 12px;
@@ -1295,13 +1326,13 @@ h2 .agent-onb-step-header__lede-strong {
 }
 
 .agent-onb-tpl-card__tab--active {
-    background: var(--happpy-white);
+    background: #ffffff;
     border-color: #a09b93;
     font-weight: 600;
 }
 
 .agent-onb-tpl-card__tab--active:hover {
-    background: var(--happpy-white);
+    background: #ffffff;
 }
 
 .agent-onb-tpl-card__tab-icon {
@@ -1321,7 +1352,7 @@ h2 .agent-onb-step-header__lede-strong {
 
 .agent-onb-tpl-card__tab-lock {
     margin-left: 4px;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
     display: inline-flex;
     align-items: center;
 }
@@ -1340,10 +1371,10 @@ h2 .agent-onb-step-header__lede-strong {
     align-items: center;
     gap: 8px;
     padding: 6px 12px;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid #dee1e7;
     border-radius: 20px;
-    color: var(--happpy-ink);
+    color: #231f20;
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 12px;
@@ -1357,14 +1388,14 @@ h2 .agent-onb-step-header__lede-strong {
 }
 
 .agent-onb-tpl-card__chip--active {
-    background: var(--happpy-mint-border);
-    border-color: var(--happpy-mint-border);
+    background: #ADFFD9;
+    border-color: #ADFFD9;
     font-weight: 600;
 }
 
 .agent-onb-tpl-card__chip--active:hover {
-    background: var(--happpy-brand);
-    border-color: var(--happpy-brand);
+    background: #46ECCD;
+    border-color: #46ECCD;
 }
 
 .agent-onb-tpl-card__chip:disabled {
@@ -1376,18 +1407,18 @@ h2 .agent-onb-step-header__lede-strong {
     width: 14px;
     height: 14px;
     border-radius: 999px;
-    border: 1.5px solid var(--happpy-ink-muted);
+    border: 1.5px solid #6b6b6b;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    background: var(--happpy-white);
+    background: #ffffff;
     transition: border-color 120ms ease, background 120ms ease;
 }
 
 .agent-onb-tpl-card__chip--active .agent-onb-tpl-card__chip-radio {
-    border-color: var(--happpy-ink);
-    background: var(--happpy-white);
+    border-color: #231f20;
+    background: #fff;
 }
 
 .agent-onb-tpl-card__chip--active .agent-onb-tpl-card__chip-radio::after {
@@ -1395,7 +1426,7 @@ h2 .agent-onb-step-header__lede-strong {
     width: 8px;
     height: 8px;
     border-radius: 999px;
-    background: var(--happpy-ink);
+    background: #231f20;
 }
 
 /* Form section under the chips */
@@ -1416,7 +1447,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 700;
     font-size: 11px;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
     margin: 0;
 }
 
@@ -1424,10 +1455,10 @@ h2 .agent-onb-step-header__lede-strong {
     width: 100%;
     height: 31px;
     padding: 6px 8px;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1.5px solid #dee1e7;
     border-radius: 8px;
-    color: var(--happpy-ink);
+    color: #231f20;
     font-family: 'Rubik', sans-serif;
     font-weight: 400;
     font-size: 12px;
@@ -1441,61 +1472,12 @@ h2 .agent-onb-step-header__lede-strong {
 
 .agent-onb-tpl-card__input:focus {
     outline: none;
-    border-color: var(--happpy-ink);
+    border-color: #231f20;
     box-shadow: 0 0 0 3px rgba(35, 31, 32, 0.08);
 }
 
 .agent-onb-tpl-card__input--error {
     border-color: #d23f3f;
-}
-
-/* Editor wrapper — overrides for TemplateEditor (react-simple-wysiwyg) */
-.agent-onb-tpl-card__editor {
-    border: 1.5px solid #dee1e7;
-    border-radius: 8px;
-    overflow: hidden;
-    background: var(--happpy-white);
-    transition: border-color 0.15s ease, box-shadow 0.15s ease, outline-color 0.15s ease;
-}
-
-.agent-onb-tpl-card__editor:focus-within {
-    border-color: var(--happpy-ink);
-    box-shadow: 0 0 0 3px rgba(35, 31, 32, 0.08);
-}
-
-.agent-onb-tpl-card__editor--error {
-    border-color: #d23f3f;
-}
-
-.agent-onb-tpl-card__editor--error:focus-within {
-    border-color: #d23f3f;
-    box-shadow: 0 0 0 3px rgba(210, 63, 63, 0.08);
-}
-
-.agent-onb-tpl-card__editor .rsw-editor {
-    border: none;
-    border-radius: 8px;
-    background: var(--happpy-white);
-}
-
-.agent-onb-tpl-card__editor .rsw-toolbar {
-    background: #f2f2f3;
-    border-bottom: 1px solid #e4e1dc;
-}
-
-.agent-onb-tpl-card__editor .rsw-ce {
-    min-height: 240px;
-    max-height: 320px;
-    overflow-y: auto;
-    padding: 8px 10px;
-    font-family: 'Rubik', sans-serif;
-    font-size: 12px;
-    color: var(--happpy-ink);
-    line-height: 1.5;
-}
-
-.agent-onb-tpl-card__editor .rsw-ce:focus {
-    outline: none;
 }
 
 .agent-onb-tpl-card__error {
@@ -1516,13 +1498,13 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 11px;
-    color: var(--happpy-ink);
+    color: #231f20;
     width: fit-content;
 }
 
 .agent-onb-tpl-card__banner svg {
     flex-shrink: 0;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 /* Locked LinkedIn tab body (when LinkedIn isn't connected) */
@@ -1543,14 +1525,14 @@ h2 .agent-onb-step-header__lede-strong {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
 }
 
 .agent-onb-tpl-card__locked-title {
     font-family: 'Rubik', sans-serif;
     font-weight: 700;
     font-size: 15px;
-    color: var(--happpy-ink);
+    color: #231f20;
     margin: 0;
 }
 
@@ -1558,7 +1540,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 12px;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
     margin: 0;
     max-width: 360px;
     line-height: 1.5;
@@ -1568,8 +1550,8 @@ h2 .agent-onb-step-header__lede-strong {
     margin-top: 6px;
     padding: 8px 18px;
     background: transparent;
-    color: var(--happpy-ink);
-    border: 1px solid var(--happpy-ink);
+    color: #231f20;
+    border: 1px solid #231f20;
     border-radius: 999px;
     font-family: 'Rubik', sans-serif;
     font-weight: 600;
@@ -1602,7 +1584,7 @@ h2 .agent-onb-step-header__lede-strong {
 .agent-onb-tpl-tooltip__inner {
     pointer-events: auto;
     position: relative;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid #e0e0fc;
     border-radius: 8px;
     padding: 8px;
@@ -1617,7 +1599,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 11px;
-    color: var(--happpy-brand-deep);
+    color: #086D7E;
     line-height: 1.4;
 }
 
@@ -1638,7 +1620,7 @@ h2 .agent-onb-step-header__lede-strong {
     width: 28px;
     height: 28px;
     border-radius: 999px;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 0.5px solid #e0e0fc;
     color: #5a5278;
     display: inline-flex;
@@ -1689,7 +1671,7 @@ h2 .agent-onb-step-header__lede-strong {
     gap: 6px;
     font-family: 'Rubik', sans-serif;
     font-size: 10px;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
 }
 
 .agent-onb-tpl-card__tabs-wrap {
@@ -1714,7 +1696,7 @@ h2 .agent-onb-step-header__lede-strong {
 .agent-onb-ext-card {
     width: 100%;
     max-width: 368px;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 2px solid #e4e2dc;
     border-radius: 12px;
     overflow: hidden;
@@ -1752,7 +1734,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-weight: 600;
     font-size: 16px;
     line-height: 1.3;
-    color: var(--happpy-ink);
+    color: #231f20;
     text-align: center;
 }
 
@@ -1770,7 +1752,7 @@ h2 .agent-onb-step-header__lede-strong {
     right: 4%;
     bottom: -3px;
     height: 2px;
-    background: var(--happpy-legacy-yellow);
+    background: #ffda30;
     border-radius: 999px;
 }
 
@@ -1796,7 +1778,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-weight: 700;
     font-size: 10px;
     line-height: 1;
-    color: var(--happpy-white);
+    color: #ffffff;
     background: #f0f0f6;
     overflow: hidden;
 }
@@ -1808,7 +1790,7 @@ h2 .agent-onb-step-header__lede-strong {
 }
 
 .agent-onb-ext-card__platform--naukri {
-    color: var(--happpy-white);
+    color: #ffffff;
     font-weight: 800;
     font-size: 13px;
 }
@@ -1820,7 +1802,7 @@ h2 .agent-onb-step-header__lede-strong {
 }
 
 .agent-onb-ext-card__platform--indeed {
-    color: var(--happpy-white);
+    color: #ffffff;
     font-weight: 800;
     font-size: 10px;
     letter-spacing: -0.3px;
@@ -1846,7 +1828,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 10px;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
     white-space: nowrap;
 }
 
@@ -1861,8 +1843,8 @@ h2 .agent-onb-step-header__lede-strong {
     padding: 12px 24px;
     border: none;
     border-radius: 56px;
-    background: var(--happpy-brand);
-    color: var(--happpy-ink);
+    background: #46ECCD;
+    color: #231f20;
     font-family: 'Rubik', sans-serif;
     font-weight: 700;
     font-size: 12px;
@@ -1876,7 +1858,7 @@ h2 .agent-onb-step-header__lede-strong {
 .agent-onb-ext-card__cta:hover,
 .agent-onb-ext-card__cta:focus-visible {
     filter: brightness(0.95);
-    color: var(--happpy-ink);
+    color: #231f20;
     outline: none;
     text-decoration: none;
 }
@@ -1887,13 +1869,13 @@ h2 .agent-onb-step-header__lede-strong {
 
 .agent-onb-ext-card__cta--done {
     background: #c0ff9b;
-    color: var(--happpy-success-alt);
+    color: #2c7a4b;
 }
 
 .agent-onb-ext-card__cta--done:hover,
 .agent-onb-ext-card__cta--done:focus-visible {
     background: #b1f48a;
-    color: var(--happpy-success-alt);
+    color: #2c7a4b;
 }
 
 /* "Prefer to paste job links manually?" helper line under the card. */
@@ -1903,12 +1885,12 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 10px;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
     line-height: 1.5;
 }
 
 .agent-onb-ext-manual-note__strong {
-    color: var(--happpy-ink-strong);
+    color: #141414;
     font-weight: 500;
 }
 
@@ -1940,7 +1922,7 @@ h2 .agent-onb-step-header__lede-strong {
 .agent-onb-ext-tooltip__bubble {
     pointer-events: auto;
     position: relative;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1px solid #e0e0fc;
     border-radius: 8px;
     padding: 10px 12px;
@@ -1965,7 +1947,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 11px;
-    color: var(--happpy-brand-deep);
+    color: #086D7E;
     line-height: 1.4;
 }
 
@@ -1992,7 +1974,7 @@ h2 .agent-onb-step-header__lede-strong {
     max-width: 347px;
     min-height: 247px;
     padding: 20px 20px 38px;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 2px solid #e4e2dc !important;
     border-radius: 12px;
     box-shadow: 1px 0 6px rgba(107, 107, 107, 0.12);
@@ -2051,7 +2033,7 @@ h2 .agent-onb-step-header__lede-strong {
     left: 16px;
     padding: 4px 10px;
     background: #c0ff9b;
-    color: var(--happpy-success-alt);
+    color: #2c7a4b;
     border-radius: 10px;
     font-family: 'Rubik', sans-serif;
     font-weight: 700;
@@ -2068,7 +2050,7 @@ h2 .agent-onb-step-header__lede-strong {
     width: 32px;
     height: 32px;
     border-radius: 6px;
-    background: var(--happpy-white);
+    background: #ffffff;
     border: 1.5px solid #d6d6d6;
     display: inline-flex;
     align-items: center;
@@ -2077,7 +2059,7 @@ h2 .agent-onb-step-header__lede-strong {
 }
 
 .agent-onb-mode-card__check--on {
-    border-color: var(--happpy-success-alt);
+    border-color: #2c7a4b;
 }
 
 .agent-onb-mode-card__head {
@@ -2103,7 +2085,7 @@ h2 .agent-onb-step-header__lede-strong {
 }
 
 .agent-onb-mode-card__icon--manual {
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
 }
 
 .agent-onb-mode-card__head-text {
@@ -2117,7 +2099,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 700;
     font-size: 20px;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .agent-onb-mode-card__subtitle {
@@ -2125,7 +2107,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 12px;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
 }
 
 .agent-onb-mode-card__features {
@@ -2145,7 +2127,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-weight: 400;
     font-size: 11px;
     line-height: 1.35;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .agent-onb-mode-card__feature-icon {
@@ -2184,12 +2166,12 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 11px;
-    color: var(--happpy-ink-strong);
+    color: #141414;
 }
 
 .agent-onb-mode-card--selected .agent-onb-mode-card__ideal {
     background: #def8e6;
-    color: var(--happpy-ink-strong);
+    color: #141414;
 }
 
 /* When the card is locked the parent already applies grayscale + opacity,
@@ -2227,7 +2209,7 @@ h2 .agent-onb-step-header__lede-strong {
 }
 
 .agent-onb-mode-notice__strong {
-    color: var(--happpy-ink-strong);
+    color: #141414;
     font-weight: 700;
     text-decoration: underline;
     text-underline-offset: 2px;
@@ -2266,7 +2248,7 @@ h2 .agent-onb-step-header__lede-strong {
 }
 
 .agent-onb-mode-tooltip--success .agent-onb-mode-tooltip__text strong {
-    color: var(--happpy-success-alt);
+    color: #2c7a4b;
     font-weight: 700;
 }
 
@@ -2281,8 +2263,8 @@ h2 .agent-onb-step-header__lede-strong {
 
 .agent-onb-mode-tooltip__bubble {
     position: relative;
-    background: var(--happpy-white);
-    border: 1px solid var(--happpy-brand-muted);
+    background: #ffffff;
+    border: 1px solid #6A7E82;
     border-radius: 8px;
     padding: 12px;
     width: 286px;
@@ -2299,7 +2281,7 @@ h2 .agent-onb-step-header__lede-strong {
     left: -13px;
     top: 16px;
     border: 6px solid transparent;
-    border-right-color: var(--happpy-brand-muted);
+    border-right-color: #6A7E82;
 }
 
 .agent-onb-mode-tooltip__text {
@@ -2307,7 +2289,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 11px;
-    color: var(--happpy-brand-deep);
+    color: #086D7E;
     line-height: 1.45;
 }
 
@@ -2321,8 +2303,8 @@ h2 .agent-onb-step-header__lede-strong {
     width: 100%;
     border: none;
     border-radius: 16px;
-    background: var(--happpy-brand-alt);
-    color: var(--happpy-white);
+    background: #059599;
+    color: #fff;
     font-family: 'Telegraf', sans-serif;
     font-weight: 700;
     font-size: 12px;
@@ -2332,13 +2314,13 @@ h2 .agent-onb-step-header__lede-strong {
     transition: background 140ms ease;
 
     svg *{
-        fill: var(--happpy-white);
+        fill: #fff;
     }
 }
 
 .agent-onb-mode-tooltip__cta:hover,
 .agent-onb-mode-tooltip__cta:focus-visible {
-    background: var(--happpy-brand-deep);
+    background: #086D7E;
     outline: none;
 }
 
@@ -2388,8 +2370,8 @@ h2 .agent-onb-step-header__lede-strong {
 /* Featured (Hustle) — white foreground with a yellow back card peeking
    out bottom-left, both bordered in Uplers-black. */
 .agent-onb-plan-card--featured {
-    background: var(--happpy-white);
-    border-color: var(--happpy-ink);
+    background: #ffffff;
+    border-color: #231f20;
 }
 
 .agent-onb-plan-card--featured::before {
@@ -2399,8 +2381,8 @@ h2 .agent-onb-step-header__lede-strong {
     bottom: -4px;
     left: -4px;
     right: 4px;
-    background: var(--happpy-legacy-yellow);
-    border: 1px solid var(--happpy-ink);
+    background: #ffda30;
+    border: 1px solid #231f20;
     border-radius: 12px;
     z-index: -1;
 }
@@ -2419,7 +2401,7 @@ h2 .agent-onb-step-header__lede-strong {
     right: 18px;
     padding: 3px 10px;
     background: #ffda32;
-    color: var(--happpy-ink);
+    color: #231f20;
     border-radius: 10px;
     font-family: 'Rubik', sans-serif;
     font-weight: 600;
@@ -2463,7 +2445,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-weight: 500;
     font-size: 18px;
     letter-spacing: -0.36px;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 /* Featured title sits in a quieter grey so the price gets the eye first. */
@@ -2476,7 +2458,7 @@ h2 .agent-onb-step-header__lede-strong {
     align-items: center;
     padding: 2px 8px;
     background: #e9ffc5;
-    color: var(--happpy-success-alt);
+    color: #2c7a4b;
     border-radius: 4px;
     font-family: 'Rubik', sans-serif;
     font-weight: 600;
@@ -2496,7 +2478,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 700;
     font-size: 28px;
-    color: var(--happpy-ink);
+    color: #231f20;
     line-height: 1.1;
     letter-spacing: -0.36px;
 }
@@ -2505,7 +2487,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 13px;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
     line-height: 1.5;
     padding-bottom: 2px;
 }
@@ -2517,8 +2499,8 @@ h2 .agent-onb-step-header__lede-strong {
     padding: 12px 24px;
     border: none;
     border-radius: 8px;
-    background: var(--happpy-ink);
-    color: var(--happpy-white);
+    background: #231f20;
+    color: #ffffff;
     font-family: 'Rubik', sans-serif;
     font-weight: 600;
     font-size: 12px;
@@ -2579,7 +2561,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-weight: 500;
     font-size: 11px;
     line-height: 1.35;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .agent-onb-plan-card__feature svg {
@@ -2657,6 +2639,30 @@ h2 .agent-onb-step-header__lede-strong {
         width: 100%;
         justify-content: center;
         text-align: center;
+
+        @media (max-width: 360px) {
+            font-size: 11px;
+        }
+    }
+
+    .agent-onb-footer.step1:has(.agent-onb-footer__start .agent-onb-footer__warning) {
+        padding-top: 44px;
+    }
+
+    .agent-onb-footer__start .agent-onb-footer__warning {
+        top: 12px;
+        left: 18px;
+        right: 18px;
+        max-width: none;
+        font-size: 12px;
+        line-height: 1.35;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .agent-onb-footer.step1:has(.agent-onb-footer__start) .agent-onb-footer__cta {
+        flex: 1;
+        width: auto;
     }
 
     .agent-onb-footer__warning--hidden {
@@ -2707,7 +2713,7 @@ h2 .agent-onb-step-header__lede-strong {
 
     .agent-onb-tpl-card__banner {
         position: sticky;
-        bottom: 0;
+        bottom: -56px;
         left: auto;
         width: 100%;
         max-width: 100%;
@@ -2715,12 +2721,6 @@ h2 .agent-onb-step-header__lede-strong {
         box-sizing: border-box;
         justify-content: center;
         z-index: 2;
-    }
-
-    .agent-onb-tpl-card__editor .rsw-toolbar {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        flex-wrap: nowrap;
     }
 
     .agent-onb-tpl-tooltip {
@@ -2862,8 +2862,14 @@ h2 .agent-onb-step-header__lede-strong {
 
 /* Step 1 — referral link accordion (Figma 1797:2409) */
 .agent-onb-referral {
-    margin: 0 0 1.5rem;
+    margin: 1.5rem 0 0;
     width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+    .agent-onb-scroll.step1 .agent-onb-referral {
+        margin-top: auto;
+    }
 }
 
 .agent-onb-referral-field {
@@ -2907,7 +2913,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-size: 11px;
     line-height: normal;
     letter-spacing: -0.0762px;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .agent-onb-referral-field__chevron {
@@ -2931,12 +2937,12 @@ h2 .agent-onb-step-header__lede-strong {
     padding: 12px;
     border: 1px solid #dee1e7;
     border-radius: 7px;
-    background: var(--happpy-white);
+    background: #ffffff;
     font-family: 'Rubik', sans-serif;
     font-weight: 600;
     font-size: 12px;
     line-height: normal;
-    color: var(--happpy-ink);
+    color: #231f20;
     box-sizing: border-box;
     transition: border-color 120ms ease, box-shadow 120ms ease;
 }
@@ -2948,7 +2954,7 @@ h2 .agent-onb-step-header__lede-strong {
 
 .agent-onb-referral-field__input:focus {
     outline: none;
-    border-color: var(--happpy-ink);
+    border-color: #231f20;
     box-shadow: 0 0 0 3px rgba(35, 31, 32, 0.08);
 }
 
@@ -2963,7 +2969,7 @@ h2 .agent-onb-step-header__lede-strong {
 
 .agent-onb-referral-field__input--locked {
     background: #e2fdf2;
-    border-color: var(--happpy-success-alt);
+    border-color: #2c7a4b;
 }
 
 .agent-onb-referral-field__input:disabled {
@@ -2979,14 +2985,14 @@ h2 .agent-onb-step-header__lede-strong {
 }
 
 .agent-onb-referral-field__status--verifying {
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
 }
 
 .agent-onb-referral-field__status--success {
     display: flex;
     align-items: center;
     gap: 6px;
-    color: var(--happpy-success-alt);
+    color: #2c7a4b;
     font-weight: 500;
 }
 
@@ -3068,7 +3074,7 @@ h2 .agent-onb-step-header__lede-strong {
 .agent-onb-referral-celebration {
     width: 100%;
     max-width: 520px;
-    background: var(--happpy-white);
+    background: #fff;
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
@@ -3088,7 +3094,7 @@ h2 .agent-onb-step-header__lede-strong {
     flex-direction: column;
     align-items: center;
     padding: 3rem 1.5rem 2rem;
-    background: var(--happpy-white);
+    background: #fff;
     font-family: "Rubik", sans-serif;
     box-sizing: border-box;
 }
@@ -3106,7 +3112,7 @@ h2 .agent-onb-step-header__lede-strong {
     border: none;
     border-radius: 50%;
     background: transparent;
-    color: var(--happpy-ink);
+    color: #231f20;
     cursor: pointer;
 }
 
@@ -3115,7 +3121,7 @@ h2 .agent-onb-step-header__lede-strong {
 }
 
 .jad-referral-trial-unlocked__close:focus-visible {
-    outline: 2px solid var(--happpy-brand-deep);
+    outline: 2px solid #086d7e;
     outline-offset: 2px;
 }
 
@@ -3142,7 +3148,7 @@ h2 .agent-onb-step-header__lede-strong {
     padding: 0.25rem 0.375rem;
     border-radius: 100px;
     background: #e2fdf2;
-    color: var(--happpy-brand-deep);
+    color: #086d7e;
     font-size: 0.75rem;
     font-weight: 500;
     line-height: normal;
@@ -3155,8 +3161,8 @@ h2 .agent-onb-step-header__lede-strong {
     width: 0.875rem;
     height: 0.875rem;
     border-radius: 0.625rem;
-    background: var(--happpy-brand-deep);
-    color: var(--happpy-white);
+    background: #086d7e;
+    color: #fff;
     font-size: 0.625rem;
     font-weight: 700;
     line-height: 1;
@@ -3180,7 +3186,7 @@ h2 .agent-onb-step-header__lede-strong {
     font-size: 1.5rem;
     font-weight: 800;
     line-height: normal;
-    color: var(--happpy-ink);
+    color: #231f20;
     letter-spacing: -0.3589px;
 }
 
@@ -3189,7 +3195,7 @@ h2 .agent-onb-step-header__lede-strong {
     max-width: 24.5rem;
     font-size: 0.75rem;
     line-height: normal;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
 }
 
 .jad-referral-trial-unlocked__benefits {
@@ -3208,7 +3214,7 @@ h2 .agent-onb-step-header__lede-strong {
     gap: 0.75rem;
     font-size: 0.8125rem;
     line-height: normal;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .jad-referral-trial-unlocked__benefit-icon {
@@ -3220,7 +3226,7 @@ h2 .agent-onb-step-header__lede-strong {
     height: 1rem;
     border-radius: 50%;
     background: #e2fdf2;
-    color: var(--happpy-success-alt);
+    color: #2c7a4b;
     font-size: 0.6875rem;
     font-weight: 700;
     line-height: 1;
@@ -3242,14 +3248,14 @@ h2 .agent-onb-step-header__lede-strong {
     font-size: 1.125rem;
     font-weight: 800;
     line-height: normal;
-    color: var(--happpy-brand-deep);
+    color: #086d7e;
 }
 
 .jad-referral-trial-unlocked__trial-label {
     margin: 0;
     font-size: 0.6875rem;
     line-height: normal;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .jad-referral-trial-unlocked__cta {
@@ -3263,8 +3269,8 @@ h2 .agent-onb-step-header__lede-strong {
     padding: 0.625rem 2rem;
     border: none;
     border-radius: 3.5rem;
-    background: var(--happpy-ink);
-    color: var(--happpy-white);
+    background: #231f20;
+    color: #fff;
     font-size: 0.875rem;
     font-weight: 800;
     line-height: normal;
@@ -3278,7 +3284,7 @@ h2 .agent-onb-step-header__lede-strong {
 }
 
 .jad-referral-trial-unlocked__cta:focus-visible {
-    outline: 2px solid var(--happpy-brand-deep);
+    outline: 2px solid #086d7e;
     outline-offset: 2px;
 }
 

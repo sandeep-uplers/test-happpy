@@ -4,8 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from '@/talent/navigation/routerCompat';
-import { useSearchParams } from '@/talent/navigation/routerCompat';
+import { useLocation, useNavigate, useSearchParams } from '@/talent/navigation/routerCompat';
 import { toast } from 'react-toastify';
 import { BookmarkNotification } from '../../../assets/BookmarkNotify';
 import { AnimatedCheckMark } from '../../../assets/IconSVG';
@@ -13,6 +12,7 @@ import { IMAGE_URL } from '../../../components/Constant';
 import Loader from '../../../components/Loader';
 import { talentBookMarkTrack } from '../../../helpers/Mixpanel';
 import { getHrNumberFromPath } from '../../../helpers/jobPath';
+import { ensureModalAppElement } from '../../../helpers/setModalAppElement';
 import {
     fetchTouchpointsQuestion,
     getMatchMakePercent,
@@ -33,7 +33,7 @@ import { SingleHrContext } from '../../../context/SingleHrContext';
 import HapppySingleJob from './HapppySingleJob';
 import useHapppyCompactJobsLayout from './useHapppyCompactJobsLayout';
 
-
+ensureModalAppElement();
 
 const TLT = 5184000000;
 
@@ -192,7 +192,7 @@ export default function HapppySingleJobContextProvider() {
 
     const getSingleHrData = (hrNo) => {
         setFetchingUpdate(true);
-        getSingleOpportunity(hrNo)(dispatch)
+        getSingleOpportunity(hrNo, { withHapppyAgentInfo: true })(dispatch)
             .then((res) => {
                 dataSetter(res.data);
                 if (searchParams.get('is_additional_screening') == 'true') {
@@ -231,7 +231,7 @@ export default function HapppySingleJobContextProvider() {
     }, [hrTobeUpdated, data, dispatch]);
 
     const getSimilarJobObj = (hrNo, email) => {
-        getSimilarJob(hrNo, email, { aggregatedJobs: true })(dispatch).then((res) => {
+        getSimilarJob(hrNo, email, { aggregatedJobs: true, withHapppyAgentInfo: true })(dispatch).then((res) => {
             if (res.data.data) {
                 let result = [...res.data.data];
                 setSimilarJobObj(result);

@@ -1,8 +1,10 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useLocation, useNavigate } from '@/talent/navigation/routerCompat';
+import { JobAgentDashboardProvider } from './JobAgentDashboardContext';
 import { differenceInMonths } from 'date-fns';
 import { identityReset } from '../../../helpers/Mixpanel';
 import { fetchHapppyAgentPlan, logoutUser, fetchHapppyAgentDailyLimit, fetchDailyReferralRuns, syncHapppyAgentDailyLimitFromOtherTab } from '../../../store/actions/UserActions';
@@ -16,7 +18,10 @@ import ReferFriendDrawer, { ReferFriendTrigger } from './ReferFriendDrawer';
 import LeaveReviewDrawer from './LeaveReviewDrawer';
 import UpgradePlanDrawer from '../happpy-agent/configure-tabs/UpgradePlanDrawer';
 import HappyAgentTemplateDrawer from '../agent-onboarding/HappyAgentTemplateDrawer';
-import { JobAgentDashboardProvider } from './JobAgentDashboardContext';
+const PasteJobLinkDrawer = dynamic(
+    () => import('../happpy-agent/configure-tabs/PasteJobLinkDrawer'),
+    { ssr: false },
+);
 import {
     clearOnboardingTemplatePending,
     clearPublicSignupHandoff,
@@ -39,8 +44,37 @@ function unwrapJobAgentApiPayload(res) {
 const CHROME_EXTENSION_URL =
     'https://chromewebstore.google.com/detail/job-referral-agent-uplers/mbajhdldnhgbgncakknckdpnjmhemgcn?hl=en';
 
-const CHROME_ICON_URL =
-    'https://img.icons8.com/?size=100&id=PfmQUI56Ji0D&format=png&color=000000';
+/** Figma 2781:7130 / 2781:7167 — topnav Run Agent + Paste job link */
+const TOPNAV_RUN_AGENT_EXTERNAL_LINK_SRC =
+    '/images/talent/happpy-agent/topnav-run-agent-external-link.svg';
+
+/** Figma 2781:7165 — plus icon uses currentColor so hover inherits teal from the button. */
+const TopnavPasteJobPlusIcon = () => (
+    <svg
+        className="job-agent-dashboard__topnav-paste-job-link-icon"
+        width="17"
+        height="17"
+        viewBox="0 0 17 17"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+    >
+        <path
+            d="M8.5 3.54167V13.4583"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M3.54167 8.5H13.4583"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+    </svg>
+);
 
 /**
  * Happpy Agent submenu — routes align with outreach surfaces.
@@ -897,6 +931,7 @@ const JobAgentDashboardLayout = ({ children }) => {
     const [leaveReviewDrawerOpen, setLeaveReviewDrawerOpen] = useState(false);
     const [upgradePlanDrawerOpen, setUpgradePlanDrawerOpen] = useState(false);
     const [onboardingTemplateDrawerOpen, setOnboardingTemplateDrawerOpen] = useState(false);
+    const [pasteJobLinkOpen, setPasteJobLinkOpen] = useState(false);
 
     /** After onboarding completes, open unclosable template drawer on dashboard. */
     useEffect(() => {
@@ -1235,21 +1270,32 @@ const JobAgentDashboardLayout = ({ children }) => {
                         />
                     </div>
                     <div className="job-agent-dashboard__topnav-right">
-                        <a
-                            className="job-agent-dashboard__topnav-extension job-agent-dashboard__topnav-utility"
-                            href={CHROME_EXTENSION_URL}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <img
-                                className="job-agent-dashboard__topnav-chrome-icon"
-                                src={CHROME_ICON_URL}
-                                alt=""
-                                width={20}
-                                height={20}
-                            />
-                            <span>Chrome & Brave Browser Extension</span>
-                        </a>
+                        <div className="job-agent-dashboard__topnav-cta-cluster job-agent-dashboard__topnav-utility">
+                            <button
+                                type="button"
+                                className="job-agent-dashboard__topnav-paste-job-link jad-font-headline"
+                                onClick={() => setPasteJobLinkOpen(true)}
+                            >
+                                <span>paste job link</span>
+                                <TopnavPasteJobPlusIcon />
+                            </button>
+                            <a
+                                className="job-agent-dashboard__topnav-run-agent-btn jad-font-headline"
+                                href={CHROME_EXTENSION_URL}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <span>Run Agent anywhere</span>
+                                <img
+                                    src={TOPNAV_RUN_AGENT_EXTERNAL_LINK_SRC}
+                                    alt=""
+                                    className="job-agent-dashboard__topnav-run-agent-btn-icon"
+                                    width={16}
+                                    height={16}
+                                    aria-hidden="true"
+                                />
+                            </a>
+                        </div>
                         {showTopnavPlanUpgradeCta &&
                             <TopnavPlanUpgradeCta
                                 plan={referralPlan.plan}
@@ -1701,7 +1747,6 @@ const JobAgentDashboardLayout = ({ children }) => {
                 <ReferFriendDrawer
                     open={referFriendDrawerOpen}
                     onClose={() => setReferFriendDrawerOpen(false)}
-                    onOpenUpgradePlan={() => setUpgradePlanDrawerOpen(true)}
                 />
                 <LeaveReviewDrawer
                     open={leaveReviewDrawerOpen}
@@ -1716,6 +1761,10 @@ const JobAgentDashboardLayout = ({ children }) => {
                     onClose={handleOnboardingTemplateSaveSuccess}
                     onSaveSuccess={handleOnboardingTemplateSaveSuccess}
                     unclosable
+                />
+                <PasteJobLinkDrawer
+                    open={pasteJobLinkOpen}
+                    onClose={() => setPasteJobLinkOpen(false)}
                 />
             </div>
         </>

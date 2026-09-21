@@ -1,6 +1,7 @@
 import React from 'react';
 import { IMAGE_URL } from '../../../components/Constant';
 import { formatSkillname, formattedYOE } from '../../../components/Helper';
+import { HapppyAgentInfoBadge, hasHapppyAgentInfo } from '../../../helpers/happpyAgentInfoBadge';
 import { talentRelevancyTracking, viewMoreDetailsAllJobPageTracking } from '../../../helpers/Mixpanel';
 import AiScreeningRequired from '../happy-jobs/AiScreeningRequired';
 import CompanyLogo from '../happy-jobs/CompanyLogo';
@@ -45,17 +46,25 @@ export default function HapppyJobCardMobile({
                 }
             }}
         >
-            {(data.is_partner_company || data.top_badge) && (
+            {(data.is_partner_company || data.top_badge || hasHapppyAgentInfo(data)) && (
                 <div className="happpy-job-card-mobile__nudges">
-                    {data.top_badge && (
+                    {hasHapppyAgentInfo(data) ? (
                         <div className="happpy-job-card-mobile__nudge">
-                            <div className="earlyApplicant" dangerouslySetInnerHTML={{ __html: data.top_badge }} />
+                            <HapppyAgentInfoBadge info={data.happpy_agent_info} />
                         </div>
-                    )}
-                    {data.is_partner_company && data.company?.company_name != 'Uplers' && (
-                        <div className="happpy-job-card-mobile__nudge">
-                            <UplersPartnerBadge data={data} fullText />
-                        </div>
+                    ) : (
+                        <>
+                            {data.top_badge && (
+                                <div className="happpy-job-card-mobile__nudge">
+                                    <div className="earlyApplicant" dangerouslySetInnerHTML={{ __html: data.top_badge }} />
+                                </div>
+                            )}
+                            {data.is_partner_company && data.company?.company_name != 'Uplers' && (
+                                <div className="happpy-job-card-mobile__nudge">
+                                    <UplersPartnerBadge data={data} fullText />
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             )}

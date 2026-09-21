@@ -134,7 +134,7 @@ const UpgradePlanDrawer = ({ open, onClose }) => {
                 const { id: order_id, amount, currency } = orderResp;
 
                 const options = {
-                    key: process.env.MIX_RAZORPAY_KEY_ID,
+                    key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
                     amount: amount.toString(),
                     currency,
                     name: orderResp?.notes?.name,

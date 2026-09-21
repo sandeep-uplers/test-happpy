@@ -1,16 +1,15 @@
-'use client';
-
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-hot-toast';
+import axios from 'axios';
 import {
     fetchHapppyAgentPlan,
     getOutreachTemplates,
     saveOutreachTemplate,
 } from '../../../../store/actions/UserActions';
 import { GmailIcon } from '../../../../assets/IconSVG';
-import { GET_API, POST_API } from '../../../../components/Helper';
-import { API_OUTREACH_DEFAULT_AUTO_TEMPLATES, API_OUTREACH_REWRITE_MESSAGE } from '../../../../components/Constant';
+import { API_OUTREACH_REWRITE_MESSAGE } from '../../../../components/Constant';
+import { POST_API } from '../../../../components/Helper';
 import TemplateEditor from '../../linkedin/TemplateEditor';
 import LinkedinTemplatePendingNotice from './LinkedinTemplatePendingNotice';
 import { isLinkedinTemplatePending } from './linkedinTemplatePending';
@@ -124,7 +123,8 @@ const MessageTemplatesTab = () => {
     /* ── Fetch default templates ────────────────────────────────────────── */
     const fetchDefaultTemplates = useCallback(() => {
         setIsFetchingDefaults(true);
-        GET_API(API_OUTREACH_DEFAULT_AUTO_TEMPLATES)
+        axios
+            .get('/api/talent/outreach/default-auto-templates')
             .then((res) => {
                 setDefaultTemplates(res?.data?.data || { linkedin_template: [], gmail_template: [] });
             })
@@ -435,13 +435,14 @@ const MessageTemplatesTab = () => {
                                     <label className="hc-field__label">Template Message</label>
                                     <div className="hc-field__editor-wrap">
                                         <TemplateEditor
+                                            variant="tall"
+                                            placeholder="Type your outreach message here..."
                                             value={customTemplate.message_template || ''}
                                             onChange={(content) => handleChange('message_template', content)}
                                             hasError={!!customTemplateErrors.message_template}
                                             dynamicFields={VAR_FIELDS}
                                             showDynamicDropdowns
                                             templateAppliedAt={templateAppliedAt}
-                                            scrollingContainer="#scrollContainer"
                                         />
                                     </div>
                                     {customTemplateErrors.message_template && (

@@ -1,15 +1,28 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Editor, EditorProvider, Toolbar, BtnBold, BtnItalic, BtnUnderline, BtnStrikeThrough, BtnNumberedList, BtnBulletList, BtnLink, BtnClearFormatting } from 'react-simple-wysiwyg';
+import {
+    Editor,
+    EditorProvider,
+    Toolbar,
+    BtnBold,
+    BtnItalic,
+    BtnUnderline,
+    BtnStrikeThrough,
+    BtnNumberedList,
+    BtnBulletList,
+    BtnLink,
+    BtnClearFormatting,
+} from 'react-simple-wysiwyg';
+import './TemplateEditor.css';
 
+const DROPDOWN_MAX_HEIGHT = 300;
+const DROPDOWN_GAP = 5;
 
 // --- Highlight helpers ------------------------------------------------------
 export function rawToDisplay(html = '') {
-    // --- Step 1: protect every <a>…</a> block -------------------------------
     const anchorPlaceholders = [];
     let anchorIndex = 0;
 
-    // Replace each whole anchor with a unique placeholder
     let protectedHtml = html.replace(
         /<a\b[^>]*>[\s\S]*?<\/a>/gi,
         (match) => {
@@ -20,13 +33,11 @@ export function rawToDisplay(html = '') {
         },
     );
 
-    // --- Step 2: highlight remaining {{ … }} tags ---------------------------
     protectedHtml = protectedHtml.replace(
         /(\{\{[^}]*\}\})/g,
-        '<span class="dynamic-field" style="color:#007bff;font-weight:500">$1</span>',
+        '<span class="dynamic-field">$1</span>',
     );
 
-    // --- Step 3: restore the anchors ---------------------------------------
     anchorPlaceholders.forEach((original, idx) => {
         protectedHtml = protectedHtml.replace(`__ANCHOR_PLACEHOLDER_${idx}__`, original);
     });
@@ -42,37 +53,99 @@ function displayToRaw(html = '') {
 }
 // ----------------------------------------------------------------------------
 
+function computeDropdownPosition(buttonEl) {
+    const rect = buttonEl.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom - DROPDOWN_GAP;
+    const spaceAbove = rect.top - DROPDOWN_GAP;
+    const openAbove = spaceBelow < DROPDOWN_MAX_HEIGHT && spaceAbove > spaceBelow;
 
+    if (openAbove) {
+        return {
+            bottom: window.innerHeight - rect.top + DROPDOWN_GAP,
+            left: rect.left,
+            maxHeight: Math.min(DROPDOWN_MAX_HEIGHT, spaceAbove),
+        };
+    }
+
+    return {
+        top: rect.bottom + DROPDOWN_GAP,
+        left: rect.left,
+        maxHeight: Math.min(DROPDOWN_MAX_HEIGHT, spaceBelow),
+    };
+}
+
+const VARIANT_CLASS = {
+    default: '',
+    compact: 'rich-editor-container--compact',
+    tall: 'rich-editor-container--tall',
+};
 
 export default function TemplateEditor({
     className,
     value,
     onChange,
     hasError,
-    scrollingContainer,
+    placeholder,
+    variant = 'default',
     readOnly = false,
-
     dynamicFields = [],
     showDynamicDropdowns = false,
     templateAppliedAt,
-    ...rest
 }) {
-    // This state will hold the "display" version of the HTML with highlighting
     const [editorHtml, setEditorHtml] = useState(rawToDisplay(value || ''));
 
-    // Keep track of the current editor DOM node and last caret position
+    const containerRef = useRef(null);
     const editorRootRef = useRef(null);
     const savedRangeRef = useRef(null);
+    const isFocusedRef = useRef(false);
+    const lastEmittedRawRef = useRef(value || '');
 
-    // Sync editorHtml with the parent's `value` when template applied
+    const syncEditorHeight = useCallback(() => {
+        const ce = containerRef.current?.querySelector('.rsw-ce');
+        if (!ce) {
+            return;
+        }
+
+        ce.style.height = 'auto';
+        const minHeight = parseFloat(window.getComputedStyle(ce).minHeight) || 0;
+        ce.style.height = `${Math.max(minHeight, ce.scrollHeight)}px`;
+    }, []);
+
     useEffect(() => {
         if (templateAppliedAt) {
-            setEditorHtml(rawToDisplay(value || ''));
+            const raw = value || '';
+            setEditorHtml(rawToDisplay(raw));
+            lastEmittedRawRef.current = raw;
         }
-    }, [templateAppliedAt]);
+    }, [templateAppliedAt, value]);
 
+    useEffect(() => {
+        const raw = value || '';
+        if (raw === lastEmittedRawRef.current) {
+            return;
+        }
+        if (isFocusedRef.current) {
+            return;
+        }
+        setEditorHtml(rawToDisplay(raw));
+        lastEmittedRawRef.current = raw;
+    }, [value]);
 
-    useEffect(() => { // save the current selection/cursor position in the editor on selection change
+    useLayoutEffect(() => {
+        syncEditorHeight();
+    }, [editorHtml, syncEditorHeight]);
+
+    useEffect(() => {
+        syncEditorHeight();
+    }, [templateAppliedAt, value, syncEditorHeight]);
+
+    useEffect(() => {
+        const handleResize = () => syncEditorHeight();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [syncEditorHeight]);
+
+    useEffect(() => {
         const saveSelection = () => {
             const sel = window.getSelection();
             if (sel && sel.rangeCount > 0 && editorRootRef.current &&
@@ -84,7 +157,15 @@ export default function TemplateEditor({
         return () => document.removeEventListener('selectionchange', saveSelection);
     }, []);
 
-    const insertTagAtCursor = (format) => { // insert the dynamic field at the cursor position
+    const handleEditorFocus = () => {
+        isFocusedRef.current = true;
+    };
+
+    const handleEditorBlur = () => {
+        isFocusedRef.current = false;
+    };
+
+    const insertTagAtCursor = (format) => {
         const sel = window.getSelection();
         if (savedRangeRef.current &&
             sel && (!sel.anchorNode || !editorRootRef.current.contains(sel.anchorNode))) {
@@ -97,69 +178,52 @@ export default function TemplateEditor({
 
             if (selection && selection.rangeCount) {
                 const range = selection.getRangeAt(0);
-                const editorElements = [editorRootRef.current];
+                const editorEl = editorRootRef.current;
 
-                let isWithinEditor = false;
+                if (editorEl && editorEl.contains(range.commonAncestorContainer)) {
+                    range.deleteContents();
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = rawToDisplay(format);
 
-                // Check whether the current caret/selection is inside this editor
-                for (let element of editorElements) {
-                    if (element.contains(range.commonAncestorContainer)) {
-                        isWithinEditor = true;
-                        console.log('[RichEmailEditor] Cursor IS inside this editor – inserting at caret.');
-
-                        // Replace current selection with the tag's HTML
-                        range.deleteContents();
-                        const tempDiv = document.createElement('div');
-                        // IMPORTANT: Insert the *highlighted* version of the tag
-                        tempDiv.innerHTML = rawToDisplay(format);
-
-                        const frag = document.createDocumentFragment();
-                        let node, lastNode;
-                        while ((node = tempDiv.firstChild)) {
-                            lastNode = frag.appendChild(node);
-                        }
-                        range.insertNode(frag);
-
-                        // Move caret just after the inserted tag
-                        if (lastNode) {
-                            range.setStartAfter(lastNode);
-                            range.collapse(true);
-                            selection.removeAllRanges();
-                            selection.addRange(range);
-                        }
-                        break;
+                    const frag = document.createDocumentFragment();
+                    let node;
+                    let lastNode;
+                    while ((node = tempDiv.firstChild)) {
+                        lastNode = frag.appendChild(node);
                     }
-                }
+                    range.insertNode(frag);
 
-                if (!isWithinEditor) {
-                    console.log('[RichEmailEditor] Cursor NOT inside this editor – appending at end.');
-                    // Append the raw format, it will be highlighted on next render
+                    if (lastNode) {
+                        range.setStartAfter(lastNode);
+                        range.collapse(true);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
+                } else {
                     content += rawToDisplay(format);
                 }
             } else {
-                console.log('[RichEmailEditor] No selection/range – appending at end.');
                 content += rawToDisplay(format);
             }
             return content;
         };
 
-        // Update local and parent state
-        setEditorHtml(prev => {
+        setEditorHtml((prev) => {
             const updated = insertAtCursorOrEnd(prev);
-            // Notify the parent with the raw, un-highlighted version
-            onChange(displayToRaw(updated));
+            const raw = displayToRaw(updated);
+            lastEmittedRawRef.current = raw;
+            onChange(raw);
             return updated;
         });
     };
 
-    // --- helpers to convert caret ↔ character offset ----------------------------
     function getCaretOffset(rootEl) {
         const sel = window.getSelection();
         if (!sel || sel.rangeCount === 0) return null;
 
         const range = sel.getRangeAt(0).cloneRange();
         range.setStart(rootEl, 0);
-        return range.toString().length;       // # of characters from start
+        return range.toString().length;
     }
 
     function setCaretOffset(rootEl, offset) {
@@ -170,7 +234,8 @@ export default function TemplateEditor({
             NodeFilter.SHOW_TEXT,
             null,
         );
-        let currentNode, chars = 0;
+        let currentNode;
+        let chars = 0;
 
         while ((currentNode = nodeIterator.nextNode())) {
             const nextChars = chars + currentNode.textContent.length;
@@ -186,7 +251,6 @@ export default function TemplateEditor({
             chars = nextChars;
         }
     }
-    // ----------------------------------------------------------------------------
 
     const handleEditorChange = (e) => {
         const newHtml = e.target.value;
@@ -194,51 +258,52 @@ export default function TemplateEditor({
 
         const isEnterKey = e.nativeEvent && e.nativeEvent.inputType === 'insertParagraph';
 
-        // save caret BEFORE we change the HTML
         const caretOffset = getCaretOffset(editorRootRef.current);
 
         const highlighted = rawToDisplay(rawHtml);
-        setEditorHtml(highlighted);   // triggers re-render
+        setEditorHtml(highlighted);
+        lastEmittedRawRef.current = rawHtml;
         onChange(rawHtml);
 
-        // re-apply caret AFTER the DOM updates
-        // we wait for the next micro-task so React has painted
         Promise.resolve().then(() => {
+            syncEditorHeight();
             if (isEnterKey) {
-                // For Enter key, don't restore the old position.
-                // The browser has already moved the cursor to the new line.
                 return;
             }
-            setCaretOffset(editorRootRef.current, caretOffset)
+            setCaretOffset(editorRootRef.current, caretOffset);
         });
     };
 
+    const variantClass = VARIANT_CLASS[variant] || '';
+    const readonlyVariantClass = variant !== 'default' ? `template-editor-readonly--${variant}` : '';
 
-    // LOGS
-    // console.log('Parent value - raw content:', value);
-    // console.log('Editor value - display content:', editorHtml);
-
+    const containerClassName = [
+        'template-editor',
+        'rich-editor-container',
+        variantClass,
+        hasError ? 'rich-editor-container--error' : '',
+    ].filter(Boolean).join(' ');
 
     if (readOnly) {
         return (
             <div
-                className={`${className ?? ''}`}
-                // In readOnly mode, we should always display the highlighted version
+                className={`template-editor template-editor-readonly ${readonlyVariantClass} ${className ?? ''}`.trim()}
                 dangerouslySetInnerHTML={{ __html: rawToDisplay(value) }}
-                style={{ border: '1px solid #ccc', padding: '8px', borderRadius: '4px' }}
             />
         );
     }
 
     return (
-        <div className="rich-editor-container">
+        <div ref={containerRef} className={containerClassName}>
             <EditorProvider>
                 <Editor
                     ref={editorRootRef}
                     value={editorHtml}
                     onChange={handleEditorChange}
-                    containerProps={{ style: { resize: 'vertical' } }}
-                    className={`${className ?? ''} resizableEditor`}
+                    placeholder={placeholder}
+                    onFocus={handleEditorFocus}
+                    onBlur={handleEditorBlur}
+                    className={`${className ?? ''} resizableEditor`.trim()}
                 >
                     <Toolbar>
                         <BtnBold />
@@ -250,18 +315,15 @@ export default function TemplateEditor({
                         <BtnLink />
                         <BtnClearFormatting />
 
-                        {showDynamicDropdowns && (
+                        {showDynamicDropdowns && dynamicFields?.length > 0 && (
                             <>
-                                {dynamicFields?.length > 0 && (
-                                    <CustomTagButton
-                                        label="{{jobTitle}}"
-                                        options={dynamicFields}
-                                        onSelect={insertTagAtCursor}
-                                    />
-                                )}
+                                <span className="template-editor-toolbar-divider" aria-hidden="true" />
+                                <CustomTagButton
+                                    options={dynamicFields}
+                                    onSelect={insertTagAtCursor}
+                                />
                             </>
                         )}
-
                     </Toolbar>
                 </Editor>
             </EditorProvider>
@@ -269,120 +331,184 @@ export default function TemplateEditor({
     );
 }
 
-// Custom Tag Button Component
-function CustomTagButton({ label, options, onSelect }) {
+function CustomTagButton({ options, onSelect }) {
     const [isOpen, setIsOpen] = useState(false);
-    const [, setPositionTick] = useState(0); // force re-render on scroll/resize so we re-read rect
-    const buttonRef = useRef();
-    const dropdownRef = useRef();
+    const [activeIndex, setActiveIndex] = useState(-1);
+    const [, setPositionTick] = useState(0);
+    const buttonRef = useRef(null);
+    const dropdownRef = useRef(null);
+    const listboxId = useRef(`template-editor-vars-${Math.random().toString(36).slice(2, 9)}`);
 
-    const updatePosition = () => setPositionTick(t => t + 1);
+    const updatePosition = useCallback(() => setPositionTick((t) => t + 1), []);
+
+    const closeDropdown = useCallback(() => {
+        setIsOpen(false);
+        setActiveIndex(-1);
+    }, []);
+
+    const openDropdown = useCallback(() => {
+        setIsOpen(true);
+        setActiveIndex(0);
+    }, []);
 
     const handleButtonClick = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        setIsOpen(!isOpen);
+        if (isOpen) {
+            closeDropdown();
+        } else {
+            openDropdown();
+        }
     };
 
-    const handleOptionClick = (option) => {
+    const handleOptionSelect = useCallback((option) => {
         onSelect(option);
-        setIsOpen(false);
-    };
+        closeDropdown();
+        buttonRef.current?.focus();
+    }, [closeDropdown, onSelect]);
 
-    const handleOutsideClick = (e) => {
+    const handleOutsideClick = useCallback((e) => {
         if (buttonRef.current && !buttonRef.current.contains(e.target) &&
             dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-            setIsOpen(false);
+            closeDropdown();
         }
-    };
+    }, [closeDropdown]);
 
     useEffect(() => {
-        if (isOpen) {
-            document.addEventListener('mousedown', handleOutsideClick);
-            window.addEventListener('scroll', updatePosition, true);
-            window.addEventListener('resize', updatePosition);
+        if (!isOpen) {
+            return undefined;
         }
+
+        document.addEventListener('mousedown', handleOutsideClick);
+        window.addEventListener('scroll', updatePosition, true);
+        window.addEventListener('resize', updatePosition);
 
         return () => {
             document.removeEventListener('mousedown', handleOutsideClick);
             window.removeEventListener('scroll', updatePosition, true);
             window.removeEventListener('resize', updatePosition);
         };
+    }, [handleOutsideClick, isOpen, updatePosition]);
+
+    useEffect(() => {
+        if (!isOpen) {
+            return;
+        }
+        dropdownRef.current?.focus();
     }, [isOpen]);
 
-    // Compute position at render time from the button rect so dropdown opens in the right place
+    useEffect(() => {
+        if (!isOpen || activeIndex < 0) {
+            return;
+        }
+        const activeEl = dropdownRef.current?.querySelector(
+            `[data-option-index="${activeIndex}"]`,
+        );
+        activeEl?.scrollIntoView({ block: 'nearest' });
+    }, [activeIndex, isOpen]);
+
+    const handleButtonKeyDown = (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            if (!isOpen) {
+                openDropdown();
+            }
+            return;
+        }
+        if (e.key === 'Escape' && isOpen) {
+            e.preventDefault();
+            closeDropdown();
+        }
+    };
+
+    const handleDropdownKeyDown = (e) => {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            closeDropdown();
+            buttonRef.current?.focus();
+            return;
+        }
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setActiveIndex((i) => Math.min(i + 1, options.length - 1));
+            return;
+        }
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setActiveIndex((i) => Math.max(i - 1, 0));
+            return;
+        }
+        if (e.key === 'Enter' && activeIndex >= 0) {
+            e.preventDefault();
+            handleOptionSelect(options[activeIndex]);
+        }
+    };
+
     const dropdownPosition = isOpen && buttonRef.current
-        ? (() => {
-            const rect = buttonRef.current.getBoundingClientRect();
-            return { top: rect.bottom + 5, left: rect.left };
-        })()
+        ? computeDropdownPosition(buttonRef.current)
         : null;
 
     return (
-        <div style={{ position: 'relative', display: 'inline-block' }}>
+        <div className="template-editor-variables-wrap">
             <button
                 ref={buttonRef}
                 type="button"
+                className={`template-editor-variables-btn${isOpen ? ' template-editor-variables-btn--open' : ''}`}
                 onClick={handleButtonClick}
-                style={{
-                    backgroundColor: isOpen ? '#edf3ff' : 'transparent',
-                    border: 'none',
-                    padding: '8px 10px',
-                    fontSize: '12px',
-                    fontFamily: 'monospace',
-                    fontWeight: 'bold',
-                    color: '#495057',
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap',
-                }}
-                onMouseEnter={(e) => {
-                    if (!isOpen) e.target.style.backgroundColor = '#edf3ff';
-                }}
-                onMouseLeave={(e) => {
-                    if (!isOpen) e.target.style.backgroundColor = 'transparent';
-                }}
-                title={`Insert dynamic ${label.replace(/[{}]/g, '').toLowerCase()} fields`}
+                onKeyDown={handleButtonKeyDown}
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
+                aria-controls={listboxId.current}
+                title="Insert dynamic variable fields"
             >
-                {label}
+                Variables
+                <svg
+                    className="template-editor-variables-btn__chevron"
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                >
+                    <path d="M2 4L5 7L8 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
             </button>
 
             {isOpen && dropdownPosition && createPortal(
                 <div
+                    id={listboxId.current}
                     className="template-custom-tag-dropdown template-editor-variables-dropdown"
                     ref={dropdownRef}
+                    role="listbox"
+                    aria-label="Dynamic variables"
+                    tabIndex={-1}
+                    onKeyDown={handleDropdownKeyDown}
                     style={{
-                        position: 'fixed',
                         top: dropdownPosition.top,
+                        bottom: dropdownPosition.bottom,
                         left: dropdownPosition.left,
-                        backgroundColor: '#fff',
-                        border: '1px solid #dee2e6',
-                        borderRadius: '6px',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                        zIndex: 99999,
-                        maxHeight: '300px',
-                        overflowY: 'auto',
-                        minWidth: '200px',
+                        maxHeight: dropdownPosition.maxHeight,
                     }}
                 >
                     {options.map((option, index) => (
-                        <div
-                            key={index}
-                            onClick={() => handleOptionClick(option)}
-                            style={{
-                                padding: '8px 12px',
-                                fontSize: '12px',
-                                fontFamily: 'monospace',
-                                cursor: 'pointer',
-                                borderBottom: index < options.length - 1 ? '1px solid #eee' : 'none',
-                            }}
-                            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#f8f9fa'; }}
-                            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = ''; }}
+                        <button
+                            key={option}
+                            type="button"
+                            role="option"
+                            aria-selected={index === activeIndex}
+                            data-option-index={index}
+                            className={`template-editor-variables-dropdown__item${
+                                index === activeIndex ? ' template-editor-variables-dropdown__item--active' : ''
+                            }`}
+                            onClick={() => handleOptionSelect(option)}
+                            onMouseEnter={() => setActiveIndex(index)}
                         >
                             {option}
-                        </div>
+                        </button>
                     ))}
                 </div>,
-                document.body
+                document.body,
             )}
         </div>
     );
