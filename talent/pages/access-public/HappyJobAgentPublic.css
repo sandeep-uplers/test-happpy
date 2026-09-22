@@ -9344,8 +9344,6 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .account-connection--happy-setup-figma .linkedin .card-header {
-    padding-top: 32px;
-    padding-bottom: 25px;
 
     @media (max-width: 767px) {
         padding-top: 24px;
@@ -12514,10 +12512,15 @@ body.happy-agent-modal-open {
 }
 
 .happy-public-auth-drawer__body.happy-public-auth-drawer__body--side-panel {
-    padding: 40px 48px 48px;
+    padding: 40px 48px 0;
     display: flex;
     flex-direction: column;
     gap: 0;
+    min-height: 0;
+}
+
+.happy-public-auth-drawer__body.happy-public-auth-drawer__body--side-panel:has(.happy-public-auth-otp-wrap) {
+    padding-bottom: 48px;
 }
 
 .happy-public-auth-drawer__header {
@@ -12650,10 +12653,95 @@ body.happy-agent-modal-open {
     height: 24px;
 }
 
+.happy-public-auth-footer {
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
 /* Figma 2864:32456 */
 .happy-public-auth-gmail-promo {
     width: 100%;
-    margin-top: 20px;
+    margin-top: 0;
+    flex-shrink: 0;
+}
+
+/* Figma 3005:8003 / 3005:7938 */
+.happy-public-auth-trust {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 32px 48px;
+    background: #fcfcfc;
+    border: 1px solid #2dc9a7;
+    border-bottom: none;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 1px 0 6px 0 rgba(107, 107, 107, 0.12);
+}
+
+.happy-public-auth-trust__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 24px;
+    text-align: center;
+}
+
+.happy-public-auth-trust__headline {
+    margin: 0;
+    width: 100%;
+    color: #6b6b6b;
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -1.2px;
+    line-height: normal;
+}
+
+.happy-public-auth-trust__highlight {
+    margin: 0;
+    width: 100%;
+    color: #06604b;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -1.2px;
+    line-height: normal;
+}
+
+.happy-public-auth-trust__pills {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 9px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.happy-public-auth-trust-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 33px;
+    padding: 9px;
+    box-sizing: border-box;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 9999px;
+    color: #6b6b6b;
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: normal;
+    white-space: nowrap;
+}
+
+.happy-public-auth-trust-pill__logo {
+    display: block;
     flex-shrink: 0;
 }
 
@@ -12716,7 +12804,11 @@ body.happy-agent-modal-open {
     }
 
     .happy-public-auth-drawer__body.happy-public-auth-drawer__body--side-panel {
-        padding: 40px 20px 28px;
+        padding: 40px 20px 0;
+    }
+
+    .happy-public-auth-drawer__body.happy-public-auth-drawer__body--side-panel:has(.happy-public-auth-otp-wrap) {
+        padding-bottom: 28px;
     }
 
     .happy-public-auth-drawer__header {
@@ -12733,8 +12825,31 @@ body.happy-agent-modal-open {
         width: 100%;
     }
 
+    .happy-public-auth-footer {
+        gap: 12px;
+    }
+
     .happy-public-auth-gmail-promo {
-        margin-top: 16px;
+        margin-top: 0;
+    }
+
+    .happy-public-auth-trust {
+        padding: 24px 12px 28px;
+    }
+
+    .happy-public-auth-trust__copy {
+        margin-bottom: 16px;
+        gap: 6px;
+    }
+
+    .happy-public-auth-trust__headline {
+        font-size: 16px;
+        letter-spacing: -0.6px;
+    }
+
+    .happy-public-auth-trust__highlight {
+        font-size: 22px;
+        letter-spacing: -0.8px;
     }
 
     .happy-public-auth-gmail-promo__banner {

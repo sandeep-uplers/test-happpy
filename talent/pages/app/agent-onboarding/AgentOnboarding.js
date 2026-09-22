@@ -28,9 +28,6 @@ import './AgentOnboarding.css';
 import { pageActivityTracker } from '../../../store/actions/UserActions';
 import { useDispatch } from 'react-redux';
 
-if (typeof document !== 'undefined' && document.getElementById('happpy-root')) {
-}
-
 /**
  * Right-side drawer that hosts the new agent onboarding flow.
  *

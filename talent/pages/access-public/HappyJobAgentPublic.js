@@ -31,6 +31,9 @@ import {
     HAPPY_PUBLIC_AUTH_CONTINUE_ARROW_SRC,
     HAPPY_PUBLIC_AUTH_INTERVIEW_COUNT,
     HAPPY_PUBLIC_AUTH_MASCOT_SRC,
+    HAPPY_PUBLIC_AUTH_TRUST_COMPANIES,
+    HAPPY_PUBLIC_AUTH_TRUST_HEADLINE,
+    HAPPY_PUBLIC_AUTH_TRUST_HIGHLIGHT,
 } from "../app/linkedin/happyAgentPageAssets";
 import "./HappyJobAgentPublic.css";
 
@@ -326,19 +329,44 @@ export function HappyJobAgentPublicAuthDrawer({
                             </>
                         )}
 
-                        <div className="happy-public-auth-gmail-promo">
-                            <div className="happy-public-auth-gmail-promo__banner">
-                                <img
-                                    className="happy-public-auth-gmail-promo__mascot"
-                                    src={HAPPY_PUBLIC_AUTH_MASCOT_SRC}
-                                    alt=""
-                                    aria-hidden
-                                />
-                                <p className="happy-public-auth-gmail-promo__text">
-                                    HAPPPY Agent helped secure over{" "}
-                                    <strong>{HAPPY_PUBLIC_AUTH_INTERVIEW_COUNT} Interviews</strong> in just last 7 days!
-                                </p>
+                        <div className="happy-public-auth-footer">
+                            <div className="happy-public-auth-gmail-promo">
+                                <div className="happy-public-auth-gmail-promo__banner">
+                                    <img
+                                        className="happy-public-auth-gmail-promo__mascot"
+                                        src={HAPPY_PUBLIC_AUTH_MASCOT_SRC}
+                                        alt=""
+                                        aria-hidden
+                                    />
+                                    <p className="happy-public-auth-gmail-promo__text">
+                                        HAPPPY Agent helped secure over{" "}
+                                        <strong>{HAPPY_PUBLIC_AUTH_INTERVIEW_COUNT} Interviews</strong> in just last 7 days!
+                                    </p>
+                                </div>
                             </div>
+                            <section className="happy-public-auth-trust" aria-label="Companies hiring through Happpy">
+                                <div className="happy-public-auth-trust__copy">
+                                    <p className="happy-public-auth-trust__headline">{HAPPY_PUBLIC_AUTH_TRUST_HEADLINE}</p>
+                                    <p className="happy-public-auth-trust__highlight">{HAPPY_PUBLIC_AUTH_TRUST_HIGHLIGHT}</p>
+                                </div>
+                                <ul className="happy-public-auth-trust__pills">
+                                    {HAPPY_PUBLIC_AUTH_TRUST_COMPANIES.map((company) => (
+                                        <li key={company.name} className="happy-public-auth-trust-pill">
+                                            {company.logo && (
+                                                <img
+                                                    className="happy-public-auth-trust-pill__logo"
+                                                    src={company.logo}
+                                                    alt=""
+                                                    width={company.width}
+                                                    height={company.height}
+                                                    aria-hidden
+                                                />
+                                            )}
+                                            <span>{company.name}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </section>
                         </div>
                     </>
                 ) : (

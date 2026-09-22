@@ -448,3 +448,32 @@ export const HAPPY_PUBLIC_AUTH_MASCOT_SRC = `${OUTREACH_IMAGE_ROOT}/mascot-chill
 export const HAPPY_PUBLIC_AUTH_CONTINUE_ARROW_SRC = "/images/talent/arrow-right.svg";
 /** Display-only social proof count for the public auth drawer promo bar. */
 export const HAPPY_PUBLIC_AUTH_INTERVIEW_COUNT = 807;
+
+/* Public auth drawer trust footer (Figma 3005:6795) */
+const AUTH_TRUST_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/auth-trust`;
+export const HAPPY_PUBLIC_AUTH_TRUST_HEADLINE =
+    "Professionals like you are already landing interviews here.";
+export const HAPPY_PUBLIC_AUTH_TRUST_HIGHLIGHT = "You are next!";
+export const HAPPY_PUBLIC_AUTH_TRUST_COMPANIES = [
+    { name: "Zomato", logo: `${AUTH_TRUST_ASSET_BASE}/zomato.png`, width: 24, height: 24 },
+    { name: "Google", logo: `${AUTH_TRUST_ASSET_BASE}/google.png`, width: 24, height: 24 },
+    { name: "Microsoft", logo: `${AUTH_TRUST_ASSET_BASE}/microsoft.png`, width: 20, height: 20 },
+    { name: "Nike", logo: `${AUTH_TRUST_ASSET_BASE}/nike.png`, width: 28, height: 10 },
+    { name: "Swiggy", logo: `${AUTH_TRUST_ASSET_BASE}/swiggy.png`, width: 24, height: 24 },
+    { name: "Razorpay", logo: `${AUTH_TRUST_ASSET_BASE}/razorpay.png`, width: 17, height: 20 },
+    { name: "GlobalLogic", logo: `${AUTH_TRUST_ASSET_BASE}/globallogic.png`, width: 20, height: 20 },
+    { name: "WNS", logo: `${AUTH_TRUST_ASSET_BASE}/wns.png`, width: 19, height: 20 },
+    { name: "GE HealthCare", logo: `${AUTH_TRUST_ASSET_BASE}/ge-healthcare.png`, width: 19, height: 20 },
+    { name: "Condé Nast", logo: `${AUTH_TRUST_ASSET_BASE}/conde-nast.png`, width: 19, height: 20 },
+    { name: "Nexthink", logo: `${AUTH_TRUST_ASSET_BASE}/nexthink.png`, width: 19, height: 20 },
+    { name: "MiQ", logo: `${AUTH_TRUST_ASSET_BASE}/miq.png`, width: 22, height: 20 },
+    { name: "BlackRock", logo: `${AUTH_TRUST_ASSET_BASE}/blackrock.png`, width: 20, height: 20 },
+    { name: "Navan", logo: `${AUTH_TRUST_ASSET_BASE}/navan.png`, width: 19, height: 20 },
+    { name: "JustAnswer", logo: `${AUTH_TRUST_ASSET_BASE}/justanswer.png`, width: 19, height: 20 },
+    { name: "Attentive.ai", logo: `${AUTH_TRUST_ASSET_BASE}/attentive.png`, width: 20, height: 20 },
+    { name: "Diligent", logo: `${AUTH_TRUST_ASSET_BASE}/diligent.png`, width: 20, height: 20 },
+    { name: "Credera", logo: `${AUTH_TRUST_ASSET_BASE}/credera.png`, width: 20, height: 20 },
+    { name: "myHQ", logo: `${AUTH_TRUST_ASSET_BASE}/myhq.png`, width: 20, height: 20 },
+    { name: "Pluang", logo: `${AUTH_TRUST_ASSET_BASE}/pluang.png`, width: 20, height: 20 },
+    { name: "+ more every day" },
+];
