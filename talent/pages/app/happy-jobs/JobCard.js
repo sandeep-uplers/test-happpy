@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from "react";
 import { IMAGE_URL } from "../../../components/Constant";
 import { formatSkillname, formattedYOE } from "../../../components/Helper";
@@ -9,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ArrowDropDownIcon, CloseIcon } from "../../../assets/IconSVG";
 import { talentRelevancyTracking, viewJobClickedTracking } from "../../../helpers/Mixpanel";
 import { getJobAgentSimilarJobHref } from "../../../helpers/jobPath";
+import { HapppyAgentInfoBadge, hasHapppyAgentInfo } from "../../../helpers/happpyAgentInfoBadge";
 import { SET_BOOKMARK_SIMILAR_JOBS, SET_LOADER } from "../../../store/actions/actionsTypes";
 import { toast as toastify } from "react-toastify";
 import toast from "react-hot-toast";
@@ -39,6 +42,9 @@ export default function JobCard({ data, allData, handleOppBookmark, activeJob, s
         e.stopPropagation();
     }
 
+    // On job-agent routes the Happpy Agent run badge replaces every other head badge.
+    const showAgentBadge = hasHapppyAgentInfo(data) || hasHapppyAgentInfo(allData);
+
     const { similarJobs } = useSelector(state => state.opps)
     const similarJobObj = similarJobs[data.HR_Number]
 
@@ -62,40 +68,47 @@ export default function JobCard({ data, allData, handleOppBookmark, activeJob, s
                             </svg>
                         </button>
                     }
-                    {(((allData.frontend_data && allData.frontend_data.frontend_label) || data.top_badge) || (allData.applied_at || data.is_partner_company)) &&
+                    {(((allData.frontend_data && allData.frontend_data.frontend_label) || data.top_badge) || (allData.applied_at || data.is_partner_company) || showAgentBadge) &&
                         <div className={`jobCardHead`}>
-                            {allData.frontend_data && allData.frontend_data.frontend_label ?
-                                <label
-                                    className={`oppHeadActionTag`}
-                                    style={{
-                                        "color": allData.frontend_data.frontend_label_color,
-                                        "backgroundColor": allData.frontend_data.frontend_message_color
-                                    }}
-                                >
-                                    {allData.frontend_data.frontend_label}
-                                </label>
+                            {showAgentBadge ?
+                                <HapppyAgentInfoBadge
+                                    info={data.happpy_agent_info || allData.happpy_agent_info}
+                                />
                                 :
                                 <>
-                                    {data.top_badge &&
-                                        <div className={`${data.is_partner_company ? 'mb-3' : ''}`}>
-                                            <div
-                                                className="earlyApplicant"
-                                                dangerouslySetInnerHTML={{ __html: data.top_badge }}
-                                            >
-                                            </div>
+                                    {allData.frontend_data && allData.frontend_data.frontend_label ?
+                                        <label
+                                            className={`oppHeadActionTag`}
+                                            style={{
+                                                "color": allData.frontend_data.frontend_label_color,
+                                                "backgroundColor": allData.frontend_data.frontend_message_color
+                                            }}
+                                        >
+                                            {allData.frontend_data.frontend_label}
+                                        </label>
+                                        :
+                                        <>
+                                            {data.top_badge &&
+                                                <div className={`${data.is_partner_company ? 'mb-3' : ''}`}>
+                                                    <div
+                                                        className="earlyApplicant"
+                                                        dangerouslySetInnerHTML={{ __html: data.top_badge }}
+                                                    >
+                                                    </div>
+                                                </div>
+                                            }
+                                        </>
+                                    }
+                                    {allData.applied_at &&
+                                        <div className="appliedAt">
+                                            <span>Applied {allData.applied_at}</span>
                                         </div>
+                                    }
+                                    {(data.is_partner_company && data.company.company_name != "Uplers") &&
+                                        <UplersPartnerBadge data={data} fullText isTooltip={false} />
                                     }
                                 </>
                             }
-                            {allData.applied_at &&
-                                <div className="appliedAt">
-                                    <span>Applied {allData.applied_at}</span>
-                                </div>
-                            }
-                            {(data.is_partner_company && data.company.company_name != "Uplers") &&
-                                <UplersPartnerBadge data={data} fullText isTooltip={false} />
-                            }
-
                         </div>
                     }
 
@@ -350,40 +363,45 @@ const SimilarJobCard = ({ data, index, onBookmarkClick, handleCardClick }) => {
                     <path d="M10.3333 13L5.66667 9.66667L1 13V2.33333C1 1.97971 1.14048 1.64057 1.39052 1.39052C1.64057 1.14048 1.97971 1 2.33333 1H9C9.35362 1 9.69276 1.14048 9.94281 1.39052C10.1929 1.64057 10.3333 1.97971 10.3333 2.33333V13Z" stroke="#231F20" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
             </button>
-            {(((data.frontend_data && data.frontend_data.frontend_label) || data.top_badge) || (data.applied_at || data.is_partner_company)) &&
+            {(((data.frontend_data && data.frontend_data.frontend_label) || data.top_badge) || (data.applied_at || data.is_partner_company) || hasHapppyAgentInfo(data)) &&
                 <div className={`jobCardHead`}>
-                    {data.frontend_data && data.frontend_data.frontend_label ?
-                        <label
-                            className={`oppHeadActionTag`}
-                            style={{
-                                "color": data.frontend_data.frontend_label_color,
-                                "backgroundColor": data.frontend_data.frontend_message_color
-                            }}
-                        >
-                            {data.frontend_data.frontend_label}
-                        </label>
+                    {hasHapppyAgentInfo(data) ?
+                        <HapppyAgentInfoBadge info={data.happpy_agent_info} />
                         :
                         <>
-                            {data.top_badge &&
-                                <div className={`${data.is_partner_company ? 'mb-3' : ''}`}>
-                                    <div
-                                        className="earlyApplicant"
-                                        dangerouslySetInnerHTML={{ __html: data.top_badge }}
-                                    >
-                                    </div>
+                            {data.frontend_data && data.frontend_data.frontend_label ?
+                                <label
+                                    className={`oppHeadActionTag`}
+                                    style={{
+                                        "color": data.frontend_data.frontend_label_color,
+                                        "backgroundColor": data.frontend_data.frontend_message_color
+                                    }}
+                                >
+                                    {data.frontend_data.frontend_label}
+                                </label>
+                                :
+                                <>
+                                    {data.top_badge &&
+                                        <div className={`${data.is_partner_company ? 'mb-3' : ''}`}>
+                                            <div
+                                                className="earlyApplicant"
+                                                dangerouslySetInnerHTML={{ __html: data.top_badge }}
+                                            >
+                                            </div>
+                                        </div>
+                                    }
+                                </>
+                            }
+                            {data.applied_at &&
+                                <div className="appliedAt">
+                                    <span>Applied {data.applied_at}</span>
                                 </div>
+                            }
+                            {(data.is_partner_company && data.company.company_name != "Uplers") &&
+                                <UplersPartnerBadge data={data} fullText isTooltip={false} />
                             }
                         </>
                     }
-                    {data.applied_at &&
-                        <div className="appliedAt">
-                            <span>Applied {data.applied_at}</span>
-                        </div>
-                    }
-                    {(data.is_partner_company && data.company.company_name != "Uplers") &&
-                        <UplersPartnerBadge data={data} fullText isTooltip={false} />
-                    }
-
                 </div>
             }
 

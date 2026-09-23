@@ -1,8 +1,9 @@
+'use client';
 
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate, useSearchParams } from "@/talent/navigation/routerCompat";
+import { Link, useLocation, useNavigate, useSearchParams } from "@/talent/navigation/routerCompat";
 import Slider from "react-slick";
 import { toast as toastify } from "react-toastify";
 import "slick-carousel/slick/slick-theme.css";
@@ -13,6 +14,7 @@ import { ArrowRightIcon } from "../../../assets/IconSVG";
 import { IMAGE_URL } from "../../../components/Constant";
 import { formattedINRJobBudget, formattedYOE, isTalentHired } from "../../../components/Helper";
 import { getJobAgentSimilarJobHref } from "../../../helpers/jobPath";
+import { HapppyAgentInfoBadge, hasHapppyAgentInfo } from "../../../helpers/happpyAgentInfoBadge";
 import Loader from "../../../components/Loader";
 import { jobNotInterestedTrack, talentBookMarkTrack, talentRelevancyTracking, viewJobClickedTracking } from "../../../helpers/Mixpanel";
 import { ADD_SIMILAR_JOBS, CLOSE_SIGNUP_APPLY_FLOW, HR_UPDATE_NEEDED, OPEN_SIGNUP_APPLY_FLOW, SET_BOOKMARK_SIMILAR_JOBS, SET_LOADER, SET_TAILOR_MODAL_OPEN, SET_TOUCHPOINT_DATA, UPDATE_WORK_CONTROL } from "../../../store/actions/actionsTypes";
@@ -46,6 +48,8 @@ export default function JobDetails({
     const [isHeaderVisible, setIsHeaderVisible] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams()
     const navigate = useNavigate();
+    const location = useLocation();
+    const isJobAgentRoute = location.pathname.includes('/talent/job-agent');
 
     const hasTailoredCV = data.tailored_status == 2 || sessionStorage.getItem('tailored_resume_generated_' + data.HR_Number);
 
@@ -105,7 +109,7 @@ export default function JobDetails({
 
     const getSingleHrData = (hrNo) => {
         setFetchingUpdate(true)
-        getSingleOpportunity(hrNo)(dispatch)
+        getSingleOpportunity(hrNo, { withHapppyAgentInfo: isJobAgentRoute })(dispatch)
             .then((res) => {
                 updateJobData(res.data)
                 if (searchParams.get('is_additional_screening') == 'true') {
@@ -246,7 +250,10 @@ export default function JobDetails({
 
     const getSimilarJobObj = (hrNo, email) => {
         setSimilarJobLoading(true)
-        getSimilarJob(hrNo, email, { aggregatedJobs: true })(dispatch)
+        getSimilarJob(hrNo, email, {
+            aggregatedJobs: true,
+            withHapppyAgentInfo: isJobAgentRoute,
+        })(dispatch)
             .then((res) => {
                 if (res.data.data) {
                     let result = [...res.data.data];
@@ -483,33 +490,38 @@ export default function JobDetails({
                 />
             }
             <div className="jobDetailsHead" id="jobDetailSectionHead">
-                {(data.top_badge || data.is_partner_company || data.applied_at || (data.frontend_data && data.frontend_data.frontend_label)) &&
+                {(data.top_badge || data.is_partner_company || data.applied_at || (data.frontend_data && data.frontend_data.frontend_label) || hasHapppyAgentInfo(data)) &&
                     <div className="jobDetailsHeadTop">
-                        {(data.top_badge || data.is_partner_company || data.applied_at) &&
+                        {(data.top_badge || data.is_partner_company || data.applied_at || hasHapppyAgentInfo(data)) &&
                             <div className="top-nudges">
-                                {data.top_badge &&
-                                    <div className={`${data.is_partner_company ? 'has-right-dot' : ''}`}>
-                                        <div
-                                            className="earlyApplicant"
-                                            dangerouslySetInnerHTML={{ __html: data.top_badge }}
-                                        >
-                                        </div>
-                                    </div>
+                                {hasHapppyAgentInfo(data) ?
+                                    <HapppyAgentInfoBadge info={data.happpy_agent_info} />
+                                    :
+                                    <>
+                                        {data.top_badge &&
+                                            <div className={`${data.is_partner_company ? 'has-right-dot' : ''}`}>
+                                                <div
+                                                    className="earlyApplicant"
+                                                    dangerouslySetInnerHTML={{ __html: data.top_badge }}
+                                                >
+                                                </div>
+                                            </div>
+                                        }
+                                        {data.applied_at &&
+                                            <div className="appliedAt">
+                                                <span>Applied {data.applied_at}</span>
+                                            </div>
+                                        }
+                                        {(data.is_partner_company && data.company.company_name != "Uplers") &&
+                                            <UplersPartnerBadge data={data} fullText isTooltip={true} />
+                                        }
+                                    </>
                                 }
-                                {data.applied_at &&
-                                    <div className="appliedAt">
-                                        <span>Applied {data.applied_at}</span>
-                                    </div>
-                                }
-                                {(data.is_partner_company && data.company.company_name != "Uplers") &&
-                                    <UplersPartnerBadge data={data} fullText isTooltip={true} />
-                                }
-
                             </div>
                         }
 
 
-                        {data.frontend_data && data.frontend_data.frontend_label &&
+                        {data.frontend_data && data.frontend_data.frontend_label && !hasHapppyAgentInfo(data) &&
                             <label
                                 className={`oppHeadActionTag`}
                                 style={{
@@ -1018,6 +1030,11 @@ const SimilarJobs = ({ hrDetails, similarJobObj }) => {
                                         {similarJobObj?.map((data, index) => (
                                             <div key={'similarJobCard' + data.id} className="jobCardContainer">
                                                 <div className="job-card" onClick={() => handleCardClick(data, index + 1)}>
+                                                    {hasHapppyAgentInfo(data) &&
+                                                        <div className="similar-job-agent-badge">
+                                                            <HapppyAgentInfoBadge info={data.happpy_agent_info} />
+                                                        </div>
+                                                    }
                                                     <div className="jobTitle">
                                                         <div className="logo">
                                                             <SimilarJobsCompanyLogo job={data} />
