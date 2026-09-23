@@ -45,7 +45,7 @@ import HappyAgentLandingNavbar from "../../../components/HappyAgentLandingNavbar
 import HapppyAgentLogo from "../../../components/common/HapppyAgentLogo";
 import { REFERRAL_AI_AGENT_PATH } from "../../../components/HappyAiAgentLayout";
 import MechanicalScoreboardNumber, { randomScoreboardStart } from "../../../components/common/MechanicalScoreboardNumber";
-import WaveLoader from "../../../components/WaveLoader";
+import JobsBoardSkeleton from "../jobs-board/JobsBoardSkeleton";
 import AgentOnboarding from "../agent-onboarding/AgentOnboarding";
 import {
     clearPublicOnbSection,
@@ -279,7 +279,7 @@ const JOBS_LISTING_QUERY_PARAM = "show_jobs_listing";
 /** Own chunk — public landings always load it; authenticated landing still needs the query param. */
 const JobsBoard = dynamic(() => import("../jobs-board/JobsBoard"), {
     ssr: false,
-    loading: () => <WaveLoader />,
+    loading: () => <JobsBoardSkeleton />,
 });
 
 /** Session: job URL already auto-submitted via ?reference= background POST (avoid duplicate on refresh). */
