@@ -111,7 +111,7 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
                 setIsLoading(false);
             });
         
-    }, [dispatch, location]);
+    }, [dispatch, gmail, publicSignupMode]);
 
     const validateForm = () => {
         const newErrors = {};

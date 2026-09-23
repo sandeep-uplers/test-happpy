@@ -1,7 +1,7 @@
 'use client';
 
 import NextLink from 'next/link';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import {
     usePathname,
     useRouter,
@@ -57,7 +57,10 @@ export function useLocation() {
     const pathname = usePathname() || '/';
     const searchParams = useNextSearchParams();
     const search = searchParams?.toString() ? `?${searchParams.toString()}` : '';
-    return { pathname, search, hash: '' };
+    return useMemo(
+        () => ({ pathname, search, hash: '' }),
+        [pathname, search],
+    );
 }
 
 export function useParams() {

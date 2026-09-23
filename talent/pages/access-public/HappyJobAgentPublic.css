@@ -9623,7 +9623,7 @@ html.happy-job-agent-landing-active #app {
 }
 
 .happy-job-agent-landing .account-connection--happy-setup-figma .btn-danger__handwriting {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-family: 'Telegraf', sans-serif;
     line-height: 1;
     letter-spacing: 0.5px;
@@ -9642,7 +9642,7 @@ html.happy-job-agent-landing-active #app {
     background: var(--happy-setup-teal);
     border: none;
     color: var(--happy-setup-ink);
-    font-size: 1.25rem;
+    font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 1.2px;
     line-height: normal;
