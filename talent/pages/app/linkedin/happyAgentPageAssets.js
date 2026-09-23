@@ -2,13 +2,14 @@
 
 const OUTREACH_IMAGE_ROOT = "/images/talent/outreach";
 
-/** Happpy brand teal — Razorpay checkout accent (Pay button, highlights). */
-/** Razorpay checkout accent — matches UTS payment modals (UpgradePlanDrawer, HapppySubscription). */
+/** Razorpay checkout accent — matches payment modals across Happpy surfaces. */
 export const HAPPPY_RAZORPAY_THEME_COLOR = '#231F20';
 
 /* Hero header */
 export const HAPPY_HERO_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/hero`;
 export const HAPPY_HERO_BG_SRC = `${HAPPY_HERO_ASSET_BASE}/hero-bg.png`;
+/** Figma Frame 18 (3070:15685) — mobile-only mint mesh hero background */
+export const HAPPY_HERO_BG_MOBILE_SRC = `${HAPPY_HERO_ASSET_BASE}/hero-bg-mobile.svg`;
 export const HAPPY_HERO_BG_WEBP_SRCSET = [
     `${HAPPY_HERO_ASSET_BASE}/hero-bg-768.webp 768w`,
     `${HAPPY_HERO_ASSET_BASE}/hero-bg-1280.webp 1280w`,
@@ -19,14 +20,23 @@ export const HAPPY_HERO_PRELOAD_ID = "happy-agent-hero-bg-preload";
 export const HAPPY_HERO_TRUST_SPARKLE_SRC = `${HAPPY_HERO_ASSET_BASE}/trust-sparkle.svg`;
 export const HAPPY_HERO_EYEBROW_LEFT = "AI referral agent";
 export const HAPPY_HERO_EYEBROW_RIGHT = "Not a job board";
-export const HAPPY_HERO_TITLE_PREFIX = "Applying to jobs has become your";
-export const HAPPY_HERO_TITLE_HIGHLIGHT = "full time job?";
-export const HAPPY_HERO_TITLE_LINES = ["Get interviews in as little as 4 days."];
+export const HAPPY_HERO_TITLE_PREFIX = "Get interviews in as little as";
+export const HAPPY_HERO_TITLE_HIGHLIGHT = "4 Days";
+export const HAPPY_HERO_MOBILE_TITLE_LINE_1 = "Get interviews";
+export const HAPPY_HERO_MOBILE_TITLE_LINE_2 = "in as little as";
+export const HAPPY_HERO_MOBILE_TITLE_HIGHLIGHT = "4 Days";
+export const HAPPY_HERO_TITLE_UNDERLINE_SRC = `${HAPPY_HERO_ASSET_BASE}/title-highlight-underline.svg`;
+export const HAPPY_HERO_MOBILE_SUBTITLE_BOLD = "HAPPPY is an AI referral agent";
+export const HAPPY_HERO_MOBILE_SUBTITLE_LINES = [
+    "That finds people inside target companies and introduces you —",
+    "so real recruiters reply instead of ghosting.",
+];
+export const HAPPY_HERO_MOBILE_CTA_LABEL = "Get started";
 export const HAPPY_HERO_SUBTITLE_LINE_1 =
-    "HAPPPY is your AI referral agent - it gets you real introductions inside the companies you want to work for, in just 12 mins a day.";
+    "An AI referral agent that finds people inside the company and introduces you - so a real recruiter replies";
 /** Desktop: sparkle + `desktop` label above the H1. Mobile: value/label stats under the hero CTA. */
 export const HAPPY_HERO_TRUST_ITEMS = [
-    { value: "2x", label: "interviews", desktop: "2x interviews" },
+    { value: "2x", label: "more interviews", desktop: "2x interviews" },
     { value: "6,450+", label: "candidates using it", desktop: "Trusted by 6450+ candidates" },
     { value: "60s", label: "setup time", desktop: "60-second setup" },
 ];

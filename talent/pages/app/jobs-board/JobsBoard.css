@@ -1,11 +1,18 @@
 /* Standalone job board (JobsBoard.js) — scoped so it can sit inside any page. */
 
 .jobs-board {
+    --jobs-board-teal-light: #e2fdf2;
+    --jobs-board-teal-surface: rgba(157, 250, 213, 0.05);
+    --jobs-board-teal: #086d7e;
+    --jobs-board-teal-cta: #059599;
+    --jobs-board-outline: #dee1e7;
+    --jobs-board-page-surface: #f9f8f4;
+
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     font-family: inherit;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .jobs-board__header {
@@ -23,7 +30,7 @@
 .jobs-board__subtitle {
     margin: 0;
     font-size: 15px;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
 }
 
 /* Filters */
@@ -45,9 +52,23 @@
 .jobs-board__filter-label {
     display: block;
     margin-bottom: 6px;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
-    color: var(--happpy-ink-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6b6b6b;
+}
+
+/* react-select search input — override legacy Uplers yellow caret from global form styles. */
+.jobs-board .jobs-board-select__input {
+    caret-color: var(--jobs-board-teal) !important;
+    color: #231f20 !important;
+    box-shadow: none !important;
+}
+
+.jobs-board .jobs-board-select__input::selection {
+    background: var(--jobs-board-teal-light);
+    color: var(--jobs-board-teal);
 }
 
 /* Phone-only: the media query below turns this on and the filter grid off by default. */
@@ -64,8 +85,9 @@
     margin-left: 6px;
     padding: 0 6px;
     border-radius: 999px;
-    background: #ffc700;
-    font-size: 11px;
+    background: var(--jobs-board-teal);
+    color: #fff;
+    font-size: 10px;
     font-style: normal;
     font-weight: 700;
 }
@@ -90,15 +112,21 @@
     background: none;
     padding: 6px 4px;
     font-size: 13px;
-    color: var(--happpy-ink-muted);
+    font-weight: 600;
+    color: var(--jobs-board-teal);
     text-decoration: underline;
     cursor: pointer;
+}
+
+.jobs-board__clear-all:hover,
+.jobs-board__clear-all:focus-visible {
+    color: var(--jobs-board-teal-cta);
 }
 
 .jobs-board__count {
     text-align: center;
     font-size: 13px;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
     margin-bottom: 20px;
 }
 
@@ -118,7 +146,7 @@
     padding: 20px;
     border: 1px solid #ececec;
     border-radius: 14px;
-    background: var(--happpy-white);
+    background: #fff;
     color: inherit;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
@@ -128,12 +156,58 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
 }
 
+.jobs-board__skeleton-bar,
 .jobs-board__card--skeleton {
-    min-height: 168px;
     background: linear-gradient(90deg, #f4f4f4 25%, #ececec 37%, #f4f4f4 63%);
     background-size: 400% 100%;
     animation: jobs-board-shimmer 1.4s ease infinite;
     pointer-events: none;
+}
+
+.jobs-board__skeleton-bar {
+    border-radius: 8px;
+}
+
+.jobs-board__skeleton-bar--title {
+    height: 38px;
+    width: min(320px, 72%);
+    margin: 0 auto 8px;
+    border-radius: 10px;
+}
+
+.jobs-board__skeleton-bar--subtitle {
+    height: 16px;
+    width: min(560px, 92%);
+    margin: 0 auto;
+    border-radius: 6px;
+}
+
+.jobs-board__skeleton-bar--label {
+    height: 11px;
+    width: 72%;
+    margin-bottom: 6px;
+    border-radius: 4px;
+}
+
+.jobs-board__skeleton-bar--control {
+    height: 44px;
+    width: 100%;
+}
+
+.jobs-board__skeleton-bar--count {
+    height: 14px;
+    width: 168px;
+    margin: 0 auto 20px;
+    border-radius: 6px;
+}
+
+.jobs-board__skeleton-toggle {
+    border-color: transparent;
+    cursor: default;
+}
+
+.jobs-board__card--skeleton {
+    min-height: 168px;
 }
 
 @keyframes jobs-board-shimmer {
@@ -156,6 +230,34 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+}
+
+/* Same mint initials fallback as Happpy All Jobs / JobCard (`.jad-all-jobs-wrap .company_intialBg`). */
+.jobs-board__card-logo .company_intialBg {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #DFEFEC !important;
+}
+
+.jobs-board__card-logo .company_intialBg .company_intial {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.jobs-board__card-logo .company_intialBg .company_intial h6 {
+    margin: 0;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.2;
+    color: #231f20 !important;
+    text-transform: uppercase;
 }
 
 .jobs-board__card-logo img {
@@ -173,7 +275,7 @@
 
 .jobs-board__card-heading span {
     font-size: 13px;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
 }
 
 .jobs-board__card-meta {
@@ -216,8 +318,8 @@
     padding: 11px 16px;
     border: none;
     border-radius: 999px;
-    background: var(--happpy-ink);
-    color: var(--happpy-white);
+    background: #231f20;
+    color: #fff;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -230,7 +332,7 @@
 
 .jobs-board__card-run:disabled {
     background: #f0f0f0;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
     cursor: default;
 }
 
@@ -241,19 +343,20 @@
     gap: 12px;
     padding: 48px 16px;
     text-align: center;
-    color: var(--happpy-ink-muted);
+    color: #6b6b6b;
 }
 
 .jobs-board__empty img {
     max-width: 220px;
+    filter: grayscale(1);
 }
 
 .jobs-board__empty button,
 .jobs-board__more button {
     padding: 10px 20px;
-    border: 1px solid var(--happpy-ink);
+    border: 1px solid #231f20;
     border-radius: 999px;
-    background: var(--happpy-white);
+    background: #fff;
     font-size: 14px;
     cursor: pointer;
 }
@@ -278,6 +381,19 @@
         font-size: 14px;
     }
 
+    .jobs-board--skeleton .jobs-board__filters {
+        display: none;
+    }
+
+    .jobs-board__skeleton-bar--title {
+        height: 29px;
+        width: min(260px, 78%);
+    }
+
+    .jobs-board__skeleton-bar--subtitle {
+        width: min(100%, 320px);
+    }
+
     .jobs-board__filters-toggle {
         display: flex;
         align-items: center;
@@ -285,13 +401,25 @@
         min-height: 44px;
         margin-bottom: 12px;
         padding: 10px 14px;
-        border: 1px solid #e2e2e2;
-        border-radius: 10px;
-        background: var(--happpy-white);
+        border: 1px solid var(--jobs-board-outline);
+        border-radius: 8px;
+        background: #fff;
         font-size: 14px;
         font-weight: 600;
-        color: var(--happpy-ink);
+        color: #231f20;
         cursor: pointer;
+        transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .jobs-board__filters-toggle:hover,
+    .jobs-board__filters-toggle:focus-visible {
+        background: var(--jobs-board-teal-light);
+        border-color: var(--jobs-board-teal);
+        outline: none;
+    }
+
+    .jobs-board__filters-toggle:focus-visible {
+        box-shadow: 0 0 0 2px var(--jobs-board-teal-cta);
     }
 
     .jobs-board__filters {
@@ -299,9 +427,9 @@
         gap: 12px;
         margin-bottom: 12px;
         padding: 14px;
-        border: 1px solid #ececec;
+        border: 1px solid var(--jobs-board-outline);
         border-radius: 12px;
-        background: #fafafa;
+        background: white;
     }
 
     .jobs-board__filters--collapsed {

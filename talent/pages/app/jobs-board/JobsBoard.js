@@ -8,17 +8,20 @@ import {
     API_ALL_OPP,
     API_OPP_LOCATION_MASTER,
     API_OPP_ROLE_MASTER,
+    API_PUBLIC_ALL_OPP,
+    API_PUBLIC_OPP_LOCATION_MASTER,
+    API_PUBLIC_OPP_ROLE_MASTER,
     IMAGE_URL,
 } from "../../../components/Constant";
-import { customSelectTheme } from "../../../components/common/CustomStyleReactSelect";
 import { GET_API, formattedJobCount, formattedYOE } from "../../../components/Helper";
 import { engagementFilterMaster, experienceFilterMaster } from "../../../components/Masters";
 import CompanyLogo from "../work-components/CompanyLogo";
 import "./JobsBoard.css";
 
 /**
- * Standalone job board — jobs from `API_ALL_OPP` behind five filters: years of experience,
- * job function, location, mode of work and sort.
+ * Standalone job board — jobs from `API_ALL_OPP` (or guest `API_PUBLIC_ALL_OPP` when
+ * `publicMode`) behind five filters: years of experience, job function, location, mode of
+ * work and sort.
  *
  * Deliberately self-contained: local state only, no Redux, no URL params and no dependency on
  * the `/talent/all-opportunities` page or its filter components, so it can be dropped into any
@@ -31,6 +34,29 @@ const SORT_OPTIONS = [
     { label: "Newest first", value: "created_at" },
 ];
 
+/** Happpy All Jobs filter palette — keep in sync with `.jad-all-jobs-toolbar` tokens. */
+const HAPPY_FILTER = {
+    teal: "#086d7e",
+    tealLight: "#e2fdf2",
+    tealSurface: "rgba(157, 250, 213, 0.05)",
+    tealCta: "#059599",
+    outline: "#dee1e7",
+    black: "#231f20",
+    grey: "#6b6b6b",
+    white: "#ffffff",
+};
+
+const jobsBoardSelectTheme = (theme) => ({
+    ...theme,
+    colors: {
+        ...theme.colors,
+        primary: HAPPY_FILTER.teal,
+        primary25: HAPPY_FILTER.tealLight,
+        primary50: HAPPY_FILTER.tealLight,
+        primary75: HAPPY_FILTER.teal,
+    },
+});
+
 /**
  * react-select rather than a hand-rolled popover: the menu goes into a `document.body` portal
  * (`menuPortalTarget` below), so no host page's overflow or stacking context can clip it — the
@@ -40,23 +66,87 @@ const SELECT_STYLES = {
     control: (base, state) => ({
         ...base,
         minHeight: "44px",
-        borderRadius: "10px",
-        borderColor: state.isFocused ? "#231f20" : "#e2e2e2",
-        boxShadow: "none",
-        ":hover": { borderColor: "#b9b9b9" },
+        borderRadius: "8px",
+        borderColor: state.isFocused ? HAPPY_FILTER.teal : HAPPY_FILTER.outline,
+        backgroundColor: state.isFocused ? HAPPY_FILTER.white : HAPPY_FILTER.tealSurface,
+        boxShadow: state.isFocused ? `0 0 0 2px ${HAPPY_FILTER.tealCta}` : "none",
+        transition: "border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease",
+        ":hover": {
+            borderColor: HAPPY_FILTER.teal,
+            backgroundColor: HAPPY_FILTER.tealLight,
+        },
     }),
-    valueContainer: (base) => ({ ...base, padding: "2px 10px" }),
-    placeholder: (base) => ({ ...base, fontSize: "14px", color: "#6b6b6b" }),
-    singleValue: (base) => ({ ...base, fontSize: "14px" }),
-    multiValue: (base) => ({ ...base, backgroundColor: "#fff8d6", borderRadius: "6px" }),
-    multiValueLabel: (base) => ({ ...base, fontSize: "12px" }),
-    option: (base) => ({ ...base, fontSize: "14px", textAlign: "left" }),
-    menu: (base) => ({ ...base, textAlign: "left" }),
+    valueContainer: (base) => ({
+        ...base,
+        padding: "2px 10px",
+        backgroundColor: "transparent",
+    }),
+    inputContainer: (base) => ({
+        ...base,
+        backgroundColor: "transparent",
+    }),
+    input: (base) => ({
+        ...base,
+        color: HAPPY_FILTER.black,
+        caretColor: HAPPY_FILTER.teal,
+    }),
+    placeholder: (base) => ({ ...base, fontSize: "14px", color: HAPPY_FILTER.grey }),
+    singleValue: (base) => ({ ...base, fontSize: "14px", color: HAPPY_FILTER.black }),
+    multiValue: (base) => ({
+        ...base,
+        backgroundColor: HAPPY_FILTER.tealLight,
+        borderRadius: "999px",
+    }),
+    multiValueLabel: (base) => ({
+        ...base,
+        fontSize: "12px",
+        fontWeight: 500,
+        color: HAPPY_FILTER.teal,
+    }),
+    multiValueRemove: (base) => ({
+        ...base,
+        color: HAPPY_FILTER.teal,
+        borderRadius: "999px",
+        ":hover": {
+            backgroundColor: "rgba(8, 109, 126, 0.12)",
+            color: HAPPY_FILTER.teal,
+        },
+    }),
+    dropdownIndicator: (base, state) => ({
+        ...base,
+        color: state.isFocused ? HAPPY_FILTER.teal : HAPPY_FILTER.grey,
+        ":hover": { color: HAPPY_FILTER.teal },
+    }),
+    clearIndicator: (base) => ({
+        ...base,
+        color: HAPPY_FILTER.grey,
+        ":hover": { color: HAPPY_FILTER.teal },
+    }),
+    option: (base, { isSelected, isFocused }) => ({
+        ...base,
+        fontSize: "14px",
+        textAlign: "left",
+        color: isSelected ? HAPPY_FILTER.white : HAPPY_FILTER.black,
+        backgroundColor: isSelected
+            ? HAPPY_FILTER.teal
+            : isFocused
+                ? HAPPY_FILTER.tealLight
+                : undefined,
+        ":active": { backgroundColor: HAPPY_FILTER.teal },
+    }),
+    menu: (base) => ({
+        ...base,
+        textAlign: "left",
+        borderRadius: "8px",
+        border: `1px solid ${HAPPY_FILTER.outline}`,
+        overflow: "hidden",
+        boxShadow: "1px 0 6px rgba(107, 107, 107, 0.12)",
+    }),
     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
 };
 
 const SHARED_SELECT_PROPS = {
-    theme: customSelectTheme,
+    theme: jobsBoardSelectTheme,
     styles: SELECT_STYLES,
     classNamePrefix: "jobs-board-select",
     menuPlacement: "auto",
@@ -86,7 +176,15 @@ export default function JobsBoard({
      * queueing returns falsy so the talent can retry once connected.
      */
     onRunAgent = null,
+    /**
+     * Happpy public landing — same cards/filters, guest endpoints (no talent token).
+     * The host should intercept `onRunAgent` and open the auth drawer instead of queueing a run.
+     */
+    publicMode = false,
 }) {
+    const jobsApi = publicMode ? API_PUBLIC_ALL_OPP : API_ALL_OPP;
+    const roleMasterApi = publicMode ? API_PUBLIC_OPP_ROLE_MASTER : API_OPP_ROLE_MASTER;
+    const locationMasterApi = publicMode ? API_PUBLIC_OPP_LOCATION_MASTER : API_OPP_LOCATION_MASTER;
     const [filters, setFilters] = useState(EMPTY_FILTERS);
     const [jobs, setJobs] = useState([]);
     const [jobsCount, setJobsCount] = useState(null);
@@ -133,7 +231,7 @@ export default function JobsBoard({
 
     useEffect(() => {
         let cancelled = false;
-        GET_API(API_OPP_ROLE_MASTER)
+        GET_API(roleMasterApi)
             .then((res) => {
                 if (cancelled) return;
                 setJobFunctionOptions(Array.isArray(res?.data?.data) ? res.data.data : []);
@@ -145,15 +243,15 @@ export default function JobsBoard({
                 if (!cancelled) setJobFunctionLoading(false);
             });
         return () => { cancelled = true; };
-    }, []);
+    }, [roleMasterApi]);
 
     const fetchLocations = useCallback((search) => {
         setLocationLoading(true);
-        GET_API(API_OPP_LOCATION_MASTER + (search ? `?search=${encodeURIComponent(search)}` : ""))
+        GET_API(locationMasterApi + (search ? `?search=${encodeURIComponent(search)}` : ""))
             .then((res) => setLocationOptions(Array.isArray(res?.data?.data) ? res.data.data : []))
             .catch(() => setLocationOptions([]))
             .finally(() => setLocationLoading(false));
-    }, []);
+    }, [locationMasterApi]);
 
     const debouncedFetchLocations = useMemo(() => debounce(fetchLocations, 400), [fetchLocations]);
 
@@ -170,13 +268,13 @@ export default function JobsBoard({
         setPage(1);
         setJobsCount(null);
 
-        GET_API(API_ALL_OPP + buildQuery(1, false))
+        GET_API(jobsApi + buildQuery(1, false))
             .then((res) => {
                 if (requestId !== requestIdRef.current) return;
                 setJobs(res?.data?.hrs?.data || []);
                 setLoading(false);
 
-                return GET_API(API_ALL_OPP + buildQuery(1, true)).then((countRes) => {
+                return GET_API(jobsApi + buildQuery(1, true)).then((countRes) => {
                     if (requestId !== requestIdRef.current) return;
                     setJobsCount(countRes?.data?.jobs_count ?? 0);
                 });
@@ -187,13 +285,13 @@ export default function JobsBoard({
                 setLoading(false);
                 setFailed(true);
             });
-    }, [buildQuery]);
+    }, [buildQuery, jobsApi]);
 
     const loadMore = () => {
         const requestId = requestIdRef.current;
         const nextPage = page + 1;
         setLoadingMore(true);
-        GET_API(API_ALL_OPP + buildQuery(nextPage, false))
+        GET_API(jobsApi + buildQuery(nextPage, false))
             .then((res) => {
                 if (requestId !== requestIdRef.current) return;
                 setJobs((prev) => [...prev, ...(res?.data?.hrs?.data || [])]);
@@ -355,9 +453,13 @@ export default function JobsBoard({
             <div className="jobs-board__count" aria-live="polite">
                 {loading
                     ? "Loading jobs…"
-                    : jobsCount !== null
-                        ? `Showing ${jobs.length} of ${formattedJobCount(jobsCount)} ${jobsCount === 1 ? "job" : "jobs"}`
-                        : `Showing ${jobs.length} jobs`}
+                    : jobs.length > 0 ?
+                        jobsCount !== null
+                            ? `Showing ${jobs.length} of ${formattedJobCount(jobsCount)} ${jobsCount === 1 ? "job" : "jobs"}`
+                            : `Showing ${jobs.length} jobs`
+                        :
+                        ""
+                }
             </div>
 
             {loading ? (

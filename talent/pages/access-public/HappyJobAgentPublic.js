@@ -2,7 +2,7 @@
 
 // import { useGoogleLogin } from "@react-oauth/google";
 import Cookies from "js-cookie";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import Modal from "react-modal";
 import OTPInput from "react-otp-input";
@@ -38,6 +38,123 @@ import {
 import "./HappyJobAgentPublic.css";
 
 ensureModalAppElement();
+
+
+const HAPPY_PUBLIC_AUTH_TRUST_MARQUEE_SPLIT = Math.ceil(HAPPY_PUBLIC_AUTH_TRUST_COMPANIES.length / 2);
+
+function HappyPublicAuthTrustPill({ company, as: Tag = "li", className = "happy-public-auth-trust-pill", ...rest }) {
+    return (
+        <Tag className={className} {...rest}>
+            {company.logo && (
+                <img
+                    className="happy-public-auth-trust-pill__logo"
+                    src={company.logo}
+                    alt=""
+                    width={company.width}
+                    height={company.height}
+                    aria-hidden
+                />
+            )}
+            <span>{company.name}</span>
+        </Tag>
+    );
+}
+
+/** Mobile trust footer — one duplicated row, measured loop distance (px) for seamless RTL scroll. */
+function HappyPublicAuthTrustMarqueeRow({ items, rowClassName }) {
+    const halfLen = items.length / 2;
+    const trackRef = useRef(null);
+    const shiftPxRef = useRef(0);
+    const [trackReady, setTrackReady] = useState(false);
+
+    useLayoutEffect(() => {
+        const track = trackRef.current;
+        if (!track || halfLen <= 0) return undefined;
+
+        let cancelled = false;
+        setTrackReady(false);
+        shiftPxRef.current = 0;
+
+        const applyShift = (rawShift) => {
+            if (cancelled || rawShift <= 0) return;
+            const shift = Math.round(rawShift * 100) / 100;
+            if (shiftPxRef.current > 0 && Math.abs(shift - shiftPxRef.current) < 1) return;
+            shiftPxRef.current = shift;
+            track.style.setProperty("--happy-marquee-shift", `${shift}px`);
+            setTrackReady(true);
+        };
+
+        const measure = () => {
+            const children = track.children;
+            const first = children[0];
+            const firstOfDuplicateHalf = children[halfLen];
+            if (!first || !firstOfDuplicateHalf) return;
+            applyShift(firstOfDuplicateHalf.getBoundingClientRect().left - first.getBoundingClientRect().left);
+        };
+
+        const scheduleMeasure = () => {
+            window.requestAnimationFrame(measure);
+        };
+
+        scheduleMeasure();
+
+        const images = track.querySelectorAll("img");
+        images.forEach((img) => {
+            if (!img.complete) {
+                img.addEventListener("load", scheduleMeasure, { once: true });
+                img.addEventListener("error", scheduleMeasure, { once: true });
+            }
+        });
+
+        const onResize = () => scheduleMeasure();
+        window.addEventListener("resize", onResize);
+
+        return () => {
+            cancelled = true;
+            window.removeEventListener("resize", onResize);
+        };
+    }, [halfLen, items]);
+
+    return (
+        <div className={`happy-public-auth-trust__marquee-row${rowClassName ? ` ${rowClassName}` : ""}`}>
+            <div
+                className={`happy-public-auth-trust__marquee-track${trackReady ? " happy-public-auth-trust__marquee-track--ready" : ""}`}
+                ref={trackRef}
+            >
+                {items.map((company, idx) => {
+                    const isDuplicate = idx >= halfLen;
+                    return (
+                        <HappyPublicAuthTrustPill
+                            key={`${company.name}-${idx}`}
+                            company={company}
+                            as="span"
+                            tabIndex={isDuplicate ? -1 : undefined}
+                            aria-hidden={isDuplicate || undefined}
+                        />
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
+
+function HappyPublicAuthTrustMarquee() {
+    const { row1, row2 } = useMemo(() => {
+        const firstRow = HAPPY_PUBLIC_AUTH_TRUST_COMPANIES.slice(0, HAPPY_PUBLIC_AUTH_TRUST_MARQUEE_SPLIT);
+        const secondRow = HAPPY_PUBLIC_AUTH_TRUST_COMPANIES.slice(HAPPY_PUBLIC_AUTH_TRUST_MARQUEE_SPLIT);
+        return {
+            row1: [...firstRow, ...firstRow],
+            row2: [...secondRow, ...secondRow],
+        };
+    }, []);
+
+    return (
+        <div className="happy-public-auth-trust__marquee">
+            <HappyPublicAuthTrustMarqueeRow items={row1} rowClassName="happy-public-auth-trust__marquee-row--primary" />
+            <HappyPublicAuthTrustMarqueeRow items={row2} rowClassName="happy-public-auth-trust__marquee-row--secondary" />
+        </div>
+    );
+}
 
 /** Same redirect as SocialSSO — required for `new-signup/google-callback` token exchange. */
 // const GOOGLE_REDIRECT_URI = process.env.MIX_APP_URL + "/talent/auth/google-callback";
@@ -349,23 +466,12 @@ export function HappyJobAgentPublicAuthDrawer({
                                     <p className="happy-public-auth-trust__headline">{HAPPY_PUBLIC_AUTH_TRUST_HEADLINE}</p>
                                     <p className="happy-public-auth-trust__highlight">{HAPPY_PUBLIC_AUTH_TRUST_HIGHLIGHT}</p>
                                 </div>
-                                <ul className="happy-public-auth-trust__pills">
+                                <ul className="happy-public-auth-trust__pills happy-public-auth-trust__pills--static">
                                     {HAPPY_PUBLIC_AUTH_TRUST_COMPANIES.map((company) => (
-                                        <li key={company.name} className="happy-public-auth-trust-pill">
-                                            {company.logo && (
-                                                <img
-                                                    className="happy-public-auth-trust-pill__logo"
-                                                    src={company.logo}
-                                                    alt=""
-                                                    width={company.width}
-                                                    height={company.height}
-                                                    aria-hidden
-                                                />
-                                            )}
-                                            <span>{company.name}</span>
-                                        </li>
+                                        <HappyPublicAuthTrustPill key={company.name} company={company} />
                                     ))}
                                 </ul>
+                                <HappyPublicAuthTrustMarquee />
                             </section>
                         </div>
                     </>
@@ -483,11 +589,7 @@ function HappyJobAgentPublicInner() {
         }).catch(() => { });
     }, [navigate, isAuthenticated, searchParams, user?.outreach?.is_outreach_paid, user?.expected_ctc]);
 
-    /**
-     * Post-auth handoff (UTS: CONNECT_ACCOUNTS_PATH = ?create-profile=true).
-     * Always navigates with create-profile — AgentOnboarding then picks the first
-     * screen from session auth path: otp/instant → Connect Accounts; google → Create Profile.
-     */
+    /** Mark public-signup handoff and go to logged-in landing with onboarding open. */
     const continueToConnectAccounts = useCallback(() => {
         setPublicSignupPending();
         navigate(

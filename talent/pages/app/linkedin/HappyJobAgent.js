@@ -23,11 +23,11 @@ import { tailorResumeCaptureOrder, tailorResumeCreateOrder } from "../../../stor
 import { trackTailorPaymentSuccess } from "../../../store/actions/trackingActions";
 import { SET_LOADER, UPDATE_CURRENT_USER } from "../../../store/actions/actionsTypes";
 import TailorPaymentLoader from "../resume/payment/TailorPaymentLoader";
+import "../../access-public/HappyJobAgentPublic.css";
 import { getReferralCompaniesGrouped, REFERRAL_LOGO_BASE } from "../../access-public/referralCompaniesData";
 import "../../access-public/ReferralJobAgentLanding.css";
-import "./OutreachAgent.css";
-import "../../access-public/HappyJobAgentPublic.css";
 import HappyAgentRunJourney from "./HappyAgentRunJourney";
+import "./OutreachAgent.css";
 import OutreachConfigureAccountsOnly from "./OutreachConfigureAccountsOnly";
 import {
     DISPLAY_ORDER as HAPPY_PRICING_DISPLAY_ORDER,
@@ -70,15 +70,23 @@ import {
     HAPPY_FOOTER_TAGLINE_LINES,
     HAPPY_HANDWRITING_CLASS,
     HAPPY_HERO_ASSET_BASE,
+    HAPPY_HERO_BG_MOBILE_SRC,
     HAPPY_HERO_BG_SIZES,
     HAPPY_HERO_BG_SRC,
     HAPPY_HERO_BG_WEBP_SRCSET,
     HAPPY_HERO_PRELOAD_ID,
     HAPPY_HERO_EYEBROW_LEFT,
     HAPPY_HERO_EYEBROW_RIGHT,
+    HAPPY_HERO_MOBILE_CTA_LABEL,
+    HAPPY_HERO_MOBILE_SUBTITLE_BOLD,
+    HAPPY_HERO_MOBILE_SUBTITLE_LINES,
+    HAPPY_HERO_MOBILE_TITLE_HIGHLIGHT,
+    HAPPY_HERO_MOBILE_TITLE_LINE_1,
+    HAPPY_HERO_MOBILE_TITLE_LINE_2,
     HAPPY_HERO_SUBTITLE_LINE_1,
     HAPPY_HERO_TITLE_HIGHLIGHT,
     HAPPY_HERO_TITLE_PREFIX,
+    HAPPY_HERO_TITLE_UNDERLINE_SRC,
     HAPPY_HERO_TRUST_ITEMS,
     HAPPY_HERO_TRUST_SPARKLE_SRC,
     HAPPY_HIW_DEMO_VIDEO_MOBILE_SRC,
@@ -268,11 +276,7 @@ function HappyMatIcon({ name, className = "" }) {
 /** `?show_jobs_listing=true` renders the standalone job board inside the landing page. */
 const JOBS_LISTING_QUERY_PARAM = "show_jobs_listing";
 
-/**
- * Own chunk — nobody without the query param pays for the board's bundle.
- * `next/dynamic` replaces @loadable/component here; ssr is off because the
- * board is only ever reached behind a client-side query param.
- */
+/** Own chunk — public landings always load it; authenticated landing still needs the query param. */
 const JobsBoard = dynamic(() => import("../jobs-board/JobsBoard"), {
     ssr: false,
     loading: () => <WaveLoader />,
@@ -414,7 +418,7 @@ function ArrowForwardIcon({ color = "white" }) {
 }
 
 /** Mid-page Get Started CTA — same pill as hero; shown when signup/onboarding is still needed. */
-function HappyGetStartedSectionCta({ onClick, align = "center", label = "Get Started Now", howItWorks = false }) {
+function HappyGetStartedSectionCta({ onClick, align = "center", label = "Get My First Referral", howItWorks = false }) {
     return (
         <div
             className={
@@ -597,10 +601,11 @@ function HappyJobAgentContent({
     /**
      * Read once on mount: the listing's filter bar owns the query string while it is open, so the
      * section must not depend on the flag still being there on later renders.
-     * The jobs API is talent-authenticated, so the public variant of this landing never shows it.
+     * Public landings (`HappyJobAgentPublic`, Happpy GTM) use guest endpoints; "Ask a referral"
+     * opens the auth drawer instead of queueing a run.
      */
     const [jobsListingRequested] = useState(() => searchParams.get(JOBS_LISTING_QUERY_PARAM) === "true");
-    const showJobsListing = jobsListingRequested && isAuthenticated && !publicSignupMode;
+    const showJobsListing = (true || (jobsListingRequested  && isAuthenticated)) || publicSignupMode;
 
     /** Mixpanel funnel: authenticated landing on `/talent/referral-ai-agent` (once per mount). */
     useEffect(() => {
@@ -787,7 +792,7 @@ function HappyJobAgentContent({
                 /* non-blocking */
             }
         })();
-    }, [loggedInReady, outreachAccountConnected, referenceParamDecoded, buildReferralJobLinksBatchPayload, location.pathname, location.search]);
+    }, [loggedInReady, outreachAccountConnected, referenceParamDecoded, buildReferralJobLinksBatchPayload, location.key]);
 
     useLayoutEffect(() => {
         const namePart = displayFirstName ? `${displayFirstName} · ` : "";
@@ -928,7 +933,7 @@ function HappyJobAgentContent({
                 const { id: order_id, amount, currency } = result;
 
                 const options = {
-                    key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+                    key: process.env.MIX_RAZORPAY_KEY_ID,
                     amount: amount.toString(),
                     currency,
                     name: result?.notes?.name,
@@ -1615,7 +1620,13 @@ function HappyJobAgentContent({
         trackHappyAgentMixpanel("happy_agent_jobs_board_run_agent_clicked", {
             hr_number: job?.HR_Number ?? null,
             gmail_connected: gmailConnected,
+            public_signup: !!publicSignupMode,
         }).catch(() => { });
+
+        if (publicSignupMode) {
+            openPublicAuth(null, "jobs_board_run_agent");
+            return false;
+        }
 
         if (!gmailConnected) {
             openAgentOnboarding("jobs_board_run_agent");
@@ -1651,7 +1662,7 @@ function HappyJobAgentContent({
             toast.error(message || "Couldn’t request a referral for this job. Please try again.");
             return false;
         }
-    }, [gmailAccountsConnected, outreachStepConfig, openAgentOnboarding, buildReferralJobLinksBatchPayload, dispatch]);
+    }, [gmailAccountsConnected, outreachStepConfig, openAgentOnboarding, openPublicAuth, publicSignupMode, buildReferralJobLinksBatchPayload, dispatch]);
 
     /** Reserve scrollbar width so react-modal body lock does not shift fixed nav / layout. */
     useEffect(() => {
@@ -1717,6 +1728,12 @@ function HappyJobAgentContent({
                             decoding="async"
                         />
                     </picture>
+                    <img
+                        className="happy-agent-hero-mesh__bg-mobile"
+                        src={HAPPY_HERO_BG_MOBILE_SRC}
+                        alt=""
+                        decoding="async"
+                    />
                     <div className="happy-agent-hero-mesh__bg-overlay" />
                     <div className="happy-agent-hero-mesh__bg-fade-top" />
                     <div className="happy-agent-hero-mesh__bg-fade-bottom" aria-hidden="true" />
@@ -1740,35 +1757,62 @@ function HappyJobAgentContent({
                         ))}
                     </p>
 
-                    <p
-                        className={`happy-agent-hero-mesh__eyebrow ${happyEnterClass()}`}
-                        style={happyStaggerStyle(0)}
-                    >
-                        <span>{HAPPY_HERO_EYEBROW_LEFT}</span>
-                        <img
-                            src={HAPPY_HERO_TRUST_SPARKLE_SRC}
-                            alt=""
-                            className="happy-agent-hero-mesh__eyebrow-sparkle"
-                            aria-hidden="true"
-                        />
-                        <span>{HAPPY_HERO_EYEBROW_RIGHT}</span>
-                    </p>
-
-                    <h1 className={`happy-agent-hero-mesh__title ${happyEnterClass()}`} style={happyStaggerStyle(1)}>
-                        <span className="happy-agent-hero-mesh__title-prefix">{HAPPY_HERO_TITLE_PREFIX}</span>
-                        <span className="happy-agent-hero-mesh__title-highlight">{HAPPY_HERO_TITLE_HIGHLIGHT}</span>
-                    </h1>
-
-                    <div className={`happy-agent-hero-mesh__lead ${happyEnterClass()}`} style={happyStaggerStyle(2)}>
-                        <p className="happy-agent-hero-mesh__lead-primary">
-                            {HAPPY_HERO_SUBTITLE_LINE_1}
+                    <div className={`happy-agent-hero-mesh__content ${happyEnterClass()}`} style={happyStaggerStyle(0)}>
+                        <p className="happy-agent-hero-mesh__eyebrow">
+                            <span>{HAPPY_HERO_EYEBROW_LEFT}</span>
+                            <img
+                                src={HAPPY_HERO_TRUST_SPARKLE_SRC}
+                                alt=""
+                                className="happy-agent-hero-mesh__eyebrow-sparkle"
+                                aria-hidden="true"
+                            />
+                            <span>{HAPPY_HERO_EYEBROW_RIGHT}</span>
                         </p>
+
+                        <h1 className="happy-agent-hero-mesh__title">
+                            <span className="happy-agent-hero-mesh__title-set happy-agent-hero-mesh__title-set--desktop">
+                                <span className="happy-agent-hero-mesh__title-prefix">{HAPPY_HERO_TITLE_PREFIX}</span>
+                                <span className="happy-agent-hero-mesh__title-highlight">{HAPPY_HERO_TITLE_HIGHLIGHT}</span>
+                            </span>
+                            <span className="happy-agent-hero-mesh__title-set happy-agent-hero-mesh__title-set--mobile">
+                                <span className="happy-agent-hero-mesh__title-prefix">
+                                    {HAPPY_HERO_MOBILE_TITLE_LINE_1}
+                                    <br />
+                                    {HAPPY_HERO_MOBILE_TITLE_LINE_2}
+                                </span>
+                                <span className="happy-agent-hero-mesh__title-highlight">
+                                    {HAPPY_HERO_MOBILE_TITLE_HIGHLIGHT}
+                                </span>
+                            </span>
+                        </h1>
+
+                        <div className="happy-agent-hero-mesh__lead">
+                            <p className="happy-agent-hero-mesh__lead-set happy-agent-hero-mesh__lead-set--desktop happy-agent-hero-mesh__lead-primary">
+                                {HAPPY_HERO_SUBTITLE_LINE_1}
+                            </p>
+                            <div className="happy-agent-hero-mesh__lead-set happy-agent-hero-mesh__lead-set--mobile">
+                                <p className="happy-agent-hero-mesh__lead-primary happy-agent-hero-mesh__lead-primary--mobile-bold">
+                                    {HAPPY_HERO_MOBILE_SUBTITLE_BOLD}
+                                </p>
+                                <img
+                                    src={HAPPY_HERO_TITLE_UNDERLINE_SRC}
+                                    alt=""
+                                    className="happy-agent-hero-mesh__title-underline"
+                                    aria-hidden="true"
+                                />
+                                {HAPPY_HERO_MOBILE_SUBTITLE_LINES.map((line) => (
+                                    <p key={line} className="happy-agent-hero-mesh__lead-secondary-line">
+                                        {line}
+                                    </p>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
                     <div
                         ref={heroCtaRef}
                         className={`happy-agent-hero-mesh__actions ${happyEnterClass()}`}
-                        style={happyStaggerStyle(3)}
+                        style={happyStaggerStyle(1)}
                         data-happy-hero-cta
                     >
                         {publicSignupMode ? (
@@ -1777,8 +1821,11 @@ function HappyJobAgentContent({
                                 className="happy-agent-hero-mesh__pill happy-agent-hero-mesh__pill--primary HERO"
                                 onClick={(e) => openPublicAuth(e, "hero")}
                             >
-                                <span className="happy-agent-hero-mesh__pill-label">
-                                    Get Started Now
+                                <span className="happy-agent-hero-mesh__pill-label happy-agent-hero-mesh__pill-label--desktop">
+                                    Get My First Referral
+                                </span>
+                                <span className="happy-agent-hero-mesh__pill-label happy-agent-hero-mesh__pill-label--mobile">
+                                    {HAPPY_HERO_MOBILE_CTA_LABEL}
                                 </span>
                                 <ArrowForwardIcon color="#231f20" />
                             </button>
@@ -1788,8 +1835,11 @@ function HappyJobAgentContent({
                                 className="happy-agent-hero-mesh__pill happy-agent-hero-mesh__pill--primary HERO"
                                 onClick={() => openAgentOnboarding("hero")}
                             >
-                                <span className="happy-agent-hero-mesh__pill-label">
-                                    Get Started Now
+                                <span className="happy-agent-hero-mesh__pill-label happy-agent-hero-mesh__pill-label--desktop">
+                                    Get My First Referral
+                                </span>
+                                <span className="happy-agent-hero-mesh__pill-label happy-agent-hero-mesh__pill-label--mobile">
+                                    {HAPPY_HERO_MOBILE_CTA_LABEL}
                                 </span>
                                 <ArrowForwardIcon color="#231f20" />
                             </button>
@@ -1810,7 +1860,7 @@ function HappyJobAgentContent({
 
                     <div
                         className={`happy-agent-hero-mesh__trust-stats ${happyEnterClass()}`}
-                        style={happyStaggerStyle(4)}
+                        style={happyStaggerStyle(2)}
                         aria-label="Why Happpy Agent"
                     >
                         {HAPPY_HERO_TRUST_ITEMS.map((item) => (
@@ -1832,7 +1882,7 @@ function HappyJobAgentContent({
                     <div className="happy-agent-live-results__stack happy-agent-live-results__stack--hero">
                         <header
                             className={`happy-agent-live-results__header happy-agent-live-results__header--hero ${happyEnterClass()}`}
-                            style={happyStaggerStyle(5)}
+                            style={happyStaggerStyle(3)}
                         >
                             <p id="happy-agent-live-results-heading" className="happy-agent-live-results__eyebrow happy-agent-live-results__eyebrow--hero">
                                 <span className="happy-agent-live-results__eyebrow-label">Live results</span>
@@ -1859,7 +1909,7 @@ function HappyJobAgentContent({
 
                         <div
                             className={`happy-agent-live-results__companies happy-agent-live-results__companies--hero ${happyEnterClass()}`}
-                            style={happyStaggerStyle(6)}
+                            style={happyStaggerStyle(4)}
                             id="positive-referrals"
                             aria-label="Companies where interviews were scheduled recently"
                         >
@@ -1871,16 +1921,6 @@ function HappyJobAgentContent({
                     </div>
                 </div>
             </section>
-
-
-            {showJobsListing ? (
-                <section className="happy-agent-jobs-listing" id="happy-agent-jobs-listing">
-                    <JobsBoard
-                        subtitle="Filter live openings by experience, function, location and how you want to work — then ask your agent for a referral on the ones you want."
-                        onRunAgent={handleJobsBoardRunAgent}
-                    />
-                </section>
-            ) : null}
 
             {/* Conversion blocks: value prop, demo video, proof */}
             <div className="happy-outreach-reference-blocks">
@@ -2097,26 +2137,26 @@ function HappyJobAgentContent({
                                         <Fragment key={block.key}>
                                             {index > 0 ? <div className="happy-agent-privacy-figma__access-divider" /> : null}
                                             <div className="happy-agent-privacy-figma__access-block">
-                                            <div className="happy-agent-privacy-figma__access-head">
-                                                <span className="happy-agent-privacy-figma__access-logo" aria-hidden="true">
-                                                    {block.key === "gmail" ? <GmailIcon /> : <PlatformLogoLinkedIn />}
-                                                </span>
-                                                <h3 className="happy-agent-privacy-figma__access-title">{block.title}</h3>
-                                            </div>
-                                            <p className="happy-agent-privacy-figma__access-highlight">{block.highlight}</p>
-                                            <ul className="happy-agent-privacy-figma__access-list">
-                                                {block.items.map((item) => (
-                                                    <li key={item} className="happy-agent-privacy-figma__access-item">
-                                                        <img
-                                                            className="happy-agent-privacy-figma__access-sparkle"
-                                                            src={HAPPY_HERO_TRUST_SPARKLE_SRC}
-                                                            alt=""
-                                                            aria-hidden="true"
-                                                        />
-                                                        <span>{item}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
+                                                <div className="happy-agent-privacy-figma__access-head">
+                                                    <span className="happy-agent-privacy-figma__access-logo" aria-hidden="true">
+                                                        {block.key === "gmail" ? <GmailIcon /> : <PlatformLogoLinkedIn />}
+                                                    </span>
+                                                    <h3 className="happy-agent-privacy-figma__access-title">{block.title}</h3>
+                                                </div>
+                                                <p className="happy-agent-privacy-figma__access-highlight">{block.highlight}</p>
+                                                <ul className="happy-agent-privacy-figma__access-list">
+                                                    {block.items.map((item) => (
+                                                        <li key={item} className="happy-agent-privacy-figma__access-item">
+                                                            <img
+                                                                className="happy-agent-privacy-figma__access-sparkle"
+                                                                src={HAPPY_HERO_TRUST_SPARKLE_SRC}
+                                                                alt=""
+                                                                aria-hidden="true"
+                                                            />
+                                                            <span>{item}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
                                             </div>
                                         </Fragment>
                                     ))}
@@ -2406,7 +2446,17 @@ function HappyJobAgentContent({
                 </div>
             </section>
 
-            <section
+            {showJobsListing ? (
+                <section className="happy-agent-jobs-listing" id="happy-agent-jobs-listing">
+                    <JobsBoard
+                        subtitle="Filter live openings by experience, function, location and how you want to work — then ask your agent for a referral on the ones you want."
+                        onRunAgent={handleJobsBoardRunAgent}
+                        publicMode={publicSignupMode}
+                    />
+                </section>
+            ) : null}
+
+            {/* <section
                 ref={kineticRevealRef}
                 className={`happy-agent-kinetic-figma${kineticRevealed ? " happy-landing-section--revealed" : ""}`}
                 aria-labelledby="happy-agent-kinetic-heading"
@@ -2486,7 +2536,7 @@ function HappyJobAgentContent({
                         />
                     ) : null}
                 </div>
-            </section>
+            </section> */}
 
             <section
                 className="happy-agent-faq-figma"
@@ -2615,7 +2665,7 @@ function HappyJobAgentContent({
                     >
                         {publicSignupMode || !gmailAccountsConnected ? (
                             <span className={`happy-agent-try-free-figma__pill-text ${HAPPY_HANDWRITING_CLASS} happy-agent-handwriting--uppercase`}>
-                                Get Started Now
+                                Get My First Referral
                             </span>
                         ) : (
                             <span className={`happy-agent-try-free-figma__pill-label ${HAPPY_HANDWRITING_CLASS} happy-agent-handwriting--uppercase`}>

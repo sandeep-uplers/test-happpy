@@ -76,6 +76,7 @@ export const API_PUBLIC_SINGLE_OPP = API_URL + "single-hr-public";
 export const API_MATCH_PERCENT = API_URL + "talent-matchmake";
 export const API_BOOKMARK_OPP = API_URL + "talent/hr/update-saved-hr";
 export const API_ALL_OPP = API_URL + "talent/hr/opportunities";
+export const API_PUBLIC_ALL_OPP = API_URL + "talent/hr/public/opportunities";
 export const API_ALL_FEATURED_OPP = API_URL + "talent/hr/all-feature-opportunities";
 export const API_MY_OPP = API_URL + "talent/hr/my-opportunities";
 export const API_OPP_MASTER = API_URL + "talent/hr/opportunity-master";
@@ -93,6 +94,8 @@ export const API_SKILL_AUTOCORRECT_STORE = API_URL + "skills/autocorrect-store";
 
 
 export const API_OPP_ROLE_MASTER = API_URL + "talent/hr/all-opp-role-master";
+export const API_PUBLIC_OPP_ROLE_MASTER = API_URL + "talent/hr/public/all-opp-role-master";
+export const API_PUBLIC_OPP_LOCATION_MASTER = API_URL + "talent/hr/public/all-opp-location-master";
 export const API_OPP_SKILL_MASTER = API_URL + "talent/hr/all-opp-skill-master";
 export const API_OPP_LOCATION_MASTER = API_URL + "talent/hr/all-opp-location-master";
 export const API_OPP_COMPANY_MASTER = API_URL + "talent/hr/all-opp-company-master";
