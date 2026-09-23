@@ -60,12 +60,13 @@ export default function Step2ProfileCreation({ onAdvance, onBack, showBack = tru
                         onPreferencesLoadingChange={setPrefsLoading}
                         centeredResumeUpload
                         linkedinOptional
+                        hideDeferredProfileFields
                     />
                 </div>
             </div>
 
             <div className="agent-onb-footer agent-onb-footer--profile">
-                {showBack ? (
+                {showBack && (
                     <button
                         type="button"
                         className="agent-onb-footer__back"
@@ -78,8 +79,6 @@ export default function Step2ProfileCreation({ onAdvance, onBack, showBack = tru
                             <path d="M16.4001 6.83301L6.83348 16.3997L16.4001 25.9663" stroke="#231F20" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </button>
-                ) : (
-                    <span className="agent-onb-footer__back-spacer" aria-hidden="true" />
                 )}
                 <button
                     type="submit"

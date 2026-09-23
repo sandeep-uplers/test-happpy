@@ -6,15 +6,20 @@ ensureModalAppElement();
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Modal from "react-modal";
+import axios from "axios";
 import { useNavigate } from '@/talent/navigation/routerCompat';
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import DownloadResumeLoader from "../pages/app/resume/payment/DownloadResumeLoader";
-import HapppyLoader from "./common/HapppyLoader";
-import { API_OUTREACH_DEFAULT_AUTO_TEMPLATES, API_OUTREACH_REWRITE_MESSAGE, API_OUTREACH_STORE_MESSAGE_TEMPLATE, API_OUTREACH_SUBSCRIBE_MODAL_ACTION, API_URL } from "./Constant";
-import { GET_API, POST_API, getClientDeviceMobileOrDesktop } from "./Helper";
+import SectionLoader from "./SectionLoader";
+import { API_OUTREACH_REWRITE_MESSAGE, API_OUTREACH_STORE_MESSAGE_TEMPLATE, API_OUTREACH_SUBSCRIBE_MODAL_ACTION, API_URL } from "./Constant";
+import { GET_API, POST_API, base64ToBlob, getClientDeviceMobileOrDesktop } from "./Helper";
 import { useDispatch, useSelector } from "react-redux";
 import { getOutreachAgentPreviewConfig } from "../store/actions/resumeActions";
+import dynamic from 'next/dynamic';
+import { profileResumeDownload, startOutreachAgent } from "../store/actions/UserActions";
 import TemplateEditor from "../pages/app/linkedin/TemplateEditor";
+
+const ResumeModal = dynamic(() => import("../pages/app/preferences/ResumeModal"), { ssr: false });
 import { GmailIcon } from "../assets/IconSVG";
 import TrialFeedbackModal from "./TrialFeedbackModal";
 import AgentRunSuccessModal from "./AgentRunSuccessModal";
@@ -225,7 +230,7 @@ const PREVIEW_MODAL_STYLES = `
     box-sizing: border-box;
 }
 .rap-preview-drawer__message-head--with-warning {
-    z-index: 1;
+    z-index: 2;
 }
 .rap-preview-drawer__message-head-main {
     flex: 1;
@@ -289,12 +294,16 @@ const PREVIEW_MODAL_STYLES = `
 .rap-preview-drawer__message-body {
     padding: 12px;
     font-size: 12px;
-    font-weight: 300;
     line-height: 16px;
     color: #231f20;
+    background: white;
+    z-index: 1;
+    position: relative;
 }
 .rap-preview-drawer__message-body p {
-    margin: 0 0 12px;
+    margin: 0;
+    line-height: 1.5;
+    font-size: inherit;
 }
 .rap-preview-drawer__message-body p:last-child {
     margin-bottom: 0;
@@ -339,22 +348,17 @@ const PREVIEW_MODAL_STYLES = `
     height: 6px;
 }
 .rap-preview-drawer__resume-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px;
+    padding: 24px 12px 12px;
+    margin-top: -30px;
     background: rgba(157, 250, 213, 0.3);
     border-radius: 0 0 8px 8px;
-    min-height: 60px;
     box-sizing: border-box;
 }
 .rap-preview-drawer__resume-bar-left {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
     min-width: 0;
-    flex: 1;
 }
 .rap-preview-drawer__resume-bar-icon {
     flex-shrink: 0;
@@ -370,34 +374,72 @@ const PREVIEW_MODAL_STYLES = `
 }
 .rap-preview-drawer__resume-bar-text {
     margin: 0;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
-    line-height: 1.4;
+    line-height: normal;
     color: #231f20;
     letter-spacing: -0.08px;
+}
+.rap-preview-drawer__resume-bar-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+}
+.rap-preview-drawer__resume-bar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+}
+.rap-preview-drawer__resume-upload {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0;
+    padding: 8px 12px;
+    border: 1px solid #086d7e;
+    border-radius: 20px;
+    background: transparent;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: normal;
+    color: #086d7e;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.rap-preview-drawer__resume-upload:hover:not(:disabled) {
+    background: rgba(157, 250, 213, 0.35);
+}
+.rap-preview-drawer__resume-upload:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.rap-preview-drawer__resume-upload .material-symbols-outlined {
+    font-size: 16px;
 }
 .rap-preview-drawer__resume-bar-link {
     flex-shrink: 0;
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    max-width: 50%;
     font-size: 12px;
-    font-weight: 500;
-    line-height: 1.4;
-    color: #059599;
+    font-weight: 700;
+    line-height: normal;
+    color: #086d7e;
     cursor: pointer;
 }
 .rap-preview-drawer__resume-bar-link .material-symbols-outlined {
     font-size: 16px;
     text-decoration: none;
 }
-.rap-preview-drawer__resume-filename {
+.rap-preview-drawer__resume-link-label {
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     text-decoration: underline;
     text-underline-offset: 2px;
+    text-decoration-skip-ink: none;
 }
 .rap-preview-drawer__agent-bubble {
     display: flex;
@@ -610,7 +652,15 @@ const PREVIEW_MODAL_STYLES = `
     cursor: not-allowed;
 }
 .rap-preview-drawer__footer-cta-spinner {
-    display: inline-flex;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: rap-preview-btn-spin 0.6s linear infinite;
+}
+@keyframes rap-preview-btn-spin {
+    to { transform: rotate(360deg); }
 }
 .rap-preview-drawer__loading-overlay {
     position: absolute;
@@ -623,12 +673,79 @@ const PREVIEW_MODAL_STYLES = `
     gap: 12px;
     background: rgba(255, 255, 255, 0.92);
 }
+.rap-preview-drawer__loading-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(26, 26, 46, 0.15);
+    border-top-color: #1a1a2e;
+    border-radius: 50%;
+    animation: rap-preview-btn-spin 0.6s linear infinite;
+}
 .rap-preview-drawer__loading-text {
     margin: 0;
     font-family: "Rubik", sans-serif;
     font-size: 13px;
     font-weight: 500;
     color: #4c4c4c;
+}
+.rap-preview-drawer__upload-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(25, 28, 30, 0.55);
+    backdrop-filter: blur(4px);
+}
+.rap-preview-drawer__upload-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px;
+}
+.rap-preview-drawer__upload-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.rap-preview-drawer__upload-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #46eccd;
+    animation: rap-preview-upload-dot-pulse 1.4s ease-in-out infinite;
+}
+.rap-preview-drawer__upload-dot:nth-child(1) {
+    animation-delay: 0s;
+}
+.rap-preview-drawer__upload-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+.rap-preview-drawer__upload-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+@keyframes rap-preview-upload-dot-pulse {
+    0%, 80%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    40% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+.rap-preview-drawer__upload-text {
+    margin: 0;
+    font-family: "Rubik", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #ffffff;
+    text-align: center;
 }
 .rap-preview-drawer__auto-reply-footer {
     flex-shrink: 0;
@@ -752,11 +869,40 @@ const PREVIEW_MODAL_STYLES = `
         align-self: flex-start;
     }
     .rap-preview-drawer__resume-bar {
-        flex-direction: column;
-        align-items: flex-start;
+        border-radius: 0 0 12px 12px;
+    }
+    .rap-preview-drawer__resume-bar-icon {
+        width: 16px;
+        height: 16px;
+        border-radius: 2px;
+    }
+    .rap-preview-drawer__resume-bar-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+    .rap-preview-drawer__resume-bar-text {
+        font-size: 10px;
+        line-height: 13px;
+    }
+    .rap-preview-drawer__resume-bar-copy {
+        gap: 8px;
+    }
+    .rap-preview-drawer__resume-bar-actions {
+        gap: 8px;
+        flex-wrap: wrap;
     }
     .rap-preview-drawer__resume-bar-link {
-        max-width: 100%;
+        font-size: 11px;
+    }
+    .rap-preview-drawer__resume-bar-link .material-symbols-outlined {
+        font-size: 14px;
+    }
+    .rap-preview-drawer__resume-upload {
+        font-size: 11px;
+        padding: 8px 12px;
+    }
+    .rap-preview-drawer__resume-upload .material-symbols-outlined {
+        font-size: 14px;
     }
     .rap-preview-drawer .agent-onb-footer {
         padding: 16px;
@@ -767,6 +913,13 @@ const PREVIEW_MODAL_STYLES = `
     .rap-preview-drawer__auto-reply-banner {
         padding: 12px 16px;
     }
+}
+body:has(.rap-preview-drawer) .react-modal-portal .ReactModal__Overlay:has(.resumeModal) {
+    z-index: 10080 !important;
+}
+.rap-preview-drawer__resume-bar-link--loading {
+    opacity: 0.6;
+    pointer-events: none;
 }
 `;
 
@@ -871,7 +1024,9 @@ export default function ReferralAgentPreviewModal({
     HR_Number,
     onConfirm,
     selectedResume,
-    noTailorHTML = false
+    noTailorHTML = false,
+    agentSource = "preview-custom-resume",
+    hrEncId: hrEncIdProp = null,
 }) {
     const [activeTab, setActiveTab] = useState("gmail");
     const [drawerStep, setDrawerStep] = useState("preview");
@@ -897,7 +1052,12 @@ export default function ReferralAgentPreviewModal({
     const [autoReplyLoading, setAutoReplyLoading] = useState(false);
     const [autoReplySaving, setAutoReplySaving] = useState(false);
     const [previewConfigLoading, setPreviewConfigLoading] = useState(false);
+    const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
+    const [resumePreviewData, setResumePreviewData] = useState(null);
+    const [resumePreviewLoading, setResumePreviewLoading] = useState(false);
+    const [customUploadedResume, setCustomUploadedResume] = useState(null);
 
+    const customResumeInputRef = useRef(null);
     const autoReplyMountedRef = useRef(true);
     useEffect(() => {
         autoReplyMountedRef.current = true;
@@ -907,6 +1067,7 @@ export default function ReferralAgentPreviewModal({
     }, []);
 
     const { downloadTailorResume } = useSelector(state => state.loader);
+    const { user } = useSelector(state => state.auth);
     const dailyLimit = useSelector((state) => state.happpyAgent?.dailyLimit) || 0;
     const downloadLoading = downloadTailorResume;
     const dispatch = useDispatch();
@@ -985,7 +1146,48 @@ export default function ReferralAgentPreviewModal({
             }
 
             const linkedinConnected = !!outreachAgentPreviewConfig?.linkedin_connected;
-            const result = (onConfirm || onClose)(messageTemplateIds, { linkedinConnected });
+
+            if (customUploadedResume?.file) {
+                const hrEncId = hrEncIdProp || outreachAgentPreviewConfig?.hr?.enc_id;
+
+                if (hrEncId) {
+                    const formData = new FormData();
+                    formData.append("hr_id", hrEncId);
+                    formData.append("source", agentSource);
+                    formData.append("is_tailored", "1");
+                    formData.append("html", customUploadedResume.file);
+                    if (messageTemplateIds.gmail_message_id) {
+                        formData.append("gmail_message_id", messageTemplateIds.gmail_message_id);
+                    }
+                    if (messageTemplateIds.linkedin_message_id) {
+                        formData.append("linkedin_message_id", messageTemplateIds.linkedin_message_id);
+                    }
+
+                    const res = await startOutreachAgent(formData)(dispatch);
+                    const status = res?.data?.status;
+
+                    if (status === "redirect") {
+                        toast.error("Please connect your Gmail and LinkedIn accounts to use the Happpy Agent.");
+                        return;
+                    }
+                    if (status !== "success") {
+                        toast.error(res?.data?.message || "Something went wrong. Please try again.");
+                        return;
+                    }
+
+                    if (linkedinConnected) {
+                        setShowRunSuccessModal(true);
+                    } else if (typeof onClose === "function") {
+                        onClose();
+                    }
+                    return;
+                }
+            }
+
+            const result = (onConfirm || onClose)(messageTemplateIds, {
+                linkedinConnected,
+                customResumeFile: customUploadedResume?.file ?? null,
+            });
             if (result && typeof result.then === "function") {
                 await result;
                 if (linkedinConnected) {
@@ -1081,7 +1283,7 @@ export default function ReferralAgentPreviewModal({
         let cancelled = false;
         setPreviewConfigLoading(true);
 
-        getOutreachAgentPreviewConfig(HR_Number, true)(dispatch)
+        getOutreachAgentPreviewConfig(HR_Number)(dispatch)
             .then((res) => {
                 if (cancelled) return;
                 const newConfigData = res.data.data;
@@ -1110,7 +1312,8 @@ export default function ReferralAgentPreviewModal({
                 if (!cancelled) setPreviewConfigLoading(false);
             });
 
-        GET_API(API_OUTREACH_DEFAULT_AUTO_TEMPLATES)
+        axios
+            .get("/api/talent/outreach/default-auto-templates")
             .then((res) => {
                 if (cancelled) return;
                 const defaults = res?.data?.data || {};
@@ -1137,6 +1340,10 @@ export default function ReferralAgentPreviewModal({
             setSetupSaving(false);
             setConfirmLoading(false);
             setShowRunSuccessModal(false);
+            setIsResumeModalOpen(false);
+            setResumePreviewData(null);
+            setResumePreviewLoading(false);
+            setCustomUploadedResume(null);
         }
     }, [isOpen, outreachAgentPreviewConfig, showRunSuccessModal]);
 
@@ -1181,12 +1388,89 @@ export default function ReferralAgentPreviewModal({
         setAllProcessed(true);
     }
 
-    const handleDownload = (e) => {
+    const openResumePreviewModal = (data) => {
+        setResumePreviewData(data);
+        setIsResumeModalOpen(true);
+    };
+
+    const handleResumePreview = (e) => {
+        e?.preventDefault?.();
         if (selectedResume === "tailored") {
             onDownload(e);
-        } else
-            window.open(outreachAgentPreviewConfig?.resumePath?.url, '_blank');
-    }
+            return;
+        }
+        if (customUploadedResume?.file) {
+            const blobUrl = URL.createObjectURL(customUploadedResume.file);
+            openResumePreviewModal({
+                data: blobUrl,
+                blob: null,
+                ext: "pdf",
+                filename: customUploadedResume.fileName,
+            });
+            return;
+        }
+        if (resumePreviewData) {
+            setIsResumeModalOpen(true);
+            return;
+        }
+        setResumePreviewLoading(true);
+        profileResumeDownload(user.talent_enc_id, true)(dispatch)
+            .then((response) => {
+                openResumePreviewModal(response?.data);
+            })
+            .catch(() => toast.error("Something went wrong"))
+            .finally(() => setResumePreviewLoading(false));
+    };
+
+    const handleCustomResumeUpload = (e) => {
+        const file = e.target.files?.[0];
+        e.target.value = "";
+        if (!file) return;
+
+        if (!/\.pdf$/i.test(file.name)) {
+            toast.error("The resume must be a PDF file.");
+            return;
+        }
+        if (file.size > 2 * 1024 * 1024) {
+            toast.error("File size should be less than 2 MB");
+            return;
+        }
+
+        setResumePreviewData(null);
+        setCustomUploadedResume({ fileName: file.name, file });
+        toast.success("Resume selected");
+    };
+
+    const onResumeDownloadClick = (e, dataObj) => {
+        e.stopPropagation();
+        e.preventDefault();
+        let url = dataObj?.data;
+
+        let blob = dataObj?.blob;
+        const type = dataObj?.ext;
+        const filename = dataObj?.filename;
+        if (type === "pdf") {
+            blob = base64ToBlob(blob, "application/pdf");
+            blob.name = filename;
+            url = URL.createObjectURL(blob);
+        } else if (type === "docx") {
+            blob = base64ToBlob(blob, "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            blob.name = filename;
+            url = URL.createObjectURL(blob);
+        }
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("target", "_blank");
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+
+        if (type === "pdf" || type === "docx") {
+            URL.revokeObjectURL(url);
+        }
+    };
 
     const handleSubscribeModalClose = () => {
         setShowSubscribeModal(false);
@@ -1383,15 +1667,19 @@ export default function ReferralAgentPreviewModal({
     const jobLabel = (outreachAgentPreviewConfig?.hr?.job_title || "").trim();
     const gmailConnected = !!outreachAgentPreviewConfig?.gmail_connected;
     const linkedinConnected = !!outreachAgentPreviewConfig?.linkedin_connected;
+    const showAccountsRequiredLede = !gmailConnected && !linkedinConnected;
     const previewPlan = outreachAgentPreviewConfig?.plan;
     const isFreeTrialPlan = !!previewPlan && !previewPlan.paid && !previewPlan.expired;
-    const showAccountsRequiredLede = !gmailConnected && !linkedinConnected;
     const resumeFilename = selectedResume === "tailored"
         ? "Tailored Resume"
-        : outreachAgentPreviewConfig?.resume_name ?? "Your Profile Resume";
+        : customUploadedResume?.fileName
+            ?? outreachAgentPreviewConfig?.resume_name
+            ?? "Your Profile Resume";
     const resumeDescription = selectedResume === "tailored"
         ? "The tailored resume will be automatically attached as a PDF to all outgoing emails."
-        : "Your latest profile resume will be automatically attached as a PDF to all outgoing emails.";
+        : customUploadedResume
+            ? "Your uploaded resume will be automatically attached as a PDF to all outgoing emails."
+            : "Your latest profile resume will be automatically attached as a PDF to all outgoing emails.";
     const agentBubbleTitle = companyName
         ? `${AGENT_NAME} will reach out to ${infoMembers} employees at ${companyName}.`
         : `${AGENT_NAME} will reach out to ${infoMembers} employees for this role.`;
@@ -1419,6 +1707,14 @@ export default function ReferralAgentPreviewModal({
                 isFreeTrial={isFreeTrialPlan}
                 onClose={handleRunSuccessDismiss}
             />
+            {isResumeModalOpen && (
+                <ResumeModal
+                    isOpen={isResumeModalOpen}
+                    setOpen={setIsResumeModalOpen}
+                    data={resumePreviewData}
+                    onDownloadClick={onResumeDownloadClick}
+                />
+            )}
             {previewVisible && typeof document !== "undefined" && createPortal(
                 <div
                     className="rap-preview-drawer"
@@ -1446,7 +1742,7 @@ export default function ReferralAgentPreviewModal({
                                 aria-busy="true"
                                 aria-label={confirmLoading ? "Sending" : "Loading preview"}
                             >
-                                <HapppyLoader size="lg" />
+                                <span className="rap-preview-drawer__loading-spinner" aria-hidden />
                                 <p className="rap-preview-drawer__loading-text">
                                     {confirmLoading ? "Sending..." : "Loading..."}
                                 </p>
@@ -1571,16 +1867,17 @@ export default function ReferralAgentPreviewModal({
                                                             )}
                                                             <div className="agent-onb-tpl-card__field">
                                                                 <label className="agent-onb-tpl-card__label">Template Message</label>
-                                                                <div className={`agent-onb-tpl-card__editor${setupDraftErrors.body ? " agent-onb-tpl-card__editor--error" : ""}`}>
+                                                                <div className="agent-onb-tpl-card__editor">
                                                                     <TemplateEditor
                                                                         key={`rap-setup-editor-${setupTab}-${setupMode}`}
+                                                                        variant="compact"
+                                                                        placeholder="Enter text here..."
                                                                         value={setupDraft.body || ""}
                                                                         onChange={(content) => handleSetupDraftChange(setupTab, "body", content)}
                                                                         hasError={!!setupDraftErrors.body}
                                                                         dynamicFields={VAR_FIELDS}
                                                                         showDynamicDropdowns
                                                                         templateAppliedAt={setupTemplateAppliedAt[setupTab]}
-                                                                        scrollingContainer="#rapPreviewDrawerScroll"
                                                                     />
                                                                 </div>
                                                                 {setupDraftErrors.body ? (
@@ -1619,7 +1916,7 @@ export default function ReferralAgentPreviewModal({
                                         <div className="rap-preview-drawer__content">
                                             {!outreachAgentPreviewConfig ? (
                                                 <div className="rap-preview-drawer__messages-loading" aria-busy="true" aria-label="Loading message previews">
-                                                    <HapppyLoader size="lg" />
+                                                    <SectionLoader />
                                                 </div>
                                             ) : (
                                                 <>
@@ -1739,36 +2036,64 @@ export default function ReferralAgentPreviewModal({
                                                             <div className="rap-preview-drawer__resume-bar-left">
                                                                 <span className="rap-preview-drawer__resume-bar-icon">
                                                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <rect x="0.5" y="0.5" width="19" height="19" rx="3.5" fill="#9DFAD5" fill-opacity="0.3" stroke="#086D7E" />
-                                                                        <path d="M5 11.087V6.02344C5 5.752 5.12328 5.49169 5.34271 5.29976C5.56215 5.10783 5.85977 5 6.1701 5H10.2654L14.3608 8.58202V11.087" stroke="#086D7E" stroke-linecap="round" stroke-linejoin="round" />
-                                                                        <path d="M10.1445 5V8.65217H14.3569" stroke="#086D7E" stroke-linecap="round" stroke-linejoin="round" />
+                                                                        <rect x="0.5" y="0.5" width="19" height="19" rx="3.5" fill="#9DFAD5" fillOpacity="0.3" stroke="#086D7E" />
+                                                                        <path d="M5 11.087V6.02344C5 5.752 5.12328 5.49169 5.34271 5.29976C5.56215 5.10783 5.85977 5 6.1701 5H10.2654L14.3608 8.58202V11.087" stroke="#086D7E" strokeLinecap="round" strokeLinejoin="round" />
+                                                                        <path d="M10.1445 5V8.65217H14.3569" stroke="#086D7E" strokeLinecap="round" strokeLinejoin="round" />
                                                                         <path d="M5.01953 15.0005V11.957H6.29728C6.58434 11.957 6.82928 11.9991 7.0321 12.0831C7.23491 12.1672 7.39092 12.2889 7.50013 12.4483C7.60934 12.6078 7.66395 12.7976 7.66395 13.0179C7.66395 13.2382 7.60934 13.428 7.50013 13.5875C7.39092 13.744 7.23491 13.8657 7.0321 13.9527C6.82928 14.0367 6.58434 14.0788 6.29728 14.0788H5.27695L5.48757 13.8744V15.0005H5.01953ZM5.48757 13.9179L5.27695 13.7005H6.28323C6.58278 13.7005 6.809 13.6411 6.96189 13.5222C7.1179 13.4034 7.19591 13.2353 7.19591 13.0179C7.19591 12.8005 7.1179 12.6324 6.96189 12.5136C6.809 12.3947 6.58278 12.3353 6.28323 12.3353H5.27695L5.48757 12.1179V13.9179Z" fill="#086D7E" />
                                                                         <path d="M8.58558 15.0005V11.957H9.96629C10.3158 11.957 10.6231 12.0208 10.8883 12.1483C11.1567 12.2759 11.3642 12.4541 11.5108 12.6831C11.6606 12.9121 11.7355 13.1773 11.7355 13.4788C11.7355 13.7802 11.6606 14.0454 11.5108 14.2744C11.3642 14.5034 11.1567 14.6817 10.8883 14.8092C10.6231 14.9367 10.3158 15.0005 9.96629 15.0005H8.58558ZM9.05362 14.6222H9.93821C10.2097 14.6222 10.4437 14.5744 10.6403 14.4788C10.84 14.3831 10.9944 14.2498 11.1036 14.0788C11.2128 13.9049 11.2674 13.7049 11.2674 13.4788C11.2674 13.2498 11.2128 13.0498 11.1036 12.8788C10.9944 12.7078 10.84 12.5744 10.6403 12.4788C10.4437 12.3831 10.2097 12.3353 9.93821 12.3353H9.05362V14.6222Z" fill="#086D7E" />
                                                                         <path d="M13.1076 13.3962H14.7972V13.7701H13.1076V13.3962ZM13.1544 15.0005H12.6864V11.957H14.9985V12.3353H13.1544V15.0005Z" fill="#086D7E" />
                                                                     </svg>
-
                                                                 </span>
-                                                                <p className="rap-preview-drawer__resume-bar-text">{resumeDescription}</p>
+                                                                <div className="rap-preview-drawer__resume-bar-copy">
+                                                                    <p className="rap-preview-drawer__resume-bar-text">{resumeDescription}</p>
+                                                                    {!(selectedResume === "tailored" && noTailorHTML) && (
+                                                                        <div className="rap-preview-drawer__resume-bar-actions">
+                                                                            <span
+                                                                                className={`rap-preview-drawer__resume-bar-link${resumePreviewLoading ? " rap-preview-drawer__resume-bar-link--loading" : ""}`}
+                                                                                title="Preview attached resume"
+                                                                                onClick={(e) => !downloadLoading && !resumePreviewLoading && handleResumePreview(e)}
+                                                                                onKeyDown={(e) => {
+                                                                                    if (!downloadLoading && !resumePreviewLoading && (e.key === "Enter" || e.key === " ")) {
+                                                                                        e.preventDefault();
+                                                                                        handleResumePreview(e);
+                                                                                    }
+                                                                                }}
+                                                                                role="button"
+                                                                                tabIndex={0}
+                                                                                aria-busy={resumePreviewLoading}
+                                                                                aria-label={`Preview attached resume: ${resumeFilename}`}
+                                                                            >
+                                                                                <MatIcon name="visibility" />
+                                                                                <span className="rap-preview-drawer__resume-link-label">
+                                                                                    {resumePreviewLoading ? "Loading…" : resumeFilename}
+                                                                                </span>
+                                                                            </span>
+                                                                            {selectedResume !== "tailored" && (
+                                                                                <>
+                                                                                    <input
+                                                                                        ref={customResumeInputRef}
+                                                                                        type="file"
+                                                                                        accept=".pdf"
+                                                                                        hidden
+                                                                                        onChange={handleCustomResumeUpload}
+                                                                                    />
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        className="rap-preview-drawer__resume-upload"
+                                                                                        disabled={downloadLoading || confirmLoading}
+                                                                                        onClick={() => customResumeInputRef.current?.click()}
+                                                                                    >
+                                                                                        <MatIcon name="upload" />
+                                                                                        {customUploadedResume
+                                                                                            ? "Replace uploaded resume"
+                                                                                            : "Upload New Resume"}
+                                                                                    </button>
+                                                                                </>
+                                                                            )}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
                                                             </div>
-                                                            {(selectedResume === "tailored" && noTailorHTML) ? null : (
-                                                                <span
-                                                                    className="rap-preview-drawer__resume-bar-link"
-                                                                    title="Preview attached resume"
-                                                                    onClick={(e) => !downloadLoading && handleDownload(e)}
-                                                                    onKeyDown={(e) => {
-                                                                        if (!downloadLoading && (e.key === "Enter" || e.key === " ")) {
-                                                                            e.preventDefault();
-                                                                            handleDownload(e);
-                                                                        }
-                                                                    }}
-                                                                    role="button"
-                                                                    tabIndex={0}
-                                                                    aria-label={`Preview attached resume: ${resumeFilename}`}
-                                                                >
-                                                                    <MatIcon name="visibility" />
-                                                                    <span className="rap-preview-drawer__resume-filename">{resumeFilename}</span>
-                                                                </span>
-                                                            )}
                                                         </div>
                                                     )}
 
@@ -1895,9 +2220,7 @@ export default function ReferralAgentPreviewModal({
                                         >
                                             {confirmLoading ? (
                                                 <>
-                                                    <span className="rap-preview-drawer__footer-cta-spinner" aria-hidden>
-                                                        <HapppyLoader size="sm" />
-                                                    </span>
+                                                    <span className="rap-preview-drawer__footer-cta-spinner" aria-hidden />
                                                     <span>Sending...</span>
                                                 </>
                                             ) : (
@@ -1930,32 +2253,25 @@ const SUBSCRIBE_MODAL_STYLES = `
 .rap-subscribe-modal-overlay.ReactModal__Overlay {
     background: rgba(25, 28, 30, 0.55) !important;
     backdrop-filter: blur(4px);
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 1rem;
     z-index: 100000;
-    position: fixed !important;
+    position: fixed;
     inset: 0;
-    overflow: auto;
 }
-.rap-subscribe-modal.commonModal.ReactModal__Content,
 .rap-subscribe-modal.modal {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    inset: auto !important;
-    max-width: 560px !important;
-    width: 100% !important;
-    height: auto !important;
-    margin: auto !important;
-    padding: 0 !important;
-    border: none !important;
-    background: transparent !important;
-    overflow: visible !important;
-    outline: none !important;
+    position: relative;
+    inset: auto;
+    max-width: 560px;
+    width: 100%;
+    margin: auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    overflow: visible;
+    outline: none;
 }
 .rap-subscribe-modal__card {
     position: relative;
@@ -2314,7 +2630,7 @@ const SubscribeModal = ({ plan, onClose }) => {
     return (
         <Modal
             isOpen={true}
-            className="commonModal rap-subscribe-modal"
+            className="modal commonModal rap-subscribe-modal"
             overlayClassName="rap-subscribe-modal-overlay"
             contentLabel={title}
         >

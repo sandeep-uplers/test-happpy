@@ -31,7 +31,7 @@
 
         @media screen and (max-width: 767px) {
             top: -60px;
-            left: -12px;
+            left: 0;
         }
     }
 }
@@ -169,7 +169,7 @@
         border-radius: 16px 16px 0 0;
         padding: 20px 16px calc(16px + env(safe-area-inset-bottom, 0px));
         max-height: calc(100dvh - 48px - env(safe-area-inset-top, 0px));
-        overflow-y: auto;
+        
     }
 
     .gmail-privacy-fallback__cta {

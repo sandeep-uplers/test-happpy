@@ -32,6 +32,7 @@
     .agent-onb-overlay .jad-sub-plan-card--landing-figma .jad-sub-plan-card__inner,
     .agent-onb-upgrade-plans .jad-sub-plan-card--landing-figma .jad-sub-plan-card__inner {
         padding: 28px 20px;
+        gap: 16px;
     }
 }
 
@@ -70,7 +71,7 @@
     gap: 28px;
     border-radius: 16px;
     border: 1px solid rgba(35, 31, 32, 0.1);
-    background: var(--happpy-white);
+    background: #ffffff;
     box-shadow: none;
     display: flex;
     flex-direction: column;
@@ -78,8 +79,8 @@
 }
 
 .jad-sub-plan-card--landing-figma.jad-sub-plan-card--featured .jad-sub-plan-card__inner {
-    border-color: var(--happpy-ink);
-    background: var(--happpy-ink);
+    border-color: #231f20;
+    background: #231f20;
     color: rgba(255, 255, 255, 0.96);
 }
 
@@ -110,8 +111,8 @@
     align-items: center;
     gap: 6px;
     padding: 6px 14px 6px 10px;
-    background: var(--happpy-mint-border);
-    color: var(--happpy-ink);
+    background: #adffd9;
+    color: #231f20;
     border-radius: 999px;
     font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 10px;
@@ -141,17 +142,17 @@
     font-weight: 700;
     line-height: 1.15;
     letter-spacing: -0.52px;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .jad-sub-plan-card--landing-figma.jad-sub-plan-card--featured .jad-sub-plan-card__title {
-    color: var(--happpy-white);
+    color: #ffffff;
 }
 
 .jad-sub-plan-card--landing-figma .jad-sub-plan-card__save-badge {
     padding: 4px 10px;
     background: #f3f0e8;
-    color: var(--happpy-ink);
+    color: #231f20;
     border-radius: 999px;
     font-family: "Rubik", sans-serif;
     font-size: 12px;
@@ -160,15 +161,18 @@
 }
 
 .jad-sub-plan-card--landing-figma.jad-sub-plan-card--featured .jad-sub-plan-card__save-badge {
-    background: #f3f0e8;
-    color: var(--happpy-ink);
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: rgb(70, 236, 205, 0.1);
+    color: #46eccd;
 }
 
 /* Referral discount pill — Figma 1042:33995 / 1042:34038 */
 .jad-sub-plan-card--landing-figma .jad-sub-plan-card__save-badge--referral {
     padding: 2px 8px;
     background: #e2fdf2;
-    color: var(--happpy-ink);
+    color: #231f20;
     font-family: "Poppins", "Rubik", sans-serif;
     font-size: 10px;
     font-weight: 500;
@@ -180,7 +184,7 @@
 
 .jad-sub-plan-card--landing-figma.jad-sub-plan-card--featured .jad-sub-plan-card__save-badge--referral {
     background: #e2fdf2;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .jad-sub-plan-card--landing-figma .jad-sub-plan-card__price-row {
@@ -199,11 +203,11 @@
     font-weight: 700;
     line-height: 1;
     letter-spacing: -0.8px;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .jad-sub-plan-card--landing-figma.jad-sub-plan-card--featured .jad-sub-plan-card__price {
-    color: var(--happpy-white);
+    color: #ffffff;
 }
 
 .jad-sub-plan-card--landing-figma .jad-sub-plan-card__price-original {
@@ -254,6 +258,10 @@
 .jad-sub-plan-card--landing-figma .jad-sub-plan-card__body {
     gap: 20px;
     flex: 1;
+
+    @media screen and (max-width: 767px) {
+        gap: 16px;
+    }
 }
 
 .jad-sub-plan-card--landing-figma .jad-sub-plan-card__desc {
@@ -279,7 +287,7 @@
     font-size: 13px;
     font-weight: 400;
     line-height: 1.45;
-    color: var(--happpy-ink);
+    color: #231f20;
 }
 
 .jad-sub-plan-card--landing-figma.jad-sub-plan-card--featured .jad-sub-plan-card__feature {
@@ -291,10 +299,15 @@
     height: 16px;
     margin-top: 2px;
     color: #1aa463;
+
+    @media screen and (max-width: 767px) {
+        width: 12px;
+        height: 12px;
+    }
 }
 
 .jad-sub-plan-card--landing-figma.jad-sub-plan-card--featured .jad-sub-plan-card__check {
-    color: var(--happpy-mint-border);
+    color: #adffd9;
 }
 
 .jad-sub-plan-card--landing-figma .jad-sub-plan-card__cta--landing {
@@ -306,9 +319,9 @@
     margin-top: auto;
     padding: 11px 24px;
     border-radius: 999px;
-    border: 1px solid var(--happpy-ink);
-    background: var(--happpy-white);
-    color: var(--happpy-ink);
+    border: 1px solid #231f20;
+    background: #ffffff;
+    color: #231f20;
     font-size: clamp(1.125rem, 2.5vw, 1.125rem);
     font-weight: 400;
     letter-spacing: 0;
@@ -324,9 +337,9 @@
 }
 
 .jad-sub-plan-card--landing-figma .jad-sub-plan-card__cta--landing.jad-sub-plan-card__cta--featured {
-    border-color: var(--happpy-brand);
-    background: var(--happpy-brand);
-    color: var(--happpy-ink);
+    border-color: #46eccd;
+    background: #46eccd;
+    color: #231f20;
 }
 
 .jad-sub-plan-card--landing-figma .jad-sub-plan-card__cta--landing.jad-sub-plan-card__cta--featured:hover:not(:disabled),
@@ -355,7 +368,7 @@
 }
 
 .jad-sub-plan-card--landing-figma.jad-sub-plan-card--trial .jad-sub-plan-card__inner {
-    background: var(--happpy-white);
+    background: #ffffff;
     border-color: rgba(35, 31, 32, 0.1);
 }
 
@@ -377,10 +390,12 @@
         max-width: 100%;
         padding: 0 4px;
         box-sizing: border-box;
+        gap: 32px;
     }
 
     .jad-sub-plan-card--landing-figma .jad-sub-plan-card__inner {
         padding: 28px 20px;
+        gap: 16px;
     }
 
     .jad-sub-plan-grid:has(.from-upgrade-drawer) {

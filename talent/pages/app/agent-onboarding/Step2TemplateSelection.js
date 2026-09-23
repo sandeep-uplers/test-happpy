@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { GET_API } from '../../../components/Helper';
-import { API_OUTREACH_DEFAULT_AUTO_TEMPLATES } from '../../../components/Constant';
+import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-hot-toast';
 import {
@@ -174,7 +173,8 @@ const Step2TemplateSelection = ({
             .then((res) => res?.data?.data || {})
             .catch(() => ({}));
 
-        const loadDefaults = GET_API(API_OUTREACH_DEFAULT_AUTO_TEMPLATES)
+        const loadDefaults = axios
+            .get('/api/talent/outreach/default-auto-templates')
             .then((res) => res?.data?.data || {})
             .catch(() => ({ linkedin_template: [], gmail_template: [] }));
 
@@ -573,19 +573,16 @@ const Step2TemplateSelection = ({
                                     )}
                                     <div className="agent-onb-tpl-card__field">
                                         <label className="agent-onb-tpl-card__label">Template Message</label>
-                                        <div
-                                            className={`agent-onb-tpl-card__editor${draftErrors.body ? ' agent-onb-tpl-card__editor--error' : ''
-                                                }`}
-                                        >
+                                        <div className="agent-onb-tpl-card__editor">
                                             <TemplateEditor
                                                 key={`tpl-editor-${tab}-${mode}`}
+                                                variant="compact"
                                                 placeholder="Enter text here..."
                                                 value={draft.body}
                                                 onChange={(content) =>
                                                     handleDraftChange(tab, 'body', content)
                                                 }
                                                 hasError={!!draftErrors.body}
-                                                scrollingContainer="#agentOnbScroll"
                                                 dynamicFields={REQUIRED_VARS}
                                                 showDynamicDropdowns
                                                 templateAppliedAt={templateAppliedAt[tab]}

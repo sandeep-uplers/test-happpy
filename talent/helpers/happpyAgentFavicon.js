@@ -1,11 +1,15 @@
 export const HAPPPY_AGENT_FAVICON = '/images/talent/outreach/happpy-agent-favicon.ico';
-export const DEFAULT_TALENT_FAVICON = '/favicon.ico';
+/** test-happpy is Happpy-only; no separate Uplers favicon (unlike full UTS talent SPA). */
+export const DEFAULT_TALENT_FAVICON = HAPPPY_AGENT_FAVICON;
 
-/** Routes that should show the Happpy Agent favicon instead of the default Uplers one. */
+/** Routes that use the Happpy Agent favicon (all Happpy-scoped paths in this app). */
 export function isHapppyAgentFaviconPath(pathname) {
     return (
+        true ||
         pathname === '/talent/happpy-ai-agent' ||
         pathname.startsWith('/talent/happpy-ai-agent/') ||
+        pathname === '/talent/happy-ai-agent' ||
+        pathname.startsWith('/talent/happy-ai-agent/') ||
         pathname === '/talent/happpy' ||
         pathname.startsWith('/talent/happpy/') ||
         pathname === '/talent/referral-ai-agent' ||

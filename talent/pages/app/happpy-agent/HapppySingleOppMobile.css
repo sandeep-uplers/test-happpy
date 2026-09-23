@@ -77,8 +77,8 @@
     }
 
     @media screen and (max-width: 767px) {
-        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 76px) !important;
-        background: #ecfef6 !important;
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 76px);
+        background: #ecfef6;
     }
 }
 
@@ -126,4 +126,29 @@
             }
         }
     }
+}
+
+.happpy-single-hr .happpy-agent-info-badge {
+    text-transform: none;
+    letter-spacing: 0.01em;
+    font-weight: 600;
+    line-height: 1.2;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.happpy-single-hr .oppHead .top-nudges:has(.happpy-agent-info-badge) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.happpy-single-hr .similar-jobs .similar-job-agent-badge {
+    padding: 4px 2px 2px;
+}
+
+.happpy-single-hr .similar-jobs .happpy-agent-info-badge {
+    display: inline-block;
 }

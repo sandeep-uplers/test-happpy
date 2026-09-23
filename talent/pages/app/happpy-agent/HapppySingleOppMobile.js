@@ -11,8 +11,9 @@ import { formattedINRJobBudget, formattedYOE, getApplyButtonText, isTalentHired 
 import { talentRelevancyTracking, viewAllJobsClickedTracking, viewJobClickedTracking } from "../../../helpers/Mixpanel";
 import { OPEN_SIGNUP_APPLY_FLOW, SET_TAILOR_MODAL_OPEN, SET_TOUCHPOINT_DATA } from "../../../store/actions/actionsTypes";
 import { trackTailorPricePopupOpen } from "../../../store/actions/trackingActions";
-import AiScreeningRequired from "../happy-jobs/AiScreeningRequired";
+import TailorResumePaymentModal from "../resume/nudges/TailorResumePaymentModal";
 import AboutCompany from "../happy-jobs/AboutCompany";
+import AiScreeningRequired from "../happy-jobs/AiScreeningRequired";
 import CompanyLogo from "../happy-jobs/CompanyLogo";
 import CustomQuesNeeded from "../happy-jobs/CustomQuesNeeded";
 import EstimatedSalaryPill from "../happy-jobs/EstimatedSalaryPill";
@@ -22,14 +23,14 @@ import HSContent from "../happy-jobs/HSContent";
 import UplersPartnerBadge from "../happy-jobs/UplersPartnerBadge";
 import SingleOppAssessmentNew from "../work-components/SingleOppAssessmentNew";
 import "../work/similarJobs.css";
-import { getJobAgentSimilarJobHref } from "../../../helpers/jobPath";
+import { HapppyAgentInfoBadge, hasHapppyAgentInfo } from "../../../helpers/happpyAgentInfoBadge";
 import { fetchTouchpointsQuestion } from "../../../store/actions/UserActions";
+import { runOutreachAgentFromPreviewConfirm } from "../../../helpers/runOutreachAgentFromPreviewConfirm";
 import ReferralAgentModal from "../../../components/ReferralAgentModal";
 import SkipTailorOptionModal, { useSkipTailorOptionPromise } from "../../../components/SkipTailorOptionModal";
 import JobDetailsResumePromo from "../resume/nudges/JobDetailsResumePromo";
 import ReferralAgentResumeModal from "../../../components/ReferralAgentResumeModal";
 import ReferralAgentPreviewModal from "../../../components/ReferralAgentPreviewModal";
-import { runOutreachAgentFromPreviewConfirm } from "../../../helpers/runOutreachAgentFromPreviewConfirm";
 
 const HAPPPY_ALL_JOBS_PATH = '/talent/job-agent/recommended-jobs?tab=all-jobs';
 
@@ -48,6 +49,7 @@ export default function HapppySingleOppMobile({
     const { is_tailored_paid: is_tailored_eligible } = user?.resume_tailored ?? {}; // need to remove after allowing new user to tailor
 
     const dispatch = useDispatch()
+    // const [showTailorResumePaymentModal, setShowTailorResumePaymentModal] = useState(false);
     const [isReferralModalVisible, setIsReferralModalVisible] = useState(false);
     const [referralPayloadHtml, setReferralPayloadHtml] = useState('');
     const [messageTemplateIds, setMessageTemplateIds] = useState({});
@@ -142,7 +144,7 @@ export default function HapppySingleOppMobile({
     const [showPreviewModal, setShowPreviewModal] = useState(false);
     const handleAfterPreviewModal = (
         { linkedin_message_id, gmail_message_id } = {},
-        { linkedinConnected } = {},
+        { linkedinConnected, custom_resume_id } = {},
     ) => {
         if (linkedinConnected) {
             return runOutreachAgentFromPreviewConfirm(dispatch, {
@@ -151,10 +153,11 @@ export default function HapppySingleOppMobile({
                 payloadHtml: referralPayloadHtml,
                 linkedin_message_id,
                 gmail_message_id,
+                custom_resume_id,
             });
         }
 
-        setMessageTemplateIds({ linkedin_message_id, gmail_message_id });
+        setMessageTemplateIds({ linkedin_message_id, gmail_message_id, custom_resume_id });
         openReferralModal();
         setShowPreviewModal(false);
     };
@@ -182,6 +185,7 @@ export default function HapppySingleOppMobile({
                         payloadHtml={referralPayloadHtml}
                         linkedin_message_id={messageTemplateIds.linkedin_message_id}
                         gmail_message_id={messageTemplateIds.gmail_message_id}
+                        custom_resume_id={messageTemplateIds.custom_resume_id}
                     />
                     <SkipTailorOptionModal
                         isOpen={skipTailorOptionModalOpen}
@@ -207,26 +211,34 @@ export default function HapppySingleOppMobile({
                             </button>
                         </div>
                         <div className="oppHead">
-                            {(data.is_partner_company || (data.top_badge && !(data.frontend_data && data.frontend_data.frontend_label))) &&
+                            {(data.is_partner_company || (data.top_badge && !(data.frontend_data && data.frontend_data.frontend_label)) || hasHapppyAgentInfo(data)) &&
                                 <div className="top-nudges">
-                                    {data.top_badge && !(data.frontend_data && data.frontend_data.frontend_label) &&
+                                    {hasHapppyAgentInfo(data) ?
                                         <div className="nudge">
-                                            <div
-                                                className="earlyApplicant"
-                                                dangerouslySetInnerHTML={{ __html: data.top_badge }}
-                                            >
-                                            </div>
+                                            <HapppyAgentInfoBadge info={data.happpy_agent_info} />
                                         </div>
-                                    }
-                                    {(data.is_partner_company && data.company?.company_name != "Uplers") &&
-                                        <div className="nudge">
-                                            <UplersPartnerBadge data={data} fullText />
-                                        </div>
+                                        :
+                                        <>
+                                            {data.top_badge && !(data.frontend_data && data.frontend_data.frontend_label) &&
+                                                <div className="nudge">
+                                                    <div
+                                                        className="earlyApplicant"
+                                                        dangerouslySetInnerHTML={{ __html: data.top_badge }}
+                                                    >
+                                                    </div>
+                                                </div>
+                                            }
+                                            {(data.is_partner_company && data.company?.company_name != "Uplers") &&
+                                                <div className="nudge">
+                                                    <UplersPartnerBadge data={data} fullText />
+                                                </div>
+                                            }
+                                        </>
                                     }
                                 </div>
                             }
 
-                            {(data.frontend_data && data.frontend_data.frontend_label) &&
+                            {(data.frontend_data && data.frontend_data.frontend_label) && !hasHapppyAgentInfo(data) &&
                                 <div className="top-nudges appliedStatus">
                                     <label
                                         className={`oppHeadActionTag`}
@@ -470,6 +482,23 @@ export default function HapppySingleOppMobile({
                     </div>
                 </>
             }
+            {/* {showTailorResumePaymentModal &&
+                <TailorResumePaymentModal
+                    isOpen={showTailorResumePaymentModal}
+                    setIsOpen={setShowTailorResumePaymentModal}
+                    hrEncId={data.enc_id}
+                    activeJob={
+                        {
+                            job_title: data.RequestForTalent,
+                            company: { ...data.company },
+                            is_applied: data.is_applied,
+                            aggregator_application_link: data.aggregator_application_link,
+                            aggregator: data.aggregator,
+                            HR_Number: data.HR_Number
+                        }
+                    }
+                />
+            } */}
         </>
     )
 }
@@ -556,6 +585,11 @@ const SimilarJobs = ({ similarJobObj, hrDetails }) => {
                                 }
                                 {similarJobObj?.map((job, index) => (
                                     <div key={job.id} className="oppHead job-card" onClick={() => handleCardClick(job, index + 1)}>
+                                        {hasHapppyAgentInfo(job) &&
+                                            <div className="similar-job-agent-badge">
+                                                <HapppyAgentInfoBadge info={job.happpy_agent_info} />
+                                            </div>
+                                        }
                                         <div className="jobTitle">
                                             <div className="logo">
                                                 <SimilarJobsCompanyLogo job={job} />
@@ -651,10 +685,10 @@ function BottomActionDrawer({ data, isTalentHired, hasTailoredCV, handleCustomiz
     };
     const closeReferralAgentResumeModal = () => setIsReferralAgentResumeModalVisible(false);
 
-    const handleAgentWithProfileResume = () => {
+    const handleAgentWithProfileResume = ({ linkedin_message_id, gmail_message_id, custom_resume_id } = {}) => {
         setIsReferralAgentResumeModalVisible(false);
-        // run Happpy Agent with profile resume - no change in flow
-        openReferralModal()
+        setMessageTemplateIds({ linkedin_message_id, gmail_message_id, custom_resume_id });
+        openReferralModal();
     }
 
     const handleAgentWithTailoredResume = (payloadHtml) => {

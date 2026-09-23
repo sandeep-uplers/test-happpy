@@ -178,7 +178,8 @@ export default function ResumeEditorModal() {
         <>
             <Modal
                 isOpen={isModalOpen}
-                portalClassName="react-modal-portal"
+                portalClassName="react-modal-portal resume-editor-modal-portal"
+                overlayClassName="resume-editor-modal-overlay"
                 className={`modal commonModal resume-editor-modal`}
                 shouldCloseOnOverlayClick={false}
             >

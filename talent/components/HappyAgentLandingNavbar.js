@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "@/talent/navigation/routerCompat";
 import { useSelector } from "react-redux";
 import HapppyAgentLogo from "./common/HapppyAgentLogo";
 import SidebarNew from "./SidebarNew";
@@ -10,9 +10,15 @@ import {
     setPublicOnbSection,
 } from "../helpers/happyAgentPublicSignupSession";
 
+const AUTH_NAV_HIDE_DELTA = 8;
+const AUTH_NAV_SHOW_DELTA = 2;
+const AUTH_NAV_TOP_LOCK = 16;
+
 /**
  * Floating pill navbar for Happpy Agent marketing landings
  * (`/talent/happpy-ai-agent` public + `/talent/referral-ai-agent` authenticated).
+ * Public variant is in-page (`position: absolute`) so it scrolls away.
+ * Authenticated stays fixed and auto-hides on scroll down / shows on a slight scroll up.
  */
 export default function HappyAgentLandingNavbar({
     variant = "public",
@@ -21,14 +27,62 @@ export default function HappyAgentLandingNavbar({
     onOpenDashboardClick = null,
     showGetStarted = true,
 }) {
-    const router = useRouter();
+    const navigate = useNavigate();
     const { user } = useSelector((state) => state.auth);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isNavHidden, setIsNavHidden] = useState(false);
+    const lastScrollYRef = useRef(0);
+    const hiddenRef = useRef(false);
+    const tickingRef = useRef(false);
+
+    useEffect(() => {
+        if (variant !== "authenticated") {
+            hiddenRef.current = false;
+            setIsNavHidden(false);
+            return undefined;
+        }
+
+        const setHidden = (next) => {
+            if (hiddenRef.current === next) return;
+            hiddenRef.current = next;
+            setIsNavHidden(next);
+        };
+
+        if (isSidebarOpen) {
+            setHidden(false);
+            return undefined;
+        }
+
+        lastScrollYRef.current = Math.max(0, window.scrollY);
+
+        const onScroll = () => {
+            if (tickingRef.current) return;
+            tickingRef.current = true;
+            window.requestAnimationFrame(() => {
+                const y = Math.max(0, window.scrollY);
+                const delta = y - lastScrollYRef.current;
+                lastScrollYRef.current = y;
+
+                if (y <= AUTH_NAV_TOP_LOCK) {
+                    setHidden(false);
+                } else if (delta > AUTH_NAV_HIDE_DELTA) {
+                    setHidden(true);
+                } else if (delta < -AUTH_NAV_SHOW_DELTA) {
+                    setHidden(false);
+                }
+
+                tickingRef.current = false;
+            });
+        };
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, [variant, isSidebarOpen]);
 
     const handleBrandClick = (event) => {
         event.preventDefault();
         if (variant === "authenticated") {
-            router.push("/talent/job-agent");
+            navigate("/talent/job-agent");
             return;
         }
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -53,12 +107,21 @@ export default function HappyAgentLandingNavbar({
             onOpenDashboardClick();
             return;
         }
-        router.push("/talent/job-agent");
+        navigate("/talent/job-agent");
     };
 
     return (
         <>
-            <header className="happy-agent-landing-navbar" role="banner">
+            <header
+                className={[
+                    "happy-agent-landing-navbar",
+                    variant === "public" ? "happy-agent-landing-navbar--scroll-away" : "happy-agent-landing-navbar--auto-hide",
+                    isNavHidden ? "happy-agent-landing-navbar--hidden" : "",
+                ].filter(Boolean).join(" ")}
+                role="banner"
+                aria-hidden={isNavHidden || undefined}
+                inert={isNavHidden ? "" : undefined}
+            >
                 <div className="happy-agent-landing-navbar__pill">
                     <a
                         href="#happyJobAgentPublic"

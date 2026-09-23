@@ -22,10 +22,9 @@ import HapppyGtmPreferencesStep from "./HapppyGtmPreferencesStep";
 import HapppyGtmExtensionStep from "./HapppyGtmExtensionStep";
 import "../../app/agent-onboarding/AgentOnboarding.css";
 import "./HapppyGtmOnboarding.css";
+import { ensureModalAppElement } from "../../../helpers/setModalAppElement";
 
-if (typeof document !== "undefined" && document.getElementById("happpy-root")) {
-    Modal.setAppElement("#happpy-root");
-}
+ensureModalAppElement();
 
 const STEP_COMPLETED_URL_PARAM = {
     prefs: ONBOARDING_URL_PARAM.PROFILE_CREATED,

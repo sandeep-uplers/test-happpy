@@ -1,15 +1,15 @@
-'use client';
-
 /** Happpy Agent landing page — shared static assets (Figma redesign sections) */
 
 const OUTREACH_IMAGE_ROOT = "/images/talent/outreach";
 
-/** Happpy brand teal — Razorpay checkout accent (Pay button, highlights). */
-export const HAPPPY_RAZORPAY_THEME_COLOR = '#086d7e';
+/** Razorpay checkout accent — matches payment modals across Happpy surfaces. */
+export const HAPPPY_RAZORPAY_THEME_COLOR = '#231F20';
 
 /* Hero header */
 export const HAPPY_HERO_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/hero`;
 export const HAPPY_HERO_BG_SRC = `${HAPPY_HERO_ASSET_BASE}/hero-bg.png`;
+/** Figma Frame 18 (3070:15685) — mobile-only mint mesh hero background */
+export const HAPPY_HERO_BG_MOBILE_SRC = `${HAPPY_HERO_ASSET_BASE}/hero-bg-mobile.svg`;
 export const HAPPY_HERO_BG_WEBP_SRCSET = [
     `${HAPPY_HERO_ASSET_BASE}/hero-bg-768.webp 768w`,
     `${HAPPY_HERO_ASSET_BASE}/hero-bg-1280.webp 1280w`,
@@ -18,16 +18,27 @@ export const HAPPY_HERO_BG_WEBP_SRCSET = [
 export const HAPPY_HERO_BG_SIZES = "100vw";
 export const HAPPY_HERO_PRELOAD_ID = "happy-agent-hero-bg-preload";
 export const HAPPY_HERO_TRUST_SPARKLE_SRC = `${HAPPY_HERO_ASSET_BASE}/trust-sparkle.svg`;
+export const HAPPY_HERO_EYEBROW_LEFT = "AI referral agent";
+export const HAPPY_HERO_EYEBROW_RIGHT = "Not a job board";
 export const HAPPY_HERO_TITLE_PREFIX = "Get interviews in as little as";
-export const HAPPY_HERO_TITLE_HIGHLIGHT = "4 days.";
-export const HAPPY_HERO_TITLE_LINES = ["Get interviews in as little as 4 days."];
+export const HAPPY_HERO_TITLE_HIGHLIGHT = "4 Days";
+export const HAPPY_HERO_MOBILE_TITLE_LINE_1 = "Get interviews";
+export const HAPPY_HERO_MOBILE_TITLE_LINE_2 = "in as little as";
+export const HAPPY_HERO_MOBILE_TITLE_HIGHLIGHT = "4 Days";
+export const HAPPY_HERO_TITLE_UNDERLINE_SRC = `${HAPPY_HERO_ASSET_BASE}/title-highlight-underline.svg`;
+export const HAPPY_HERO_MOBILE_SUBTITLE_BOLD = "HAPPPY is an AI referral agent";
+export const HAPPY_HERO_MOBILE_SUBTITLE_LINES = [
+    "That finds people inside target companies and introduces you —",
+    "so real recruiters reply instead of ghosting.",
+];
+export const HAPPY_HERO_MOBILE_CTA_LABEL = "Get started";
 export const HAPPY_HERO_SUBTITLE_LINE_1 =
-    "An AI referral agent that finds people inside the company and introduces you - so a real recruiter replies.";
+    "An AI referral agent that finds people inside the company and introduces you - so a real recruiter replies";
+/** Desktop: sparkle + `desktop` label above the H1. Mobile: value/label stats under the hero CTA. */
 export const HAPPY_HERO_TRUST_ITEMS = [
-    "120-second setup",
-    // "Free until referred",
-    "2x interviews",
-    "Trusted by 2201 candidates",
+    { value: "2x", label: "more interviews", desktop: "2x interviews" },
+    { value: "6,450+", label: "candidates using it", desktop: "Trusted by 6450+ candidates" },
+    { value: "60s", label: "setup time", desktop: "60-second setup" },
 ];
 
 /* Section 2 — Live Results */
@@ -37,6 +48,8 @@ export const HAPPY_LIVE_RESULTS_HEADLINE_UNDERLINE_SRC = `${OUTREACH_IMAGE_ROOT}
 /* Section 3 — How It Works */
 export const HAPPY_HIW_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/hiw`;
 export const HAPPY_HIW_HEADLINE_HIGHLIGHT_SRC = `${HAPPY_HIW_ASSET_BASE}/headline-highlight.svg`;
+export const HAPPY_HIW_DEMO_VIDEO_PC_SRC = "/happpy-agent/how-it-works-pc.mp4";
+export const HAPPY_HIW_DEMO_VIDEO_MOBILE_SRC = "/happpy-agent/how-it-works-mobile-final.mp4";
 
 export const HAPPY_HOW_IT_WORKS_PILLARS = [
     {
@@ -132,6 +145,15 @@ export const HAPPY_MANUAL_VS_STATS = [
     { value: "0", label: "LinkedIn Premium subscriptions needed" },
 ];
 
+/** Mobile heading + compare strip (Figma 2922:4801). Desktop title stays unchanged. */
+export const HAPPY_MANUAL_VS_MOBILE_TITLE_LEAD = "HAPPPY Agent does it in ";
+export const HAPPY_MANUAL_VS_MOBILE_TITLE_HIGHLIGHT = "under 60 seconds.";
+export const HAPPY_MANUAL_VS_COMPARE_ARROW_SRC = `${HAPPY_MANUAL_VS_ASSET_BASE}/compare-arrow.svg`;
+export const HAPPY_MANUAL_VS_MOBILE_COMPARE = [
+    { value: "1-2 hrs", label: "Finding referrals" },
+    { value: "<60 sec", label: "Per job, with HAPPPY", accent: true },
+];
+
 /* Section 4 — Works Anywhere */
 export const HAPPY_WORKS_ANYWHERE_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/works-anywhere`;
 export const HAPPY_WORKS_ANYWHERE_TITLE_UNDERLINE_SRC = `${HAPPY_WORKS_ANYWHERE_ASSET_BASE}/title-underline.png`;
@@ -161,6 +183,41 @@ export const HAPPY_PRIVACY_BADGE_UNDERLINE_PRIVACY_SRC = `${HAPPY_PRIVACY_ASSET_
 export const HAPPY_PRIVACY_BADGE_UNDERLINE_OAUTH_SRC = `${HAPPY_PRIVACY_ASSET_BASE}/badge-underline-oauth.svg`;
 export const HAPPY_PRIVACY_BADGE_UNDERLINE_MONITORING_SRC = `${HAPPY_PRIVACY_ASSET_BASE}/badge-underline-monitoring.svg`;
 export const HAPPY_PRIVACY_SPARKLE_SRC = `${HAPPY_PRIVACY_ASSET_BASE}/sparkle.svg`;
+export const HAPPY_PRIVACY_SHIELD_SRC = `${HAPPY_PRIVACY_ASSET_BASE}/shield.svg`;
+
+/** Mobile privacy cards (Figma 2922:4883) — desktop still uses HAPPY_PRIVACY_CARDS. */
+export const HAPPY_PRIVACY_MOBILE = {
+    titleSuffix: " first",
+    access: [
+        {
+            key: "gmail",
+            title: "Gmail access",
+            highlight: "Never reads your personal emails, attachments, or drafts",
+            items: [
+                "Only reads replies to messages the agent sent",
+                "Used only to send referral requests on your behalf",
+            ],
+        },
+        {
+            key: "linkedin",
+            title: "LinkedIn access",
+            highlight: "Never reads your other conversations or profile settings",
+            items: [
+                "Only reads replies to messages the agent sent",
+                "Sends connection requests with personalized notes",
+            ],
+        },
+    ],
+    security: {
+        title: "Data Security",
+        items: [
+            "No data sold to third parties",
+            "Token deleted on disconnect",
+            "AES-256 encryption",
+            "OAuth 2.0 authentication",
+        ],
+    },
+};
 
 export const HAPPY_PRIVACY_CARDS = [
     {
@@ -195,21 +252,25 @@ export const HAPPY_PRIVACY_CARDS = [
 export const HAPPY_PRIVACY_BADGES = [
     {
         label: "SSL Secured",
+        mobileLabel: "SSL SECURED",
         underlineSrc: HAPPY_PRIVACY_BADGE_UNDERLINE_SSL_SRC,
         rotate: "-0.46deg",
     },
     {
         label: "Privacy First",
+        mobileLabel: "PRIVACY COMPLIANT",
         underlineSrc: HAPPY_PRIVACY_BADGE_UNDERLINE_PRIVACY_SRC,
         rotate: "-7.09deg",
     },
     {
         label: "OAuth 2.O",
+        mobileLabel: "OAUTH 2.0",
         underlineSrc: HAPPY_PRIVACY_BADGE_UNDERLINE_OAUTH_SRC,
         rotate: "0deg",
     },
     {
         label: "24/7 Monitoring",
+        mobileLabel: "24/7 monitoring",
         underlineSrc: HAPPY_PRIVACY_BADGE_UNDERLINE_MONITORING_SRC,
         rotate: "-1.22deg",
         sparkle: true,
@@ -220,40 +281,48 @@ export const HAPPY_PRIVACY_BADGES = [
 export const HAPPY_TESTIMONIALS_TITLE_UNDERLINE_SRC = `${OUTREACH_IMAGE_ROOT}/testimonials-title-underline.svg`;
 
 /* Section 11 — FAQ */
-export const HAPPY_FAQ_ITEMS = [
+export const HAPPY_FAQ_GROUPS = [
     {
-        q: "How long does activation take?",
-        a: "Usually under a minute. Referral mail sends from your own address so it lands like a real introduction—not spam. One quick sign-in links your inbox; we don't read your mail, only what you approve to send.",
+        heading: "GETTING STARTED",
+        items: [
+            {
+                q: "How long does activation take?",
+                a: "Usually under a minute. Referral mail sends from your own address so it lands like a real introduction—not spam. One quick sign-in links your inbox; we don't read your mail, only what you approve to send.",
+            },
+            {
+                q: "What jobs work best with Happpy Agent?",
+                a: "Roles posted in the last 24–48 hours. Hiring teams are still actively reviewing candidates; you're more likely to get a reply before the pipeline fills. Older listings often move slower.",
+            },
+            {
+                q: "What happens when I hit my daily job limit?",
+                a: "We queue the extra jobs for the next day. Your limit resets every 24 hours. Nothing is lost — it just runs the next day.",
+            },
+        ],
     },
     {
-        q: "What jobs work best with Happpy Agent?",
-        a: "Roles posted in the last 24–48 hours. Hiring teams are still actively reviewing candidates; you're more likely to get a reply before the pipeline fills. Older listings often move slower.",
-    },
-    {
-        q: "Won't the messages sound like a bot wrote them?",
-        a: "They're written from your resume, your tone, and the specific person you're reaching out to. You review and edit every one before it goes out. If anything sounds off, you change it in one click.",
-    },
-    {
-        q: "Is my LinkedIn account safe?",
-        a: "Yes. We cap outreach at 10 jobs a day — well below LinkedIn's safe limits. Messages go out on a randomised schedule that looks human. We haven't had a single account flagged.",
-    },
-    {
-        q: "What happens to my Gmail and LinkedIn data?",
-        a: "We use them only for outreach. We don't read your inbox, scrape contacts, or share anything. You can disconnect both with one click, anytime.",
-    },
-    {
-        q: "What if it doesn't work? Refund how?",
-        a: "If you don't get a response in 7 days, we refund that month. No support ticket. No explanation required. One click inside your dashboard.",
-    },
-    {
-        q: "What happens when I hit my daily job limit?",
-        a: "We queue the extra jobs for the next day. Your limit resets every 24 hours. Nothing is lost — it just runs the next day.",
-    },
-    {
-        q: "How does Happpy Agent find official work emails?",
-        a: "For each job, we identify recruiters, hiring managers, and relevant peers at the target company. We then look up their official work email—typically on the company domain (e.g. @acme.com)—using trusted third-party B2B data providers such as Lusha, Apollo, ContactOut, and SignalHire. These services cross-reference public professional profiles, company websites, and licensed business contact databases. We prioritise verified work addresses. Accuracy can vary.",
+        heading: "TRUST & AUTHENTICITY",
+        items: [
+            {
+                q: "Won't the messages sound like a bot wrote them?",
+                a: "They're written from your resume, your tone, and the specific person you're reaching out to. You review and edit every one before it goes out. If anything sounds off, you change it in one click.",
+            },
+            {
+                q: "Is my LinkedIn account safe?",
+                a: "Yes. We cap outreach at 10 jobs a day — well below LinkedIn's safe limits. Messages go out on a randomised schedule that looks human. We haven't had a single account flagged.",
+            },
+            {
+                q: "What happens to my Gmail and LinkedIn data?",
+                a: "We use them only for outreach. We don't read your inbox, scrape contacts, or share anything. You can disconnect both with one click, anytime.",
+            },
+            {
+                q: "How does Happpy Agent find official work emails?",
+                a: "For each job, we identify recruiters, hiring managers, and relevant peers at the target company. We then look up their official work email—typically on the company domain (e.g. @acme.com)—using trusted third-party B2B data providers such as Lusha, Apollo, ContactOut, and SignalHire. These services cross-reference public professional profiles, company websites, and licensed business contact databases. We prioritise verified work addresses. Accuracy can vary.",
+            },
+        ],
     },
 ];
+
+export const HAPPY_FAQ_ITEMS = HAPPY_FAQ_GROUPS.flatMap((group) => group.items);
 
 /* Section 12 — Try free CTA band */
 export const HAPPY_TRY_FREE_TITLE_LINES = [
@@ -268,7 +337,7 @@ export const HAPPY_FOOTER_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/footer`;
 export const HAPPY_FOOTER_LOGO_SRC = `${HAPPY_FOOTER_ASSET_BASE}/happpy-agent-logo-light.svg`;
 
 export const HAPPY_FOOTER_TAGLINE_LINES = [
-    "An agent that gets your resume in front of",
+    "An agent that gets your resume in front of ",
     "humans and follows up until they answer.",
 ];
 
@@ -317,35 +386,54 @@ export const HAPPY_KINETIC_HEADER_SPARKLE_SMALL_SRC = `${HAPPY_KINETIC_ASSET_BAS
 export const HAPPY_KINETIC_CONCLUSION_UNDERLINE_PRIMARY_SRC = `${HAPPY_KINETIC_ASSET_BASE}/conclusion-underline-primary.svg`;
 export const HAPPY_KINETIC_CONCLUSION_UNDERLINE_SECONDARY_SRC = `${HAPPY_KINETIC_ASSET_BASE}/conclusion-underline-secondary.svg`;
 
-export const HAPPY_KINETIC_EYEBROW = "TRUE SUCCESS STORIES";
-export const HAPPY_KINETIC_TITLE = "Why This Actually Works";
-export const HAPPY_KINETIC_SUBTITLE = "A real-world breakdown of speed-to-hire using our referral engine";
+export const HAPPY_KINETIC_EYEBROW = "TRUE SUCCESS STORY";
+export const HAPPY_KINETIC_TITLE = "Why this actually works";
+export const HAPPY_KINETIC_SUBTITLE =
+    "A real-world breakdown of speed-to-hire using our referral engine.";
 
 export const HAPPY_KINETIC_STEPS = [
     {
         time: "1:30 PM",
         title: "Agent activated",
-        body: "A candidate ran the agent on a Mobikwik job posting.",
+        body: [
+            { text: "A candidate ran the agent on a " },
+            { text: "Mobikwik", bold: true },
+            { text: " job posting." },
+        ],
     },
     {
         time: "Instantly",
         title: "Profile sent to decision makers",
-        bodyLines: [
-            "Her profile went to 2 Talent Acquisition Partners and 2 Hiring Managers",
-            "for that role.",
+        body: [
+            { text: "Typically, a profile like hers reaches " },
+            { text: "2 Talent Acquisition Partners", bold: true },
+            { text: " and " },
+            { text: "2 Hiring Managers", bold: true },
+            { text: " for that role." },
         ],
     },
     {
         time: "4:30 PM",
         title: "Interview scheduled",
-        body: "Within 3 hours, she got an interview email from Mobikwik.",
+        body: [
+            { text: "Within " },
+            { text: "3 hours", bold: true },
+            { text: ", she got an interview email from " },
+            { text: "Mobikwik", bold: true },
+            { text: "." },
+        ],
         isLast: true,
     },
 ];
 
 export const HAPPY_KINETIC_CONCLUSION_TITLE = "Why so fast?";
-export const HAPPY_KINETIC_CONCLUSION_BODY =
-    "Her profile reached the right people — including the senior engineer hiring for that role. He liked her profile and scheduled the interview instantly. No waiting for a bot to read her resume.";
+export const HAPPY_KINETIC_CONCLUSION_BODY = [
+    { text: "Her profile reached the right people — including the " },
+    { text: "senior engineer", bold: true },
+    { text: " hiring for that role. He liked her profile and scheduled the interview " },
+    { text: "instantly", bold: true },
+    { text: ". No waiting for a bot to read her resume." },
+];
 
 /* Section — Pricing */
 export const HAPPY_PRICING_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/pricing`;
@@ -357,10 +445,45 @@ export const HAPPY_PRICING_CTA_ARROW_SRC = `${HAPPY_PRICING_ASSET_BASE}/cta-arro
 export const HAPPY_PRICING_EYEBROW = "PLANS";
 export const HAPPY_PRICING_TITLE = "Start free. Pay only when you’re ready";
 export const HAPPY_PRICING_FOOTNOTE =
-    "All plans include standard resume health check & assistance. One-time setup fee may apply for transformation.";
+    "All plans include standard resume health check & assistance.";
 
 /** Display-only plan metadata for unauthenticated public landing pricing cards. */
 export const PUBLIC_LANDING_PLAN_FALLBACKS = {
     1: { PriceText: 1499, ValidityText: "1 month" },
     3: { PriceText: 2999, ValidityText: "3 months" },
 };
+
+/* Public auth drawer (Figma 2864:26627) */
+export const HAPPY_PUBLIC_AUTH_MASCOT_SRC = `${OUTREACH_IMAGE_ROOT}/mascot-chill.svg`;
+export const HAPPY_PUBLIC_AUTH_CONTINUE_ARROW_SRC = "/images/talent/arrow-right.svg";
+/** Display-only social proof count for the public auth drawer promo bar. */
+export const HAPPY_PUBLIC_AUTH_INTERVIEW_COUNT = 807;
+
+/* Public auth drawer trust footer (Figma 3005:6795) */
+const AUTH_TRUST_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/auth-trust`;
+export const HAPPY_PUBLIC_AUTH_TRUST_HEADLINE =
+    "Professionals like you are already landing interviews here.";
+export const HAPPY_PUBLIC_AUTH_TRUST_HIGHLIGHT = "You are next!";
+export const HAPPY_PUBLIC_AUTH_TRUST_COMPANIES = [
+    { name: "Zomato", logo: `${AUTH_TRUST_ASSET_BASE}/zomato.png`, width: 24, height: 24 },
+    { name: "Google", logo: `${AUTH_TRUST_ASSET_BASE}/google.png`, width: 24, height: 24 },
+    { name: "Microsoft", logo: `${AUTH_TRUST_ASSET_BASE}/microsoft.png`, width: 20, height: 20 },
+    { name: "Nike", logo: `${AUTH_TRUST_ASSET_BASE}/nike.png`, width: 28, height: 10 },
+    { name: "Swiggy", logo: `${AUTH_TRUST_ASSET_BASE}/swiggy.png`, width: 24, height: 24 },
+    { name: "Razorpay", logo: `${AUTH_TRUST_ASSET_BASE}/razorpay.png`, width: 17, height: 20 },
+    { name: "GlobalLogic", logo: `${AUTH_TRUST_ASSET_BASE}/globallogic.png`, width: 20, height: 20 },
+    { name: "WNS", logo: `${AUTH_TRUST_ASSET_BASE}/wns.png`, width: 19, height: 20 },
+    { name: "GE HealthCare", logo: `${AUTH_TRUST_ASSET_BASE}/ge-healthcare.png`, width: 19, height: 20 },
+    { name: "Condé Nast", logo: `${AUTH_TRUST_ASSET_BASE}/conde-nast.png`, width: 19, height: 20 },
+    { name: "Nexthink", logo: `${AUTH_TRUST_ASSET_BASE}/nexthink.png`, width: 19, height: 20 },
+    { name: "MiQ", logo: `${AUTH_TRUST_ASSET_BASE}/miq.png`, width: 22, height: 20 },
+    { name: "BlackRock", logo: `${AUTH_TRUST_ASSET_BASE}/blackrock.png`, width: 20, height: 20 },
+    { name: "Navan", logo: `${AUTH_TRUST_ASSET_BASE}/navan.png`, width: 19, height: 20 },
+    { name: "JustAnswer", logo: `${AUTH_TRUST_ASSET_BASE}/justanswer.png`, width: 19, height: 20 },
+    { name: "Attentive.ai", logo: `${AUTH_TRUST_ASSET_BASE}/attentive.png`, width: 20, height: 20 },
+    { name: "Diligent", logo: `${AUTH_TRUST_ASSET_BASE}/diligent.png`, width: 20, height: 20 },
+    { name: "Credera", logo: `${AUTH_TRUST_ASSET_BASE}/credera.png`, width: 20, height: 20 },
+    { name: "myHQ", logo: `${AUTH_TRUST_ASSET_BASE}/myhq.png`, width: 20, height: 20 },
+    { name: "Pluang", logo: `${AUTH_TRUST_ASSET_BASE}/pluang.png`, width: 20, height: 20 },
+    { name: "+ more every day" },
+];

@@ -1,13 +1,12 @@
 'use client';
 
-import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
+// import { useGoogleLogin } from "@react-oauth/google";
 import Cookies from "js-cookie";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "@/talent/navigation/routerCompat";
-import { useSearchParams } from "@/talent/navigation/routerCompat";
+import { useNavigate, useSearchParams } from "@/talent/navigation/routerCompat";
 import { HappyJobAgentContent } from "../../app/linkedin/HappyJobAgent";
 import { HappyJobAgentPublicAuthDrawer } from "../HappyJobAgentPublic";
 import HapppyGtmOnboarding from "./HapppyGtmOnboarding";
@@ -15,7 +14,7 @@ import {
     clearPublicAuthPath,
     getPublicAuthPath,
     isPublicEmailAuthPath,
-    setPublicAuthPath,
+    // setPublicAuthPath,
     setPublicReferralCode,
 } from "../../../helpers/happyAgentPublicSignupSession";
 import {
@@ -36,13 +35,12 @@ import {
     trackHapppyGtmPublicPageVisit,
 } from "../../../helpers/happpyGtmOnboarding";
 import { trackHappyAgentPublicAuthCompleted } from "../../../store/actions/happyAgentTracking";
-import { socialGoogleCallback } from "../../../store/actions/signupApplyActions";
+// import { socialGoogleCallback } from "../../../store/actions/signupApplyActions";
 import { getProfilePercent } from "../../../store/actions/UserActions";
 import "../HappyJobAgentPublic.css";
 
-const GOOGLE_OAUTH_CLIENT_ID = (process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '')
-    .replace(/^['"]|['"]$/g, '')
-    .trim();
+/** Same redirect as SocialSSO — required for `new-signup/google-callback` token exchange. */
+// const GOOGLE_REDIRECT_URI = process.env.MIX_APP_URL + "/talent/auth/google-callback";
 
 const HAPPPY_GTM_FINISH_JOBS_PATH = pathWithOnboardingParam(
     HAPPPY_GTM_RECOMMENDED_JOBS_PATH,
@@ -60,9 +58,10 @@ function HapppyGtmPublicInner() {
     const [status, setStatus] = useState(null);
     const [initialStep, setInitialStep] = useState("prefs");
     const [accountsFirstFlow, setAccountsFirstFlow] = useState(false);
-    const [googleAuthing, setGoogleAuthing] = useState(false);
+    // Continue with Google CTA disabled on this GTM landing.
+    // const [googleAuthing, setGoogleAuthing] = useState(false);
     const pageViewTrackedRef = useRef(false);
-    const openAfterGoogleRef = useRef(null);
+    // const openAfterGoogleRef = useRef(null);
     const cachedPreferencesRef = useRef(cachedPreferences);
     const bootstrapStartedRef = useRef(false);
 
@@ -128,7 +127,7 @@ function HapppyGtmPublicInner() {
         clearHapppyGtmOnboardingStatusCache();
         bootstrapStartedRef.current = true;
         trackHapppyGtmPublicPageVisit();
-        setGoogleAuthing(false);
+        // setGoogleAuthing(false);
         setAuthDrawerOpen(false);
 
         const authPath = getPublicAuthPath();
@@ -218,63 +217,65 @@ function HapppyGtmPublicInner() {
         refreshOnboardingInBackground(user);
     }, [dispatch, openDrawerWithStatus, refreshOnboardingInBackground, status, user]);
 
-    openAfterGoogleRef.current = () => {
-        window.dataLayer = window.dataLayer || [];
-        if (typeof gtag === "undefined") {
-            window.gtag = function () {
-                window.dataLayer.push(arguments);
-            };
-        }
-        const registerEventPayload = {
-            from_where: "happpy_gtm_public_landing",
-            auth_path: "google",
-        };
-        gtag("event", "user_register_via_referral_agent_public_page", registerEventPayload);
-        window.dataLayer.push({
-            event: "user_register_via_referral_agent_public_page",
-            ...registerEventPayload,
-        });
-
-        setPublicAuthPath("google");
-        handleAuthCompleted({ authPath: "google" });
-        continueAfterAuth();
-    };
-
-    const googleLogin = useGoogleLogin({
-        flow: "auth-code",
-        onSuccess: (codeResponse) => {
-            socialGoogleCallback(codeResponse.code, "regular")(dispatch)
-                .then(() => openAfterGoogleRef.current())
-                .catch((err) => {
-                    trackHapppyGtm("happpy_gtm_google_login_failed");
-                    const message = err?.response?.data?.message;
-                    toast.error(
-                        typeof message === "string" && message ? message : "Something went wrong!",
-                        { duration: 6000 }
-                    );
-                })
-                .finally(() => setGoogleAuthing(false));
-        },
-        onError: () => {
-            setGoogleAuthing(false);
-            trackHapppyGtm("happpy_gtm_google_login_failed");
-            toast.error("Google sign-in failed. Please try again.", { duration: 6000 });
-        },
-        onNonOAuthError: () => {
-            setGoogleAuthing(false);
-        },
-    });
-
-    const handleGoogleSignIn = useCallback(() => {
-        if (googleAuthing) return;
-        setAuthDrawerOpen(false);
-        trackHapppyGtm("happpy_gtm_google_login_attempted");
-        setGoogleAuthing(true);
-        googleLogin();
-    }, [googleAuthing, googleLogin]);
+    // Continue with Google CTA — commented out on this GTM landing (email/OTP only).
+    // openAfterGoogleRef.current = () => {
+    //     window.dataLayer = window.dataLayer || [];
+    //     if (typeof gtag === "undefined") {
+    //         window.gtag = function () {
+    //             window.dataLayer.push(arguments);
+    //         };
+    //     }
+    //     const registerEventPayload = {
+    //         from_where: "happpy_gtm_public_landing",
+    //         auth_path: "google",
+    //     };
+    //     gtag("event", "user_register_via_referral_agent_public_page", registerEventPayload);
+    //     window.dataLayer.push({
+    //         event: "user_register_via_referral_agent_public_page",
+    //         ...registerEventPayload,
+    //     });
+    //
+    //     setPublicAuthPath("google");
+    //     handleAuthCompleted({ authPath: "google" });
+    //     continueAfterAuth();
+    // };
+    //
+    // const googleLogin = useGoogleLogin({
+    //     flow: "auth-code",
+    //     redirect_uri: GOOGLE_REDIRECT_URI,
+    //     onSuccess: (codeResponse) => {
+    //         socialGoogleCallback(codeResponse.code, "regular")(dispatch)
+    //             .then(() => openAfterGoogleRef.current())
+    //             .catch((err) => {
+    //                 trackHapppyGtm("happpy_gtm_google_login_failed");
+    //                 const message = err?.response?.data?.message;
+    //                 toast.error(
+    //                     typeof message === "string" && message ? message : "Something went wrong!",
+    //                     { duration: 6000 }
+    //                 );
+    //             })
+    //             .finally(() => setGoogleAuthing(false));
+    //     },
+    //     onError: () => {
+    //         setGoogleAuthing(false);
+    //         trackHapppyGtm("happpy_gtm_google_login_failed");
+    //         toast.error("Google sign-in failed. Please try again.", { duration: 6000 });
+    //     },
+    //     onNonOAuthError: () => {
+    //         setGoogleAuthing(false);
+    //     },
+    // });
+    //
+    // const handleGoogleSignIn = useCallback(() => {
+    //     if (googleAuthing) return;
+    //     setAuthDrawerOpen(false);
+    //     trackHapppyGtm("happpy_gtm_google_login_attempted");
+    //     setGoogleAuthing(true);
+    //     googleLogin();
+    // }, [googleAuthing, googleLogin]);
 
     const openOnboarding = useCallback(() => {
-        if (googleAuthing || drawerOpen) return;
+        if (drawerOpen) return;
         trackHapppyGtm("happpy_gtm_cta_clicked");
 
         if (isAuthenticated) {
@@ -283,7 +284,7 @@ function HapppyGtmPublicInner() {
         }
 
         setAuthDrawerOpen(true);
-    }, [drawerOpen, googleAuthing, isAuthenticated, openOnboardingForAuthedUser]);
+    }, [drawerOpen, isAuthenticated, openOnboardingForAuthedUser]);
 
     const closeAuthDrawer = useCallback(() => {
         setAuthDrawerOpen(false);
@@ -294,14 +295,15 @@ function HapppyGtmPublicInner() {
             <HappyJobAgentContent
                 publicSignupMode
                 onOpenAuthDrawer={openOnboarding}
-                authDrawerOpen={drawerOpen || googleAuthing || authDrawerOpen}
+                authDrawerOpen={drawerOpen || authDrawerOpen}
             />
             <HappyJobAgentPublicAuthDrawer
                 isOpen={authDrawerOpen}
                 onClose={closeAuthDrawer}
                 onAuthSuccess={continueAfterAuth}
-                onGoogleSignIn={handleGoogleSignIn}
-                googleAuthing={googleAuthing}
+                // Continue with Google CTA commented out — email/OTP only on this landing.
+                // onGoogleSignIn={handleGoogleSignIn}
+                // googleAuthing={googleAuthing}
                 gtagFromWhere="happpy_gtm_public_landing"
                 onAuthCompleted={handleAuthCompleted}
             />
@@ -319,22 +321,9 @@ function HapppyGtmPublicInner() {
 }
 
 export default function HapppyGtmPublic() {
-    const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHAV3_SITEKEY;
-
-    let content = <HapppyGtmPublicInner />;
-    if (recaptchaKey) {
-        content = (
-            <GoogleReCaptchaProvider reCaptchaKey={recaptchaKey}>
-                {content}
-            </GoogleReCaptchaProvider>
-        );
-    }
-    if (GOOGLE_OAUTH_CLIENT_ID) {
-        content = (
-            <GoogleOAuthProvider clientId={GOOGLE_OAUTH_CLIENT_ID}>
-                {content}
-            </GoogleOAuthProvider>
-        );
-    }
-    return content;
+    return (
+        <GoogleReCaptchaProvider reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHAV3_SITEKEY}>
+            <HapppyGtmPublicInner />
+        </GoogleReCaptchaProvider>
+    );
 }

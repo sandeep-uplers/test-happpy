@@ -6164,24 +6164,6 @@
                 margin-bottom: 12px;
             }
 
-            .form-group .rich-editor-container .rsw-editor {
-                height: 200px !important;
-                min-height: 150px !important;
-                font-size: 14px !important;
-
-                .resizableEditor {
-                    line-height: 22px !important;
-                }
-
-                .dynamic-field {
-                    color: var(--primary-black) !important;
-                }
-
-                span {
-                    font-size: 14px !important;
-                }
-            }
-
             .form-group .error {
                 margin-bottom: 0;
                 line-height: 20px;
@@ -6440,8 +6422,8 @@
 
 @media (max-width: 767px) {
     .outreach-container .testimonials-slider .testimonials-slider__marquee {
-        -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
-        mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
     }
 
     .outreach-container .testimonials-slider .tc-wrapper {
@@ -7720,6 +7702,10 @@
 
             .benefits-list {
                 padding: 24px !important;
+                
+                @media (max-width: 767px) {
+                    padding: 20px 24px !important;
+                }
             }
 
             .account-card {
@@ -7925,9 +7911,6 @@
                 max-width: 100%;
             }
 
-            .template-custom-tag-dropdown {
-                min-width: fit-content !important;
-            }
         }
     }
 

@@ -1,9 +1,10 @@
 'use client';
 
 import { HAPPPY_AI_AGENT_PATH, REFERRAL_AI_AGENT_PATH } from '../components/HappyAiAgentLayout';
+import { ONBOARDING_URL_PARAM } from './onboardingUrlParams';
 
-/** Query keys preserved when logging out from `/talent/referral-ai-agent`. */
-export const HAPPY_AGENT_PRESERVED_PARAM_KEYS = ['r', 'reference', 'src', 'entry_source'];
+/** Query keys preserved across public landing → referral-ai-agent navigation. */
+export const HAPPY_AGENT_PRESERVED_PARAM_KEYS = ['r', 'reference', 'src', 'entry_source', 'source'];
 
 const TALENT_LOGIN_PATH = '/login';
 
@@ -36,6 +37,23 @@ function pickHappyAgentUrlParams(search) {
         }
     }
     return picked;
+}
+
+/**
+ * `/talent/referral-ai-agent` with marketing params (`r`, `reference`, `src`, …) carried
+ * from the public landing — matches UTS handoff behaviour.
+ *
+ * @param {URLSearchParams|string|undefined} search — current page query
+ * @param {{ onboardingParam?: string }} [options] — optional onboarding flag (e.g. create-profile)
+ */
+export function buildReferralAiAgentPath(search, { onboardingParam } = {}) {
+    const params = pickHappyAgentUrlParams(search);
+    if (onboardingParam) {
+        Object.values(ONBOARDING_URL_PARAM).forEach((key) => params.delete(key));
+        params.set(onboardingParam, 'true');
+    }
+    const qs = params.toString();
+    return qs ? `${REFERRAL_AI_AGENT_PATH}?${qs}` : REFERRAL_AI_AGENT_PATH;
 }
 
 /** Public landing path with preserved query params from the referral-ai-agent page. */

@@ -76,7 +76,7 @@ const PRIVACY_POINTS = [
     "Read-only access — only sees emails/messages the agent sends",
     "Never touches your personal inbox, attachments, or profile",
     "Bank-grade encryption · Disconnect anytime, instantly revoked",
-    'We never store your password. We use a secure, unreadable token - just like you save cards on Swiggy or Flipkart.'
+    // 'We never store your password. We use a secure, unreadable token - just like you save cards on Swiggy or Flipkart.'
 ];
 
 const TRUST_BADGES = ["SSL SECURED", "PRIVACY FIRST", "OAUTH 2.0"];
@@ -764,7 +764,7 @@ export default function HapppyGtmGmailStep({ gmailConnected, onAdvance, onBack }
                                 </button>
                             )}
                         </div>
-                        <p className="agent-onb-card__footnote">
+                        <p className="agent-onb-card__footnote hidden">
                             We never see your password · Your account stays safe · Revoke anytime
                         </p>
                     </div>

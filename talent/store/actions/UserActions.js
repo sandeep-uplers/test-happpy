@@ -1,5 +1,3 @@
-'use client';
-
 import Cookies from 'js-cookie';
 
 import {
@@ -57,7 +55,7 @@ import {
     API_UPDATE_TRANSFORMED_RESUME_IN_PROFILE,
     API_SNOOZE_EMAIL,
     API_SNOOZE_EMAIL_UPDATE,
-    API_ACCOUNT_STATUS, API_LINKEDIN_CONNECT, API_LINKEDIN_VERIFY, API_LINKEDIN_DISCONNECT, API_GMAIL_VERIFY, API_GMAIL_DISCONNECT, API_OUTREACH_AGENT, API_AUTO_RUN_REQUEST, API_REFERRAL_AGENT_JOB_APPLY_BY_LINKS_BATCH, API_ACCOUNT_ANALYTICS,
+    API_ACCOUNT_STATUS, API_LINKEDIN_CONNECT, API_LINKEDIN_VERIFY, API_LINKEDIN_DISCONNECT, API_GMAIL_VERIFY, API_GMAIL_DISCONNECT, API_OUTREACH_AGENT, API_AUTO_RUN_REQUEST, API_REFERRAL_AGENT_JOB_APPLY_BY_LINK, API_REFERRAL_AGENT_JOB_APPLY_BY_LINKS_BATCH, API_ACCOUNT_ANALYTICS,
     API_RESUME_DASHBOARD,
     API_RESUME_PREVIEW,
     API_VIEW_HEALTH_REPORT,
@@ -88,10 +86,9 @@ import {
     API_GET_OUTREACH_DASHBOARD_DATA,
     API_DAILY_REFERRAL_RUNS,
     API_GET_RECOMMENDED_JOBS,
-    API_REFERRAL_AGENT_JOB_APPLY_BY_LINK,
+    API_STORE_RECOMMENDED_JOBS,
     AUTO_RUN_CONSENT_GIVEN,
     AUTO_RUN_CONSENT_REMOVED,
-    API_STORE_RECOMMENDED_JOBS,
     API_COMPANY_SALARY_FEEDBACK,
     API_OUTREACH_SUPPORT,
     API_RESUME_HEALTH_CHECK_NEW,
@@ -104,7 +101,7 @@ import {
     API_OUTREACH_MARK_REPLY_SEEN,
 } from '../../components/Constant';
 
-import { formatErrors, GET_API, GET_API_WithToken, POST_API, POST_API_WithToken, getDomain, checkEvenUser, isRequestCanceled } from '../../components/Helper';
+import { formatErrors, GET_API, POST_API, getDomain, checkEvenUser } from '../../components/Helper';
 import {
     REMOVE_BULK_ERRORS, REMOVE_ERRORS, REMOVE_NESTED_LOCK, REMOVE_PROFILE_STATE, REMOVE_SINGLE_LOCK, SET_BULK_ERRORS, SET_CURRENT_USER,
     SET_ERRORS, SET_FORM_ERRORS, SET_LOADER, SET_OPP_MASTER, SET_PROFILE_DATA, SET_PROFILE_PERCENT, SET_PROFILE_REM_PERCENT, SET_SUCCESS, SET_TNC_MODAL, UPDATE_CURRENT_USER,
@@ -143,9 +140,9 @@ import {
     parseDailyReferralRunsResponse,
     shouldRefreshDailyLimitAfterAutoRun,
 } from '../../helpers/happpyAgentDailyLimitLogic';
-import { HAPPPY_AGENT_DASHBOARD_CACHE_KEY } from '../../helpers/happpyAgentDailyLimit';
 import { resumeHealthReportViewedTracking, resumeTemplateSelectedTracking, setRegisterId, trackAllCtaClickV2, updateMixpanelUserDetails } from '../../helpers/Mixpanel';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 
 // export const talentLogin = (userInfo) => async (dispatch) => {
@@ -443,8 +440,8 @@ export const signupReferralAgent = (payload) => async (dispatch) => {
         POST_API(API_SIGNUP_REFERRAL_AGENT, payload).then((res) => {
             const { data } = res;
             if (data.status == 200) {
-                // Backend returns requires_otp + email when OTP must be verified first; no token until then
-                if (!data.requires_otp && data.authtoken) {
+                // New users: requires_otp false + token. Existing users: requires_otp true until OTP verify.
+                if (data.requires_otp === false && data.authtoken) {
                     Cookies.set('talent', true, { domain: getDomain(), secure: true, sameSite: 'Strict' });
                     localStorage.setItem('token', data.authtoken);
                     localStorage.setItem('user', JSON.stringify(data.data));
@@ -821,13 +818,15 @@ export const logoutUser = () => (dispatch) => {
     })
 }
 export const removeUser = () => async (dispatch) => {
+    happpyAgentDailyLimitFetchGeneration += 1;
     Cookies.remove('token')
     localStorage.removeItem('token')
     localStorage.removeItem('mixpanel_session_id')
     localStorage.removeItem('user')
     localStorage.removeItem("warning")
     localStorage.removeItem("joinusVideoCount")
-    clearHapppyAgentDashboardCache();
+    clearLegacyHapppyAgentDashboardCache();
+    clearHapppyAgentDailyLimitSync();
     dispatch({ type: REMOVE_PROFILE_STATE });
     dispatch({ type: SET_LOGGED_OUT, payload: true });
     dispatch({ type: HAPPPY_AGENT_RESET });
@@ -912,6 +911,7 @@ export const getProfilePercent = (loader = true) => async (dispatch) => {
                 agent_tailor_plans: data?.agent_tailor_plans,
                 agent_tailor_plans_original: data?.agent_tailor_plans_original,
                 happy_referral_total_discount: data?.happy_referral_total_discount,
+                special_renewal_message: !!data?.special_renewal_message,
             }
         });
         dispatch({
@@ -1330,7 +1330,7 @@ export const getFeaturedOpportnities = () => (dispatch) => {
     })
 }
 
-export const getMyOpportnities = ({ page, activeJob }, signal) => (dispatch) => {
+export const getMyOpportnities = ({ page, activeJob }, cancelToken) => (dispatch) => {
     let params = {
         pagination: 10,
         page: page
@@ -1338,17 +1338,17 @@ export const getMyOpportnities = ({ page, activeJob }, signal) => (dispatch) => 
     if (activeJob) {
         params.activeJob = activeJob
     }
+    const token = localStorage.getItem('token');
+    if (token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
     return new Promise((resolve, reject) => {
         if (page == 1) dispatch({ type: SET_LOADER, payload: true })
-        GET_API(API_MY_OPP, { params, signal })
+        axios.get(API_MY_OPP, { params, cancelToken: cancelToken })
             .then((res) => {
                 resolve(res);
             })
             .catch((err) => {
-                if (isRequestCanceled(err)) {
-                    reject(err);
-                    return;
-                }
                 if (err.response && err.response.status && err.response.status == 401) {
                     removeUser()(dispatch);
                 }
@@ -1692,10 +1692,14 @@ export const getIndividualHR = (reqHrNumber) => (dispatch) => {
     })
 }
 
-export const getSingleOpportunity = (reqHrNumber) => (dispatch) => {
+export const getSingleOpportunity = (reqHrNumber, { withHapppyAgentInfo = false } = {}) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
+    let url = API_SINGLE_OPP + '?hr_number=' + reqHrNumber;
+    if (withHapppyAgentInfo) {
+        url += '&happpy_agent_info=1';
+    }
     return new Promise((resolve, reject) => {
-        GET_API(API_SINGLE_OPP + '?hr_number=' + reqHrNumber)
+        GET_API(url)
             .then((res) => {
                 if (res.data.is_test_hr == 1) {
                     window.location.href = '/talent/all-opportunities';
@@ -1768,10 +1772,13 @@ export const getMatchMakePercent = (reqHrNumber) => (dispatch) => {
 }
 
 
-export const getSimilarJob = (reqHrNumber, email, { aggregatedJobs = false } = {}) => (dispatch) => {
+export const getSimilarJob = (reqHrNumber, email, { aggregatedJobs = false, withHapppyAgentInfo = false } = {}) => (dispatch) => {
     const payload = { hr_id: reqHrNumber, user_email: email };
     if (aggregatedJobs) {
         payload.aggregated_jobs = 1;
+    }
+    if (withHapppyAgentInfo) {
+        payload.happpy_agent_info = 1;
     }
     return new Promise((resolve, reject) => {
         POST_API(API_SIMILAR_JOB, payload)
@@ -2661,7 +2668,7 @@ export const errorBoundryTrigger = (payload) => {
 }
 
 
-export const getTalentLocationMaster = ({ search, noState }, signal) => {
+export const getTalentLocationMaster = ({ search, noState }, cancelToken) => {
     return new Promise((resolve, reject) => {
         let params = {
             search: search,
@@ -2670,12 +2677,15 @@ export const getTalentLocationMaster = ({ search, noState }, signal) => {
         if (noState) {
             params.search_state = 'no'
         }
-        GET_API(API_TALENT_LOCATION_MASTER, { params, signal })
+        axios.get(API_TALENT_LOCATION_MASTER, {
+            params: params,
+            cancelToken: cancelToken
+        })
             .then((res) => {
                 resolve(res);
             })
             .catch((err) => {
-                if (isRequestCanceled(err)) {
+                if (axios.isCancel(err)) {
                     console.log('Request canceled');
                 } else {
                     console.error("search location request failed:", err);
@@ -2721,11 +2731,7 @@ export const getTalentPreferences = (noLoader = false) => (dispatch) => {
                 }
                 reject(err)
             })
-            .finally(() => {
-                if (!noLoader) {
-                    dispatch({ type: SET_LOADER, payload: false })
-                }
-            })
+            .finally(() => dispatch({ type: SET_LOADER, payload: false }))
     })
 }
 
@@ -3155,30 +3161,17 @@ export const getOutreachStep = () => (dispatch) => {
     })
 }
 
-/** Mirror of the localStorage cache the AgentJ layout uses for first-paint hydration. */
+/** Seeds gmail/linkedin connection flags from localStorage for first paint after hard reload. */
 const HAPPPY_AGENT_CACHE_KEY = 'job_agent_outreach_step_cache';
-
-function persistHapppyAgentDashboardData(payload) {
-    if (typeof window === 'undefined' || !payload || typeof payload !== 'object') return;
-    try {
-        window.localStorage.setItem(HAPPPY_AGENT_DASHBOARD_CACHE_KEY, JSON.stringify(payload));
-    } catch {
-        /* ignore quota / private mode */
-    }
-}
-
-function clearHapppyAgentDashboardCache() {
-    if (typeof window === 'undefined') return;
-    try {
-        window.localStorage.removeItem(HAPPPY_AGENT_DASHBOARD_CACHE_KEY);
-    } catch {
-        /* ignore */
-    }
-}
 
 /** Remove deprecated dashboard localStorage cache (API-only sync since 2026). */
 function clearLegacyHapppyAgentDashboardCache() {
-    clearHapppyAgentDashboardCache();
+    if (typeof window === 'undefined') return;
+    try {
+        window.localStorage.removeItem('happpy_agent_dashboard_data_cache');
+    } catch {
+        /* ignore */
+    }
 }
 
 function persistHapppyAgentConnections(d) {
@@ -3406,11 +3399,13 @@ export const submitReferralJobApplyByLinksBatch = (payload) => (dispatch) =>
         return res;
     });
 
-/** Persist Auto Run toggle into dashboard cache (`dashboardData.auto_run_consent`). */
+/** Update Auto Run toggle in Redux (`dashboardData.auto_run_consent_status` 0/1/2). */
 export const setHapppyAgentAutoRunHapppy = (autoRunHapppy) => (dispatch, getState) => {
     const current = getState().happpyAgent?.dashboardData || {};
-    const nextDashboard = { ...current, auto_run_consent: !!autoRunHapppy };
-    persistHapppyAgentDashboardData(nextDashboard);
+    const nextDashboard = {
+        ...current,
+        auto_run_consent_status: autoRunHapppy ? AUTO_RUN_CONSENT_GIVEN : AUTO_RUN_CONSENT_REMOVED,
+    };
     dispatch({
         type: HAPPPY_AGENT_DAILY_LIMIT_SET,
         payload: { dashboardData: nextDashboard },
@@ -3528,8 +3523,10 @@ export const getResumeDashboard = () => (dispatch) => {
 
 
 
-export const getPreviewUploadedResume = (payload, fromTailorDashboard = false) => (dispatch) => {
-    dispatch({ type: SET_LOADER, payload: true })
+export const getPreviewUploadedResume = (payload, fromTailorDashboard = false, noLoader = false) => (dispatch) => {
+    if (!noLoader) {
+        dispatch({ type: SET_LOADER, payload: true })
+    }
     const url = fromTailorDashboard ? API_TAILOR_RESUME_PREVIEW : API_RESUME_PREVIEW
     return new Promise((resolve, reject) => {
         POST_API(url, payload)
@@ -3542,7 +3539,11 @@ export const getPreviewUploadedResume = (payload, fromTailorDashboard = false) =
                 }
                 reject(err)
             })
-            .finally(() => dispatch({ type: SET_LOADER, payload: false }))
+            .finally(() => {
+                if (!noLoader) {
+                    dispatch({ type: SET_LOADER, payload: false })
+                }
+            })
     })
 }
 
@@ -3790,8 +3791,11 @@ export const createCareerCoachProfile = (payload) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
 
     return new Promise((resolve, reject) => {
-        POST_API_WithToken(API_CAREER_COACH_PROFILE, payload, localStorage.getItem('cc_token'))
-            .then((res) => {
+        axios.post(API_CAREER_COACH_PROFILE, payload, {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem('cc_token'),
+            }
+        }).then((res) => {
             resolve(res);
             let users = JSON.parse(localStorage.getItem('cc_profiles')) || [];
 
@@ -3815,8 +3819,11 @@ export const getCCRecentChats = () => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
 
     return new Promise((resolve, reject) => {
-        GET_API_WithToken(API_CAREER_COACH_RECENT_CHATS, localStorage.getItem('cc_token'))
-            .then((res) => {
+        axios.get(API_CAREER_COACH_RECENT_CHATS, {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem('cc_token'),
+            }
+        }).then((res) => {
             resolve(res);
         })
             .catch((err) => {
@@ -3832,8 +3839,11 @@ export const getCCChatMessages = (payload) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
 
     return new Promise((resolve, reject) => {
-        GET_API_WithToken(API_CAREER_COACH_CHAT_MESSAGES + payload?.chat_id, localStorage.getItem('cc_token'))
-            .then((res) => {
+        axios.get(API_CAREER_COACH_CHAT_MESSAGES + payload?.chat_id, {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem('cc_token'),
+            }
+        }).then((res) => {
             resolve(res);
         })
             .catch((err) => {
@@ -3848,8 +3858,12 @@ export const getCCChatMessages = (payload) => (dispatch) => {
 export const uploadCCResume = (payload) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
     return new Promise((resolve, reject) => {
-        POST_API_WithToken(API_CAREER_COACH_UPLOAD_RESUME, payload, localStorage.getItem('cc_token'))
-            .then((res) => {
+        axios.post(API_CAREER_COACH_UPLOAD_RESUME, payload, {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem('cc_token'),
+                'Content-Type': 'multipart/form-data',
+            }
+        }).then((res) => {
             resolve(res);
         }).catch((err) => {
             reject(err)
@@ -3862,8 +3876,11 @@ export const uploadCCResume = (payload) => (dispatch) => {
 export const getCCUploadedResume = () => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
     return new Promise((resolve, reject) => {
-        GET_API_WithToken(API_CAREER_COACH_GET_RESUME, localStorage.getItem('cc_token'))
-            .then((res) => {
+        axios.get(API_CAREER_COACH_GET_RESUME, {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem('cc_token'),
+            }
+        }).then((res) => {
             resolve(res);
         })
             .catch((err) => {
@@ -3878,8 +3895,11 @@ export const getCCUploadedResume = () => (dispatch) => {
 export const storeCCFeedback = (payload) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
     return new Promise((resolve, reject) => {
-        POST_API_WithToken(API_CAREER_COACH_FEEDBACK, payload, localStorage.getItem('cc_token'))
-            .then((res) => {
+        axios.post(API_CAREER_COACH_FEEDBACK, payload, {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem('cc_token'),
+            }
+        }).then((res) => {
             resolve(res);
         })
             .catch((err) => {
@@ -3895,7 +3915,7 @@ export const storeCCFeedback = (payload) => (dispatch) => {
 export const checkJobsSpotUser = (payload) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
     return new Promise((resolve, reject) => {
-        POST_API(API_JOBS_SPOT_CHECK_USER, payload)
+        axios.post(API_JOBS_SPOT_CHECK_USER, payload)
             .then((res) => {
                 resolve(res);
             }).catch((err) => {
@@ -3909,7 +3929,7 @@ export const checkJobsSpotUser = (payload) => (dispatch) => {
 export const creatJobAlert = (payload) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
     return new Promise((resolve, reject) => {
-        POST_API(API_JOBS_SPOT_CREATE_JOB_ALERT, payload)
+        axios.post(API_JOBS_SPOT_CREATE_JOB_ALERT, payload)
             .then((res) => {
                 resolve(res);
             }).catch((err) => {

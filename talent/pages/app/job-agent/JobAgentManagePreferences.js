@@ -7,7 +7,7 @@ import '../../../../styles/talent/index.css';
 import Select from 'react-select';
 import { customSelectTheme, JobFunctionGroupLabel, JobFunctionSelectStyles, ReactSelectStyles } from '../../../components/common/CustomStyleReactSelect';
 import { CheckboxInput, MoneyInput, RadioInput } from '../../../components/common/Inputs';
-import { base64ToBlob, buildFormData, convertNpToDays, formatErrors, groupOptionsByCategory, formattedCTC, getLastWorkingDayBounds, getLastWorkingDayBoundsError, getPlaceholderLWD, isLastWorkingDayInBounds, isValidDate, sanitizePayload, scrollToFirstError, isAllEmpty, formatCTCBreakdown, formatCTCBreakdownLPA, checkDirectPayUser, createRequestCancelSource } from '../../../components/Helper';
+import { base64ToBlob, buildFormData, checkIfFilePasswordProtected, convertNpToDays, formatErrors, groupOptionsByCategory, formattedCTC, getLastWorkingDayBounds, getLastWorkingDayBoundsError, getPlaceholderLWD, isLastWorkingDayInBounds, isValidDate, sanitizePayload, scrollToFirstError, isAllEmpty, formatCTCBreakdown, formatCTCBreakdownLPA, checkDirectPayUser } from '../../../components/Helper';
 import '../preferences/preferences.css';
 import { JAD_PREF_FIGMA_COLORS } from './preference/JobAgentManagePreferences.colors';
 import _, { debounce } from 'lodash';
@@ -20,10 +20,8 @@ import toast from 'react-hot-toast';
 import { savePreferencesCtaTrack, skipPreferencesModalTrack, resumeReplacedInProfileTracking } from '../../../helpers/Mixpanel';
 import { useRouter } from 'next/navigation';
 import { IMAGE_URL, JobSearchPrefMonthsOptions } from '../../../components/Constant';
-import { checkIfFilePasswordProtected } from '../../../components/Helper';
-import { MenuDots, MenuResumeDownload, MenuResumeUpload } from '../../../assets/IconSVG';
+import { Clock, EyeIconPreview, MenuDots, MenuResumeDownload, MenuResumeUpload } from '../../../assets/IconSVG';
 import { format } from 'date-fns';
-import { Clock, EyeIconPreview } from '../../../assets/IconSVG';
 import ExperienceInput from '../../../components/common/ExperienceInput';
 import dynamic from 'next/dynamic';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -162,6 +160,8 @@ export default function JobAgentManagePreferences({
     centeredResumeUpload = false,
     /** When true, LinkedIn URL is optional (e.g. agent onboarding step 2). Default: required. */
     linkedinOptional = false,
+    /** When true, hide job journey, target roles, and company-type fields (collected later on update profile). */
+    hideDeferredProfileFields = false,
 }) {
     const { resumeHealthControl } = useSelector(state => state.resume);
     const dispatch = useDispatch()
@@ -208,6 +208,10 @@ export default function JobAgentManagePreferences({
     })
     const [selectedResume, setSelectedResume] = useState(null)
     const [isResumeModalOpen, setIsResumeModalOpen] = useState(false)
+    const uploadResumeRef = useRef(null);
+    const [resumeData, setResumeData] = useState(null);
+    const [resumeUploading, setResumeUploading] = useState(false);
+    const [fileId, setFileId] = useState(null);
     const preferencesData = useSelector(state => state?.profile?.preferences)
     const { jobFunctionMaster } = useSelector(state => state.profile)
     const [agentSkillDefaultOptions, setAgentSkillDefaultOptions] = useState([])
@@ -215,8 +219,6 @@ export default function JobAgentManagePreferences({
     const [agentSkillSearchLoading, setAgentSkillSearchLoading] = useState(false)
     const [interestedJobFunctionOptions, setInterestedJobFunctionOptions] = useState([])
     const lastAgentSkillInputValueRef = useRef('');
-
-    const [resumeData, setResumeData] = useState(null);
 
     const validate = ({ silent = false } = {}) => {
         let isValid = true;
@@ -229,23 +231,25 @@ export default function JobAgentManagePreferences({
             isValid = false;
             newErrors.talent_top_skills = `You can select up to ${MAX_AGENT_TOP_SKILLS} skills only`;
         }
-        if (!formData.target_company_types?.length) {
-            isValid = false;
-            newErrors.target_company_types = "Please select at least one company type";
-        }
-        if (!formData.interested_job_functions?.length) {
-            isValid = false;
-            newErrors.interested_job_functions = "Please select at least one job function";
-        } else if (formData.interested_job_functions.length > MAX_INTERESTED_JOB_FUNCTIONS) {
-            isValid = false;
-            newErrors.interested_job_functions = `You can select up to ${MAX_INTERESTED_JOB_FUNCTIONS} job functions only`;
-        }
-
-        if (twoColumnLocationPreferences) {
-            const journeyError = validateUserJourneyStatus(formData.user_journey_status, masters);
-            if (journeyError) {
+        if (!hideDeferredProfileFields) {
+            if (!formData.target_company_types?.length) {
                 isValid = false;
-                newErrors.user_journey_status = journeyError;
+                newErrors.target_company_types = "Please select at least one company type";
+            }
+            if (!formData.interested_job_functions?.length) {
+                isValid = false;
+                newErrors.interested_job_functions = "Please select at least one job function";
+            } else if (formData.interested_job_functions.length > MAX_INTERESTED_JOB_FUNCTIONS) {
+                isValid = false;
+                newErrors.interested_job_functions = `You can select up to ${MAX_INTERESTED_JOB_FUNCTIONS} job functions only`;
+            }
+
+            if (twoColumnLocationPreferences) {
+                const journeyError = validateUserJourneyStatus(formData.user_journey_status, masters);
+                if (journeyError) {
+                    isValid = false;
+                    newErrors.user_journey_status = journeyError;
+                }
             }
         }
 
@@ -621,7 +625,6 @@ export default function JobAgentManagePreferences({
 
                     setModalDataLoading(false);
                 })
-                .catch(() => setModalDataLoading(false))
         }
 
     }, [])
@@ -762,7 +765,7 @@ export default function JobAgentManagePreferences({
                 setSearchLoading(null);
                 return;
             }
-            const newSource = createRequestCancelSource();
+            const newSource = axios.CancelToken.source();
             cancelSources.current = {
                 ...cancelSources.current,
                 [locationType]: newSource // Store the new source
@@ -830,6 +833,7 @@ export default function JobAgentManagePreferences({
         modalDataLoading,
         isLoading,
         twoColumnLocationPreferences,
+        hideDeferredProfileFields,
         onCanSubmitChange,
         isModalOpen,
     ]);
@@ -870,8 +874,14 @@ export default function JobAgentManagePreferences({
         if (formData.talent_top_skills?.length > 0) {
             reqMap.talent_top_skills = formData.talent_top_skills.map(item => item.value);
         }
-        if (formData.interested_job_functions?.length > 0) {
+        if (!hideDeferredProfileFields && formData.interested_job_functions?.length > 0) {
             reqMap.interested_job_functions = formData.interested_job_functions.map(item => item.value);
+        } else {
+            delete reqMap.interested_job_functions;
+        }
+        if (hideDeferredProfileFields) {
+            delete reqMap.target_company_types;
+            delete reqMap.user_journey_status;
         }
         if (!isModalOpen) {
             if (resumeData) {
@@ -903,11 +913,17 @@ export default function JobAgentManagePreferences({
         if (obj?.ctc_breakdown) {
             obj.ctc_breakdown = formatCTCBreakdown(obj.ctc_breakdown)
         }
-        if (twoColumnLocationPreferences) {
+        if (twoColumnLocationPreferences && !hideDeferredProfileFields) {
             const journeyPayload = buildUserJourneyStatusPayload(formData.user_journey_status, masters);
             if (journeyPayload) {
                 obj.user_journey_status = journeyPayload;
+            } else {
+                delete obj.user_journey_status;
             }
+        } else if (hideDeferredProfileFields) {
+            delete obj.user_journey_status;
+            delete obj.target_company_types;
+            delete obj.interested_job_functions;
         }
         if (!isModalOpen && formData.contact_number) {
             obj.contact_number = formData.contact_number;
@@ -1010,10 +1026,6 @@ export default function JobAgentManagePreferences({
             })
 
     }
-
-    const uploadResumeRef = useRef(null);
-    const [resumeUploading, setResumeUploading] = useState(false);
-    const [fileId, setFileId] = useState(null);
 
     const handleResume = async (e) => {
         const file = e.target.files[0];
@@ -1496,8 +1508,8 @@ export default function JobAgentManagePreferences({
 
     return (
         <section className="containSection">
-            {(isLoading || modalDataLoading) &&
-                <div className="jad-jobs__toolbar-msg jad-jobs__toolbar-msg--loading text-center preferences-fetch-loading">
+            {(isLoading) &&
+                <div className="jad-jobs__toolbar-msg jad-jobs__toolbar-msg--loading text-center">
                     <span className="jad-jobs__toolbar-msg">Loading preferences…</span>
                     <div className="jad-jobs__toolbar-spinner" aria-hidden />
                 </div>
@@ -1752,7 +1764,7 @@ export default function JobAgentManagePreferences({
 
                         {renderCompensationFields()}
 
-                        {twoColumnLocationPreferences && (
+                        {twoColumnLocationPreferences && !hideDeferredProfileFields && (
                             <JobAgentJobJourneyStatusField
                                 value={formData.user_journey_status}
                                 onChange={handleUserJourneyChange}
@@ -1938,13 +1950,15 @@ export default function JobAgentManagePreferences({
 
 
                         <div className="jad-agent-targeting-section">
-                            <JobAgentTargetRolesField
-                                value={formData.interested_job_functions}
-                                options={interestedJobFunctionOptions}
-                                maxSelection={MAX_INTERESTED_JOB_FUNCTIONS}
-                                onChange={handleInterestedJobFunctionsChange}
-                                error={errors.interested_job_functions}
-                            />
+                            {!hideDeferredProfileFields && (
+                                <JobAgentTargetRolesField
+                                    value={formData.interested_job_functions}
+                                    options={interestedJobFunctionOptions}
+                                    maxSelection={MAX_INTERESTED_JOB_FUNCTIONS}
+                                    onChange={handleInterestedJobFunctionsChange}
+                                    error={errors.interested_job_functions}
+                                />
+                            )}
                             <div className='form-group jad-agent-field jad-agent-field--skills'>
                                 <div className="jad-agent-field__label-col">
                                     <label className='required_label sectionTitle'>Skills</label>
@@ -1965,44 +1979,46 @@ export default function JobAgentManagePreferences({
                                 </div>
                             </div>
 
-                            <div className='form-group jad-agent-field'>
-                                <div className="jad-agent-field__label-col">
-                                    <label className='required_label sectionTitle' style={{ marginBottom: '0.625rem' }}>What kind of companies are you targeting?</label>
-                                </div>
-                                <div className='jad-agent-field__input'>
-                                    <div className="jad-company-target-grid">
-                                        {preferredCompanyTypesMaster.filter(option => normalizeCompanyTypeValue(option.value) !== 6).map((option) => {
-                                            const isChecked = isCompanyTypeSelected(formData.target_company_types, option.value);
-                                            return (
-                                                <CheckboxInput
-                                                    key={option.value}
-                                                    name={`target_company_${option.value}`}
-                                                    inputId={`target_company_${option.value}`}
-                                                    label={option.label}
-                                                    checked={isChecked}
-                                                    onChange={(e) => handleCompanyTargetChange(option.value, e.target.checked)}
-                                                />
-                                            );
-                                        })}
+                            {!hideDeferredProfileFields && (
+                                <div className='form-group jad-agent-field'>
+                                    <div className="jad-agent-field__label-col">
+                                        <label className='required_label sectionTitle' style={{ marginBottom: '0.625rem' }}>What kind of companies are you targeting?</label>
                                     </div>
-                                    <div className="jad-company-target-grid one-column">
-                                        {preferredCompanyTypesMaster.filter(option => normalizeCompanyTypeValue(option.value) === 6).map((option) => {
-                                            const isChecked = isCompanyTypeSelected(formData.target_company_types, option.value);
-                                            return (
-                                                <CheckboxInput
-                                                    key={option.value}
-                                                    name={`target_company_${option.value}`}
-                                                    inputId={`target_company_${option.value}`}
-                                                    label={option.label}
-                                                    checked={isChecked}
-                                                    onChange={(e) => handleCompanyTargetChange(option.value, e.target.checked)}
-                                                />
-                                            );
-                                        })}
+                                    <div className='jad-agent-field__input'>
+                                        <div className="jad-company-target-grid">
+                                            {preferredCompanyTypesMaster.filter(option => normalizeCompanyTypeValue(option.value) !== 6).map((option) => {
+                                                const isChecked = isCompanyTypeSelected(formData.target_company_types, option.value);
+                                                return (
+                                                    <CheckboxInput
+                                                        key={option.value}
+                                                        name={`target_company_${option.value}`}
+                                                        inputId={`target_company_${option.value}`}
+                                                        label={option.label}
+                                                        checked={isChecked}
+                                                        onChange={(e) => handleCompanyTargetChange(option.value, e.target.checked)}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
+                                        <div className="jad-company-target-grid one-column">
+                                            {preferredCompanyTypesMaster.filter(option => normalizeCompanyTypeValue(option.value) === 6).map((option) => {
+                                                const isChecked = isCompanyTypeSelected(formData.target_company_types, option.value);
+                                                return (
+                                                    <CheckboxInput
+                                                        key={option.value}
+                                                        name={`target_company_${option.value}`}
+                                                        inputId={`target_company_${option.value}`}
+                                                        label={option.label}
+                                                        checked={isChecked}
+                                                        onChange={(e) => handleCompanyTargetChange(option.value, e.target.checked)}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
+                                        {errors.target_company_types && <div className='error-msg'>{errors.target_company_types}</div>}
                                     </div>
-                                    {errors.target_company_types && <div className='error-msg'>{errors.target_company_types}</div>}
                                 </div>
-                            </div>
+                            )}
                         </div>
 
                         {/* <div className='form-group preferMethodWork'>

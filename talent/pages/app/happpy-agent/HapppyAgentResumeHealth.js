@@ -33,10 +33,6 @@ import HealthCheckLoaderModal from '../resume/HealthCheckLoaderModal';
 import HealthCheckPusher from '../resume/HealthCheckPusher';
 import TransformLoader from '../resume/payment/TransformLoader';
 
-if (typeof document !== 'undefined' && document.getElementById('happpy-root') || document.getElementById('app')) {
-    ensureModalAppElement();
-}
-
 const POPUP_STORAGE_KEY = 'jad_resume_health_popup';
 const LOG_PREFIX = '[AgentJ resume-health]';
 const FILE_REGEX = /(\.pdf|\.docx)$/i;
@@ -239,6 +235,11 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
     const userAttempts = resumeHealthControl?.user_attempts ?? 0;
     const totalAttempts = resumeHealthControl?.total_attempts ?? 0;
     const hasReachedLimit = totalAttempts > 0 && userAttempts >= totalAttempts;
+    // The monthly cap is surfaced as a toast instead of a disabled button, so the
+    // CTA stays clickable and the user gets told why nothing happened.
+    const notifyLimitReached = useCallback(() => {
+        toast.error(`You've used all ${totalAttempts} health checks this month.`, { duration: 4000 });
+    }, [totalAttempts]);
     const verdict = useMemo(() => (hasScore ? getResumeVerdict(score) : null), [hasScore, score]);
     const reportFileId = resumeHealthControl?.health_check?.file_id || null;
 
@@ -321,6 +322,10 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
     };
 
     const onSubmitHealthCheck = async () => {
+        if (hasReachedLimit) {
+            notifyLimitReached();
+            return;
+        }
         resumeHealthCheckInitiatedTracking(formData.resume);
         const openAiStatus = await getOpenAiStatus()(dispatch);
         if (!openAiStatus?.requiredFunctionOnline) {
@@ -507,8 +512,13 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
         .join(' ');
 
     const ctaLabel = variant === 'score' ? 'VIEW RESUME HEALTH REPORT' : "CHECK RESUME'S HEALTH";
-    const onCtaClick = () =>
+    const onCtaClick = () => {
+        if (variant !== 'score' && hasReachedLimit) {
+            notifyLimitReached();
+            return;
+        }
         openPopupAt(variant === 'score' ? STEP.REPORT : STEP.LANDING);
+    };
 
     return (
         <>
@@ -876,7 +886,7 @@ function LandingStep({
                             <button
                                 className="primaryBtn"
                                 onClick={onSubmit}
-                                disabled={submitting || hasReachedLimit || !formData.resume}
+                                disabled={submitting || !formData.resume}
                             >
                                 {submitting ? 'Starting…' : 'Review My Resume FOR FREE!'}
                             </button>

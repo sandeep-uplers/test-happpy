@@ -16,6 +16,7 @@ import {
     isAutoRunConsentOn,
 } from '../../../components/Constant';
 import { GET_API, POST_API, DELETE_API, renderTextWithLinks } from '../../../components/Helper';
+import { withHapppyAgentInfoQuery } from '../../../helpers/jobPath';
 import { submitAutoRunRequest } from '../../../store/actions/UserActions';
 import { trackHappyAgentMixpanel } from '../../../store/actions/happyAgentTracking';
 import ReferralAgentPreviewModal from '../../../components/ReferralAgentPreviewModal';
@@ -51,6 +52,7 @@ const markExtensionEngagement = () => {
         chrome_extension_download: true,
     }).catch(() => {});
 };
+
 
 const GMAIL_CONSENT_PLATFORMS = ['LINKEDIN', 'NAUKRI', 'GLASSDOOR', 'INDEED'];
 
@@ -914,19 +916,8 @@ const HapppyRecommendedJobs = () => {
     /** Resolve active tab from `?tab=...`, falling back to default when missing/invalid. */
     const activeTab = useMemo(() => {
         const tab = searchParams.get('tab');
-        const normalizedTab = tab === 'recommended' ? DEFAULT_RECOMMENDED_JOBS_TAB : tab;
-        return VALID_RECOMMENDED_JOBS_TAB_IDS.includes(normalizedTab)
-            ? normalizedTab
-            : DEFAULT_RECOMMENDED_JOBS_TAB;
+        return VALID_RECOMMENDED_JOBS_TAB_IDS.includes(tab) ? tab : DEFAULT_RECOMMENDED_JOBS_TAB;
     }, [searchParams]);
-
-    /** Legacy bookmarks used `?tab=recommended`; normalize to the default all-jobs URL. */
-    useEffect(() => {
-        if (searchParams.get('tab') !== 'recommended') return;
-        const next = new URLSearchParams(searchParams);
-        next.delete('tab');
-        setSearchParams(next, { replace: true });
-    }, [searchParams, setSearchParams]);
 
     const autoRunHapppy = useSelector(
         (state) => isAutoRunConsentOn(state.happpyAgent.dashboardData?.auto_run_consent_status),
@@ -1005,7 +996,7 @@ const HapppyRecommendedJobs = () => {
         setLoading(true);
         setError('');
         try {
-            const response = await GET_API(`${API_GET_RECOMMENDED_JOBS}?limit=15`);
+            const response = await GET_API(withHapppyAgentInfoQuery(`${API_GET_RECOMMENDED_JOBS}?limit=15`));
             const data = unwrapApiData(response);
             setJobs(Array.isArray(data) ? data : []);
             setPage(1);
@@ -1040,7 +1031,9 @@ const HapppyRecommendedJobs = () => {
         if (!silent) setError('');
         try {
             const response = await GET_API(
-                `${API_GET_RECOMMENDED_EMAIL_JOBS}?best_for_you=${emailBestForYouOnly ? 'true' : 'false'}`
+                withHapppyAgentInfoQuery(
+                    `${API_GET_RECOMMENDED_EMAIL_JOBS}?best_for_you=${emailBestForYouOnly ? 'true' : 'false'}`
+                )
             );
             const data = unwrapApiData(response);
             setEmailJobs(Array.isArray(data) ? data : []);
@@ -1268,22 +1261,36 @@ const HapppyRecommendedJobs = () => {
         setToast((prev) => ({ ...prev, open: false }));
     };
 
-    const onAddToQueue = async (job, { linkedin_message_id, gmail_message_id } = {}) => {
+    const onAddToQueue = async (job, { linkedin_message_id, gmail_message_id, customResumeFile } = {}) => {
         const jobId = job?.id;
         if (jobId == null) return;
 
         setQueueingJobId(jobId);
         setError('');
         try {
-            const payload = {
-                job_id: jobId,
-                source: 'recommended-job page',
-            };
-            if (job?.HR_Number == null) {
-                payload.run_time = true;
+            let payload;
+            if (customResumeFile) {
+                payload = new FormData();
+                payload.append('job_id', jobId);
+                payload.append('source', 'recommended-job page');
+                if (job?.HR_Number == null) {
+                    payload.append('run_time', '1');
+                }
+                payload.append('is_tailored', '1');
+                payload.append('html', customResumeFile);
+                if (linkedin_message_id) payload.append('linkedin_message_id', linkedin_message_id);
+                if (gmail_message_id) payload.append('gmail_message_id', gmail_message_id);
+            } else {
+                payload = {
+                    job_id: jobId,
+                    source: 'recommended-job page',
+                };
+                if (job?.HR_Number == null) {
+                    payload.run_time = true;
+                }
+                if (linkedin_message_id) payload.linkedin_message_id = linkedin_message_id;
+                if (gmail_message_id) payload.gmail_message_id = gmail_message_id;
             }
-            if (linkedin_message_id) payload.linkedin_message_id = linkedin_message_id;
-            if (gmail_message_id) payload.gmail_message_id = gmail_message_id;
             const response = await dispatch(submitAutoRunRequest(payload));
             const message = response?.data?.message || 'Job added to Happpy Agent queue!';
             setQueuedJobIds((prev) => ({ ...prev, [jobId]: true }));
@@ -1310,11 +1317,11 @@ const HapppyRecommendedJobs = () => {
         setPreviewJob(null);
     }, []);
 
-    const confirmRunAgentFromPreview = useCallback((messageTemplateIds = {}) => {
+    const confirmRunAgentFromPreview = useCallback((messageTemplateIds = {}, { customResumeFile } = {}) => {
         if (previewJob?.id == null) {
             return Promise.resolve();
         }
-        return onAddToQueue(previewJob, messageTemplateIds);
+        return onAddToQueue(previewJob, { ...messageTemplateIds, customResumeFile });
     }, [previewJob, onAddToQueue]);
 
     const openJobDescription = async (job) => {
@@ -1343,7 +1350,7 @@ const HapppyRecommendedJobs = () => {
                 setJobModal((prev) => ({ ...prev, loading: false }));
                 return;
             }
-            const response = await GET_API(`${API_SINGLE_OPP}?hr_number=${encodeURIComponent(hrNumber)}`);
+            const response = await GET_API(withHapppyAgentInfoQuery(`${API_SINGLE_OPP}?hr_number=${encodeURIComponent(hrNumber)}`));
             const payload = response?.data || {};
             const descriptionRaw =
                 payload?.JobDescription ??
@@ -1459,6 +1466,7 @@ const HapppyRecommendedJobs = () => {
             ? ''
             : `Showing ${pageStart}-${pageEnd} of ${activeJobs.length}`;
     const tabCounts = {
+        recommended: jobs.length,
         'gmail-scan': emailMeta?.total_jobs ?? emailJobs.length,
     };
     const pageTitle = isAllJobsTab
@@ -1466,11 +1474,6 @@ const HapppyRecommendedJobs = () => {
         : isGmailTab
             ? 'Recommended jobs from inbox | Happpy Agent | Uplers'
             : 'Jobs | Happpy Agent | Uplers';
-
-    useEffect(() => {
-        document.title = pageTitle;
-    }, [pageTitle]);
-
     const skeletonCards = useMemo(
         () => Array.from({ length: SKELETON_CARD_COUNT }, (_, idx) => idx),
         []
@@ -2288,9 +2291,11 @@ const HapppyRecommendedJobs = () => {
             {TABS.map((tab) => {
                 const isActive = activeTab === tab.id;
                 const count = tabCounts[tab.id];
-                const showCount = tab.id === 'gmail-scan'
-                    ? !emailMetaLoading && Boolean(emailMeta?.has_consent)
-                    : false;
+                const showCount = tab.id === 'recommended'
+                    ? !loading
+                    : tab.id === 'gmail-scan'
+                        ? !emailMetaLoading && Boolean(emailMeta?.has_consent)
+                        : false;
 
                 return (
                     <button
@@ -2301,7 +2306,7 @@ const HapppyRecommendedJobs = () => {
                         aria-current={isActive ? 'page' : undefined}
                     >
                         <span className="hra-rec__tab-label">{tab.label}</span>
-                        {showCount && count != null ? (
+                        {showCount ? (
                             <span className="hra-rec__tab-count" aria-hidden="true">
                                 {count}
                             </span>
@@ -2441,6 +2446,10 @@ const HapppyRecommendedJobs = () => {
         );
     };
 
+    useEffect(() => {
+        document.title = pageTitle;
+    }, [pageTitle]);
+
     return (
         <>
             <div className="hra-rec">
@@ -2448,7 +2457,7 @@ const HapppyRecommendedJobs = () => {
 
                 {/* <div className={`hra-rec__bento${isPaidPlan ? ' hra-rec__bento--single' : ''}`}>
 
-                     {!isPaidPlan && !dailyLimitLoading ? ( 
+                     {!isPaidPlan && !bentoLoading ? ( 
                         <section className="hra-rec__upgrade-card" aria-label="Upgrade plan">
                             <div className="hra-rec__upgrade-card-glow" aria-hidden />
                             <div className="hra-rec__upgrade-card-content">

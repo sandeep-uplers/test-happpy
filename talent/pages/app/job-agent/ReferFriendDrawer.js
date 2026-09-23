@@ -11,19 +11,17 @@ const COPIED_RESET_MS = 4000;
 const REFERRALS_EMPTY_MASCOT_SRC = IMAGE_URL + 'outreach/' + 'mascot-empty-list.svg';
 
 const EMPTY_REFERRAL_REWARDS = {
-    discount_percent: 0,
-    maxed_out: false,
-    eligible_paid_count: 0,
     eligible_count: 0,
-    reward_mode: 'paid_conversion',
-    trials_per_reward: null,
+    payout_rupees: 0,
     referrals: [],
 };
 
 const DEFAULT_SHARE_MESSAGE =
     'Join me on Happpy Agent — get an extended 10-day trial and let AI handle your job referral outreach.';
 
-function getHowItWorksSteps(isFreeReferrer) {
+const REFERRAL_PAYOUT_RUPEES = 500;
+
+function getHowItWorksSteps() {
     return [
         {
             id: 1,
@@ -40,55 +38,54 @@ function getHowItWorksSteps(isFreeReferrer) {
         },
         {
             id: 3,
-            content: isFreeReferrer ? (
+            content: (
                 <>
-                    Every 3 friends who start a free trial{' '}
-                    <strong className="jad-refer-friend-drawer__step-strong">→ you earn 20% off your next payment.</strong>
+                    Earn{' '}
+                    <strong className="jad-refer-friend-drawer__step-strong">₹{REFERRAL_PAYOUT_RUPEES} directly to your bank</strong>
+                    {' '}for every friend who subscribes to a Monthly or 3-Month plan.
                 </>
-            ) : (
+            ),
+        },
+        {
+            id: 4,
+            content: (
                 <>
-                    They subscribe to a paid plan{' '}
-                    <strong className="jad-refer-friend-drawer__step-strong">→ you earn 20% off your next payment.</strong>
+                    Track every referral in the{' '}
+                    <strong className="jad-refer-friend-drawer__step-strong">My Referrals &amp; Rewards</strong>
+                    {' '}tab.
+                </>
+            ),
+        },
+        {
+            id: 5,
+            content: (
+                <>
+                    Once your friend subscribes, we&apos;ll contact you to confirm your UPI or bank details and send your payout.
                 </>
             ),
         },
     ];
 }
 
-function getReferralTermsSections(isFreeReferrer) {
-    const earnItems = isFreeReferrer
-        ? [
-            "Share your link with a friend who's job hunting.",
-            'They get a 10-day free trial (instead of 7).',
-            'For every 3 friends who start a free trial via your link, you get 20% off your next payment.',
-            'You do not need those friends to pay — starting free trial is enough while you are on a free plan.',
-            'Use your 20% on a Monthly or Quarterly plan payment.',
-            'Refer more friends, earn more - every additional 3 trial joins add another 20%, up to 100% off one payment.',
-            'Your reward never expires.',
-        ]
-        : [
-            "Share your link with a friend who's job hunting.",
-            'They get a 10-day free trial (instead of 7).',
-            'When they subscribe to a paid plan, you get 20% off your next payment.',
-            'Anyone can refer - even on a Free Trial or Weekly plan (if available).',
-            'Use your 20% on a Monthly or Quarterly plan payment.',
-            'Refer more friends, earn more - discounts stack up to 100% off one payment.',
-            'Your reward never expires.',
-        ];
-
+function getReferralTermsSections() {
     return [
         {
-            title: isFreeReferrer
-                ? 'Refer friends. Get 20% off every 3 free trials.'
-                : 'Refer a friend. Get 20% off.',
-            items: earnItems,
+            title: `Refer friends. Earn ₹${REFERRAL_PAYOUT_RUPEES}.`,
+            items: [
+                "Share your link with a friend who's job hunting.",
+                'They get a 10-day free trial (instead of 7).',
+                `When they subscribe to a Monthly or 3-Month plan, you earn ₹${REFERRAL_PAYOUT_RUPEES} directly to your bank.`,
+                'Anyone can refer — even on a Free Trial.',
+                'Track every referral in the My Referrals & Rewards tab.',
+                "Once your friend subscribes, we'll contact you using your existing profile details to confirm UPI or bank details and send your payout. You do not need to submit payment details in the app.",
+            ],
         },
         {
             title: 'The fair-use bit:',
             items: [
                 'Real friends only - no fake or repeat accounts, and no spamming your link. If we detect this, your account will be suspended immediately.',
                 'One free trial per person.',
-                "If your friend's payment is refunded, that 20% goes away.",
+                `If your friend's payment is refunded, that ₹${REFERRAL_PAYOUT_RUPEES} payout is cancelled.`,
                 "We may update or end the program anytime (rewards you've already earned stay yours).",
             ],
         },
@@ -290,53 +287,28 @@ function getReferralInitial(name) {
 }
 
 /** Map GET /talent/outreach/referral-list item → rewards list row. */
-function mapApiReferralToUiItem(referral, rewardMode = 'paid_conversion') {
+function mapApiReferralToUiItem(referral) {
     const recipient = referral?.recipient || {};
     const isClaimed = Number(referral?.is_claimed) === 1;
-    const isPaidPlan = Number(recipient?.current_plan) === 2;
     const referralStatus = Number(referral?.status);
 
     let status = 'trial';
     if (isClaimed) {
         status = 'redeemed';
-    } else if (isPaidPlan || referralStatus === 2) {
+    } else if (referralStatus === 2) {
         status = 'paid';
     }
 
-    // Free referrers earn in groups of 3 trials — individual rows don't show 20% each.
-    const rewardPercent =
-        status === 'redeemed' || status === 'paid'
-            ? 20
-            : rewardMode === 'free_trial_groups' && status === 'trial'
-                ? 0
-                : 0;
+    const rewardAmount =
+        status === 'redeemed' || status === 'paid' ? REFERRAL_PAYOUT_RUPEES : 0;
 
     return {
         id: referral?.id,
         name: recipient?.name || '',
         email: recipient?.email || '',
         status,
-        reward_percent: rewardPercent,
+        reward_amount: rewardAmount,
     };
-}
-
-/** True when the user is on free trial or their plan has expired (not active paid). */
-function isTrialOrExpiredOutreachPlan(referralPlan) {
-    if (!referralPlan?.loaded) return false;
-    const planNumber = Number(referralPlan.plan);
-    return !(planNumber === 2 && !referralPlan.has_plan_expired);
-}
-
-/** True when trial/paid outreach access has ended (not merely on an active free trial). */
-function isExpiredOutreachPlan(referralPlan) {
-    return Boolean(referralPlan?.loaded && referralPlan.has_plan_expired);
-}
-
-/** Invite-footer redeem nudge — Figma 723:66309. */
-function getInviteRedeemBannerText(referralPlan) {
-    const planNumber = Number(referralPlan?.plan);
-    const planLabel = planNumber === 2 ? 'Paid plan' : 'free trial';
-    return `Your ${planLabel} has ended. You can redeem your referral rewards for a discount on your next plan!`;
 }
 
 const EMAIL_INVITE_RE = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -575,47 +547,20 @@ function ReferralInviteField() {
     );
 }
 
-function InviteRedeemFooterBanner({ text }) {
-    return (
-        <div className="jad-refer-friend-drawer__invite-redeem-banner" role="status">
-            <p className="jad-refer-friend-drawer__invite-redeem-banner-text">{text}</p>
-        </div>
-    );
-}
-
 /** Map referral-list API payload → rewards drawer state. */
 function mapReferralListToRewardsData(referrals, rewardSummary) {
     const list = Array.isArray(referrals) ? referrals : [];
-    const rewardMode = rewardSummary?.reward_mode || 'paid_conversion';
-    const uiReferrals = list.map((item) => mapApiReferralToUiItem(item, rewardMode));
-
-    if (rewardSummary && rewardSummary.discount_percent != null) {
-        const discountPercent = Number(rewardSummary.discount_percent) || 0;
-        const eligibleCount = Number(rewardSummary.eligible_count) || 0;
-        return {
-            discount_percent: discountPercent,
-            maxed_out: Boolean(rewardSummary.maxed_out) || discountPercent >= 100,
-            eligible_paid_count: eligibleCount,
-            eligible_count: eligibleCount,
-            reward_mode: rewardMode,
-            trials_per_reward: rewardSummary.trials_per_reward ?? (rewardMode === 'free_trial_groups' ? 3 : null),
-            referrals: uiReferrals,
-        };
-    }
-
-    // Fallback when reward_summary is missing (older API): paid-conversion math only.
-    const eligiblePaidCount = list.filter(
-        (item) => Number(item?.is_claimed) === 0 && Number(item?.recipient?.current_plan) === 2,
+    const uiReferrals = list.map((item) => mapApiReferralToUiItem(item));
+    const paidCount = uiReferrals.filter(
+        (item) => item.status === 'paid' || item.status === 'redeemed',
     ).length;
-    const discountPercent = Math.min(eligiblePaidCount * 20, 100);
+    const payoutRupees = rewardSummary?.payout_rupees != null
+        ? Number(rewardSummary.payout_rupees) || 0
+        : paidCount * REFERRAL_PAYOUT_RUPEES;
 
     return {
-        discount_percent: discountPercent,
-        maxed_out: discountPercent >= 100,
-        eligible_paid_count: eligiblePaidCount,
-        eligible_count: eligiblePaidCount,
-        reward_mode: 'paid_conversion',
-        trials_per_reward: null,
+        eligible_count: Number(rewardSummary?.eligible_count) || paidCount,
+        payout_rupees: payoutRupees,
         referrals: uiReferrals,
     };
 }
@@ -623,68 +568,48 @@ function mapReferralListToRewardsData(referrals, rewardSummary) {
 /** Map API payload → rewards screen variant. */
 function resolveRewardsViewState(rewardsData) {
     const referrals = Array.isArray(rewardsData?.referrals) ? rewardsData.referrals : [];
-    const discountPercent = Number(rewardsData?.discount_percent) || 0;
-    const maxedOut = Boolean(rewardsData?.maxed_out) || discountPercent >= 100;
-    const rewardMode = rewardsData?.reward_mode || 'paid_conversion';
+    const payoutRupees = Number(rewardsData?.payout_rupees) || 0;
 
     if (!referrals.length) {
-        return { variant: 'empty', referrals, discountPercent, maxedOut, rewardMode };
+        return { variant: 'empty', referrals, payoutRupees };
     }
-    if (maxedOut) {
-        return { variant: 'maxed', referrals, discountPercent, maxedOut, rewardMode };
+    if (payoutRupees > 0) {
+        return { variant: 'paid', referrals, payoutRupees };
     }
-    if (discountPercent > 0) {
-        return { variant: 'paid', referrals, discountPercent, maxedOut, rewardMode };
-    }
-    return { variant: 'pending', referrals, discountPercent, maxedOut, rewardMode };
+    return { variant: 'pending', referrals, payoutRupees };
 }
 
-function getRewardsBannerContent(variant, discountPercent, rewardMode = 'paid_conversion') {
-    const isFreeMode = rewardMode === 'free_trial_groups';
+function getRewardsBannerContent(variant, payoutRupees) {
     switch (variant) {
-        case 'maxed':
-            return {
-                compact: true,
-                showBadge: false,
-                showMascot: false,
-                title: "You've unlocked the maximum reward - 100% off",
-                lines: [
-                    'Your discount credits never expire, use them whenever you like!',
-                    "You've earned 100% off from your referrals. Your 100% discount will be applied automatically on a Monthly or Quarterly plan.",
-                ],
-                footnote: isFreeMode
-                    ? "Once you use this 100% discount, your reward meter resets and you'll earn 20% off again for every 3 new friends who start a free trial!"
-                    : "Once you use this 100% discount, your reward meter resets and you'll start earning 20% off for every new paid referral again!",
-            };
         case 'pending':
             return {
                 compact: false,
-                showBadge: true,
+                showBadge: false,
                 showMascot: false,
                 title: 'Your rewards journey starts here',
                 lines: [
-                    'Did you know? That your discount credits never expire, use them whenever you like!',
-                    isFreeMode
-                        ? 'Share your referral link — every 3 friends who start a free trial unlocks 20% off.'
-                        : 'Share your referral code to start earning rewards from paid referrals.',
+                    'Track every friend in this tab.',
+                    `You earn ₹${REFERRAL_PAYOUT_RUPEES} in your bank when a friend subscribes to a Monthly or 3-Month plan.`,
                 ],
             };
         case 'paid':
         default:
             return {
                 compact: false,
-                showBadge: true,
+                showBadge: false,
                 showMascot: false,
-                title: `${discountPercent}% off on your next purchase`,
+                title: payoutRupees > 0
+                    ? `₹${payoutRupees} ready to pay out`
+                    : `₹${REFERRAL_PAYOUT_RUPEES} per paid referral`,
                 lines: [
-                    'Did you know? That your discount credits never expire, use them whenever you like!',
-                    'The accumulated discount applies automatically the moment you purchase a Monthly or Quarterly plan.',
+                    "Once your friend subscribes, we'll contact you to confirm your UPI or bank details and send your payout.",
+                    'We already have your contact details — no form to fill in the app.',
                 ],
             };
     }
 }
 
-function ReferralTermsDialog({ open, onClose, isFreeReferrer = false }) {
+function ReferralTermsDialog({ open, onClose }) {
     useEffect(() => {
         if (!open) return undefined;
         const onKeyDown = (e) => {
@@ -696,7 +621,7 @@ function ReferralTermsDialog({ open, onClose, isFreeReferrer = false }) {
 
     if (!open || typeof document === 'undefined') return null;
 
-    const termsSections = getReferralTermsSections(isFreeReferrer);
+    const termsSections = getReferralTermsSections();
 
     return createPortal(
         <div
@@ -754,7 +679,7 @@ function ReferralTermsDialog({ open, onClose, isFreeReferrer = false }) {
     );
 }
 
-function ReferralTermsLink({ className = '', isFreeReferrer = false }) {
+function ReferralTermsLink({ className = '' }) {
     const [termsOpen, setTermsOpen] = useState(false);
 
     return (
@@ -769,7 +694,6 @@ function ReferralTermsLink({ className = '', isFreeReferrer = false }) {
             <ReferralTermsDialog
                 open={termsOpen}
                 onClose={() => setTermsOpen(false)}
-                isFreeReferrer={isFreeReferrer}
             />
         </>
     );
@@ -865,14 +789,8 @@ function ReferralLinkField({
 }
 
 /** Rewards summary banner — Figma 673:50885 / 747:50512 / 829:91149. */
-function ReferralsRewardsBanner({
-    variant,
-    discountPercent,
-    rewardMode = 'paid_conversion',
-    showUpgradePlansCta = false,
-    onUpgradePlansClick,
-}) {
-    const content = getRewardsBannerContent(variant, discountPercent, rewardMode);
+function ReferralsRewardsBanner({ variant, payoutRupees }) {
+    const content = getRewardsBannerContent(variant, payoutRupees);
 
     return (
         <>
@@ -883,7 +801,7 @@ function ReferralsRewardsBanner({
                 {/* <HeroArcArt /> */}
                 {content.showBadge ? (
                     <span className="jad-refer-friend-drawer__rewards-banner-badge">
-                        Stack up to 100% off one payment!
+                        ₹{REFERRAL_PAYOUT_RUPEES} per paid referral
                     </span>
                 ) : null}
                 <div
@@ -911,15 +829,6 @@ function ReferralsRewardsBanner({
                         </div>
                     </div>
                 </div>
-                {showUpgradePlansCta ? (
-                    <button
-                        type="button"
-                        className="jad-refer-friend-drawer__rewards-banner-cta"
-                        onClick={onUpgradePlansClick}
-                    >
-                        See monthly &amp; quarterly plans
-                    </button>
-                ) : null}
             </div>
             {content.footnote ? (
                 <p className="jad-refer-friend-drawer__rewards-banner-footnote">{content.footnote}</p>
@@ -928,21 +837,19 @@ function ReferralsRewardsBanner({
     );
 }
 
-function ReferralListItem({ referral, rewardMode = 'paid_conversion' }) {
+function ReferralListItem({ referral }) {
     const isRedeemed = referral.status === 'redeemed' || referral.status === 'muted';
     const isPaid = referral.status === 'paid';
     const isTrial = referral.status === 'trial';
     const rewardLabel = isTrial
-        ? rewardMode === 'free_trial_groups'
-            ? 'Counts toward reward'
-            : 'No reward yet'
-        : `${referral.reward_percent || 20}% off`;
+        ? 'No reward yet'
+        : `₹${referral.reward_amount || REFERRAL_PAYOUT_RUPEES}`;
 
     let statusClass = 'jad-refer-friend-drawer__referral-status--trial';
     let statusLabel = 'On free trial';
     if (isRedeemed) {
         statusClass = 'jad-refer-friend-drawer__referral-status--redeemed';
-        statusLabel = 'Reward redeemed';
+        statusLabel = 'Payout sent';
     } else if (isPaid) {
         statusClass = 'jad-refer-friend-drawer__referral-status--paid';
         statusLabel = 'On a paid plan';
@@ -974,7 +881,7 @@ function ReferralListItem({ referral, rewardMode = 'paid_conversion' }) {
 }
 
 /** Rewards footer — list screen: Figma 1103:30464. Empty screen: back + terms only. */
-function ReferralRewardsFooter({ onBack, onCopyCode, codeCopied, showCopyCode = false, isFreeReferrer = false }) {
+function ReferralRewardsFooter({ onBack, onCopyCode, codeCopied, showCopyCode = false }) {
     return (
         <footer className="jad-refer-friend-drawer__footer jad-refer-friend-drawer__footer--rewards">
             <button
@@ -989,7 +896,7 @@ function ReferralRewardsFooter({ onBack, onCopyCode, codeCopied, showCopyCode = 
                 className={`jad-refer-friend-drawer__footer-actions${showCopyCode ? '' : ' jad-refer-friend-drawer__footer-actions--terms-only'
                     }`}
             >
-                <ReferralTermsLink isFreeReferrer={isFreeReferrer} />
+                <ReferralTermsLink />
                 {showCopyCode ? (
                     <button
                         type="button"
@@ -1012,19 +919,13 @@ function ReferralRewardsFooter({ onBack, onCopyCode, codeCopied, showCopyCode = 
 function ReferralsRewardsListView({
     variant,
     referrals,
-    discountPercent,
-    rewardMode = 'paid_conversion',
-    showUpgradePlansCta,
-    onUpgradePlansClick,
+    payoutRupees,
 }) {
     return (
         <div className="jad-refer-friend-drawer__rewards-list-view">
             <ReferralsRewardsBanner
                 variant={variant}
-                discountPercent={discountPercent}
-                rewardMode={rewardMode}
-                showUpgradePlansCta={showUpgradePlansCta}
-                onUpgradePlansClick={onUpgradePlansClick}
+                payoutRupees={payoutRupees}
             />
             <section className="jad-refer-friend-drawer__referrals-section" aria-labelledby="jad-refer-friend-referrals-title">
                 <h3 id="jad-refer-friend-referrals-title" className="jad-refer-friend-drawer__referrals-heading">
@@ -1032,7 +933,7 @@ function ReferralsRewardsListView({
                 </h3>
                 <div className="jad-refer-friend-drawer__referrals-list">
                     {referrals.map((referral) => (
-                        <ReferralListItem key={referral.id} referral={referral} rewardMode={rewardMode} />
+                        <ReferralListItem key={referral.id} referral={referral} />
                     ))}
                 </div>
             </section>
@@ -1050,7 +951,6 @@ function ReferralsRewardsEmptyView({
     onWhatsApp,
     onLinkedIn,
     onGmail,
-    isFreeReferrer = false,
 }) {
     return (
         <div className="jad-refer-friend-drawer__rewards-empty">
@@ -1067,9 +967,7 @@ function ReferralsRewardsEmptyView({
                     No referrals yet
                 </h2>
                 <p className="jad-refer-friend-drawer__rewards-empty-desc">
-                    {isFreeReferrer
-                        ? 'Share your link. Every 3 friends who start a free trial unlocks 20% off your next payment.'
-                        : 'Share your link. When a friend subscribes to a paid plan, you earn 20% off your next payment.'}
+                    Share your link. When a friend subscribes to a Monthly or 3-Month plan, you earn ₹{REFERRAL_PAYOUT_RUPEES} directly to your bank.
                 </p>
             </div>
             <ReferralLinkField
@@ -1102,20 +1000,19 @@ function ReferralsRewardsEmptyView({
  * Opens ReferFriendDrawer on click.
  */
 export function ReferFriendTrigger({ onClick, className = '' }) {
-    const { user } = useSelector((state) => state.auth);
     return (
         <>
             <button
                 type="button"
                 className={`job-agent-dashboard__refer-friend-trigger jad-font-headline${className ? ` ${className}` : ''}`}
                 onClick={onClick}
-                aria-label="Refer a friend — earn up to 100% off on your next payment"
+                aria-label={`Refer a friend — earn ₹${REFERRAL_PAYOUT_RUPEES} for every paid referral`}
             >
                 <span className="job-agent-dashboard__refer-friend-trigger-row">
                     <span className="job-agent-dashboard__refer-friend-trigger-icon-badge">
                         <ReferFriendIcon />
                     </span>
-                    <span className="job-agent-dashboard__refer-friend-trigger-title">Get 100% discount</span>
+                    <span className="job-agent-dashboard__refer-friend-trigger-title">Earn ₹{REFERRAL_PAYOUT_RUPEES}</span>
                 </span>
                 <span className="job-agent-dashboard__refer-friend-trigger-sub jad-font-body">
                     Refer your friends
@@ -1132,9 +1029,8 @@ export function ReferFriendTrigger({ onClick, className = '' }) {
  * `view`: invite (default) | rewards (in-drawer screen).
  * Rewards empty state — Figma 673:44221.
  */
-const ReferFriendDrawer = ({ open, onClose, onOpenUpgradePlan }) => {
+const ReferFriendDrawer = ({ open, onClose }) => {
     const { user } = useSelector((state) => state.auth);
-    const referralPlan = useSelector((state) => state.happpyAgent);
     const [linkCopied, setLinkCopied] = useState(false);
     const [codeCopied, setCodeCopied] = useState(false);
     const [view, setView] = useState('invite');
@@ -1143,39 +1039,9 @@ const ReferFriendDrawer = ({ open, onClose, onOpenUpgradePlan }) => {
     const copiedResetTimerRef = useRef(null);
     const codeCopiedResetTimerRef = useRef(null);
 
-    const isFreeReferrer = useMemo(() => {
-        if (rewardsData?.reward_mode === 'free_trial_groups') return true;
-        if (rewardsData?.reward_mode === 'paid_conversion') return false;
-        return Number(referralPlan?.plan) === 1;
-    }, [rewardsData?.reward_mode, referralPlan?.plan]);
-
-    const howItWorksSteps = useMemo(() => getHowItWorksSteps(isFreeReferrer), [isFreeReferrer]);
+    const howItWorksSteps = useMemo(() => getHowItWorksSteps(), []);
 
     const rewardsState = useMemo(() => resolveRewardsViewState(rewardsData), [rewardsData]);
-
-    const redeemableDiscount = useMemo(
-        () => Number(rewardsData?.discount_percent) || 0,
-        [rewardsData?.discount_percent],
-    );
-
-    const showUpgradePlansCta = useMemo(() => {
-        return isTrialOrExpiredOutreachPlan(referralPlan) && redeemableDiscount > 0;
-    }, [referralPlan, redeemableDiscount]);
-
-    /** Invite view only — expired/trial-ended + redeemable referral discount. */
-    const showInviteRedeemBanner = useMemo(() => {
-        return isExpiredOutreachPlan(referralPlan) && redeemableDiscount > 0;
-    }, [referralPlan, redeemableDiscount]);
-
-    const inviteRedeemBannerText = useMemo(
-        () => getInviteRedeemBannerText(referralPlan),
-        [referralPlan],
-    );
-
-    const handleUpgradePlansClick = useCallback(() => {
-        onOpenUpgradePlan?.();
-        onClose?.();
-    }, [onOpenUpgradePlan, onClose]);
 
     const referralLink = useMemo(() => buildReferralLink(user), [user]);
     const referralCode = useMemo(() => buildReferralSlug(user) || referralLink, [user, referralLink]);
@@ -1384,16 +1250,12 @@ const ReferFriendDrawer = ({ open, onClose, onOpenUpgradePlan }) => {
                                     onWhatsApp={handleWhatsAppShare}
                                     onLinkedIn={handleLinkedInShare}
                                     onGmail={handleGmailShare}
-                                    isFreeReferrer={isFreeReferrer}
                                 />
                             ) : (
                                 <ReferralsRewardsListView
                                     variant={rewardsState.variant}
                                     referrals={rewardsState.referrals}
-                                    discountPercent={rewardsState.discountPercent}
-                                    rewardMode={rewardsState.rewardMode}
-                                    showUpgradePlansCta={showUpgradePlansCta}
-                                    onUpgradePlansClick={handleUpgradePlansClick}
+                                    payoutRupees={rewardsState.payoutRupees}
                                 />
                             )}
                         </div>
@@ -1402,7 +1264,6 @@ const ReferFriendDrawer = ({ open, onClose, onOpenUpgradePlan }) => {
                             onCopyCode={handleCopyCode}
                             codeCopied={codeCopied}
                             showCopyCode={rewardsState.variant !== 'empty'}
-                            isFreeReferrer={isFreeReferrer}
                         />
                     </>
                 ) : (
@@ -1411,14 +1272,12 @@ const ReferFriendDrawer = ({ open, onClose, onOpenUpgradePlan }) => {
                             <div className="jad-refer-friend-drawer__hero">
                                 <HeroArcArt />
                                 <span className="jad-refer-friend-drawer__hero-badge">
-                                    {isFreeReferrer
-                                        ? '20% off every 3 free trials'
-                                        : '20% off each paid referral'}
+                                    ₹{REFERRAL_PAYOUT_RUPEES} per paid referral
                                 </span>
                                 <div className="jad-refer-friend-drawer__hero-copy">
                                     <p className="jad-refer-friend-drawer__hero-eyebrow">Refer &amp; Earn</p>
                                     <h2 id="jad-refer-friend-drawer-title" className="jad-refer-friend-drawer__hero-title">
-                                        Invite a friend, get 20% off!
+                                        Invite a friend, earn ₹{REFERRAL_PAYOUT_RUPEES}!
                                     </h2>
                                 </div>
                             </div>
@@ -1456,14 +1315,8 @@ const ReferFriendDrawer = ({ open, onClose, onOpenUpgradePlan }) => {
                             <ReferralInviteField />
                         </div>
 
-                        {showInviteRedeemBanner ? (
-                            <InviteRedeemFooterBanner text={inviteRedeemBannerText} />
-                        ) : null}
-                        <footer
-                            className={`jad-refer-friend-drawer__footer${showInviteRedeemBanner ? ' jad-refer-friend-drawer__footer--with-redeem-banner' : ''
-                                }`}
-                        >
-                            <ReferralTermsLink isFreeReferrer={isFreeReferrer} />
+                        <footer className="jad-refer-friend-drawer__footer">
+                            <ReferralTermsLink />
                             <button
                                 type="button"
                                 className="jad-refer-friend-drawer__rewards-btn"

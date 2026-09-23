@@ -3,42 +3,41 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'next/navigation';
+import { useLocation } from '@/talent/navigation/routerCompat';
 import { toast } from 'react-hot-toast';
 import {
     connectLinkedin,
     disconnectGmail,
     disconnectLinkedin,
+    fetchDailyReferralRuns,
     getAccountStatus,
     getOpenAiStatus,
-    fetchDailyReferralRuns,
     submitResumeHealthCheck,
     verifyLinkedin,
 } from '../../../store/actions/UserActions';
 import { getResumeHealthCheck } from '../../../store/actions/resumeActions';
-import { SET_BG_RESUME_HEALTH_CHECK_ID, UPDATE_CURRENT_USER } from '../../../store/actions/actionsTypes';
+import { SET_BG_RESUME_HEALTH_CHECK_ID } from '../../../store/actions/actionsTypes';
 import { CheckedRoundedIcon, GmailIcon } from '../../../assets/IconSVG';
 import { trackHappyAgentMixpanel, trackOutreachJourney } from '../../../store/actions/happyAgentTracking';
-import { POST_API, GET_API } from '../../../components/Helper';
+import { POST_API } from '../../../components/Helper';
 import {
     API_CLAIM_REFERRAL_CODE,
-    API_ME,
     API_VERIFY_REFERRAL_CODE,
     OUTREACH_JOURNEY_KEY_GMAIL_CLICKED,
     OUTREACH_JOURNEY_KEY_ONB_GMAIL_CONNECTED,
     OUTREACH_JOURNEY_KEY_LINKEDIN_CLICKED,
+    OUTREACH_JOURNEY_KEY_ONB_LINKEDIN_CONNECTED,
 } from '../../../components/Constant';
 import GmailPrivacyFallbackPopup from '../../../components/GmailPrivacyFallbackPopup';
+import LinkedinAppApprovalCallout, {
+    linkedinAppApprovalSubmitLabel,
+} from '../../../components/LinkedinAppApprovalCallout';
+import LinkedinConnectedNotice from '../../../components/LinkedinConnectedNotice';
 import LinkedinPasswordSecurityNote from '../../../components/LinkedinPasswordSecurityNote';
 import {
     getPublicReferralCode,
     isPublicSignupPending,
 } from '../../../helpers/happyAgentPublicSignupSession';
-import {
-    isGmailConnectCallbackUrl,
-    listenForGmailConnectResult,
-    buildGmailOAuthUrl,
-} from '../../../helpers/gmailConnectPopup';
 import { JAD_PREF_FIGMA_COLORS } from '../job-agent/preference/JobAgentManagePreferences.colors';
 import ReferralTrialUnlockedScreen from '../job-agent/ReferralTrialUnlockedScreen';
 import '../linkedin/AccountConnection.css';
@@ -135,6 +134,7 @@ const PRIVACY_POINTS = [
     'Read-only access — only sees emails/messages the agent sends',
     'Never touches your personal inbox, attachments, or profile',
     'Bank-grade encryption · Disconnect anytime, instantly revoked',
+    // 'We never store your password. We use a secure, unreadable token - just like you save cards on Swiggy or Flipkart.'
 ];
 
 const TRUST_BADGES = ['SSL SECURED', 'PRIVACY FIRST', 'OAUTH 2.0'];
@@ -148,8 +148,9 @@ const Step1AccountConnection = ({
     showBack = true,
 }) => {
     const dispatch = useDispatch();
-    const searchParams = useSearchParams();
+    const location = useLocation();
     const user = useSelector((state) => state.auth)?.user;
+    const dailyLimit = useSelector((state) => state.happpyAgent?.dailyLimit) || 0;
     const resumeHealthControl = useSelector((state) => state.resume?.resumeHealthControl);
     const bgResumeHealthCheckId = useSelector(
         (state) => state.resume?.bgResumeHealthCheckId
@@ -218,7 +219,7 @@ const Step1AccountConnection = ({
         setCelebrationOpen(true);
     };
 
-    const gmailParam = searchParams.get('gmail');
+    const gmailParam = new URLSearchParams(location.search).get('gmail');
 
     const track = (eventName, properties = {}) => {
         trackHappyAgentMixpanel(eventName, properties).catch(() => { });
@@ -402,6 +403,7 @@ const Step1AccountConnection = ({
                 setFormMessage({ type: 'success', text: 'LinkedIn account connected successfully!' });
                 onConnectedAccount();
                 track('agent_onb_linkedin_connected');
+                trackJourneyClick(OUTREACH_JOURNEY_KEY_ONB_LINKEDIN_CONNECTED);
                 setTimeout(() => {
                     setShowLinkedinForm(false);
                     setFormMessage({ type: null, text: '' });
@@ -448,6 +450,7 @@ const Step1AccountConnection = ({
                 });
                 setLinkedinStatus(response?.data?.data);
                 track('agent_onb_linkedin_verified');
+                trackJourneyClick(OUTREACH_JOURNEY_KEY_ONB_LINKEDIN_CONNECTED);
                 setTimeout(() => {
                     setShowLinkedinForm(false);
                     setFormMessage({ type: null, text: '' });
@@ -568,30 +571,12 @@ const Step1AccountConnection = ({
     };
 
     /** OAuth popup flow — mirrors the legacy AccountConnection handler. */
-    const handleGmailConnect = async (e) => {
+    const handleGmailConnect = (e) => {
         if (e?.preventDefault) e.preventDefault();
 
         trackJourneyClick(OUTREACH_JOURNEY_KEY_GMAIL_CLICKED);
 
-        let encId = user?.enc_id;
-        if (!encId) {
-            try {
-                const { data } = await GET_API(API_ME);
-                encId = data?.data?.enc_id;
-                if (encId) {
-                    dispatch({ type: UPDATE_CURRENT_USER, payload: { enc_id: encId } });
-                }
-            } catch {
-                /* fall through to error below */
-            }
-        }
-
-        if (!encId) {
-            toast.error('Could not start Gmail connect. Please refresh and try again.');
-            return;
-        }
-
-        const gmailUrl = buildGmailOAuthUrl(encId);
+        const gmailUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/login/gmail/${user?.enc_id}`;
         const popup = window.open(
             gmailUrl,
             'Gmail OAuth',
@@ -611,18 +596,11 @@ const Step1AccountConnection = ({
 
         let resolved = false;
         let timeoutId = null;
-        let urlCheckInterval = null;
-
-        const teardown = () => {
-            if (timeoutId) clearTimeout(timeoutId);
-            if (urlCheckInterval) clearInterval(urlCheckInterval);
-            removeGmailConnectListener();
-        };
 
         const finishSuccess = () => {
             if (resolved) return;
             resolved = true;
-            teardown();
+            if (timeoutId) clearTimeout(timeoutId);
             dispatch(getAccountStatus())
                 .then((res) => {
                     setGmailStatus(res?.data?.data?.gmail);
@@ -639,7 +617,7 @@ const Step1AccountConnection = ({
         const finishError = (message) => {
             if (resolved) return;
             resolved = true;
-            teardown();
+            if (timeoutId) clearTimeout(timeoutId);
             setGmailConnecting(false);
             setGmailConnectingError(true);
             setGmailErrorPopup({
@@ -651,78 +629,59 @@ const Step1AccountConnection = ({
             });
         };
 
-        const tryFinishFromAccountStatus = () =>
-            dispatch(getAccountStatus())
-                .then((res) => {
-                    const gmail = res?.data?.data?.gmail;
-                    if (gmail?.status === 2) {
-                        if (!popup.closed) popup.close();
-                        finishSuccess();
-                        return true;
-                    }
-                    return false;
-                })
-                .catch(() => false);
-
-        const removeGmailConnectListener = listenForGmailConnectResult(
-            () => {
+        const messageListener = (event) => {
+            if (event.origin !== window.location.origin) return;
+            if (event.data?.type === 'GMAIL_CONNECT_SUCCESS') {
+                window.removeEventListener('message', messageListener);
                 if (!popup.closed) popup.close();
                 finishSuccess();
-            },
-            (message) => {
+            } else if (event.data?.type === 'GMAIL_CONNECT_ERROR') {
+                window.removeEventListener('message', messageListener);
                 if (!popup.closed) popup.close();
-                finishError(message);
+                finishError(event.data.message);
             }
-        );
+        };
+        window.addEventListener('message', messageListener);
 
-        urlCheckInterval = setInterval(() => {
+        const urlCheckInterval = setInterval(() => {
             try {
                 if (popup.closed) {
                     clearInterval(urlCheckInterval);
-                    urlCheckInterval = null;
-                    if (!resolved) {
-                        tryFinishFromAccountStatus().then((connected) => {
-                            if (!connected && !resolved) {
-                                finishError('Gmail connection was cancelled.');
-                            }
-                        });
-                    } else {
-                        removeGmailConnectListener();
-                    }
+                    window.removeEventListener('message', messageListener);
+                    if (!resolved) finishError();
                     return;
                 }
-
                 const popupUrl = popup.location.href;
-
-                if (isGmailConnectCallbackUrl(popupUrl) || popupUrl.includes('gmail=success')) {
-                    tryFinishFromAccountStatus();
-                    return;
-                }
-
-                if (popupUrl.includes('error=')) {
+                if (popupUrl.includes('gmail=success')) {
+                    clearInterval(urlCheckInterval);
+                    window.removeEventListener('message', messageListener);
+                    if (!popup.closed) popup.close();
+                    finishSuccess();
+                } else if (popupUrl.includes('error=')) {
+                    clearInterval(urlCheckInterval);
+                    window.removeEventListener('message', messageListener);
                     if (!popup.closed) popup.close();
                     finishError('Gmail connection failed');
                 }
             } catch (_) {
-                // Cross-origin during OAuth handshake is expected.
+                // Cross-origin during OAuth handshake is expected — postMessage will resolve it.
             }
         }, 500);
 
         timeoutId = setTimeout(() => {
             if (!popup.closed) popup.close();
-            if (!resolved) {
-                tryFinishFromAccountStatus().then((connected) => {
-                    if (!connected && !resolved) {
-                        finishError('Connection timeout. Please try again.');
-                    }
-                });
-            }
+            clearInterval(urlCheckInterval);
+            window.removeEventListener('message', messageListener);
+            if (!resolved) finishError('Connection timeout. Please try again.');
         }, 600000);
     };
 
     const gmailConnected = gmailStatus?.status === 2;
     const linkedinConnected = linkedinStatus?.status === 2;
     const linkedinNeedsVerification = linkedinStatus?.status === 1;
+    const isLinkedinAppApproval = linkedinStatus?.auth_type === 'linkedin_app_approval';
+    const isFreeTrialPlan =
+        Number(outreachStepConfig?.plan) === 1 && !outreachStepConfig?.has_plan_expired;
 
     /** Gmail completion drives whether the user can advance to the next step. */
     const gmailDone = !!outreachStepConfig?.status?.step1 || gmailConnected;
@@ -807,90 +766,6 @@ const Step1AccountConnection = ({
                         Join HAPPPY Agent <span className='subtitle'>Configure in less than 60 seconds</span>
                     </h2>
                 </header>
-
-                {showReferral && (
-                    <div className="agent-onb-referral">
-                        <div
-                            className={`agent-onb-referral-field${showReferralExpanded ? ' agent-onb-referral-field--open' : ''}`}
-                        >
-                            <button
-                                type="button"
-                                className="agent-onb-referral-field__toggle"
-                                onClick={() => setShowReferralExpanded((prev) => !prev)}
-                                aria-expanded={showReferralExpanded}
-                                aria-controls="agent-onb-referral-input"
-                            >
-                                <span className="agent-onb-referral-field__label">
-                                    Have a referral link? paste it here to get 3 days of extra free trial
-                                </span>
-                                <svg
-                                    className={`agent-onb-referral-field__chevron${showReferralExpanded ? ' agent-onb-referral-field__chevron--open' : ''}`}
-                                    width="14"
-                                    height="14"
-                                    viewBox="0 0 16 16"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    aria-hidden="true"
-                                >
-                                    <path
-                                        d="M4 6L8 10L12 6"
-                                        stroke="#231F20"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                            </button>
-
-                            <div
-                                className={`agent-onb-accordion-panel${showReferralExpanded ? ' agent-onb-accordion-panel--open' : ''}`}
-                                aria-hidden={!showReferralExpanded}
-                            >
-                                <div className="agent-onb-accordion-panel__inner">
-                                    <div className="agent-onb-referral-field__body">
-                                        <input
-                                            ref={referralInputRef}
-                                            type="text"
-                                            name="referral_link"
-                                            id="agent-onb-referral-input"
-                                            className={`agent-onb-referral-field__input${referralVerifyState === 'invalid' ? ' agent-onb-referral-field__input--error' : ''}${isReferralInputLocked ? ' agent-onb-referral-field__input--locked' : ''}`}
-                                            placeholder="Paste link here..."
-                                            value={referralLinkInput}
-                                            onChange={handleReferralLinkChange}
-                                            onBlur={handleReferralLinkBlur}
-                                            readOnly={isReferralInputLocked}
-                                            disabled={referralVerifyState === 'verifying'}
-                                            tabIndex={showReferralExpanded ? 0 : -1}
-                                            data-hj-allow
-                                        />
-                                        {referralVerifyState === 'verifying' && (
-                                            <p className="agent-onb-referral-field__status agent-onb-referral-field__status--verifying">
-                                                Verifying referral code...
-                                            </p>
-                                        )}
-                                        {referralVerifyState === 'verified' && (
-                                            <div className="agent-onb-referral-field__status agent-onb-referral-field__status--success">
-                                                {isReferralInputLocked && (
-                                                    <CheckedRoundedIcon color={JAD_PREF_FIGMA_COLORS.successGreen} />
-                                                )}
-                                                <p>Your referral code will be applied.</p>
-                                            </div>
-                                        )}
-                                        {referralVerifyState === 'invalid' && (
-                                            <p className="agent-onb-referral-field__status agent-onb-referral-field__status--error">
-                                                Referral code is invalid.
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                <div className="agent-onb-callback-banner" role="note">
-                    Job seekers sent 12,400+ referrals through HAPPPY this month — and it starts the moment you link Gmail.
-                </div>
 
                 <div className="agent-onb-cards">
                     {/* ---------------- Gmail card (required / connected) ---------------- */}
@@ -1009,11 +884,19 @@ const Step1AccountConnection = ({
                                 </button>
                             )}
                         </div>
-                        <p className="agent-onb-card__footnote">
+                        <p className="agent-onb-card__footnote hidden">
                             We never see your password · Your account stays safe · Revoke anytime
                         </p>
                     </div>
                 </div>
+
+                {linkedinConnected && (
+                    <LinkedinConnectedNotice
+                        dailyLimit={dailyLimit}
+                        isFreeTrial={isFreeTrialPlan}
+                        className="agent-onb-linkedin-connected-notice"
+                    />
+                )}
 
                 <div className="agent-onb-trust-strip" aria-label="Security and privacy assurances">
                     <svg
@@ -1122,12 +1005,15 @@ const Step1AccountConnection = ({
                 {showLinkedinForm && linkedinNeedsVerification && (
                     <div className="agent-onb-li-form" role="region" aria-label="Verify LinkedIn">
                         <h3 className="agent-onb-li-form__title">Verify LinkedIn</h3>
-                        <p className="agent-onb-li-form__hint">
-                            {linkedinStatus?.email}
-                            {linkedinStatus?.auth_type === 'linkedin_app_approval'
-                                ? ' — kindly approve the request in your LinkedIn app.'
-                                : ' — enter the verification code sent to your email, phone, or authentication app.'}
-                        </p>
+                        {isLinkedinAppApproval ? (
+                            <LinkedinAppApprovalCallout email={linkedinStatus?.email} />
+                        ) : (
+                            <p className="agent-onb-li-form__hint">
+                                {linkedinStatus?.email
+                                    ? `${linkedinStatus.email} — enter the verification code sent to your email, phone, or authentication app.`
+                                    : 'Enter the verification code sent to your email, phone, or authentication app.'}
+                            </p>
+                        )}
 
                         {formMessage.type && !formMessage.text.includes('Verification code sent!') && (
                             <div
@@ -1172,10 +1058,8 @@ const Step1AccountConnection = ({
                                     className="agent-onb-li-form__btn agent-onb-li-form__btn--primary"
                                     disabled={linkedinConnecting}
                                 >
-                                    {linkedinStatus?.auth_type === 'linkedin_app_approval'
-                                        ? linkedinConnecting
-                                            ? 'Approving…'
-                                            : 'Approved in LinkedIn'
+                                    {isLinkedinAppApproval
+                                        ? linkedinAppApprovalSubmitLabel(linkedinConnecting)
                                         : linkedinConnecting
                                             ? 'Verifying…'
                                             : 'Verify Code'}
@@ -1261,26 +1145,115 @@ const Step1AccountConnection = ({
                         </div>
                     </div>
                 </div>
+
+                {showReferral && (
+                    <div className="agent-onb-referral">
+                        <div
+                            className={`agent-onb-referral-field${showReferralExpanded ? ' agent-onb-referral-field--open' : ''}`}
+                        >
+                            <button
+                                type="button"
+                                className="agent-onb-referral-field__toggle"
+                                onClick={() => setShowReferralExpanded((prev) => !prev)}
+                                aria-expanded={showReferralExpanded}
+                                aria-controls="agent-onb-referral-input"
+                            >
+                                <span className="agent-onb-referral-field__label">
+                                    Have a referral link? paste it here to get 3 days of extra free trial
+                                </span>
+                                <svg
+                                    className={`agent-onb-referral-field__chevron${showReferralExpanded ? ' agent-onb-referral-field__chevron--open' : ''}`}
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 16 16"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        d="M4 6L8 10L12 6"
+                                        stroke="#231F20"
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </button>
+
+                            <div
+                                className={`agent-onb-accordion-panel${showReferralExpanded ? ' agent-onb-accordion-panel--open' : ''}`}
+                                aria-hidden={!showReferralExpanded}
+                            >
+                                <div className="agent-onb-accordion-panel__inner">
+                                    <div className="agent-onb-referral-field__body">
+                                        <input
+                                            ref={referralInputRef}
+                                            type="text"
+                                            name="referral_link"
+                                            id="agent-onb-referral-input"
+                                            className={`agent-onb-referral-field__input${referralVerifyState === 'invalid' ? ' agent-onb-referral-field__input--error' : ''}${isReferralInputLocked ? ' agent-onb-referral-field__input--locked' : ''}`}
+                                            placeholder="Paste link here..."
+                                            value={referralLinkInput}
+                                            onChange={handleReferralLinkChange}
+                                            onBlur={handleReferralLinkBlur}
+                                            readOnly={isReferralInputLocked}
+                                            disabled={referralVerifyState === 'verifying'}
+                                            tabIndex={showReferralExpanded ? 0 : -1}
+                                            data-hj-allow
+                                        />
+                                        {referralVerifyState === 'verifying' && (
+                                            <p className="agent-onb-referral-field__status agent-onb-referral-field__status--verifying">
+                                                Verifying referral code...
+                                            </p>
+                                        )}
+                                        {referralVerifyState === 'verified' && (
+                                            <div className="agent-onb-referral-field__status agent-onb-referral-field__status--success">
+                                                {isReferralInputLocked && (
+                                                    <CheckedRoundedIcon color={JAD_PREF_FIGMA_COLORS.successGreen} />
+                                                )}
+                                                <p>Your referral code will be applied.</p>
+                                            </div>
+                                        )}
+                                        {referralVerifyState === 'invalid' && (
+                                            <p className="agent-onb-referral-field__status agent-onb-referral-field__status--error">
+                                                Referral code is invalid.
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
             <div className="agent-onb-footer step1">
                 {showBack ? (
-                    <button
-                        type="button"
-                        className="agent-onb-footer__back"
-                        onClick={onBack}
-                        aria-label="Back to previous step"
-                        disabled={stepConfigLoading || linkedinConnecting}
-                    >
-                        <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path d="M25.9668 16.4004H6.83346" stroke="#231F20" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            <path d="M16.4001 6.83301L6.83348 16.3997L16.4001 25.9663" stroke="#231F20" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </button>
-                ) : (
-                    <span className="agent-onb-footer__back-spacer" aria-hidden="true" />
-                )}
-                {gmailDone ? (
+                    <div className="agent-onb-footer__start">
+                        {!gmailDone && (
+                            <span className="agent-onb-footer__warning" role="status">
+                                <span className="agent-onb-footer__warning-icon" aria-hidden="true">
+                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8.5 2.5L3.75 7.25L1.5 5" stroke="#2C7A4B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </span>
+                                Please link with Gmail to proceed. Reversible anytime
+                            </span>
+                        )}
+                        <button
+                            type="button"
+                            className="agent-onb-footer__back"
+                            onClick={onBack}
+                            aria-label="Back to previous step"
+                            disabled={stepConfigLoading || linkedinConnecting}
+                        >
+                            <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M25.9668 16.4004H6.83346" stroke="#231F20" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M16.4001 6.83301L6.83348 16.3997L16.4001 25.9663" stroke="#231F20" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+                ) : gmailDone ? (
                     <span
                         className="agent-onb-footer__warning agent-onb-footer__warning--hidden"
                         aria-hidden="true"

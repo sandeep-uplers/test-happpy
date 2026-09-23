@@ -239,7 +239,8 @@ export default function TransformedResumeEditorModal() {
         <>
             <Modal
                 isOpen={isModalOpen}
-                portalClassName="react-modal-portal"
+                portalClassName="react-modal-portal resume-editor-modal-portal"
+                overlayClassName="resume-editor-modal-overlay"
                 className={`modal commonModal resume-editor-modal transformed-editor`}
                 shouldCloseOnOverlayClick={false}
             >

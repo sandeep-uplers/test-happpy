@@ -1,0 +1,293 @@
+/*
+ * TemplateEditor — single source of truth for all consumption surfaces.
+ * Scoped under .template-editor to isolate from public/css/talent/style.css
+ * (global `ul li { list-style-type: none }` etc.).
+ */
+
+.template-editor.rich-editor-container {
+    --te-default-lines: 7;
+    --te-ce-padding-block: 20px;
+    --te-ce-min-h: calc(var(--te-default-lines) * 1.5em + var(--te-ce-padding-block));
+
+    border: 1.5px solid #dee1e7;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.template-editor.rich-editor-container:focus-within {
+    border-color: #231f20;
+    box-shadow: 0 0 0 3px rgba(35, 31, 32, 0.08);
+}
+
+.template-editor.rich-editor-container--error {
+    border-color: #d23f3f;
+}
+
+.template-editor.rich-editor-container--error:focus-within {
+    border-color: #d23f3f;
+    box-shadow: 0 0 0 3px rgba(210, 63, 63, 0.08);
+}
+
+.template-editor.rich-editor-container .rsw-editor {
+    border: none !important;
+    border-radius: 0 !important;
+    background: #ffffff;
+    resize: none;
+    min-height: 0;
+    height: auto;
+}
+
+.template-editor.rich-editor-container .rsw-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 6px;
+    background: #f2f2f3;
+    border-bottom: 1px solid #e4e1dc;
+}
+
+.template-editor.rich-editor-container .rsw-btn {
+    width: 28px;
+    min-width: 28px;
+    height: 28px;
+    min-height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.template-editor.rich-editor-container .rsw-ce {
+    min-height: var(--te-ce-min-h);
+    height: auto;
+    overflow: visible;
+    padding: 10px 12px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 12px;
+    color: #231f20;
+    line-height: 1.5;
+    box-sizing: border-box;
+}
+
+.template-editor.rich-editor-container .rsw-ce:focus {
+    outline: none;
+}
+
+.template-editor.rich-editor-container .rsw-ce p,
+.template-editor.rich-editor-container .rsw-ce span,
+.template-editor.rich-editor-container .rsw-ce div {
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0;
+}
+
+/* Lists — restore bullets/numbers overridden by talent/style.css */
+.template-editor.rich-editor-container .rsw-ce ul,
+.template-editor.template-editor-readonly ul {
+    list-style: disc outside !important;
+    list-style-type: disc !important;
+    padding-left: 1.5em !important;
+    margin: 0.5em 0 !important;
+}
+
+.template-editor.rich-editor-container .rsw-ce ol,
+.template-editor.template-editor-readonly ol {
+    list-style: decimal outside !important;
+    list-style-type: decimal !important;
+    padding-left: 1.5em !important;
+    margin: 0.5em 0 !important;
+}
+
+.template-editor.rich-editor-container .rsw-ce ul li,
+.template-editor.rich-editor-container .rsw-ce ol li,
+.template-editor.template-editor-readonly ul li,
+.template-editor.template-editor-readonly ol li {
+    list-style-type: inherit !important;
+    display: list-item !important;
+    margin-bottom: 0.25em;
+    padding-left: 0;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.template-editor.rich-editor-container .rsw-ce a,
+.template-editor.template-editor-readonly a {
+    color: #1a7a63;
+    text-decoration: underline;
+}
+
+/* Dynamic variable tokens */
+.template-editor .dynamic-field {
+    background: #e8f5f2;
+    color: #1a7a63;
+    font-weight: 500;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    border-radius: 3px;
+    padding: 0 2px;
+}
+
+/* Toolbar divider before Variables control */
+.template-editor-toolbar-divider {
+    display: inline-block;
+    width: 1px;
+    height: 20px;
+    margin: 0 4px;
+    background: #e4e1dc;
+    align-self: center;
+    flex-shrink: 0;
+}
+
+/* Variables dropdown trigger */
+.template-editor-variables-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.template-editor-variables-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 28px;
+    min-height: 28px;
+    padding: 0 8px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    font-family: 'Rubik', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: #495057;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.template-editor-variables-btn:hover,
+.template-editor-variables-btn--open {
+    background: #edf3ff;
+}
+
+.template-editor-variables-btn:focus-visible {
+    outline: 2px solid #231f20;
+    outline-offset: 1px;
+}
+
+.template-editor-variables-btn__chevron {
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+}
+
+.template-editor-variables-btn--open .template-editor-variables-btn__chevron {
+    transform: rotate(180deg);
+}
+
+/* Variables dropdown (portaled to document.body) */
+.template-editor-variables-dropdown {
+    position: fixed;
+    z-index: 1050;
+    min-width: 200px;
+    max-height: 300px;
+    overflow-y: auto;
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.template-editor-variables-dropdown__item {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    border-bottom: 1px solid #eee;
+    background: transparent;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    color: #231f20;
+    text-align: left;
+    cursor: pointer;
+}
+
+.template-editor-variables-dropdown__item:last-child {
+    border-bottom: none;
+}
+
+.template-editor-variables-dropdown__item:hover,
+.template-editor-variables-dropdown__item--active {
+    background: #f8f9fa;
+}
+
+.template-editor-variables-dropdown__item:focus-visible {
+    outline: none;
+    background: #edf3ff;
+}
+
+/* Parent wrappers — editor grows; page/panel scroll handles overflow */
+.hc-field__editor-wrap,
+.agent-onb-tpl-card__editor {
+    min-height: 0;
+}
+
+/* Read-only preview */
+.template-editor.template-editor-readonly {
+    --te-default-lines: 7;
+    --te-ce-padding-block: 20px;
+    min-height: calc(var(--te-default-lines) * 1.5em + var(--te-ce-padding-block));
+    padding: 10px 12px;
+    border: 1.5px solid #dee1e7;
+    border-radius: 8px;
+    background: #ffffff;
+    font-family: 'Rubik', sans-serif;
+    font-size: 12px;
+    color: #231f20;
+    line-height: 1.5;
+}
+
+.template-editor.template-editor-readonly--compact,
+.template-editor.template-editor-readonly--tall {
+    --te-ce-min-h: calc(var(--te-default-lines, 7) * 1.5em + var(--te-ce-padding-block, 20px));
+    height: auto;
+    overflow: visible;
+}
+
+@media (max-width: 768px) {
+    .template-editor.rich-editor-container .rsw-toolbar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .template-editor.rich-editor-container .rsw-ce {
+        padding: 12px 6.5px;
+        font-size: 11px;
+    }
+
+    .template-editor.rich-editor-container .rsw-toolbar .rsw-btn {
+        width: 16px;
+        min-width: 16px;
+        height: 16px;
+        min-height: 16px;
+        font-size: 16px;
+    }
+
+    .template-editor.rich-editor-container .rsw-toolbar .rsw-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .template-editor.rich-editor-container .rsw-toolbar .rsw-btn s {
+        font-size: 14px;
+    }
+
+    .template-editor.rich-editor-container .rsw-toolbar .rsw-btn[title="Link"] {
+        font-size: 10px;
+    }
+
+    .template-editor-variables-dropdown {
+        min-width: fit-content;
+    }
+}

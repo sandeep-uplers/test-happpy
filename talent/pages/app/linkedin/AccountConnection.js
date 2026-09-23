@@ -4,10 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { connectLinkedin, disconnectGmail, disconnectLinkedin, getAccountStatus, getOpenAiStatus, submitResumeHealthCheck, verifyLinkedin } from "../../../store/actions/UserActions";
 import { ActivateAgentIcon, BrowseJobsIcon, DeleteIcon2, EditIcon2, GmailIcon, LinkAccountIcon, OutreachAgentIcon } from '../../../assets/IconSVG';
-import { useSearchParams } from "next/navigation";
+import { useLocation } from "@/talent/navigation/routerCompat";
 import { toast } from 'react-hot-toast';
 import Loader from "../../../components/Loader";
 import GmailPrivacyFallbackPopup from "../../../components/GmailPrivacyFallbackPopup";
+import LinkedinAppApprovalCallout, {
+    linkedinAppApprovalSubmitLabel,
+} from "../../../components/LinkedinAppApprovalCallout";
 import { trackHappyAgentMixpanel } from "../../../store/actions/happyAgentTracking";
 import "./AccountConnection.css";
 import {
@@ -16,14 +19,7 @@ import {
     HAPPY_SETUP_HANDWRITING,
 } from "./happyAgentPageAssets";
 import { getResumeHealthCheck } from "../../../store/actions/resumeActions";
-import { SET_BG_RESUME_HEALTH_CHECK_ID, UPDATE_CURRENT_USER } from "../../../store/actions/actionsTypes";
-import { GET_API } from "../../../components/Helper";
-import { API_ME } from "../../../components/Constant";
-import {
-    isGmailConnectCallbackUrl,
-    listenForGmailConnectResult,
-    buildGmailOAuthUrl,
-} from "../../../helpers/gmailConnectPopup";
+import { SET_BG_RESUME_HEALTH_CHECK_ID } from "../../../store/actions/actionsTypes";
 
 export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyMode = false, onOpenAgentOnboarding, publicSignupMode = false }) => {
     
@@ -56,8 +52,8 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
     const [disconnectModal, setDisconnectModal] = useState(null);
     const [disconnectReason, setDisconnectReason] = useState('');
 
-    const searchParams = useSearchParams();
-    const gmail = searchParams.get('gmail');
+    const location = useLocation();
+    const gmail = new URLSearchParams(location.search).get('gmail');
 
     const trackAccountsOnlyEvent = (eventName, properties = {}) => {
         if (!accountsOnlyMode) return;
@@ -115,7 +111,7 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
                 setIsLoading(false);
             });
         
-    }, [dispatch, gmail]);
+    }, [dispatch, gmail, publicSignupMode]);
 
     const validateForm = () => {
         const newErrors = {};
@@ -437,7 +433,7 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
         }
     };
 
-    const handleGmailConnect = async (e) => {
+    const handleGmailConnect = (e) => {
         if (e?.preventDefault) {
             e.preventDefault();
         }
@@ -448,26 +444,8 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
         //     return;
         // }
 
-        let encId = user?.enc_id;
-        if (!encId) {
-            try {
-                const { data } = await GET_API(API_ME);
-                encId = data?.data?.enc_id;
-                if (encId) {
-                    dispatch({ type: UPDATE_CURRENT_USER, payload: { enc_id: encId } });
-                }
-            } catch {
-                /* fall through */
-            }
-        }
-
-        if (!encId) {
-            toast.error('Could not start Gmail connect. Please refresh and try again.');
-            return;
-        }
-
         // Open Gmail OAuth in a popup window
-        const gmailUrl = buildGmailOAuthUrl(encId);
+        const gmailUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/login/gmail/${user?.enc_id}`;
         const popup = window.open(
             gmailUrl,
             'Gmail OAuth',
@@ -488,19 +466,15 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
 
         let isResolved = false;
         let timeout = null;
-        let urlCheckInterval = null;
 
-        const teardown = () => {
-            if (timeout) clearTimeout(timeout);
-            if (urlCheckInterval) clearInterval(urlCheckInterval);
-            removeGmailConnectListener();
-        };
-
+        // Helper function to handle successful connection
         const handleSuccess = () => {
             if (isResolved) return;
             isResolved = true;
-            teardown();
-
+            if (timeout) clearTimeout(timeout);
+            // Keep gmailConnecting true until account status is fully refreshed
+            
+            // Refresh account status
             dispatch(getAccountStatus())
                 .then((res) => {
                     setGmailStatus(res?.data?.data?.gmail);
@@ -508,9 +482,12 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
                     localStorage.setItem('outreach_account_connected', 'true');
                     trackAccountsOnlyEvent('happy_agent_gmail_connected');
                     onConnectedAccount();
+                    // Check if we should show jobs popup
                     if (res?.data?.data?.gmail?.status == 2 && res?.data?.jobs?.length > 0) {
                         setShowJobsPopup(true);
                     }
+                    
+                    // Refresh outreach step config in parent component
                     if (onRefresh) {
                         onRefresh();
                     }
@@ -523,89 +500,84 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
                 });
         };
 
+        // Helper function to handle errors
         const handleError = (message) => {
             if (isResolved) return;
             isResolved = true;
-            teardown();
+            if (timeout) clearTimeout(timeout);
             setGmailConnecting(false);
             setGmailErrorPopup({
                 open: true,
-                message: message || 'Failed to connect Gmail account. Please try again.',
+                message: message || 'Failed to connect Gmail account. Please try again.'
             });
             trackAccountsOnlyEvent('happy_agent_gmail_connect_failed', {
                 message: message || '',
             });
         };
 
-        const tryFinishFromAccountStatus = () =>
-            dispatch(getAccountStatus())
-                .then((res) => {
-                    const gmail = res?.data?.data?.gmail;
-                    if (gmail?.status === 2) {
-                        if (!popup.closed) popup.close();
-                        handleSuccess();
-                        return true;
-                    }
-                    return false;
-                })
-                .catch(() => false);
+        // Listen for messages from the popup
+        const messageListener = (event) => {
+            // Verify origin for security
+            if (event.origin !== window.location.origin) {
+                return;
+            }
 
-        const removeGmailConnectListener = listenForGmailConnectResult(
-            () => {
+            if (event.data && event.data.type === 'GMAIL_CONNECT_SUCCESS') {
+                window.removeEventListener('message', messageListener);
                 if (!popup.closed) popup.close();
                 handleSuccess();
-            },
-            (message) => {
+            } else if (event.data && event.data.type === 'GMAIL_CONNECT_ERROR') {
+                console.log('GMAIL_CONNECT_ERROR', event.data);
+                window.removeEventListener('message', messageListener);
                 if (!popup.closed) popup.close();
-                handleError(message);
+                handleError(event.data.message);
             }
-        );
+        };
 
-        urlCheckInterval = setInterval(() => {
+        window.addEventListener('message', messageListener);
+
+        // Fallback: Poll popup URL to detect redirects (as backup if postMessage fails)
+        const urlCheckInterval = setInterval(() => {
             try {
                 if (popup.closed) {
                     clearInterval(urlCheckInterval);
-                    urlCheckInterval = null;
+                    window.removeEventListener('message', messageListener);
                     if (!isResolved) {
-                        tryFinishFromAccountStatus().then((connected) => {
-                            if (!connected && !isResolved) {
-                                handleError('Gmail connection was cancelled.');
-                            }
-                        });
-                    } else {
-                        removeGmailConnectListener();
+                        handleError();
                     }
                     return;
                 }
 
+                // Try to access popup location (may fail due to cross-origin)
                 const popupUrl = popup.location.href;
-
-                if (
-                    isGmailConnectCallbackUrl(popupUrl) ||
-                    (popupUrl.includes('/talent/referral-ai-agent') && popupUrl.includes('gmail=success')) ||
-                    (popupUrl.includes('/talent/outreach-agent') && popupUrl.includes('gmail=success'))
-                ) {
-                    tryFinishFromAccountStatus();
-                    return;
-                }
-
-                if (popupUrl.includes('error=')) {
+                
+                // Check if we're on the success page
+                if (popupUrl.includes('/talent/outreach-agent') && popupUrl.includes('gmail=success')) {
+                    clearInterval(urlCheckInterval);
+                    window.removeEventListener('message', messageListener);
+                    if (!popup.closed) popup.close();
+                    handleSuccess();
+                } else if (popupUrl.includes('/talent/outreach-agent') && popupUrl.includes('error=')) {
+                    clearInterval(urlCheckInterval);
+                    window.removeEventListener('message', messageListener);
                     if (!popup.closed) popup.close();
                     handleError('Gmail connection failed');
                 }
-            } catch (_) {
-                /* Cross-origin during OAuth — expected */
+            } catch (e) {
+                // Cross-origin error is expected, ignore it
+                // The postMessage approach will handle the communication
             }
         }, 500);
 
+        // Cleanup after 10 minutes (timeout)
         timeout = setTimeout(() => {
-            if (!popup.closed) popup.close();
+            if (!popup.closed) {
+                popup.close();
+            }
+            clearInterval(urlCheckInterval);
+            window.removeEventListener('message', messageListener);
             if (!isResolved) {
-                tryFinishFromAccountStatus().then((connected) => {
-                    if (!connected && !isResolved) {
-                        handleError('Connection timeout. Please try again.');
-                    }
-                });
+                handleError('Connection timeout. Please try again.');
             }
         }, 600000);
     };
@@ -699,7 +671,7 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
             {/* Gmail Account Card */}
             <div className="account-card gmail">
                 <div className="card-header">
-                    {!accountsOnlyMode && (
+                    {accountsOnlyMode && (
                     <div className="service-icon gmail">
                         <GmailIcon />
                     </div>
@@ -868,7 +840,7 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
             {/* LinkedIn Account Card */}
             <div className={`account-card linkedin`}>
                 <div className="card-header">
-                    {!accountsOnlyMode && (
+                    {accountsOnlyMode && (
                     <div className="service-icon linkedin">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" fill="#0077B5"/>
@@ -1120,15 +1092,16 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
                                     )}
                                     
                                     <div className="verification-section">
-                                        <div className="verification-intro">
-                                            <p>{linkedinStatus?.email}</p>
-                                            {linkedinStatus?.auth_type == "linkedin_app_approval" && (
-                                                <p>Kindly approve the request in your LinkedIn app.</p>
-                                            )}
-                                            {linkedinStatus?.auth_type == "code_required" && (
-                                                <p>Enter the verification code sent to your email, phone, or authentication app.</p>
-                                            )}
-                                        </div>
+                                        {linkedinStatus?.auth_type == "linkedin_app_approval" ? (
+                                            <LinkedinAppApprovalCallout email={linkedinStatus?.email} />
+                                        ) : (
+                                            <div className="verification-intro">
+                                                <p>{linkedinStatus?.email}</p>
+                                                {linkedinStatus?.auth_type == "code_required" && (
+                                                    <p>Enter the verification code sent to your email, phone, or authentication app.</p>
+                                                )}
+                                            </div>
+                                        )}
 
                                         {linkedinStatus?.auth_type == "code_required" && (
                                             <div className="form-group">
@@ -1169,7 +1142,7 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
                                                 className="btn btn-primary" 
                                                 disabled={linkedinConnecting}
                                             >
-                                                {linkedinConnecting ? 'Approving...' : 'Approved in LinkedIn'}
+                                                {linkedinAppApprovalSubmitLabel(linkedinConnecting)}
                                             </button>
                                         ) : (
                                             <button 
