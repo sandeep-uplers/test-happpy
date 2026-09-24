@@ -31,6 +31,7 @@ import SkipTailorOptionModal, { useSkipTailorOptionPromise } from "../../../comp
 import JobDetailsResumePromo from "../resume/nudges/JobDetailsResumePromo";
 import ReferralAgentResumeModal from "../../../components/ReferralAgentResumeModal";
 import ReferralAgentPreviewModal from "../../../components/ReferralAgentPreviewModal";
+import JobDetailsApply, { JobRoleTitleLink } from "../happy-jobs/JobDetailsApply";
 
 const HAPPPY_ALL_JOBS_PATH = '/talent/job-agent/recommended-jobs?tab=all-jobs';
 
@@ -271,10 +272,23 @@ export default function HapppySingleOppMobile({
                                     <CompanyLogo company={data.company} HR_Number={data.HR_Number} />
                                 </div>
                                 <div className="content">
-                                    <h6>{data.RequestForTalent}</h6>
+                                    <h6>
+                                        <JobRoleTitleLink data={data}>
+                                            {data.RequestForTalent}
+                                        </JobRoleTitleLink>
+                                    </h6>
                                     <span className="companyName">{data.company?.company_name}</span>
                                 </div>
                             </div>
+                            {hideApplyCta && data.aggregator_application_link && !data.is_applied && !isTalentHired(talentStatus) && !isOppDisabled &&
+                                (!markedNotInterested && !data.job_not_interested) &&
+                                <JobDetailsApply
+                                    data={data}
+                                    setIsHeaderVisible={() => { }}
+                                    handleCustomizeResume={handleCustomizeResume}
+                                    hideApplyButton
+                                />
+                            }
                             {(!isOppDisabled && !(data.is_applied && data.screening_status && data.ai_needed) && data.current_talent_hr) &&
                                 <OppStatusMessgae data={data} />
                             }
