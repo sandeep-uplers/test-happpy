@@ -21,6 +21,10 @@
     --happy-footer: #ffffff;
     --happy-lavender: var(--happy-yellow-soft);
     --happy-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --happy-landing-cream: #f3f0e8;
+    --happy-landing-section-divider: #dcd9c6;
+    /* Shared horizontal inset for all section separator lines */
+    --happy-landing-divide-inset-x: 80px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: var(--happy-ink);
     background: linear-gradient(180deg, #ffffff 0%, #fffef8 38%, #ffffff 100%);
@@ -28,6 +32,18 @@
     min-height: 100dvh;
     overflow-x: clip;
     position: relative;
+}
+
+@media (max-width: 1200px) {
+    .happy-job-agent-landing {
+        --happy-landing-divide-inset-x: 40px;
+    }
+}
+
+@media (max-width: 767px) {
+    .happy-job-agent-landing {
+        --happy-landing-divide-inset-x: 16px;
+    }
 }
 
 .dashboard-pg .happy-job-agent-landing {
@@ -5329,7 +5345,8 @@ html.happy-job-agent-landing-active #app {
 @media (max-width: 767px) {
     .happy-job-agent-landing .happy-agent-hero-mesh {
         border-radius: 0;
-        min-height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
         /* background: #231f20; */
     }
 
@@ -5362,7 +5379,7 @@ html.happy-job-agent-landing-active #app {
 
     .happy-job-agent-landing .happy-agent-hero-mesh__content {
         align-items: flex-start;
-        gap: 12px;
+        gap: 24px;
     }
 
     .happy-job-agent-landing .happy-agent-hero-mesh__title-set--desktop,
@@ -5397,7 +5414,7 @@ html.happy-job-agent-landing-active #app {
     /* Header lives inside `.happy-job-agent-landing`, then next to the hero —
        not as a sibling of the landing root (unlike `.top-toolbar ~ .landing`). */
     .happy-job-agent-landing .happy-agent-landing-navbar--scroll-away ~ .happy-agent-hero-mesh .happy-agent-hero-mesh__inner.happy-agent-hero-mesh__inner--with-landing-nav {
-        padding-top: calc(84px + env(safe-area-inset-top, 0px));
+        padding-top: calc(72px + env(safe-area-inset-top, 0px));
     }
 
     .happy-job-agent-landing .happy-agent-live-results__stack--hero {
@@ -6329,7 +6346,7 @@ html.happy-job-agent-landing-active #app {
     --happy-mv-stripe: #f6f6f6;
     --happy-mv-stat-bg: #fdfcf9;
 
-    background: #f9f8f4;
+    background: #f3f0e8;
     padding: 80px 41px;
 }
 
@@ -7218,6 +7235,36 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-outreach-reference-blocks {
     width: 100%;
     background: linear-gradient(180deg, #fffef8 0%, #ffffff 42%, #fff9e6 100%);
+}
+
+/* Section dividers — top-level landing blocks + selected in-flow sections */
+.happy-job-agent-landing > .happy-outreach-reference-blocks,
+.happy-job-agent-landing > .happy-agent-pricing-figma,
+.happy-job-agent-landing > .happy-agent-jobs-listing,
+.happy-job-agent-landing > .happy-agent-faq-figma,
+.happy-job-agent-landing > .happy-agent-try-free-figma,
+.happy-job-agent-landing .happy-outreach-testimonials-wrap,
+.happy-job-agent-landing .happy-agent-privacy-figma,
+.happy-job-agent-landing .happy-agent-manual-vs-figma {
+    position: relative;
+}
+
+.happy-job-agent-landing > .happy-outreach-reference-blocks::before,
+.happy-job-agent-landing > .happy-agent-pricing-figma::before,
+.happy-job-agent-landing > .happy-agent-jobs-listing::before,
+.happy-job-agent-landing > .happy-agent-faq-figma::before,
+.happy-job-agent-landing > .happy-agent-try-free-figma::before,
+.happy-job-agent-landing .happy-outreach-testimonials-wrap::before,
+.happy-job-agent-landing .happy-agent-privacy-figma::before,
+.happy-job-agent-landing .happy-agent-manual-vs-figma::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: var(--happy-landing-divide-inset-x);
+    right: var(--happy-landing-divide-inset-x);
+    z-index: 2;
+    border-top: 1px solid var(--happy-landing-section-divider);
+    pointer-events: none;
 }
 
 /* How it works (.hiw-big) — yellow & white on Happpy Agent (overrides Outreach purple / slate) */
@@ -9108,7 +9155,7 @@ html.happy-job-agent-landing-active #app {
     margin: 0 auto;
     padding: 0 0 40px;
     box-sizing: border-box;
-    background: #fff;
+    background: var(--happy-landing-cream);
     overflow-x: clip;
 }
 
@@ -10457,7 +10504,7 @@ html.happy-job-agent-landing-active #app {
 /* Privacy & data security — Figma Section 8 */
 .happy-job-agent-landing .happy-agent-privacy-figma {
     padding: 80px 24px;
-    background: #ffffff;
+    background: var(--happy-landing-cream);
 }
 
 .happy-job-agent-landing .happy-agent-privacy-figma__inner {
@@ -11122,7 +11169,7 @@ html.happy-job-agent-landing-active #app {
 @media (max-width: 767px) {
     .happy-job-agent-landing .happy-agent-faq-figma {
         padding: 40px 16px;
-        background: #f9f8f4;
+        background: #f3f0e8;
     }
 
     .happy-job-agent-landing .happy-agent-faq-figma__header {
@@ -13906,7 +13953,7 @@ body.happy-agent-modal-open {
     z-index: 2;
     width: 100%;
     padding: 56px 24px;
-    background: #fff;
+    background: var(--happy-landing-cream);
 }
 
 @media screen and (max-width: 767px) {
