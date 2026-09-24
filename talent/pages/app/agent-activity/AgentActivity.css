@@ -1676,11 +1676,16 @@ a.aa-replies__job-title--link:focus-visible {
     cursor: pointer;
     border: 0;
     background: transparent;
-    color: transparent;
+    color: #231f20;
     font-family: inherit;
     appearance: none;
     -webkit-appearance: none;
     outline: none;
+}
+
+.aa-reminders__lookback-select option {
+    color: #231f20;
+    background-color: #fff;
 }
 
 .aa-reminders__divider {
@@ -2901,6 +2906,8 @@ a.aa-replies__job-title--link:focus-visible {
     color: #6b6b6b;
 }
 
+/* opacity hides the closed control; do not use color: transparent — PC Chrome
+   paints an in-page option list that inherits it and shows blank rows. */
 .aa-act__filter-select {
     position: absolute;
     inset: 0;
@@ -2913,8 +2920,13 @@ a.aa-replies__job-title--link:focus-visible {
     border: 0;
     padding: 0;
     background: transparent;
-    color: transparent;
+    color: #231f20;
     font-size: 12px;
+}
+
+.aa-act__filter-select option {
+    color: #231f20;
+    background-color: #fff;
 }
 
 /* Date-range filter (right side) -------------------------------- */

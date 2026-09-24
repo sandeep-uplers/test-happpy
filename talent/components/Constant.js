@@ -170,6 +170,12 @@ export const SESSION_KEY_PUBLIC_AGENT_PENDING_JOB_LINKS = 'uts_public_agent_pend
 /** Same URLs kept for UI on Job Agent “run agent” page (not cleared when the queue is processed). Cleared when user removes them later if we add that. */
 export const SESSION_KEY_JOB_AGENT_DISPLAY_JOB_URLS = 'uts_job_agent_display_job_urls';
 
+/** Landing JobsBoard “Ask a referral” → onboarding → open this HR on recommended-jobs. */
+export const SESSION_KEY_LANDING_PENDING_ACTIVE_JOB_HR = 'happy_agent_landing_pending_active_job_hr';
+
+/** One-shot: clear All Jobs filters on recommended-jobs only after HappyJobAgent JobsBoard handoff. */
+export const SESSION_KEY_LANDING_JOBS_BOARD_FILTER_RESET_HR = 'happy_agent_landing_jobs_board_filter_reset_hr';
+
 export const API_RESUME_YOE = API_URL + "talent/yoe-parsing";
 export const API_COMPANY_DETAILS = API_URL + "get-company-detail";
 export const API_COMPANY_SALARY_DATA = API_URL + "get-company-salary-data";

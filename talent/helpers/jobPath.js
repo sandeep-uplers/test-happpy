@@ -65,3 +65,11 @@ export function getJobAgentSimilarJobHref(job) {
     }
     return `${JOB_AGENT_RECOMMENDED_JOBS_PATH}?activeJob=${encodedHr}`;
 }
+
+/** Post-onboarding landing from JobsBoard handoff (all-jobs tab + split-pane selection). */
+export function buildJobAgentRecommendedJobsActivePath(hrNumber, { tab = 'all-jobs' } = {}) {
+    if (hrNumber == null || String(hrNumber).trim() === '') {
+        return `${JOB_AGENT_RECOMMENDED_JOBS_PATH}?tab=${tab}`;
+    }
+    return `${JOB_AGENT_RECOMMENDED_JOBS_PATH}?tab=${tab}&activeJob=${encodeURIComponent(String(hrNumber).trim())}`;
+}

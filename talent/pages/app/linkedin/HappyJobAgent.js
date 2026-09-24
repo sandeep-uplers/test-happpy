@@ -48,12 +48,17 @@ import MechanicalScoreboardNumber, { randomScoreboardStart } from "../../../comp
 import JobsBoardSkeleton from "../jobs-board/JobsBoardSkeleton";
 import AgentOnboarding from "../agent-onboarding/AgentOnboarding";
 import {
+    clearLandingPendingActiveJobHr,
     clearPublicOnbSection,
     clearPublicSignupHandoff,
+    getLandingPendingActiveJobHr,
     getPublicOnbSection,
     isPublicSignupPending,
+    setLandingJobsBoardFilterResetForHr,
+    setLandingPendingActiveJobHr,
     setPublicOnbSection,
 } from "../../../helpers/happyAgentPublicSignupSession";
+import { buildJobAgentRecommendedJobsActivePath } from "../../../helpers/jobPath";
 import {
     ONBOARDING_URL_PARAM,
 } from "../../../helpers/onboardingUrlParams";
@@ -858,6 +863,13 @@ function HappyJobAgentContent({
     const handleAgentOnboardingExit = useCallback(
         ({ wouldRedirectToDashboard, completed }) => {
             if (wouldRedirectToDashboard) {
+                const pendingHr = getLandingPendingActiveJobHr();
+                if (pendingHr) {
+                    setLandingJobsBoardFilterResetForHr(pendingHr);
+                    clearLandingPendingActiveJobHr();
+                    navigate(buildJobAgentRecommendedJobsActivePath(pendingHr), { replace: true });
+                    return;
+                }
                 navigate("/talent/job-agent", { replace: true });
                 return;
             }
@@ -1624,11 +1636,17 @@ function HappyJobAgentContent({
         }).catch(() => { });
 
         if (publicSignupMode) {
+            if (job?.HR_Number) {
+                setLandingPendingActiveJobHr(job.HR_Number);
+            }
             openPublicAuth(null, "jobs_board_run_agent");
             return false;
         }
 
         if (!gmailConnected) {
+            if (job?.HR_Number) {
+                setLandingPendingActiveJobHr(job.HR_Number);
+            }
             openAgentOnboarding("jobs_board_run_agent");
             return false;
         }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import axios from 'axios';
 import _, { debounce } from "lodash";
@@ -17,6 +17,10 @@ import { jobPostedDateFilterMaster } from "../../../components/Masters";
 import { JobDetailLoader } from "../../../components/SectionLoader";
 import WaveLoader from "../../../components/WaveLoader";
 import PageTimeLogger from "../../../components/common/PageTimeLogger";
+import {
+    clearLandingJobsBoardFilterResetHr,
+    isLandingJobsBoardFilterResetHandoff,
+} from '../../../helpers/happyAgentPublicSignupSession';
 import { withHapppyAgentAllJobsQuery } from '../../../helpers/jobPath';
 import { ensureModalAppElement } from '../../../helpers/setModalAppElement';
 import { allOppoPageLoaded, filterUsedTracking, pageVisitLoadAndCtaTrack, talentBookMarkTrack, timeTrackEvent, trackAllOpportunitiesSearch } from '../../../helpers/Mixpanel';
@@ -39,6 +43,32 @@ const DEFAULT_JOB_POSTED_DATE = jobPostedDateFilterMaster.find((item) => String(
 const defaultAllJobsFilters = () => ({
     job_posted_date: { [DEFAULT_JOB_POSTED_DATE.value]: DEFAULT_JOB_POSTED_DATE },
 });
+
+/** Same shape as OpportunitiesFilter “Clear all” — normalizes to no API filter params. */
+const clearedAllJobsFilters = () => ({
+    roles: {},
+    experience: {},
+    skills: {},
+    engagements: {},
+    payout: {},
+    locations: {},
+    salary_available: null,
+    job_posted_date: {},
+    maang_plus: {},
+    team_size: {},
+});
+
+/** JobsBoard → onboarding handoff only: omit list filters so the API can return that HR. */
+const resolveAllJobsFetchFilters = (filters, activeJobHr, searchParams) => {
+    const urlHr = searchParams?.get?.('activeJob');
+    if (
+        !activeJobHr
+        && isLandingJobsBoardFilterResetHandoff(urlHr)
+    ) {
+        return clearedAllJobsFilters();
+    }
+    return filters;
+};
 
 ensureModalAppElement();
 let listCancelTokenSource = axios.CancelToken.source();
@@ -65,6 +95,16 @@ const normalizeFilters = (filters = {}) => {
 
 const filtersCacheKey = (filters = {}) => JSON.stringify(normalizeFilters(filters))
 
+function readJobsBoardLandingHandoffFromLocation() {
+    if (typeof window === 'undefined') return false;
+    try {
+        const urlHr = new URLSearchParams(window.location.search).get('activeJob');
+        return isLandingJobsBoardFilterResetHandoff(urlHr);
+    } catch {
+        return false;
+    }
+}
+
 export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) {
     const dispatch = useDispatch();
     if (localStorage.getItem('mixpanel_session_id') == null) {
@@ -80,7 +120,8 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
     const [isCall, setIsCall] = useState(false);
     const videoRef = useRef(null);
     const fetchGenerationRef = useRef(0);
-    const lastFetchFiltersKeyRef = useRef(null);
+    /** Filters key for the last successful first-page opportunities fetch (not debounce schedule). */
+    const lastCompletedFetchKeyRef = useRef(null);
     const countFetchKeyRef = useRef(null);
     const { triggerAllJobsReset } = useSelector(state => state.opps)
 
@@ -101,6 +142,9 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
 
     const [filters, setFilters] = useState(() => {
         if (typeof window !== 'undefined') {
+            if (readJobsBoardLandingHandoffFromLocation()) {
+                return clearedAllJobsFilters();
+            }
             const params = new URLSearchParams(window.location.search);
             const postedDate = params.get('job_posted_date');
             if (postedDate) {
@@ -122,6 +166,10 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
     const [activeJob, markJobActive] = useState({});
 
     const [searchParams, setSearchParams] = useSearchParams();
+
+    const jobsBoardLandingHandoff =
+        isLandingJobsBoardFilterResetHandoff(searchParams.get('activeJob'))
+        || readJobsBoardLandingHandoffFromLocation();
 
     const setActiveJob = useCallback((data) => {
         markJobActive(data);
@@ -145,7 +193,7 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
 
     useEffect(() => {
         if (triggerAllJobsReset) {
-            lastFetchFiltersKeyRef.current = null
+            lastCompletedFetchKeyRef.current = null
             fetchGenerationRef.current += 1
             setFilters(defaultAllJobsFilters())
             dispatch({ type: SET_TRIGGER_ALL_JOBS_RESET, payload: false })
@@ -238,6 +286,7 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
 
     const filterData = useCallback( // load 1st page
         debounce(() => {
+            const activeFilters = filtersRef.current;
             const generation = ++fetchGenerationRef.current
             countFetchKeyRef.current = null
             timeTrackEvent('All Opportunity Page Loaded');
@@ -249,7 +298,6 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
             setJobsCount(null)
             listRef.current?.children[0]?.scrollIntoView({ behavior: 'instant', block: 'center' });
             let perPage = 10;
-            const activeFilters = filtersRef.current;
 
             getAllOpportnities(1, activeFilters, 0)(dispatch)
                 .then((res) => {
@@ -260,7 +308,29 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                     setBookmarkCount(res.data.bookmarkedCount)
                     setShowFiltered(true)
                     setOppDetailsOpen({})
-                    setActiveJob(res.data.hrs.data[0] || {})
+                    {
+                        const rows = res.data.hrs.data || [];
+                        let nextActive = rows[0] || {};
+                        try {
+                            const urlHr = new URLSearchParams(window.location.search).get('activeJob');
+                            if (urlHr) {
+                                const matched = rows.find((j) => String(j.HR_Number) === String(urlHr));
+                                if (matched) nextActive = matched;
+                            }
+                        } catch {
+                            /* ignore */
+                        }
+                        setActiveJob(nextActive);
+                    }
+                    lastCompletedFetchKeyRef.current = filtersCacheKey(activeFilters);
+                    try {
+                        const urlHr = new URLSearchParams(window.location.search).get('activeJob');
+                        if (isLandingJobsBoardFilterResetHandoff(urlHr)) {
+                            clearLandingJobsBoardFilterResetHr();
+                        }
+                    } catch {
+                        /* ignore */
+                    }
                     perPage = parseInt(res.data.hrs.per_page) || 10;
                     if (Object.keys(activeFilters).length > 0) {
                         allOppoPageLoaded('true', activeFilters)
@@ -294,6 +364,7 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                 .catch((err) => {
                     console.log(err)
                     if (generation === fetchGenerationRef.current) {
+                        lastCompletedFetchKeyRef.current = null;
                         setLoading(false);
                     }
                 })
@@ -323,17 +394,33 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
             Object.keys(filterMasterData).length > 1 ||
             !MASTER_FILTERS.some((item) => searchParams.has(item))
 
-        if (!mastersReady || lastFetchFiltersKeyRef.current === filtersKey) {
+        if (!mastersReady) {
             if (firstUpdate.current) { firstUpdate.current = false; }
-            return () => filterData.cancel()
+            return undefined;
         }
 
-        lastFetchFiltersKeyRef.current = filtersKey
+        if (lastCompletedFetchKeyRef.current === filtersKey) {
+            if (firstUpdate.current) { firstUpdate.current = false; }
+            return undefined;
+        }
+
         filterData();
         if (firstUpdate.current) { firstUpdate.current = false; }
         setShowFiltered(false)
-        return filterData.cancel
-    }, [filters])
+    }, [filters, filterMasterData, filterData])
+
+    /**
+     * JobsBoard handoff runs after OpportunitiesFilter’s layout hydration (child → parent)
+     * so “Within 3 days” is not re-applied on top of cleared filters.
+     */
+    useLayoutEffect(() => {
+        if (!readJobsBoardLandingHandoffFromLocation()) return;
+        lastCompletedFetchKeyRef.current = null;
+        const cleared = clearedAllJobsFilters();
+        filtersRef.current = cleared;
+        setPreFilters({});
+        setFilters(cleared);
+    }, [])
 
     useEffect(() => { // load 2nd page onwards
         if (lastPage >= currentPage && !loading && currentPage > 1) {
@@ -468,27 +555,28 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
 
     // const getAllOpportnities = (page, filters, is_count = 0, loosen = false) => (dispatch) => {
     const getAllOpportnities = (page, filters, is_count = 0) => (dispatch) => {
+        const appliedFilters = resolveAllJobsFetchFilters(filters, activeJob?.HR_Number, searchParams);
         let qryUrl = `?pagination=10&page=${page}&is_count=${is_count}`
 
         if (!activeJob.HR_Number && searchParams.has('activeJob')) {
             qryUrl = qryUrl + '&activeJob=' + searchParams.get('activeJob')
         }
 
-        if (filters.is_saved_filter === 1) {
+        if (appliedFilters.is_saved_filter === 1) {
             qryUrl = qryUrl + '&is_saved_filter=1'
-            if (filters.search && filters.search?.length > 0) {
-                qryUrl = qryUrl + `&search=${filters.search}`
+            if (appliedFilters.search && appliedFilters.search?.length > 0) {
+                qryUrl = qryUrl + `&search=${appliedFilters.search}`
             }
         } else {
-            Object.keys(filters).map((key, index) => {
+            Object.keys(appliedFilters).map((key, index) => {
                 if (key === 'aggregated_jobs' || key === 'partner_companies') return
-                if (filters[key]) {
+                if (appliedFilters[key]) {
                     if (key == 'sort_field') {
-                        qryUrl = qryUrl + `&${key}=${encodeURIComponent(filters[key])}`
+                        qryUrl = qryUrl + `&${key}=${encodeURIComponent(appliedFilters[key])}`
                     }
                     else if (key === 'payout') {
-                        if (Object.keys(filters[key]).length) {
-                            let payoutRange = Object.keys(filters[key]).map((key) => {
+                        if (Object.keys(appliedFilters[key]).length) {
+                            let payoutRange = Object.keys(appliedFilters[key]).map((key) => {
                                 return {
                                     start: key.split(',')[0],
                                     end: key.split(',')[1],
@@ -497,13 +585,13 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                             qryUrl = qryUrl + "&" + key + "=" + encodeURIComponent(JSON.stringify(payoutRange))
                         }
                     }
-                    else if (typeof filters[key] === 'object') {
-                        if (Object.keys(filters[key]).length > 0) {
+                    else if (typeof appliedFilters[key] === 'object') {
+                        if (Object.keys(appliedFilters[key]).length > 0) {
                             if (key == "engagements") {
                                 let subArray = []
-                                Object.keys(filters[key]).map((subKey) => {
-                                    // if (typeof filters[key][subKey] === 'object') {
-                                    //     subArray.push({ type: subKey, cities: Object.keys(filters[key][subKey]).toString() })
+                                Object.keys(appliedFilters[key]).map((subKey) => {
+                                    // if (typeof appliedFilters[key][subKey] === 'object') {
+                                    //     subArray.push({ type: subKey, cities: Object.keys(appliedFilters[key][subKey]).toString() })
                                     // } else {
                                     subArray.push({ type: subKey })
                                     // }
@@ -511,13 +599,13 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                                 qryUrl = qryUrl + "&" + key + "=" + encodeURIComponent(JSON.stringify(subArray));
                             }
                             else if (key == 'shifts') {
-                                qryUrl = qryUrl + "&" + key + "=" + encodeURIComponent(JSON.stringify(Object.keys(filters[key])));
+                                qryUrl = qryUrl + "&" + key + "=" + encodeURIComponent(JSON.stringify(Object.keys(appliedFilters[key])));
                             } else
-                                qryUrl = qryUrl + "&" + key + "=" + encodeURIComponent(Object.keys(filters[key]).toString());
+                                qryUrl = qryUrl + "&" + key + "=" + encodeURIComponent(Object.keys(appliedFilters[key]).toString());
                         }
                     }
                     else {
-                        qryUrl = qryUrl + `&${key}=${encodeURIComponent(filters[key])}`
+                        qryUrl = qryUrl + `&${key}=${encodeURIComponent(appliedFilters[key])}`
                     }
                 }
 
@@ -643,7 +731,7 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
     const handleNotInterested = (HR_Number) => {
         let newData = allOpportunity.filter(item => item.HR_Number != HR_Number)
         if (newData.length == 0 && (Object.keys(filters).length > 0 || filters.search !== '')) {
-            lastFetchFiltersKeyRef.current = null
+            lastCompletedFetchKeyRef.current = null
             fetchGenerationRef.current += 1
             setFilters({});
             return
@@ -685,7 +773,9 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                                 bookmarkCount={bookmarkCount}
                                 nonMatchingJobs={nonMatchingJobs}
                                 isBookmarkedActive={filters.is_saved_filter}
-                                defaultJobPostedDate={DEFAULT_JOB_POSTED_DATE}
+                                defaultJobPostedDate={jobsBoardLandingHandoff ? null : DEFAULT_JOB_POSTED_DATE}
+                                skipUrlFilterHydration={jobsBoardLandingHandoff}
+                                applyMasterBufferFilters={!jobsBoardLandingHandoff}
                                 filterLayout="drawer"
                                 toolbarHost={embedded ? toolbarHost : null}
                                 toolbarMountInHost={embedded}
@@ -886,7 +976,9 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                             bookmarkCount={bookmarkCount}
                             nonMatchingJobs={nonMatchingJobs}
                             isBookmarkedActive={filters.is_saved_filter}
-                            defaultJobPostedDate={DEFAULT_JOB_POSTED_DATE}
+                            defaultJobPostedDate={jobsBoardLandingHandoff ? null : DEFAULT_JOB_POSTED_DATE}
+                            skipUrlFilterHydration={jobsBoardLandingHandoff}
+                            applyMasterBufferFilters={!jobsBoardLandingHandoff}
                             isPc={true}
                             filterLayout="drawer"
                             toolbarHost={embedded ? toolbarHost : null}
