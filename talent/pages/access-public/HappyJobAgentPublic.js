@@ -15,6 +15,7 @@ import {
     API_REFERRAL_AGENT_VERIFY_OTP,
     LOGIN_IMAGE_URL,
 } from "../../components/Constant";
+import { getLinkTrackingDeviceCategory } from "../../components/common/linkTrackingDeviceCategory";
 import { getDomain, POST_API } from "../../components/Helper";
 import {
     setPublicAuthPath,
@@ -25,7 +26,7 @@ import { buildReferralAiAgentPath } from "../../helpers/happyAgentUrlParams";
 import { ONBOARDING_URL_PARAM } from "../../helpers/onboardingUrlParams";
 import { trackHappyAgentMixpanel, trackHappyAgentPublicAuthCompleted } from "../../store/actions/happyAgentTracking";
 // import { socialGoogleCallback } from "../../store/actions/signupApplyActions";
-import { setCurrentUser, signupReferralAgent } from "../../store/actions/UserActions";
+import { setCurrentUser, signupReferralAgent, trackLink } from "../../store/actions/UserActions";
 import { HappyJobAgentContent } from "../app/linkedin/HappyJobAgent";
 import {
     HAPPY_PUBLIC_AUTH_CONTINUE_ARROW_SRC,
@@ -187,6 +188,7 @@ export function HappyJobAgentPublicAuthDrawer({
     const [otpResendMessage, setOtpResendMessage] = useState("");
     /** Carried from email submit when OTP is required (`new_account` from signup API). */
     const [pendingNewAccount, setPendingNewAccount] = useState(null);
+    const authDrawerOpenTrackedRef = useRef(false);
 
     const resetDrawer = useCallback(() => {
         setEmail("");
@@ -208,9 +210,38 @@ export function HappyJobAgentPublicAuthDrawer({
 
     useEffect(() => {
         if (!isOpen) {
+            authDrawerOpenTrackedRef.current = false;
             resetDrawer();
         }
     }, [isOpen, resetDrawer]);
+
+    useEffect(() => {
+        if (!isOpen || authDrawerOpenTrackedRef.current) {
+            return;
+        }
+        authDrawerOpenTrackedRef.current = true;
+
+        const query = new URLSearchParams(window.location.search);
+        const source = query.get("source");
+        let cookie = Cookies.get("l");
+        if (!cookie) {
+            cookie = String(new Date().getTime() + Math.floor(Math.random() * 1000000) + 1);
+            Cookies.set("l", cookie);
+        }
+        const payload = {
+            e: "Auth Drawer Open",
+            c: cookie,
+            d: getLinkTrackingDeviceCategory(),
+        };
+        if (source != null) {
+            payload.l = source;
+        }
+
+        trackLink(payload).catch(() => {});
+        trackHappyAgentMixpanel("happy_agent_public_auth_drawer_opened", {
+            from_where: gtagFromWhere,
+        }).catch(() => {});
+    }, [isOpen, gtagFromWhere]);
 
     const emailLooksValid = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((value || "").trim());
 

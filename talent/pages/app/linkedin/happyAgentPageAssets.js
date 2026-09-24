@@ -31,7 +31,7 @@ export const HAPPY_HERO_MOBILE_SUBTITLE_LINES = [
     "That finds people inside target companies and introduces you —",
     "so real recruiters reply instead of ghosting.",
 ];
-export const HAPPY_HERO_MOBILE_CTA_LABEL = "Get started";
+export const HAPPY_HERO_MOBILE_CTA_LABEL = "Get My First Referral";
 export const HAPPY_HERO_SUBTITLE_LINE_1 =
     "An AI referral agent that finds people inside the company and introduces you - so a real recruiter replies";
 /** Desktop: sparkle + `desktop` label above the H1. Mobile: value/label stats under the hero CTA. */
