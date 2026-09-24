@@ -5365,7 +5365,7 @@ html.happy-job-agent-landing-active #app {
         min-height: 683px;
         height: calc(100% + 16px);
         max-width: none;
-        object-fit: cover;
+        object-fit: fill;
         object-position: center top;
         pointer-events: none;
     }
@@ -13031,6 +13031,7 @@ body.happy-agent-modal-open {
         height: auto;
         max-height: calc(100vh - 48px - env(safe-area-inset-top, 0px));
         max-height: calc(100dvh - 48px - env(safe-area-inset-top, 0px));
+        height: calc(100dvh - 48px - env(safe-area-inset-top, 0px));
         border-radius: 16px 16px 0 0 !important;
         box-shadow: 0 -6px 24px rgba(20, 20, 20, 0.18);
         transform: translateY(100%);
