@@ -30,7 +30,7 @@ import { trackTailorPricePopupOpen } from "../../../store/actions/trackingAction
 import AiScreeningRequired from "./AiScreeningRequired";
 import CustomQuesNeeded from "./CustomQuesNeeded";
 import EstimatedSalaryPill from "./EstimatedSalaryPill";
-import JobDetailsApply from "./JobDetailsApply";
+import JobDetailsApply, { JobRoleTitleLink } from "./JobDetailsApply";
 import JobHeaderSticky from "./JobHeaderSticky";
 import MatcherInfo from "./MatcherInfo";
 import NotInterested from "./modals/NotInterested";
@@ -540,8 +540,10 @@ export default function JobDetails({
                         <CompanyLogo company={data.company} HR_Number={data.HR_Number} />
                     </div>
                     <div className="main">
-                        <h5 >
-                            {data.RequestForTalent}
+                        <h5>
+                            <JobRoleTitleLink data={data}>
+                                {data.RequestForTalent}
+                            </JobRoleTitleLink>
                         </h5>
                         <span className="companyName">{data.company?.company_name}</span>
                     </div>
@@ -556,12 +558,13 @@ export default function JobDetails({
                     <>
                         <div className="actionBtns">
                             <div className="primary">
-                                {!hideApplyCta && !data.is_applied && !isTalentHired(talentStatus) && !isOppDisabled &&
+                                {(!hideApplyCta || data.aggregator_application_link) && !data.is_applied && !isTalentHired(talentStatus) && !isOppDisabled &&
                                     (!markedNotInterested && !data.job_not_interested) &&
                                     <JobDetailsApply
                                         data={data}
                                         setIsHeaderVisible={setIsHeaderVisible}
                                         handleCustomizeResume={handleCustomizeResume}
+                                        hideApplyButton={hideApplyCta}
                                     />
                                 }
 
