@@ -9525,6 +9525,7 @@ html.happy-job-agent-landing-active #app {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    margin-top: auto;
 
     @media (max-width: 767px) {
         padding: 0 0 24px;

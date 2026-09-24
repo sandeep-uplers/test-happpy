@@ -19,7 +19,7 @@ const rangeFilters = ["payout", "experience", "team_size"];
 export default function OpportunitiesFilter({ showFiltered, noSearch, searchVal, onSearch, currentFilters, setCurrentFilters, totalOpp,
     loading, bookmarkCount, nonMatchingJobs, isBookmarkedActive, isPc, syncFiltersToUrl = true, applyMasterBufferFilters = true,
     filterLayout = 'inline', toolbarMeta = null, toolbarMetaLoading = false, toolbarHost = null, toolbarMountInHost = false,
-    defaultJobPostedDate = null }) {
+    defaultJobPostedDate = null, skipUrlFilterHydration = false }) {
     const dispatch = useDispatch()
     const firstPageLoad = useRef(true);
 
@@ -74,7 +74,7 @@ export default function OpportunitiesFilter({ showFiltered, noSearch, searchVal,
     }, [filterMasterData, applyMasterBufferFilters])
 
     useLayoutEffect(() => {
-        if (!syncFiltersToUrl) return;
+        if (!syncFiltersToUrl || skipUrlFilterHydration) return;
         const initialFilters = {};
         searchParams.forEach((value, key) => {
             if (!ALL_FILTERS.includes(key) || EXCLUDED_FILTERS.includes(key)) return;

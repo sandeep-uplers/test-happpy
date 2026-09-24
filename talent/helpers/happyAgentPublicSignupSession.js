@@ -1,5 +1,10 @@
 'use client';
 
+import {
+    SESSION_KEY_LANDING_JOBS_BOARD_FILTER_RESET_HR,
+    SESSION_KEY_LANDING_PENDING_ACTIVE_JOB_HR,
+} from '../components/Constant';
+
 /**
  * Ephemeral cross-route handoff for the public Happpy Agent signup flow:
  * Auth (public) → AgentOnboarding (logged-in landing) → Template drawer.
@@ -156,4 +161,65 @@ export function clearOnboardingTemplatePending() {
     } catch {
         /* ignore */
     }
+}
+
+export function setLandingPendingActiveJobHr(hrNumber) {
+    const trimmed = hrNumber != null ? String(hrNumber).trim() : '';
+    if (!trimmed) return;
+    try {
+        sessionStorage.setItem(SESSION_KEY_LANDING_PENDING_ACTIVE_JOB_HR, trimmed);
+    } catch {
+        /* ignore */
+    }
+}
+
+export function getLandingPendingActiveJobHr() {
+    try {
+        return sessionStorage.getItem(SESSION_KEY_LANDING_PENDING_ACTIVE_JOB_HR) || null;
+    } catch {
+        return null;
+    }
+}
+
+export function clearLandingPendingActiveJobHr() {
+    try {
+        sessionStorage.removeItem(SESSION_KEY_LANDING_PENDING_ACTIVE_JOB_HR);
+    } catch {
+        /* ignore */
+    }
+}
+
+export function setLandingJobsBoardFilterResetForHr(hrNumber) {
+    const trimmed = hrNumber != null ? String(hrNumber).trim() : '';
+    if (!trimmed) return;
+    try {
+        sessionStorage.setItem(SESSION_KEY_LANDING_JOBS_BOARD_FILTER_RESET_HR, trimmed);
+    } catch {
+        /* ignore */
+    }
+}
+
+export function getLandingJobsBoardFilterResetHr() {
+    try {
+        return sessionStorage.getItem(SESSION_KEY_LANDING_JOBS_BOARD_FILTER_RESET_HR) || null;
+    } catch {
+        return null;
+    }
+}
+
+export function clearLandingJobsBoardFilterResetHr() {
+    try {
+        sessionStorage.removeItem(SESSION_KEY_LANDING_JOBS_BOARD_FILTER_RESET_HR);
+    } catch {
+        /* ignore */
+    }
+}
+
+/** True when recommended-jobs should drop filters for a HappyJobAgent JobsBoard handoff. */
+export function isLandingJobsBoardFilterResetHandoff(urlActiveJobHr) {
+    const handoffHr = getLandingJobsBoardFilterResetHr();
+    if (!handoffHr || urlActiveJobHr == null || String(urlActiveJobHr).trim() === '') {
+        return false;
+    }
+    return String(handoffHr) === String(urlActiveJobHr).trim();
 }
