@@ -231,6 +231,8 @@ function toYmd(date) {
 
 /* ---------------- Icons ---------------- */
 
+const AUTO_SOURCE_GLYPH_SRC = '/images/talent/agent-activity/auto-source-glyph.svg';
+
 function BuildingIcon() {
     return (
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -252,9 +254,14 @@ function PersonGlyph() {
 
 function AutoGlyph() {
     return (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d="M13 2 4 14h8l-1 8 9-12h-8l1-8z" />
-        </svg>
+        <img
+            className="aa-act__auto-glyph"
+            src={AUTO_SOURCE_GLYPH_SRC}
+            width={15}
+            height={15}
+            alt=""
+            aria-hidden
+        />
     );
 }
 
