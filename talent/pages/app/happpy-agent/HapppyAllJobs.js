@@ -21,6 +21,7 @@ import {
     clearLandingJobsBoardFilterResetHr,
     isLandingJobsBoardFilterResetHandoff,
 } from '../../../helpers/happyAgentPublicSignupSession';
+import { ensureModalAppElement } from '../../../helpers/setModalAppElement';
 import { withHapppyAgentAllJobsQuery } from '../../../helpers/jobPath';
 import { allOppoPageLoaded, filterUsedTracking, pageVisitLoadAndCtaTrack, talentBookMarkTrack, timeTrackEvent, trackAllOpportunitiesSearch } from '../../../helpers/Mixpanel';
 import { oppBookmark, removeUser } from "../../../store/actions/UserActions";
@@ -69,7 +70,7 @@ const resolveAllJobsFetchFilters = (filters, activeJobHr, searchParams) => {
     return filters;
 };
 
-Modal.setAppElement('#app');
+ensureModalAppElement();
 let listCancelTokenSource = axios.CancelToken.source();
 let countCancelTokenSource = axios.CancelToken.source();
 let pendingCountUrl = null;

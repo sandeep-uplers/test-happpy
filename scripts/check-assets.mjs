@@ -18,7 +18,7 @@ const SOURCE_PUBLIC = process.env.ASSET_SOURCE
     : null;
 
 /** Referenced in UTS but missing from both repos' public/ — tracked separately, not a sync gap. */
-const KNOWN_GAPS = new Set(['/images/default-company.png']);
+const KNOWN_GAPS = new Set([]);
 
 const SCAN_DIRS = ['talent', 'app', 'styles']
     .map((d) => path.join(ROOT, d))

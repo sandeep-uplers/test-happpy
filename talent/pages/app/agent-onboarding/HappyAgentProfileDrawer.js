@@ -2,15 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import { ensureModalAppElement } from '../../../helpers/setModalAppElement';
 import JobAgentManagePreferences from '../job-agent/JobAgentManagePreferences';
 import '../job-agent/JobAgentUpdateProfile.css';
 import '../../access-public/HappyJobAgentPublic.css';
 
 const HAPPY_PUBLIC_PROFILE_FORM_ID = 'happy-public-profile-form';
 
-if (typeof document !== 'undefined' && document.getElementById('app')) {
-    Modal.setAppElement('#app');
-}
+ensureModalAppElement();
 
 /**
  * Legacy standalone profile drawer — profile creation now lives in onboarding

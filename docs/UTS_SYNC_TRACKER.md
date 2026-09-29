@@ -94,6 +94,16 @@ Then apply manual merges listed below.
 
 Also synced (CSS / no git diff vs prior if identical): `HapppyAllJobs.css`, `HapppySingleOppMobile.css`, `JobAgentDashboard.css`, `jobs-board/*`, `OutreachAgent.css`.
 
+## Follow-up (2026-09-29) — Verify outreach drawer
+
+| talent/ path | Notes |
+|--------------|--------|
+| `pages/app/linkedin/VerifyOutreachPerson.js` | Full copy from UTS + `port-uts-js.mjs` (`TemplateEditor`, Figma modals) |
+| `pages/app/linkedin/VerifyOutreachPerson.css` | Full copy from UTS (~110KB styles) |
+| `public/images/talent/outreach/mascot-thumbsup.svg` | Success state art (required by synced JS) |
+
+`TemplateEditor.js` / `.css` already matched UTS. Agent activity tabs/drawer CSS unchanged vs UTS.
+
 ## Verification (2026-09-29)
 
 - `npm run sync:assets` — no new assets required
