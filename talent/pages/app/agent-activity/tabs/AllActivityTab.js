@@ -17,7 +17,7 @@ import VerifyOutreachPerson from '../../linkedin/VerifyOutreachPerson';
 /**
  * All Activity tab — table redesign of `JobAgentJobs`, matching Figma node
  * 28464:5995. Surfaces every Happpy Agent run (success, failure, queued,
- * cancelled) in one feed.
+ * cancelled) in one feed. Referral Status defaults to Success (completed).
  *
  * Live data contract (mirrors `JobAgentJobs`):
  *   GET /talent/outreach/agent-tailor-activity?page&limit&run_by&agent&tailor&status&q&date_from&date_to
@@ -46,6 +46,8 @@ const PAGE_SIZE = 10;
  * `AgentActivity.js` — keep the string in sync if it changes there.
  */
 const JOB_LINK_ADDED_EVENT = 'agent-activity:job-link-added';
+const PENDING_MANUAL_REFRESH_EVENT = 'agent-activity:pending-manual-refresh';
+const OPEN_PENDING_MANUAL_REVIEW_EVENT = 'agent-activity:open-pending-manual-review';
 
 /* ---------------- Constants ---------------- */
 
@@ -101,6 +103,9 @@ const STATUS_FILTER_OPTIONS = [
     { value: STATUS_VARIANT.DISCARDED, label: 'Discarded' },
     { value: STATUS_VARIANT.CONFIRMATION_REQUIRED, label: 'Confirmation Required' },
 ];
+
+/** Landing filter for All Activity — show completed (Success) runs first. */
+const DEFAULT_STATUS_FILTER = STATUS_VARIANT.COMPLETED;
 
 /* ---------------- Helpers ---------------- */
 
@@ -294,26 +299,6 @@ function ChevronDownIcon() {
     return (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <polyline points="6 9 12 15 18 9" />
-        </svg>
-    );
-}
-
-function PersonSearchIcon() {
-    return (
-        <svg className="aa-queue__pending-strip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <circle cx="10" cy="8" r="4" />
-            <path d="M2 22a8 8 0 0 1 13.5-5.8" />
-            <circle cx="18" cy="18" r="3" />
-            <path d="m22 22-1.5-1.5" />
-        </svg>
-    );
-}
-
-function ArrowRightIcon() {
-    return (
-        <svg className="aa-queue__pending-strip-btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d="M5 12h14" />
-            <path d="m13 6 6 6-6 6" />
         </svg>
     );
 }
@@ -1724,7 +1709,7 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
     const [page, setPage] = useState(1);
     const [runByFilter, setRunByFilter] = useState('all');
     const [tailorFilter, setTailorFilter] = useState('all');
-    const [statusFilter, setStatusFilter] = useState('all');
+    const [statusFilter, setStatusFilter] = useState(DEFAULT_STATUS_FILTER);
     const [dateFrom, setDateFrom] = useState('');
     const [dateTo, setDateTo] = useState('');
 
@@ -1746,59 +1731,20 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
         return () => window.removeEventListener(JOB_LINK_ADDED_EVENT, onAdded);
     }, []);
 
-    /* ---- Pending manual outreach strip + drawer (moved from JobsInQueueTab) ---- */
+    /* ---- Pending manual outreach drawer (top banner lives in AgentActivity) ---- */
 
-    // Mirrors JobAgentDashboardHome.js: GET has-pending-action-manual-outreach-agent
-    // → hrs[]; drives the top "pending companies" strip.
-    const [pendingManualHrs, setPendingManualHrs] = useState([]);
-    const [pendingManualLoading, setPendingManualLoading] = useState(true);
     // Drawer state. `open` toggles the right-side drawer; `jobId` is the
     // outreach_hr_id to deep-link into VerifyOutreachPerson (null = let the
-    // component show its own job-selection list — used by the strip's
-    // Take Action button).
+    // component show its own job-selection list — used by the page banner's
+    // Review now button).
     const [outreachDrawer, setOutreachDrawer] = useState({ open: false, jobId: null });
-
-    const fetchPendingManualHrs = useCallback(async () => {
-        if (USE_DUMMY_DATA) {
-            // No live endpoint in dummy mode — keep the strip hidden so the rest
-            // of the tab can still be exercised offline.
-            setPendingManualLoading(false);
-            setPendingManualHrs([]);
-            return;
-        }
-        try {
-            setPendingManualLoading(true);
-            const res = await GET_API(`${API_URL}talent/outreach/has-pending-action-manual-outreach-agent`);
-            const body = res?.data;
-            const payload = body?.data;
-            if (
-                body?.status === 'success' &&
-                payload?.has_pending_action &&
-                Array.isArray(payload.hrs) &&
-                payload.hrs.length > 0
-            ) {
-                setPendingManualHrs(payload.hrs);
-            } else {
-                setPendingManualHrs([]);
-            }
-        } catch {
-            setPendingManualHrs([]);
-        } finally {
-            setPendingManualLoading(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        fetchPendingManualHrs();
-    }, [fetchPendingManualHrs]);
 
     /**
      * Opens the manual outreach confirmation flow inside a right-side drawer
      * instead of a full-page navigation. `VerifyOutreachPerson` is mounted in
      * "embedded" mode (`embeddedJobId` + `onClose`) so it preselects a
      * specific outreach_hr_id and suppresses its internal route updates. Pass
-     * `jobId` as `null` from the strip's Take Action button to surface the
-     * job-selection list inside the drawer.
+     * `jobId` as `null` from the page banner to surface the job-selection list.
      */
     const openOutreachDrawer = useCallback((jobId) => {
         setOutreachDrawer({ open: true, jobId: jobId ?? null });
@@ -1807,10 +1753,10 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
     const closeOutreachDrawer = useCallback(() => {
         setOutreachDrawer({ open: false, jobId: null });
         // The user may have submitted or discarded inside the drawer — refresh
-        // both the activity feed (status may have flipped) and the strip.
+        // both the activity feed (status may have flipped) and the page banner.
         setRefreshKey((k) => k + 1);
-        fetchPendingManualHrs();
-    }, [fetchPendingManualHrs]);
+        window.dispatchEvent(new CustomEvent(PENDING_MANUAL_REFRESH_EVENT));
+    }, []);
 
     /* ---- Drawer effects (Esc, body scroll lock) ---- */
 
@@ -1827,6 +1773,12 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
             document.body.style.overflow = prevOverflow;
         };
     }, [outreachDrawer.open, closeOutreachDrawer]);
+
+    useEffect(() => {
+        const onOpenPendingReview = () => openOutreachDrawer(null);
+        window.addEventListener(OPEN_PENDING_MANUAL_REVIEW_EVENT, onOpenPendingReview);
+        return () => window.removeEventListener(OPEN_PENDING_MANUAL_REVIEW_EVENT, onOpenPendingReview);
+    }, [openOutreachDrawer]);
 
     /**
      * Deep link: `?pendingManualReview=true` (alongside `?tab=activity`) opens the
@@ -1913,7 +1865,10 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
                 return;
             }
             setRows(data.list);
-            if (params.size <= 2) {
+            const onlyDefaultStatus =
+                params.size === 3 &&
+                String(params.get('status')) === String(DEFAULT_STATUS_FILTER);
+            if (params.size <= 2 || onlyDefaultStatus) {
                 onActivityFetched(data.list.length);
             }
             setTotal(typeof data.total === 'number' ? data.total : data.list.length);
@@ -2194,37 +2149,6 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
                 </Link>
                 <span className="aa-act__legacy-strip-text">?</span>
             </div> */}
-
-            {pendingManualLoading ? (
-                <div className="aa-queue__pending-strip aa-queue__pending-strip--skeleton" aria-hidden>
-                    <span className="aa-skel aa-skel--pending-msg" />
-                    <div className="aa-queue__pending-strip-end">
-                        <div className="aa-queue__pending-strip-companies">
-                            <span className="aa-skel aa-skel--pending-chip" />
-                            <span className="aa-skel aa-skel--pending-chip" />
-                        </div>
-                        <span className="aa-skel aa-skel--pending-btn" />
-                    </div>
-                </div>
-            ) : pendingManualHrs.length > 0 ? (
-                <div className="aa-queue__pending-strip" role="region" aria-label="Pending manual outreach companies">
-                    <p className="aa-queue__pending-strip-msg">
-                        <PersonSearchIcon />
-                        Pending action for {pendingManualHrs.length}{' '}
-                        {pendingManualHrs.length === 1 ? 'company' : 'companies'}. Agent successfully found data.
-                    </p>
-                    <div className="aa-queue__pending-strip-end">
-                        <button
-                            type="button"
-                            className="aa-queue__pending-strip-btn"
-                            onClick={() => openOutreachDrawer(null)}
-                        >
-                            Take Action
-                            <ArrowRightIcon />
-                        </button>
-                    </div>
-                </div>
-            ) : null}
 
             <div className="aa-act__filters" role="region" aria-label="Activity filters">
                     <FilterChip
@@ -2568,7 +2492,7 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
                     className="aa-drawer aa-drawer--outreach"
                     role="dialog"
                     aria-modal="true"
-                    aria-labelledby="aa-drawer-outreach-title"
+                    aria-label="Review outreach"
                 >
                     <button
                         type="button"
@@ -2577,20 +2501,7 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
                         onClick={closeOutreachDrawer}
                     />
                     <aside className="aa-drawer__panel">
-                        <header className="aa-drawer__head">
-                            <h3 id="aa-drawer-outreach-title" className="aa-drawer__title">
-                                Review Outreach
-                            </h3>
-                            <button
-                                type="button"
-                                className="aa-drawer__close"
-                                aria-label="Close"
-                                onClick={closeOutreachDrawer}
-                            >
-                                <CloseIcon />
-                            </button>
-                        </header>
-                        <div className="aa-drawer__body">
+                        <div className="aa-drawer__body aa-drawer__body--outreach">
                             <VerifyOutreachPerson
                                 embeddedJobId={outreachDrawer.jobId}
                                 onClose={closeOutreachDrawer}

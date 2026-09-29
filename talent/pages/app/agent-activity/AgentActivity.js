@@ -9,10 +9,17 @@ import ReminderAlertsTab from './tabs/ReminderAlertsTab';
 import JobsInQueueTab from './tabs/JobsInQueueTab';
 import AllActivityTab from './tabs/AllActivityTab';
 import InterviewBoardTab from './tabs/InterviewBoardTab';
+import UpcomingFollowUpTab from './tabs/UpcomingFollowUpTab';
 import MascotRepliesIntro from './MascotRepliesIntro';
 import ActivityGlobalSearch from './ActivityGlobalSearch';
 import PasteJobLinkDrawer from '../happpy-agent/configure-tabs/PasteJobLinkDrawer';
+import PendingManualOutreachBanner from './PendingManualOutreachBanner';
 import './AgentActivity.css';
+
+const JOB_LINK_ADDED_EVENT = 'agent-activity:job-link-added';
+const PENDING_MANUAL_REFRESH_EVENT = 'agent-activity:pending-manual-refresh';
+const OPEN_PENDING_MANUAL_REVIEW_EVENT = 'agent-activity:open-pending-manual-review';
+const PENDING_MANUAL_DRAWER_QUERY_KEY = 'pendingManualReview';
 
 /* ---------------- Paste Job Link flow ----------------
  * Page-level "Paste Job Link" opens PasteJobLinkDrawer (same drawer used on
@@ -42,6 +49,7 @@ function MatIcon({ name, className = '' }) {
 const TABS = [
     { id: 'activity', label: 'All Activity' },
     { id: 'jobs-in-queue', label: 'Jobs in Queue' },
+    { id: 'upcoming-followup', label: 'Upcoming Follow-up' },
     { id: 'replies', label: 'Responses' },
     { id: 'reminders', label: 'Reminder Alerts' },
     { id: 'interviews', label: 'Interviews' },
@@ -227,6 +235,7 @@ const AgentActivity = () => {
         replies: null,
         reminders: null,
         'jobs-in-queue': null,
+        'upcoming-followup': null,
         activity: null,
         interviews: null,
         max_limit: null,
@@ -236,14 +245,86 @@ const AgentActivity = () => {
         (tabCounts.replies > 0) ||
         (tabCounts.reminders > 0) ||
         (tabCounts['jobs-in-queue'] > 0) ||
+        (tabCounts['upcoming-followup'] > 0) ||
         (tabCounts.interviews > 0);
 
     /** Full blank: no All Activity rows and no other tab badges to show. */
     const showPageEmpty = activityBlank === true && !hasOtherTabData;
 
-    const handleActivityFetched = (activityCount) => {
-        setTabCounts((prev) => ({ ...prev, activity: activityCount }));
-    };
+    const [pendingManualCount, setPendingManualCount] = useState(0);
+    const [pendingManualLoading, setPendingManualLoading] = useState(true);
+
+    const fetchPendingManualCount = useCallback(async () => {
+        try {
+            setPendingManualLoading(true);
+            const res = await GET_API(`${API_URL}talent/outreach/has-pending-action-manual-outreach-agent`);
+            const body = res?.data;
+            const payload = body?.data;
+            if (
+                body?.status === 'success' &&
+                payload?.has_pending_action &&
+                Array.isArray(payload.hrs) &&
+                payload.hrs.length > 0
+            ) {
+                setPendingManualCount(payload.hrs.length);
+            } else {
+                setPendingManualCount(0);
+            }
+        } catch {
+            setPendingManualCount(0);
+        } finally {
+            setPendingManualLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (showPageEmpty) {
+            setPendingManualLoading(false);
+            setPendingManualCount(0);
+            return undefined;
+        }
+        fetchPendingManualCount();
+        const onRefresh = () => fetchPendingManualCount();
+        const onJobAdded = () => fetchPendingManualCount();
+        window.addEventListener(PENDING_MANUAL_REFRESH_EVENT, onRefresh);
+        window.addEventListener(JOB_LINK_ADDED_EVENT, onJobAdded);
+        return () => {
+            window.removeEventListener(PENDING_MANUAL_REFRESH_EVENT, onRefresh);
+            window.removeEventListener(JOB_LINK_ADDED_EVENT, onJobAdded);
+        };
+    }, [fetchPendingManualCount, showPageEmpty]);
+
+    const handlePendingReviewNow = useCallback(() => {
+        if (activeTab === 'activity') {
+            window.dispatchEvent(new CustomEvent(OPEN_PENDING_MANUAL_REVIEW_EVENT));
+            return;
+        }
+        const next = new URLSearchParams(searchParams);
+        next.set('tab', 'activity');
+        next.set(PENDING_MANUAL_DRAWER_QUERY_KEY, 'open');
+        setSearchParams(next);
+    }, [activeTab, searchParams, setSearchParams]);
+
+    const handleActivityFetched = useCallback((activityCount) => {
+        setTabCounts((prev) => {
+            if (prev.activity === activityCount) return prev;
+            return { ...prev, activity: activityCount };
+        });
+    }, []);
+
+    const handleUpcomingFollowUpCount = useCallback((upcomingCount) => {
+        setTabCounts((prev) => {
+            if (prev['upcoming-followup'] === upcomingCount) return prev;
+            return { ...prev, 'upcoming-followup': upcomingCount };
+        });
+    }, []);
+
+    const handleInterviewCount = useCallback((interviewCount) => {
+        setTabCounts((prev) => {
+            if (prev.interviews === interviewCount) return prev;
+            return { ...prev, interviews: interviewCount };
+        });
+    }, []);
 
     const fetchTabCounts = async () => {
         const res = await GET_API(`${API_URL}talent/outreach/get-outreach-dashboard-data`);
@@ -253,6 +334,7 @@ const AgentActivity = () => {
             replies: counts?.total_positive_replies,
             reminders: counts?.reminder_count,
             'jobs-in-queue': counts?.jobs_in_queue,
+            'upcoming-followup': counts?.upcoming_followup_count,
             interviews: counts?.interview_count,
             max_limit: counts?.max_limit,
         }));
@@ -279,10 +361,6 @@ const AgentActivity = () => {
 
     useEffect(() => {
         fetchTabCounts();
-    }, []);
-
-    useEffect(() => {
-        document.title = 'My activity | Happpy Agent | Uplers';
     }, []);
 
     const tabsTrackRef = useRef(null);
@@ -330,6 +408,11 @@ const AgentActivity = () => {
                         </>
                     ) : (
                         <>
+                            <PendingManualOutreachBanner
+                                loading={pendingManualLoading}
+                                count={pendingManualCount}
+                                onReviewNow={handlePendingReviewNow}
+                            />
                             <div className="aa-shell__header">
                                 <h1 className="aa-title">Job Referral Activity</h1>
                                 <div className="aa-shell__header-actions">
@@ -412,12 +495,17 @@ const AgentActivity = () => {
                                         <JobsInQueueTab maxLimit={tabCounts.max_limit} searchQuery={searchQuery} />
                                     </div>
                                 )}
+                                {activeTab === 'upcoming-followup' && (
+                                    <div role="tabpanel" id="aa-panel-upcoming-followup" aria-labelledby="aa-tab-upcoming-followup">
+                                        <UpcomingFollowUpTab onCountsFetched={handleUpcomingFollowUpCount} />
+                                    </div>
+                                )}
                                 {activeTab === 'activity' && (
                                     <div role="tabpanel" id="aa-panel-activity" aria-labelledby="aa-tab-activity">
                                         <AllActivityTab
+                                            searchQuery={searchQuery}
                                             onActivityFetched={handleActivityFetched}
                                             onBlankStateChange={setActivityBlank}
-                                            searchQuery={searchQuery}
                                         />
                                     </div>
                                 )}

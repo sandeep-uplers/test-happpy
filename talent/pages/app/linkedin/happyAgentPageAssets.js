@@ -1,3 +1,5 @@
+'use client';
+
 /** Happpy Agent landing page — shared static assets (Figma redesign sections) */
 
 const OUTREACH_IMAGE_ROOT = "/images/talent/outreach";
@@ -26,14 +28,17 @@ export const HAPPY_HERO_MOBILE_TITLE_LINE_1 = "Get interviews";
 export const HAPPY_HERO_MOBILE_TITLE_LINE_2 = "in as little as";
 export const HAPPY_HERO_MOBILE_TITLE_HIGHLIGHT = "4 Days";
 export const HAPPY_HERO_TITLE_UNDERLINE_SRC = `${HAPPY_HERO_ASSET_BASE}/title-highlight-underline.svg`;
+/** Mobile hero stats — underline under “candidates using it” (Figma hero foot) */
+export const HAPPY_HERO_CANDIDATES_UNDERLINE_SRC = `${HAPPY_HERO_ASSET_BASE}/candidates-underline.png`;
 export const HAPPY_HERO_MOBILE_SUBTITLE_BOLD = "HAPPPY is an AI referral agent";
+/** Figma 3200:41293 — mobile hero body (14/20, two lines) */
 export const HAPPY_HERO_MOBILE_SUBTITLE_LINES = [
-    "That finds people inside target companies and introduces you —",
+    "A referral agent that finds people inside the target companies and introduces you - ",
     "so real recruiters reply instead of ghosting.",
 ];
-export const HAPPY_HERO_MOBILE_CTA_LABEL = "Get My First Referral";
+export const HAPPY_HERO_MOBILE_CTA_LABEL = "Start Getting Interviews";
 export const HAPPY_HERO_SUBTITLE_LINE_1 =
-    "An AI referral agent that finds people inside the company and introduces you - so a real recruiter replies";
+    "A referral agent that finds people inside the company and introduces you - so a real recruiter replies";
 /** Desktop: sparkle + `desktop` label above the H1. Mobile: value/label stats under the hero CTA. */
 export const HAPPY_HERO_TRUST_ITEMS = [
     { value: "2x", label: "more interviews", desktop: "2x interviews" },

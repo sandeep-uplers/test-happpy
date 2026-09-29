@@ -243,6 +243,23 @@ export const ONB_POP_OPENED_SECTIONS = {
     payment_success: "Payment Success",
     sticky_mobile: "Sticky Mobile CTA",
 };
+
+/** Writable slugs for Auth Drawer Open link tracking (must match PHP `authDrawerCtaWritableSections`). */
+export const AUTH_DRAWER_CTA_SECTIONS = {
+    ...ONB_POP_OPENED_SECTIONS,
+    jobs_board_run_agent: "Jobs Board — Run Agent",
+    navbar_login: "Navbar — Login",
+    happpy_gtm_cta: "Happpy GTM — main CTA",
+};
+
+export function isAuthDrawerCtaSection(section) {
+    return !!(
+        section &&
+        typeof section === "string" &&
+        Object.prototype.hasOwnProperty.call(AUTH_DRAWER_CTA_SECTIONS, section)
+    );
+}
+
 export const OUTREACH_JOURNEY_KEY_GMAIL_CLICKED = "gmail_clicked";
 export const OUTREACH_JOURNEY_KEY_ONB_GMAIL_CONNECTED = "onb_gmail_connected";
 export const OUTREACH_JOURNEY_KEY_LINKEDIN_CLICKED = "linkedin_clicked";
@@ -261,6 +278,10 @@ export const API_JOB_AGENT_AGENT_TAILOR_ACTIVITY = API_URL + "talent/outreach/ag
 export const API_JOB_AGENT_MISSED_REPLY_FOLLOWUPS = API_URL + "talent/outreach/missed-positive-reply-followups";
 /** Job Agent — lightweight `{ pending }` for sidebar (same filters as MISSED_REPLY_FOLLOWUPS). */
 export const API_JOB_AGENT_MISSED_REPLY_FOLLOWUPS_PENDING = API_URL + "talent/outreach/missed-positive-reply-followups-pending";
+/** Job Agent — outbound follow-ups Happpy Agent will send on Gmail / LinkedIn. */
+export const API_JOB_AGENT_UPCOMING_FOLLOWUPS = API_URL + "talent/outreach/upcoming-followups";
+export const API_JOB_AGENT_UPCOMING_FOLLOWUPS_BLOCK = API_URL + "talent/outreach/upcoming-followups/block";
+export const API_JOB_AGENT_UPCOMING_FOLLOWUPS_UNBLOCK = API_URL + "talent/outreach/upcoming-followups/unblock";
 export const AUTO_RUN_CONSENT_DEFAULT = 0;
 export const AUTO_RUN_CONSENT_GIVEN = 1;
 export const AUTO_RUN_CONSENT_REMOVED = 2;
@@ -344,7 +365,9 @@ export const API_TRANSFORMED_RESUME_UPDATE = API_URL + "talent/resume-health-che
 export const API_TRANSFORMED_RESUME_DOWNLOAD = API_URL + "talent/resume-health-check/download";
 export const API_OUTREACH_AGENT_PREVIEW_CONFIG = API_URL + "talent/outreach/preview-config";
 export const API_OUTREACH_REWRITE_MESSAGE = API_URL + "talent/outreach/rewrite-message";
+export const API_OUTREACH_REWRITE_MESSAGE_FOR_JOB = API_URL + "talent/outreach/rewrite-message-for-job";
 export const API_OUTREACH_STORE_MESSAGE_TEMPLATE = API_URL + "talent/outreach/store-message-template";
+export const API_OUTREACH_STORE_PREVIEW_MESSAGE_TEMPLATE = API_URL + "talent/outreach/store-preview-message-template";
 export const API_OUTREACH_RESUME_TRANSFORM = LRR_API_URL + "talent/resume-health-check/resume-transform";
 export const API_GET_LAST_HEALTH_CHECK = API_URL + "talent/outreach/get-last-health-check";
 

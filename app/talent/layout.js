@@ -14,6 +14,7 @@ export default function TalentLayout({ children }) {
             <link href="/css/editor-styles.css" rel="stylesheet" />
             <link href="/css/talent/resume-template.css" rel="stylesheet" />
             <link href="/css/talent/resume-editor.css" rel="stylesheet" />
+            <link href="/css/talent/rem-root.css" rel="stylesheet" />
             {children}
         </>
     );

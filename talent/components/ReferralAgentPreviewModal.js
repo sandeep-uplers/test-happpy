@@ -1,8 +1,5 @@
 'use client';
 
-import { ensureModalAppElement } from '@/talent/helpers/setModalAppElement';
-ensureModalAppElement();
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Modal from "react-modal";
@@ -11,19 +8,18 @@ import { useNavigate } from '@/talent/navigation/routerCompat';
 import { toast } from "react-hot-toast";
 import DownloadResumeLoader from "../pages/app/resume/payment/DownloadResumeLoader";
 import SectionLoader from "./SectionLoader";
-import { API_OUTREACH_REWRITE_MESSAGE, API_OUTREACH_STORE_MESSAGE_TEMPLATE, API_OUTREACH_SUBSCRIBE_MODAL_ACTION, API_URL } from "./Constant";
+import { API_OUTREACH_REWRITE_MESSAGE_FOR_JOB, API_OUTREACH_STORE_PREVIEW_MESSAGE_TEMPLATE, API_OUTREACH_SUBSCRIBE_MODAL_ACTION, API_URL } from "./Constant";
 import { GET_API, POST_API, base64ToBlob, getClientDeviceMobileOrDesktop } from "./Helper";
 import { useDispatch, useSelector } from "react-redux";
 import { getOutreachAgentPreviewConfig } from "../store/actions/resumeActions";
-import dynamic from 'next/dynamic';
 import { profileResumeDownload, startOutreachAgent } from "../store/actions/UserActions";
+import ResumeModal from "../pages/app/preferences/ResumeModal";
 import TemplateEditor from "../pages/app/linkedin/TemplateEditor";
-
-const ResumeModal = dynamic(() => import("../pages/app/preferences/ResumeModal"), { ssr: false });
 import { GmailIcon } from "../assets/IconSVG";
 import TrialFeedbackModal from "./TrialFeedbackModal";
 import AgentRunSuccessModal from "./AgentRunSuccessModal";
 import "../pages/app/agent-onboarding/AgentOnboarding.css";
+import { ensureModalAppElement } from "../helpers/setModalAppElement";
 
 ensureModalAppElement();
 
@@ -290,6 +286,48 @@ const PREVIEW_MODAL_STYLES = `
 }
 .rap-preview-drawer__rewrite-btn .material-symbols-outlined {
     font-size: 16px;
+}
+.rap-preview-drawer__message-actions {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.rap-preview-drawer__edit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid #dee1e7;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #231f20;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+.rap-preview-drawer__edit-btn:hover:not(:disabled) {
+    border-color: #086d7e;
+    color: #086d7e;
+}
+.rap-preview-drawer__edit-btn--active {
+    background: #086d7e;
+    border-color: #086d7e;
+    color: #ffffff;
+}
+.rap-preview-drawer__edit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.rap-preview-drawer__edit-btn .material-symbols-outlined {
+    font-size: 18px;
+}
+.rap-preview-drawer__message-body--editable {
+    padding: 8px 12px 12px;
+}
+.rap-preview-drawer__message-body--editable .rich-editor-container {
+    min-height: 12rem;
 }
 .rap-preview-drawer__message-body {
     padding: 12px;
@@ -865,7 +903,7 @@ const PREVIEW_MODAL_STYLES = `
         flex-direction: column;
         align-items: stretch;
     }
-    .rap-preview-drawer__rewrite-btn {
+    .rap-preview-drawer__message-actions {
         align-self: flex-start;
     }
     .rap-preview-drawer__resume-bar {
@@ -996,7 +1034,7 @@ function ResumeUpdatedWarning({ onReview, disabled }) {
 
 function MessageRewriteSkeleton() {
     return (
-        <div className="rap-preview-drawer__message-body-loading" aria-busy="true" aria-label="Rewriting message">
+        <div className="rap-preview-drawer__message-body-loading" aria-busy="true" aria-label="Tailoring message">
             <span className="rap-preview-drawer__message-skel-line rap-preview-drawer__message-skel-line--lg" />
             <span className="rap-preview-drawer__message-skel-line rap-preview-drawer__message-skel-line--full" />
             <span className="rap-preview-drawer__message-skel-line rap-preview-drawer__message-skel-line--md" />
@@ -1036,6 +1074,11 @@ export default function ReferralAgentPreviewModal({
     const [showRunSuccessModal, setShowRunSuccessModal] = useState(false);
     const [allProcessed, setAllProcessed] = useState(false);
     const [rewritingProvider, setRewritingProvider] = useState(null);
+    const [previewEditingProvider, setPreviewEditingProvider] = useState(null);
+    const [previewMessageManuallyEdited, setPreviewMessageManuallyEdited] = useState({
+        gmail: false,
+        linkedin: false,
+    });
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [setupTab, setSetupTab] = useState(OUTREACH_PROVIDER_GMAIL);
     const [setupModes, setSetupModes] = useState({ 1: "template1", 2: "template1" });
@@ -1092,8 +1135,6 @@ export default function ReferralAgentPreviewModal({
         !!outreachAgentPreviewConfig?.linkedin_template &&
         outreachAgentPreviewConfig.linkedin_template.message !== originalTemplates.linkedin.message;
 
-    const hasCustomizedMessage = gmailMessageChanged || linkedinMessageChanged;
-
     const handleConfirm = async () => {
         if (skipPreview) {
             localStorage.setItem(SKIP_PREVIEW_KEY, "true");
@@ -1107,11 +1148,10 @@ export default function ReferralAgentPreviewModal({
             if (gmailMessageChanged && outreachAgentPreviewConfig?.gmail_connected) {
                 saveRequests.push({
                     provider: OUTREACH_PROVIDER_GMAIL,
-                    promise: POST_API(API_OUTREACH_STORE_MESSAGE_TEMPLATE, {
+                    promise: POST_API(API_OUTREACH_STORE_PREVIEW_MESSAGE_TEMPLATE, {
                         provider: OUTREACH_PROVIDER_GMAIL,
                         message_template: outreachAgentPreviewConfig.gmail_template.message,
                         message_subject: outreachAgentPreviewConfig.gmail_template.subject ?? "",
-                        tag: "rewrite-message-from-preview",
                     }),
                 });
             }
@@ -1119,10 +1159,10 @@ export default function ReferralAgentPreviewModal({
             if (linkedinMessageChanged && outreachAgentPreviewConfig?.linkedin_connected) {
                 saveRequests.push({
                     provider: OUTREACH_PROVIDER_LINKEDIN,
-                    promise: POST_API(API_OUTREACH_STORE_MESSAGE_TEMPLATE, {
+                    promise: POST_API(API_OUTREACH_STORE_PREVIEW_MESSAGE_TEMPLATE, {
                         provider: OUTREACH_PROVIDER_LINKEDIN,
                         message_template: outreachAgentPreviewConfig.linkedin_template.message,
-                        tag: "rewrite-message-from-preview",
+                        message_subject: "",
                     }),
                 });
             }
@@ -1206,11 +1246,6 @@ export default function ReferralAgentPreviewModal({
     const handleRunSuccessDismiss = () => {
         setShowRunSuccessModal(false);
         onClose();
-    };
-
-    const handleReviewTemplate = () => {
-        if (typeof onClose === "function") onClose();
-        navigate("/talent/job-agent/configure");
     };
 
     const fetchAutoReplySettings = useCallback(async () => {
@@ -1302,6 +1337,7 @@ export default function ReferralAgentPreviewModal({
                         }
                         : null,
                 });
+                setPreviewMessageManuallyEdited({ gmail: false, linkedin: false });
                 hydrateSetupDrafts(newConfigData);
             })
             .catch((err) => {
@@ -1344,8 +1380,14 @@ export default function ReferralAgentPreviewModal({
             setResumePreviewData(null);
             setResumePreviewLoading(false);
             setCustomUploadedResume(null);
+            setPreviewEditingProvider(null);
+            setPreviewMessageManuallyEdited({ gmail: false, linkedin: false });
         }
     }, [isOpen, outreachAgentPreviewConfig, showRunSuccessModal]);
+
+    useEffect(() => {
+        setPreviewEditingProvider(null);
+    }, [activeTab]);
 
     const previewVisible = isOpen && showSubscribeModal !== true && !showRunSuccessModal;
     const showPreviewLoading = previewConfigLoading || !outreachAgentPreviewConfig || confirmLoading;
@@ -1616,9 +1658,48 @@ export default function ReferralAgentPreviewModal({
         setDrawerStep("preview");
     };
 
+    const togglePreviewMessageEdit = (provider) => {
+        setPreviewEditingProvider((current) => (current === provider ? null : provider));
+    };
+
+    const handlePreviewMessageChange = (provider, message) => {
+        setPreviewMessageManuallyEdited((prev) => ({
+            ...prev,
+            ...(provider === OUTREACH_PROVIDER_GMAIL ? { gmail: true } : { linkedin: true }),
+        }));
+        setOutreachAgentPreviewConfig((prev) => {
+            if (!prev) return prev;
+            if (provider === OUTREACH_PROVIDER_GMAIL) {
+                return {
+                    ...prev,
+                    gmail_template: {
+                        ...(prev.gmail_template || {}),
+                        message,
+                    },
+                };
+            }
+            return {
+                ...prev,
+                linkedin_template: {
+                    ...(prev.linkedin_template || {}),
+                    message,
+                },
+            };
+        });
+    };
+
     const handleRewriteMessage = (provider) => {
+        if (!HR_Number) {
+            toast.error("Job details are still loading. Please try again.");
+            return;
+        }
+        setPreviewEditingProvider(null);
+        setPreviewMessageManuallyEdited((prev) => ({
+            ...prev,
+            ...(provider === OUTREACH_PROVIDER_GMAIL ? { gmail: false } : { linkedin: false }),
+        }));
         setRewritingProvider(provider);
-        POST_API(API_OUTREACH_REWRITE_MESSAGE, { provider })
+        POST_API(API_OUTREACH_REWRITE_MESSAGE_FOR_JOB, { provider, HR_Number: HR_Number })
             .then((res) => {
                 if (res.data?.status !== "success" || !res.data?.data) return;
                 const { message, subject } = res.data.data;
@@ -1961,15 +2042,27 @@ export default function ReferralAgentPreviewModal({
                                                                                 </p>
                                                                             ) : null}
                                                                         </div>
-                                                                        <button
-                                                                            type="button"
-                                                                            className="rap-preview-drawer__rewrite-btn"
-                                                                            onClick={() => handleRewriteMessage(OUTREACH_PROVIDER_GMAIL)}
-                                                                            disabled={rewritingProvider === OUTREACH_PROVIDER_GMAIL || downloadLoading}
-                                                                        >
-                                                                            <MatIcon name="auto_awesome" />
-                                                                            <span>Rewrite Message</span>
-                                                                        </button>
+                                                                        <div className="rap-preview-drawer__message-actions">
+                                                                            <button
+                                                                                type="button"
+                                                                                className="rap-preview-drawer__rewrite-btn"
+                                                                                onClick={() => handleRewriteMessage(OUTREACH_PROVIDER_GMAIL)}
+                                                                                disabled={rewritingProvider === OUTREACH_PROVIDER_GMAIL || downloadLoading || previewEditingProvider === OUTREACH_PROVIDER_GMAIL}
+                                                                            >
+                                                                                <MatIcon name="auto_awesome" />
+                                                                                <span>Tailor Message</span>
+                                                                            </button>
+                                                                            <button
+                                                                                type="button"
+                                                                                className={`rap-preview-drawer__edit-btn${previewEditingProvider === OUTREACH_PROVIDER_GMAIL ? " rap-preview-drawer__edit-btn--active" : ""}`}
+                                                                                onClick={() => togglePreviewMessageEdit(OUTREACH_PROVIDER_GMAIL)}
+                                                                                disabled={rewritingProvider === OUTREACH_PROVIDER_GMAIL || downloadLoading || confirmLoading}
+                                                                                aria-label={previewEditingProvider === OUTREACH_PROVIDER_GMAIL ? "Stop editing message" : "Edit message"}
+                                                                                aria-pressed={previewEditingProvider === OUTREACH_PROVIDER_GMAIL}
+                                                                            >
+                                                                                <MatIcon name="edit" />
+                                                                            </button>
+                                                                        </div>
                                                                         {showResumeWarning && (
                                                                             <ResumeUpdatedWarning
                                                                                 onReview={() => setDrawerStep("setup")}
@@ -1979,6 +2072,18 @@ export default function ReferralAgentPreviewModal({
                                                                     </div>
                                                                     {rewritingProvider === OUTREACH_PROVIDER_GMAIL ? (
                                                                         <MessageRewriteSkeleton />
+                                                                    ) : previewEditingProvider === OUTREACH_PROVIDER_GMAIL ? (
+                                                                        <div className="rap-preview-drawer__message-body rap-preview-drawer__message-body--editable">
+                                                                            <TemplateEditor
+                                                                                key="rap-preview-editor-gmail"
+                                                                                variant="compact"
+                                                                                placeholder="Enter your Gmail outreach message..."
+                                                                                value={outreachAgentPreviewConfig?.gmail_template?.message || ""}
+                                                                                onChange={(content) => handlePreviewMessageChange(OUTREACH_PROVIDER_GMAIL, content)}
+                                                                                dynamicFields={VAR_FIELDS}
+                                                                                showDynamicDropdowns
+                                                                            />
+                                                                        </div>
                                                                     ) : (
                                                                         <div
                                                                             className={`rap-preview-drawer__message-body${outreachAgentPreviewConfig?.gmail_template?.message ? "" : " rap-preview-drawer__message-body--empty"}`}
@@ -1999,15 +2104,27 @@ export default function ReferralAgentPreviewModal({
                                                                             <span className="rap-preview-drawer__message-subject-label">LinkedIn Message</span>
                                                                         </div>
                                                                     </div>
-                                                                    <button
-                                                                        type="button"
-                                                                        className="rap-preview-drawer__rewrite-btn"
-                                                                        onClick={() => handleRewriteMessage(OUTREACH_PROVIDER_LINKEDIN)}
-                                                                        disabled={rewritingProvider === OUTREACH_PROVIDER_LINKEDIN || downloadLoading}
-                                                                    >
-                                                                        <MatIcon name="auto_awesome" />
-                                                                        <span>Rewrite Message</span>
-                                                                    </button>
+                                                                    <div className="rap-preview-drawer__message-actions">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="rap-preview-drawer__rewrite-btn"
+                                                                            onClick={() => handleRewriteMessage(OUTREACH_PROVIDER_LINKEDIN)}
+                                                                            disabled={rewritingProvider === OUTREACH_PROVIDER_LINKEDIN || downloadLoading || previewEditingProvider === OUTREACH_PROVIDER_LINKEDIN}
+                                                                        >
+                                                                            <MatIcon name="auto_awesome" />
+                                                                            <span>Tailor Message</span>
+                                                                        </button>
+                                                                        <button
+                                                                            type="button"
+                                                                            className={`rap-preview-drawer__edit-btn${previewEditingProvider === OUTREACH_PROVIDER_LINKEDIN ? " rap-preview-drawer__edit-btn--active" : ""}`}
+                                                                            onClick={() => togglePreviewMessageEdit(OUTREACH_PROVIDER_LINKEDIN)}
+                                                                            disabled={rewritingProvider === OUTREACH_PROVIDER_LINKEDIN || downloadLoading || confirmLoading}
+                                                                            aria-label={previewEditingProvider === OUTREACH_PROVIDER_LINKEDIN ? "Stop editing message" : "Edit message"}
+                                                                            aria-pressed={previewEditingProvider === OUTREACH_PROVIDER_LINKEDIN}
+                                                                        >
+                                                                            <MatIcon name="edit" />
+                                                                        </button>
+                                                                    </div>
                                                                     {showResumeWarning && (
                                                                         <ResumeUpdatedWarning
                                                                             onReview={() => setDrawerStep("setup")}
@@ -2017,6 +2134,18 @@ export default function ReferralAgentPreviewModal({
                                                                 </div>
                                                                 {rewritingProvider === OUTREACH_PROVIDER_LINKEDIN ? (
                                                                     <MessageRewriteSkeleton />
+                                                                ) : previewEditingProvider === OUTREACH_PROVIDER_LINKEDIN ? (
+                                                                    <div className="rap-preview-drawer__message-body rap-preview-drawer__message-body--editable">
+                                                                        <TemplateEditor
+                                                                            key="rap-preview-editor-linkedin"
+                                                                            variant="compact"
+                                                                            placeholder="Enter your LinkedIn outreach message..."
+                                                                            value={outreachAgentPreviewConfig?.linkedin_template?.message || ""}
+                                                                            onChange={(content) => handlePreviewMessageChange(OUTREACH_PROVIDER_LINKEDIN, content)}
+                                                                            dynamicFields={VAR_FIELDS}
+                                                                            showDynamicDropdowns
+                                                                        />
+                                                                    </div>
                                                                 ) : (
                                                                     <div
                                                                         className={`rap-preview-drawer__message-body${outreachAgentPreviewConfig?.linkedin_template?.message ? "" : " rap-preview-drawer__message-body--empty"}`}
@@ -2134,22 +2263,6 @@ export default function ReferralAgentPreviewModal({
                                     </>
                                 )}
                             </div>
-
-                            {drawerStep === "preview" && hasCustomizedMessage && (
-                                <div className="rap-preview-drawer__footer-notes">
-                                    <div className="rap-preview-drawer__default-message-note" role="note">
-                                        <MatIcon name="info" />
-                                        <p>
-                                            If you confirm and send, your updated message will be saved as your default outreach template.
-                                            You can edit it anytime from{" "}
-                                            <button type="button" onClick={handleReviewTemplate}>
-                                                Happpy Agent configuration
-                                            </button>{" "}
-                                            in your dashboard.
-                                        </p>
-                                    </div>
-                                </div>
-                            )}
 
                             <div className="rap-preview-drawer__auto-reply-footer">
                                 <div className="rap-preview-drawer__auto-reply-banner" role="region" aria-label="Auto-reply settings">
@@ -2500,7 +2613,7 @@ const SubscribeModal = ({ plan, onClose }) => {
     const isExpired = !!expired;
     const isLimitOnly = !expired && !paid && !!daily_limit_exceeded;
     const hasConversionOffer = !!conversion_offer;
-    const showSomethingElse = isExpired && !paid ;
+    const showSomethingElse = false;
 
     let title = "";
     let subtitle = "";
