@@ -6,15 +6,19 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 // import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "@/talent/navigation/routerCompat";
+import { useNavigate } from '@/talent/navigation/routerCompat';
+import { useSearchParams } from '@/talent/navigation/routerCompat';
 import { HappyJobAgentContent } from "../../app/linkedin/HappyJobAgent";
 import { HappyJobAgentPublicAuthDrawer } from "../HappyJobAgentPublic";
 import HapppyGtmOnboarding from "./HapppyGtmOnboarding";
+import { isAuthDrawerCtaSection } from "../../../components/Constant";
 import {
     clearPublicAuthPath,
     getPublicAuthPath,
+    getPublicOnbSection,
     isPublicEmailAuthPath,
     // setPublicAuthPath,
+    setPublicOnbSection,
     setPublicReferralCode,
 } from "../../../helpers/happyAgentPublicSignupSession";
 import {
@@ -283,6 +287,9 @@ function HapppyGtmPublicInner() {
             return;
         }
 
+        if (!isAuthDrawerCtaSection(getPublicOnbSection())) {
+            setPublicOnbSection("happpy_gtm_cta");
+        }
         setAuthDrawerOpen(true);
     }, [drawerOpen, isAuthenticated, openOnboardingForAuthedUser]);
 
@@ -322,7 +329,7 @@ function HapppyGtmPublicInner() {
 
 export default function HapppyGtmPublic() {
     return (
-        <GoogleReCaptchaProvider reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHAV3_SITEKEY}>
+        <GoogleReCaptchaProvider reCaptchaKey={process.env.MIX_RECAPTCHAV3_SITEKEY}>
             <HapppyGtmPublicInner />
         </GoogleReCaptchaProvider>
     );

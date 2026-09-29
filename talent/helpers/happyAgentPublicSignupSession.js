@@ -1,10 +1,3 @@
-'use client';
-
-import {
-    SESSION_KEY_LANDING_JOBS_BOARD_FILTER_RESET_HR,
-    SESSION_KEY_LANDING_PENDING_ACTIVE_JOB_HR,
-} from '../components/Constant';
-
 /**
  * Ephemeral cross-route handoff for the public Happpy Agent signup flow:
  * Auth (public) → AgentOnboarding (logged-in landing) → Template drawer.
@@ -16,10 +9,16 @@ export const SESSION_KEY_PUBLIC_SIGNUP_PENDING = 'happy_agent_public_signup_pend
 export const SESSION_KEY_PUBLIC_REFERRAL_CODE = 'happy_agent_public_referral_code';
 /** Landing CTA section that opened auth before connect-your-accounts handoff. */
 export const SESSION_KEY_PUBLIC_ONB_SECTION = 'happy_agent_public_onb_section';
+/** One Auth Drawer Open link-tracking hit per browser tab session (public landing). */
+export const SESSION_KEY_PUBLIC_AUTH_DRAWER_TRACKED = 'happy_agent_public_auth_drawer_tracked';
 /** Set when onboarding is fully completed; dashboard opens the template drawer. */
 export const SESSION_KEY_ONBOARDING_TEMPLATE_PENDING = 'happy_agent_onboarding_template_pending';
 /** Auth method from public landing (`otp`, `instant`, `google`) — drives onboarding step order. */
 export const SESSION_KEY_PUBLIC_AUTH_PATH = 'happy_agent_public_auth_path';
+/** Landing JobsBoard “Ask a referral” → onboarding → open this HR on recommended-jobs. */
+export const SESSION_KEY_LANDING_PENDING_ACTIVE_JOB_HR = 'happy_agent_landing_pending_active_job_hr';
+/** One-shot: clear All Jobs filters on recommended-jobs only after HappyJobAgent JobsBoard handoff. */
+export const SESSION_KEY_LANDING_JOBS_BOARD_FILTER_RESET_HR = 'happy_agent_landing_jobs_board_filter_reset_hr';
 
 export function setPublicSignupPending() {
     try {
@@ -94,6 +93,22 @@ export function getPublicOnbSection() {
 export function clearPublicOnbSection() {
     try {
         sessionStorage.removeItem(SESSION_KEY_PUBLIC_ONB_SECTION);
+    } catch {
+        /* ignore */
+    }
+}
+
+export function hasPublicAuthDrawerTracked() {
+    try {
+        return sessionStorage.getItem(SESSION_KEY_PUBLIC_AUTH_DRAWER_TRACKED) === '1';
+    } catch {
+        return false;
+    }
+}
+
+export function markPublicAuthDrawerTracked() {
+    try {
+        sessionStorage.setItem(SESSION_KEY_PUBLIC_AUTH_DRAWER_TRACKED, '1');
     } catch {
         /* ignore */
     }

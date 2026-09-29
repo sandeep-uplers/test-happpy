@@ -6,7 +6,7 @@ import axios from 'axios';
 import _, { debounce } from "lodash";
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useSearchParams } from "@/talent/navigation/routerCompat";
+import { Link, useSearchParams } from '@/talent/navigation/routerCompat';
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from 'uuid';
 import { BookmarkNotification } from "../../../assets/BookmarkNotify";
@@ -22,7 +22,6 @@ import {
     isLandingJobsBoardFilterResetHandoff,
 } from '../../../helpers/happyAgentPublicSignupSession';
 import { withHapppyAgentAllJobsQuery } from '../../../helpers/jobPath';
-import { ensureModalAppElement } from '../../../helpers/setModalAppElement';
 import { allOppoPageLoaded, filterUsedTracking, pageVisitLoadAndCtaTrack, talentBookMarkTrack, timeTrackEvent, trackAllOpportunitiesSearch } from '../../../helpers/Mixpanel';
 import { oppBookmark, removeUser } from "../../../store/actions/UserActions";
 import { HR_UPDATE_COMPLETED, SET_ALL_JOBS, SET_BOOKMARK_COUNT, SET_ERRORS, SET_LOADER, SET_TRIGGER_ALL_JOBS_RESET } from "../../../store/actions/actionsTypes";
@@ -70,7 +69,7 @@ const resolveAllJobsFetchFilters = (filters, activeJobHr, searchParams) => {
     return filters;
 };
 
-ensureModalAppElement();
+Modal.setAppElement('#app');
 let listCancelTokenSource = axios.CancelToken.source();
 let countCancelTokenSource = axios.CancelToken.source();
 let pendingCountUrl = null;
@@ -450,9 +449,7 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
     };
 
     useEffect(() => {
-        if (!embedded) {
-            document.title = 'All Jobs | Happpy Agent | Uplers';
-        }
+        document.title = process.env.MIX_APP_NAME + " | All Jobs";
         pageVisitLoadAndCtaTrack('All Opportunity Page Visit')
         localStorage.removeItem('new_loggedin')
         timeTrackEvent('All Opportunity Page Loaded')

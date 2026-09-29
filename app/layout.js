@@ -1,8 +1,8 @@
 import Script from 'next/script';
 import Providers from './providers';
+import './globals.css';
 import '../styles/happpy-tokens.css';
 import '../styles/fonts.css';
-import './globals.css';
 
 const GTM_CONTAINER_ID = 'GTM-P6GXD64V';
 const HAPPY_HERO_WEBP_SRCSET =
@@ -27,6 +27,8 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en">
             <head>
+                {/* Single rem scale file — re-linked last by TalentResumeStyles after style.css */}
+                <link href="/css/talent/rem-root.css" rel="stylesheet" />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
                 <link

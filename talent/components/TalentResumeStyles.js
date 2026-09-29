@@ -15,15 +15,50 @@ const TALENT_STYLESHEETS = [
     '/css/talent/resume-editor.css',
 ];
 
+/** Must stay after style.css (resets html { font-size: 100% }). */
+const REM_ROOT_STYLESHEET = '/css/talent/rem-root.css';
+
+function appendStylesheet(href) {
+    return new Promise((resolve) => {
+        const existing = document.querySelector(`link[rel="stylesheet"][href="${href}"]`);
+        if (existing) {
+            resolve();
+            return;
+        }
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        link.onload = () => resolve();
+        link.onerror = () => resolve();
+        document.head.appendChild(link);
+    });
+}
+
+function ensureRemRootStylesheetLast() {
+    const existing = document.querySelector(`link[rel="stylesheet"][href="${REM_ROOT_STYLESHEET}"]`);
+    if (existing) {
+        existing.remove();
+    }
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = REM_ROOT_STYLESHEET;
+    document.head.appendChild(link);
+}
+
 export default function TalentResumeStyles() {
     useEffect(() => {
-        TALENT_STYLESHEETS.forEach((href) => {
-            if (document.querySelector(`link[rel="stylesheet"][href="${href}"]`)) return;
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = href;
-            document.head.appendChild(link);
-        });
+        let cancelled = false;
+        (async () => {
+            for (const href of TALENT_STYLESHEETS) {
+                await appendStylesheet(href);
+            }
+            if (!cancelled) {
+                ensureRemRootStylesheetLast();
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     return null;

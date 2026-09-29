@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "@/talent/navigation/routerCompat";
+import { useNavigate } from '@/talent/navigation/routerCompat';
 import { useSelector } from "react-redux";
 import HapppyAgentLogo from "./common/HapppyAgentLogo";
 import SidebarNew from "./SidebarNew";
@@ -201,7 +201,7 @@ export function HappyJobAgentPublicNavbar({ onOpenAuthDrawer }) {
         <HappyAgentLandingNavbar
             variant="public"
             onLoginClick={() => {
-                clearPublicOnbSection();
+                setPublicOnbSection("navbar_login");
                 onOpenAuthDrawer();
             }}
             onGetStartedClick={() => {

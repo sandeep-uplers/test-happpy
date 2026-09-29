@@ -1,8 +1,11 @@
+'use client';
+
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { renderTextWithLinks } from '../../../../components/Helper';
+import { API_URL } from '../../../../components/Constant';
 import ReferralAgentPreviewModal from '../../../../components/ReferralAgentPreviewModal';
 import { fetchDailyReferralRuns, fetchHapppyAgentDailyLimit, submitReferralJobApplyByLink } from '../../../../store/actions/UserActions';
 import { trackHappyAgentMixpanel } from '../../../../store/actions/happyAgentTracking';
@@ -14,6 +17,8 @@ const ADD_JOB_SUCCESS_MESSAGE =
     "We've received your request. The agent will start in the background soon — it may take 20–30 minutes.";
 const JOB_LINK_ADDED_EVENT = 'agent-activity:job-link-added';
 const MAX_JOB_LINKS = 8;
+/** Above ReferralAgentPreviewModal (10070) so toasts show after confirm. */
+const PASTE_JOB_TOAST_OPTS = { duration: 5000, style: { zIndex: 101000 } };
 
 function isValidHttpUrl(raw) {
     const s = (raw || '').trim();
@@ -141,7 +146,22 @@ const PasteJobLinkDrawer = ({ open, onClose }) => {
         setPreviewOpen(true);
     };
 
-    const submitJobLinks = async ({ linkedin_message_id, gmail_message_id } = {}) => {
+    const failSubmit = useCallback((msg) => {
+        setPreviewOpen(false);
+        setErrorMessage(msg);
+        toast.error(msg, PASTE_JOB_TOAST_OPTS);
+        const error = new Error(msg);
+        error.pasteJobNotified = true;
+        throw error;
+    }, []);
+
+    const showSubmitSuccess = useCallback(() => {
+        setPreviewOpen(false);
+        setSuccessMessage(ADD_JOB_SUCCESS_MESSAGE);
+        toast.success(ADD_JOB_SUCCESS_MESSAGE, PASTE_JOB_TOAST_OPTS);
+    }, []);
+
+    const submitJobLinks = async ({ linkedin_message_id, gmail_message_id, customResumeFile } = {}) => {
         const urls = getValidUrls();
         if (!urls.length) return;
 
@@ -149,47 +169,55 @@ const PasteJobLinkDrawer = ({ open, onClose }) => {
         try {
             let submitted = 0;
             for (const url of urls) {
-                const payload = { url };
-                if (linkedin_message_id) payload.linkedin_message_id = linkedin_message_id;
-                if (gmail_message_id) payload.gmail_message_id = gmail_message_id;
+                let payload;
+                if (customResumeFile) {
+                    payload = new FormData();
+                    payload.append('url', url);
+                    payload.append('is_tailored', '1');
+                    payload.append('html', customResumeFile);
+                    if (linkedin_message_id) payload.append('linkedin_message_id', linkedin_message_id);
+                    if (gmail_message_id) payload.append('gmail_message_id', gmail_message_id);
+                } else {
+                    payload = { url };
+                    if (linkedin_message_id) payload.linkedin_message_id = linkedin_message_id;
+                    if (gmail_message_id) payload.gmail_message_id = gmail_message_id;
+                }
                 const res = await dispatch(
                     submitReferralJobApplyByLink(payload, { broadcast: false, refresh: false }),
                 );
                 if (res?.data?.status !== 'success') {
                     if (submitted > 0) {
                         await Promise.all([
-                            dispatch(fetchHapppyAgentDailyLimit({ broadcast: true })).catch(() => {}),
+                            dispatch(fetchHapppyAgentDailyLimit({ skip: false, broadcast: true })).catch(() => {}),
                             dispatch(fetchDailyReferralRuns({ broadcast: true })).catch(() => {}),
                         ]);
                     }
-                    const msg = res?.data?.message || 'Failed to add job link';
-                    setErrorMessage(msg);
-                    toast.error(msg, { duration: 5000 });
-                    throw new Error(msg);
+                    failSubmit(res?.data?.message || 'Failed to add job link');
                 }
                 submitted += 1;
             }
             await Promise.all([
-                dispatch(fetchHapppyAgentDailyLimit({ broadcast: true })).catch(() => {}),
+                dispatch(fetchHapppyAgentDailyLimit({ skip: false, broadcast: true })).catch(() => {}),
                 dispatch(fetchDailyReferralRuns({ broadcast: true })).catch(() => {}),
             ]);
-            setSuccessMessage(ADD_JOB_SUCCESS_MESSAGE);
+            showSubmitSuccess();
             setJobUrls(['']);
             window.dispatchEvent(new CustomEvent(JOB_LINK_ADDED_EVENT));
             trackHappyAgentMixpanel('agent_configure_paste_job_submitted', { count: urls.length }).catch(
                 () => {},
             );
         } catch (err) {
-            const msg = err?.response?.data?.message || err?.message || 'Failed to add job link';
-            setErrorMessage(msg);
-            toast.error(msg, { duration: 5000 });
-            throw err;
+            if (err.pasteJobNotified) {
+                throw err;
+            }
+            failSubmit(err?.response?.data?.message || err?.message || 'Failed to add job link');
         } finally {
             setSubmitting(false);
         }
     };
 
-    const handlePreviewConfirm = (messageTemplateIds = {}) => submitJobLinks(messageTemplateIds);
+    const handlePreviewConfirm = (messageTemplateIds = {}, { customResumeFile } = {}) =>
+        submitJobLinks({ ...messageTemplateIds, customResumeFile });
 
     if (!open || typeof document === 'undefined') return null;
 

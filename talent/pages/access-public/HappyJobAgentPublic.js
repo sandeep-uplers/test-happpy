@@ -8,16 +8,21 @@ import Modal from "react-modal";
 import OTPInput from "react-otp-input";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "@/talent/navigation/routerCompat";
-import { ensureModalAppElement } from "../../helpers/setModalAppElement";
+import { useNavigate } from '@/talent/navigation/routerCompat';
+import { useSearchParams } from '@/talent/navigation/routerCompat';
 import {
     API_REFERRAL_AGENT_RESEND_OTP,
     API_REFERRAL_AGENT_VERIFY_OTP,
     LOGIN_IMAGE_URL,
+    isAuthDrawerCtaSection,
 } from "../../components/Constant";
 import { getLinkTrackingDeviceCategory } from "../../components/common/linkTrackingDeviceCategory";
 import { getDomain, POST_API } from "../../components/Helper";
+import { ensureModalAppElement } from "../../helpers/setModalAppElement";
 import {
+    getPublicOnbSection,
+    hasPublicAuthDrawerTracked,
+    markPublicAuthDrawerTracked,
     setPublicAuthPath,
     setPublicReferralCode,
     setPublicSignupPending,
@@ -39,7 +44,6 @@ import {
 import "./HappyJobAgentPublic.css";
 
 ensureModalAppElement();
-
 
 const HAPPY_PUBLIC_AUTH_TRUST_MARQUEE_SPLIT = Math.ceil(HAPPY_PUBLIC_AUTH_TRUST_COMPANIES.length / 2);
 
@@ -221,6 +225,17 @@ export function HappyJobAgentPublicAuthDrawer({
         }
         authDrawerOpenTrackedRef.current = true;
 
+        if (hasPublicAuthDrawerTracked()) {
+            return;
+        }
+
+        const ctaSection = getPublicOnbSection();
+        if (!isAuthDrawerCtaSection(ctaSection)) {
+            return;
+        }
+
+        markPublicAuthDrawerTracked();
+
         const query = new URLSearchParams(window.location.search);
         const source = query.get("source");
         let cookie = Cookies.get("l");
@@ -232,6 +247,7 @@ export function HappyJobAgentPublicAuthDrawer({
             e: "Auth Drawer Open",
             c: cookie,
             d: getLinkTrackingDeviceCategory(),
+            cta_section: ctaSection,
         };
         if (source != null) {
             payload.l = source;
@@ -727,7 +743,7 @@ function HappyJobAgentPublicInner() {
 
 export default function HappyJobAgentPublic() {
     return (
-        <GoogleReCaptchaProvider reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHAV3_SITEKEY}>
+        <GoogleReCaptchaProvider reCaptchaKey={process.env.MIX_RECAPTCHAV3_SITEKEY}>
             <HappyJobAgentPublicInner />
         </GoogleReCaptchaProvider>
     );

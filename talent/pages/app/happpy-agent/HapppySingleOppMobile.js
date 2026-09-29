@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate, useSearchParams } from "@/talent/navigation/routerCompat";
+import { Link, useNavigate, useSearchParams } from '@/talent/navigation/routerCompat';
 import { ArrowRightIcon } from "../../../assets/IconSVG";
 import { IMAGE_URL } from "../../../components/Constant";
 import ConfirmAppliedCard from "../../../components/extensionModal/ConfirmAppliedCard";

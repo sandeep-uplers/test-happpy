@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { GET_API, DELETE_API } from '../../../../components/Helper';
@@ -811,7 +813,7 @@ const JobsInQueueTab = ({ maxLimit, searchQuery = '' }) => {
                     className="aa-drawer aa-drawer--outreach"
                     role="dialog"
                     aria-modal="true"
-                    aria-labelledby="aa-drawer-outreach-title"
+                    aria-label="Review outreach"
                 >
                     <button
                         type="button"
@@ -820,20 +822,7 @@ const JobsInQueueTab = ({ maxLimit, searchQuery = '' }) => {
                         onClick={closeOutreachDrawer}
                     />
                     <aside className="aa-drawer__panel">
-                        <header className="aa-drawer__head">
-                            <h3 id="aa-drawer-outreach-title" className="aa-drawer__title">
-                                Review Outreach
-                            </h3>
-                            <button
-                                type="button"
-                                className="aa-drawer__close"
-                                aria-label="Close"
-                                onClick={closeOutreachDrawer}
-                            >
-                                <CloseIcon />
-                            </button>
-                        </header>
-                        <div className="aa-drawer__body">
+                        <div className="aa-drawer__body aa-drawer__body--outreach">
                             <VerifyOutreachPerson
                                 embeddedJobId={outreachDrawer.jobId}
                                 onClose={closeOutreachDrawer}

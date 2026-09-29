@@ -1,15 +1,15 @@
 /* Referral Job Agent — Landing page (website color scheme: yellow + black) */
 
 .referral-job-agent-landing {
-    --ra-yellow: var(--brandYellow, var(--happpy-legacy-yellow));
-    --ra-black: var(--primary-black, var(--happpy-on-brand));
-    --ra-yellow-dark: var(--happpy-legacy-yellow-deep);
+    --ra-yellow: var(--brandYellow, #FFDA30);
+    --ra-black: var(--primary-black, #232323);
+    --ra-yellow-dark: #e6c41a;
     --ra-gray: #4b5563;
-    --ra-gray-light: var(--happpy-gray-500);
+    --ra-gray-light: #6b7280;
     --ra-bg: #fafaf9;
     --ra-bg-warm: #fffef7;
-    --ra-border: var(--happpy-gray-200);
-    --ra-border-strong: var(--happpy-gray-300);
+    --ra-border: #e5e7eb;
+    --ra-border-strong: #d1d5db;
 }
 
 /* —— Hero: left text, right photo + animations —— */
@@ -105,7 +105,7 @@
 
 .referral-job-agent-landing .referral-landing-hero {
     padding: 56px 24px 72px;
-    background: linear-gradient(135deg, #fffef9 0%, var(--happpy-white) 25%, var(--happpy-slate-50) 50%, var(--happpy-white) 75%, #fffef7 100%);
+    background: linear-gradient(135deg, #fffef9 0%, #fff 25%, #f8fafc 50%, #fff 75%, #fffef7 100%);
     background-size: 200% 200%;
     animation: ra-electric-gradient 12s ease infinite;
     position: relative;
@@ -369,7 +369,7 @@
 .referral-job-agent-landing .referral-quickstart-form-in-hero.referral-quickstart-form {
     margin: 0;
     padding: 0;
-    background: var(--happpy-white);
+    background: #fff;
     border-radius: 24px;
     position: relative;
     overflow: hidden;
@@ -387,7 +387,7 @@
 .referral-job-agent-landing .referral-upload-card-head {
     padding: 28px 28px 24px;
     text-align: center;
-    background: linear-gradient(180deg, var(--ra-bg-warm) 0%, var(--happpy-white) 20%);
+    background: linear-gradient(180deg, var(--ra-bg-warm) 0%, #fff 20%);
     border-bottom: 1px solid var(--ra-border);
 }
 
@@ -452,7 +452,7 @@
     align-items: center;
     justify-content: center;
     padding: 20px 24px;
-    background: var(--happpy-white);
+    background: #fff;
     border: 1px dashed var(--ra-border-strong);
     border-radius: 10px;
     cursor: pointer;
@@ -516,14 +516,14 @@
     font-size: 15px;
     line-height: 1.4;
     color: var(--ra-black);
-    background: var(--happpy-white);
+    background: #fff;
     border: 1px solid var(--ra-border-strong);
     border-radius: 10px;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .referral-job-agent-landing .ra-email-input::placeholder {
-    color: var(--happpy-gray-400);
+    color: #9ca3af;
 }
 
 .referral-job-agent-landing .ra-email-input:hover:not(:disabled) {
@@ -602,7 +602,7 @@
 .referral-job-agent-landing .ra-upload-error {
     margin: 0;
     font-size: 13px;
-    color: var(--happpy-danger-strong);
+    color: #dc2626;
 }
 
 .referral-job-agent-landing .ra-upload-cta {
@@ -663,7 +663,7 @@
 
 /* —— How it works (overrides for landing) —— */
 .referral-job-agent-landing .hiw-big {
-    background: linear-gradient(180deg, var(--happpy-white) 0%, var(--ra-bg) 50%, var(--happpy-white) 100%);
+    background: linear-gradient(180deg, #fff 0%, var(--ra-bg) 50%, #fff 100%);
     padding: 80px 20px;
 }
 
@@ -701,7 +701,7 @@
 }
 
 .referral-job-agent-landing .hiw-big-card {
-    background: var(--happpy-white);
+    background: #fff;
     border: 1px solid var(--ra-border);
     border-radius: 20px;
     transition: all 0.3s ease;
@@ -736,7 +736,7 @@
 }
 
 .referral-job-agent-landing .hiw-big-card-num {
-    color: var(--happpy-gray-100);
+    color: #f3f4f6;
 }
 
 .referral-job-agent-landing .hiw-big-card:hover .hiw-big-card-num {
@@ -799,7 +799,7 @@
 }
 
 .referral-job-agent-landing .hiw-big-platform-tags span {
-    background: var(--happpy-gray-100);
+    background: #f3f4f6;
     color: var(--ra-gray);
 }
 
@@ -812,7 +812,7 @@
 .referral-job-agent-landing .referral-landing-kinetic-section {
     padding: 96px 32px;
     background: var(--ra-black);
-    color: var(--happpy-white);
+    color: #fff;
     overflow: hidden;
 }
 
@@ -865,7 +865,7 @@
     font-weight: 900;
     letter-spacing: -0.04em;
     line-height: 1.05;
-    color: var(--happpy-white);
+    color: #fff;
 }
 
 .referral-job-agent-landing .referral-landing-kinetic-quote {
@@ -1102,7 +1102,7 @@
 }
 
 .referral-job-agent-landing .referral-landing-chrome-best-card {
-    background: var(--happpy-white);
+    background: #fff;
     border: 1px solid rgba(35, 35, 35, 0.12);
     border-radius: 12px;
     padding: 40px;
@@ -1231,7 +1231,7 @@
 }
 
 .referral-job-agent-landing .ra-testimonial-card {
-    background: var(--happpy-white);
+    background: #fff;
     border-radius: 16px;
     padding: 28px 24px 24px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
@@ -1347,7 +1347,7 @@
 /* —— Pricing section (free only; page color schema) —— */
 .referral-job-agent-landing .referral-landing-pricing {
     padding: 80px 20px;
-    background: linear-gradient(180deg, var(--happpy-white) 0%, var(--ra-bg) 50%, var(--happpy-white) 100%);
+    background: linear-gradient(180deg, #fff 0%, var(--ra-bg) 50%, #fff 100%);
 }
 
 .referral-job-agent-landing .referral-landing-pricing-inner {
@@ -1395,7 +1395,7 @@
 }
 
 .referral-job-agent-landing .referral-landing-pricing-card {
-    background: var(--happpy-white);
+    background: #fff;
     border: 1px solid var(--ra-border);
     border-radius: 20px;
     padding: 32px 28px 36px;
@@ -1607,7 +1607,7 @@
 }
 
 .referral-job-agent-landing .ra-eligibility-block {
-    background: var(--happpy-white);
+    background: #fff;
     border: 1px solid var(--ra-border);
     border-radius: 16px;
     padding: 24px 28px;
@@ -1694,7 +1694,7 @@
 }
 
 .referral-job-agent-landing .ra-eligibility-in-footer .ra-eligibility-sub {
-    color: var(--happpy-gray-300);
+    color: #d1d5db;
     font-size: 15px;
     max-width: 640px;
     margin-left: auto;
@@ -1713,12 +1713,12 @@
 }
 
 .referral-job-agent-landing .ra-eligibility-in-footer .ra-eligibility-block-title {
-    color: var(--happpy-gray-100);
+    color: #f3f4f6;
     font-size: 15px;
 }
 
 .referral-job-agent-landing .ra-eligibility-in-footer .ra-eligibility-role-tag {
-    color: var(--happpy-gray-200);
+    color: #e5e7eb;
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.15);
 }
@@ -1726,7 +1726,7 @@
 .referral-job-agent-landing .ra-eligibility-in-footer .ra-eligibility-role-tag:hover {
     border-color: var(--ra-yellow);
     background: rgba(255, 218, 48, 0.15);
-    color: var(--happpy-white);
+    color: #fff;
 }
 
 .referral-job-agent-landing .ra-eligibility-in-footer .ra-eligibility-block-experience {
@@ -1749,7 +1749,7 @@
 /* —— Positive referral responses (companies, grouped by size) —— */
 .referral-job-agent-landing .ra-positive-responses {
     padding: 64px 24px 72px;
-    background: linear-gradient(180deg, rgba(34, 197, 94, 0.06) 0%, var(--happpy-white) 20%, var(--ra-bg-warm) 50%, rgba(255, 218, 48, 0.04) 100%);
+    background: linear-gradient(180deg, rgba(34, 197, 94, 0.06) 0%, #fff 20%, var(--ra-bg-warm) 50%, rgba(255, 218, 48, 0.04) 100%);
     border-top: 1px solid var(--ra-border);
 }
 
@@ -1856,7 +1856,7 @@
     padding: 0;
     border: 1px solid var(--ra-border);
     border-radius: 50%;
-    background: var(--happpy-white);
+    background: #fff;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     cursor: pointer;
     display: flex;
@@ -1935,7 +1935,7 @@
 }
 
 .referral-job-agent-landing .ra-positive-responses-group {
-    background: var(--happpy-white);
+    background: #fff;
     border: 1px solid var(--ra-border);
     border-radius: 20px;
     padding: 24px 28px 28px;
@@ -2018,7 +2018,7 @@
 }
 
 .referral-job-agent-landing .ra-positive-responses-logo-cell:hover {
-    background: var(--happpy-white);
+    background: #fff;
     border-color: var(--ra-border-strong);
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     transform: translateY(-1px);
@@ -2106,7 +2106,7 @@
     padding: 14px 26px;
     border-radius: 9999px;
     border: 1px solid var(--ra-border);
-    background: var(--happpy-white);
+    background: #fff;
     color: var(--ra-black);
     box-shadow: 0 4px 14px rgba(35, 35, 35, 0.06);
 }
@@ -2146,7 +2146,7 @@
 /* —— Data privacy —— */
 .referral-job-agent-landing .ra-data-privacy {
     padding: 56px 24px 64px;
-    background: var(--happpy-white);
+    background: #fff;
     border-top: 1px solid var(--ra-border);
 }
 
@@ -2200,7 +2200,7 @@
 .referral-job-agent-landing .ra-footer {
     padding: 28px 24px 32px;
     background: var(--ra-black);
-    color: var(--happpy-gray-400);
+    color: #9ca3af;
 }
 
 .referral-job-agent-landing .ra-footer-inner {
@@ -2221,7 +2221,7 @@
 .referral-job-agent-landing .ra-footer-nav a {
     font-size: 14px;
     font-weight: 600;
-    color: var(--happpy-gray-200);
+    color: #e5e7eb;
     text-decoration: none;
     transition: color 0.2s;
 }
@@ -2233,7 +2233,7 @@
 .referral-job-agent-landing .ra-footer-copy {
     margin: 0;
     font-size: 13px;
-    color: var(--happpy-gray-400);
+    color: #9ca3af;
 }
 
 .referral-job-agent-landing .referral-landing-cta-btn {
@@ -2459,14 +2459,14 @@
     max-width: 400px;
     width: 100%;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-    border: 1px solid var(--ra-border, var(--happpy-gray-200));
+    border: 1px solid var(--ra-border, #e5e7eb);
 }
 
 .referral-otp-title {
     margin: 0 0 8px;
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--ra-black, var(--happpy-on-brand));
+    color: var(--ra-black, #232323);
 }
 
 .referral-otp-desc {
@@ -2479,7 +2479,7 @@
 .referral-otp-hint {
     margin: 0 0 20px;
     font-size: 0.85rem;
-    color: var(--ra-gray-light, var(--happpy-gray-500));
+    color: var(--ra-gray-light, #6b7280);
 }
 
 .referral-otp-input-wrap {
@@ -2498,8 +2498,8 @@
 }
 
 .referral-otp-input-wrap-error .referral-otp-input {
-    border-color: var(--happpy-danger-strong) !important;
-    box-shadow: 0 0 0 1px var(--happpy-danger-strong);
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 1px #dc2626;
 }
 
 .referral-otp-input {
@@ -2511,10 +2511,10 @@
     font-weight: 600;
     line-height: 1 !important;
     text-align: center;
-    border: 2px solid var(--ra-border-strong, var(--happpy-gray-300));
+    border: 2px solid var(--ra-border-strong, #d1d5db);
     border-radius: 10px;
-    background: var(--happpy-white);
-    color: var(--ra-black, var(--happpy-on-brand));
+    background: #fff;
+    color: var(--ra-black, #232323);
     transition: border-color 0.15s, box-shadow 0.15s;
     flex-shrink: 0;
     box-sizing: border-box;
@@ -2522,20 +2522,20 @@
 
 .referral-otp-input:focus {
     outline: none;
-    border-color: var(--ra-yellow, var(--happpy-legacy-yellow));
+    border-color: var(--ra-yellow, #FFDA30);
     box-shadow: 0 0 0 2px rgba(255, 218, 48, 0.35);
 }
 
 .referral-otp-error {
     margin: 0 0 8px;
     font-size: 0.875rem;
-    color: var(--happpy-danger-strong);
+    color: #dc2626;
 }
 
 .referral-otp-success {
     margin: 0 0 8px;
     font-size: 0.875rem;
-    color: var(--happpy-success-strong);
+    color: #059669;
 }
 
 .referral-otp-resend {
@@ -2547,7 +2547,7 @@
 .referral-otp-resend-btn {
     background: none;
     border: none;
-    color: var(--ra-yellow-dark, var(--happpy-legacy-yellow-deep));
+    color: var(--ra-yellow-dark, #e6c41a);
     font-weight: 600;
     cursor: pointer;
     text-decoration: underline;
@@ -2556,7 +2556,7 @@
 }
 
 .referral-otp-resend-btn:hover {
-    color: var(--ra-black, var(--happpy-on-brand));
+    color: var(--ra-black, #232323);
 }
 
 .referral-otp-verify-btn {
@@ -2564,8 +2564,8 @@
     padding: 14px 24px;
     font-size: 1rem;
     font-weight: 600;
-    color: var(--ra-black, var(--happpy-on-brand));
-    background: var(--ra-yellow, var(--happpy-legacy-yellow));
+    color: var(--ra-black, #232323);
+    background: var(--ra-yellow, #FFDA30);
     border: none;
     border-radius: 10px;
     cursor: pointer;
@@ -2573,7 +2573,7 @@
 }
 
 .referral-otp-verify-btn:hover:not(:disabled) {
-    background: var(--ra-yellow-dark, var(--happpy-legacy-yellow-deep));
+    background: var(--ra-yellow-dark, #e6c41a);
 }
 
 .referral-otp-verify-btn:disabled {

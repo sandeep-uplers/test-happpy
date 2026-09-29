@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { IMAGE_URL } from '../../../components/Constant';
 import { formatSkillname, formattedYOE } from '../../../components/Helper';
