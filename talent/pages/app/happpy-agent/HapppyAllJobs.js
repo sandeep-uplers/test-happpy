@@ -449,7 +449,7 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
     };
 
     useEffect(() => {
-        document.title = process.env.MIX_APP_NAME + " | All Jobs";
+        document.title = process.env.NEXT_PUBLIC_APP_NAME + " | All Jobs";
         pageVisitLoadAndCtaTrack('All Opportunity Page Visit')
         localStorage.removeItem('new_loggedin')
         timeTrackEvent('All Opportunity Page Loaded')

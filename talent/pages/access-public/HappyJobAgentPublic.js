@@ -743,7 +743,7 @@ function HappyJobAgentPublicInner() {
 
 export default function HappyJobAgentPublic() {
     return (
-        <GoogleReCaptchaProvider reCaptchaKey={process.env.MIX_RECAPTCHAV3_SITEKEY}>
+        <GoogleReCaptchaProvider reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHAV3_SITEKEY}>
             <HappyJobAgentPublicInner />
         </GoogleReCaptchaProvider>
     );

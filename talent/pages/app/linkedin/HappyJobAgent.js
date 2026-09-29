@@ -804,7 +804,7 @@ function HappyJobAgentContent({
 
     useLayoutEffect(() => {
         const namePart = displayFirstName ? `${displayFirstName} · ` : "";
-        document.title = `${process.env.MIX_APP_NAME} | ${namePart}Happpy Agent`;
+        document.title = `${process.env.NEXT_PUBLIC_APP_NAME} | ${namePart}Happpy Agent`;
         // const el = document.getElementById("happyJobAgentPublic");
         // if (el) el.scrollIntoView({ behavior: "instant", block: "start" });
         window.scrollTo(0, 0);
@@ -949,7 +949,7 @@ function HappyJobAgentContent({
                 const { id: order_id, amount, currency } = result;
 
                 const options = {
-                    key: process.env.MIX_RAZORPAY_KEY_ID,
+                    key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
                     amount: amount.toString(),
                     currency,
                     name: result?.notes?.name,

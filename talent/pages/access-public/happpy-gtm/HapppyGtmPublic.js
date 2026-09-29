@@ -329,7 +329,7 @@ function HapppyGtmPublicInner() {
 
 export default function HapppyGtmPublic() {
     return (
-        <GoogleReCaptchaProvider reCaptchaKey={process.env.MIX_RECAPTCHAV3_SITEKEY}>
+        <GoogleReCaptchaProvider reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHAV3_SITEKEY}>
             <HapppyGtmPublicInner />
         </GoogleReCaptchaProvider>
     );
