@@ -397,6 +397,7 @@
     font-size: 13px;
     line-height: 1.4;
     vertical-align: top;
+    border: 1px solid #ddd;
 }
 
 .aa-table__td--state {
@@ -3228,13 +3229,13 @@ a.aa-replies__job-title--link:focus-visible {
 }
 
 .aa-act__source--you {
-    background: #ffda30;
+    background: #D4EAFF;
     color: #231f20;
 }
 
 .aa-act__source--auto {
-    background: rgba(90, 79, 128, 0.12);
-    color: #4a3f6e;
+    background: #46ECCD;
+    color: #231f20;
 }
 
 .aa-act__source--uplers {
@@ -3247,8 +3248,13 @@ a.aa-replies__job-title--link:focus-visible {
     color: #4a3f6e;
 }
 
-.aa-act__source svg {
+.aa-act__source svg,
+.aa-act__source .aa-act__auto-glyph {
     flex-shrink: 0;
+}
+
+.aa-act__auto-glyph {
+    display: block;
 }
 
 /* Source-help popover ------------------------------------------- */
@@ -4615,7 +4621,8 @@ jad-jobs__pill--success.orange-pill{
         flex-shrink: 0;
     }
 
-    .aa-act__via svg {
+    .aa-act__via svg,
+    .aa-act__via .aa-act__auto-glyph {
         flex-shrink: 0;
     }
 
