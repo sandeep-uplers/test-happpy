@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from 'react-hot-toast';
 import { ToastContainer } from 'react-toastify';
@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ensureModalAppElement } from '@/talent/helpers/setModalAppElement';
 import store from '@/talent/store/store';
 import { HYDRATE_AUTH } from '@/talent/store/actions/actionsTypes';
+import { getProfilePercent } from '@/talent/store/actions/UserActions';
 import { readStoredAuth } from '@/talent/store/reducers/authReducer';
 import HappyAiAgentLayout from '@/talent/components/HappyAiAgentLayout';
 
@@ -21,11 +22,20 @@ const googleClientId = (process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '')
 
 function AuthHydrator({ children }) {
     const dispatch = useDispatch();
+    const { isAuthenticated, isAuthReady } = useSelector((state) => state.auth);
+    const profilePercent = useSelector((state) => state.profile.profilePercent);
 
     useEffect(() => {
         ensureModalAppElement();
         dispatch({ type: HYDRATE_AUTH, payload: readStoredAuth() });
     }, [dispatch]);
+
+    useEffect(() => {
+        if (!isAuthReady || !isAuthenticated || profilePercent.overall != null) {
+            return;
+        }
+        getProfilePercent(false)(dispatch).catch(() => {});
+    }, [dispatch, isAuthReady, isAuthenticated, profilePercent.overall]);
 
     return children;
 }
