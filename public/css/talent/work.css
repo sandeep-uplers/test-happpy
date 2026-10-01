@@ -8287,30 +8287,6 @@ white-space: nowrap;}
     }
 }
 
-@media (max-width: 1280px) {
-    .containSection.workPc {
-        padding: 0 32px;
-    }
-}
-
-@media (max-width: 991px) {
-    .containSection.workPc {
-        padding: 0 16px;
-    }
-}
-
-
-@media (max-width: 991px) {
-    .containSection.workPc {
-        padding: 0 16px;
-    }
-}
-@media (max-width: 876px) {
-    .containSection.workPc {
-        padding: 0;
-    }
-}
-
 @-webkit-keyframes blink-1{0%,50%,100%{opacity:1}25%,75%{opacity:0}}
 @keyframes blink-1{0%,50%,100%{opacity:1}25%,75%{opacity:0}}
 

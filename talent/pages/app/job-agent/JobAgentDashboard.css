@@ -4666,14 +4666,14 @@ button.jad-cta-card__btn:hover {
     letter-spacing: 0.04em;
     color: var(--jad-on-surface-variant);
     background: rgba(157, 250, 213, 0.2);
-    border-bottom: 1px solid var(--jad-outline-variant);
+    border: 1px solid var(--jad-outline-variant);
     white-space: nowrap;
 }
 
 .jad-jobs__table tbody td {
     padding: 0.75rem 1rem;
     vertical-align: middle;
-    border-bottom: 1px solid var(--jad-outline-variant);
+    border: 1px solid var(--jad-outline-variant);
     color: var(--jad-on-surface);
     transition: background 0.12s ease;
 }
@@ -8466,6 +8466,7 @@ button.jad-cta-card__btn:hover {
     text-decoration: none;
     white-space: nowrap;
     transition: background-color 140ms ease, opacity 140ms ease;
+    border: none;
 }
 
 .job-agent-dashboard .jad-helpguide-raise__guide-cta:hover {
