@@ -11000,6 +11000,17 @@ button.jad-cta-card__btn:hover {
     line-height: 16px;
     color: #231f20;
     outline: none;
+
+    &:focus, &:focus-visible, &:focus-within{
+        outline: none;
+        box-shadow: none;
+    }
+}
+
+.jad-refer-friend-drawer__invite-field{
+    &:focus, &:focus-visible, &:focus-within{
+        outline: 1px solid #231f20;
+    }
 }
 
 .jad-refer-friend-drawer__invite-input::placeholder {
@@ -11397,6 +11408,10 @@ button.jad-cta-card__btn:hover {
 
     .jad-refer-friend-drawer__hero-title {
         font-size: 20px;
+
+        @media screen and (max-width: 480px) {
+            padding-right: 140px;
+        }
     }
 
     .jad-refer-friend-drawer__steps-list {
