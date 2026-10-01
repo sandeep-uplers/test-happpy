@@ -4628,14 +4628,14 @@ jad-jobs__pill--success.orange-pill{
 
     .aa-act__via--you,
     .aa-act__via--uplers {
-        background: #ffda30;
+        background: #D4EAFF;
         color: #231f20;
     }
 
     .aa-act__via--auto,
     .aa-act__via--extension {
-        background: rgba(90, 79, 128, 0.12);
-        color: #4a3f6e;
+        background: #46ECCD;
+        color: #231f20;
     }
 
     .aa-act__card-sub {
