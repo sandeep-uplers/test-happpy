@@ -3946,7 +3946,7 @@ ul.settingMenu:before {
     position: absolute;
     display: inline-block;
     left: 50%;
-    top: 45%;
+    top: 40%;
     width: 0.5625rem;
     height: 0.3125rem;
     margin: auto;
@@ -3958,7 +3958,7 @@ ul.settingMenu:before {
     transition: all 0.35s ease 0s;
     opacity: 0;
     visibility: hidden;
-    translate: -50% -45%;
+    translate: -50% -40%;
 }
 
 .checkboxInput .checkbox:checked~.checkmark:after {
@@ -3969,8 +3969,8 @@ ul.settingMenu:before {
 }
 
 .checkboxInput .checkbox:checked~.checkmark {
-    background: var(--brandYellow);
-    border-color: var(--brandYellow)
+    background: #46eccd;
+    border-color: #46eccd;
 }
 
 .npsform .checkboxInput .name {

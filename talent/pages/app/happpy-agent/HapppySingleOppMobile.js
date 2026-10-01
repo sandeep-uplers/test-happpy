@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useSearchParams } from '@/talent/navigation/routerCompat';
 import { ArrowRightIcon } from "../../../assets/IconSVG";
@@ -162,6 +163,17 @@ export default function HapppySingleOppMobile({
         openReferralModal();
         setShowPreviewModal(false);
     };
+
+    const canShowAgentFooter =
+        !data.is_applied
+        && (!markedNotInterested && !data.job_not_interested);
+
+    const showAssessmentSection =
+        ((data.ai_mandatory != 1 || (data.assessments?.length ?? 0) > 0) && canShowAgentFooter);
+
+    const showBottomActionDrawer =
+        canShowAgentFooter && (showAssessmentSection || hideApplyCta);
+
     return (
         <>
             {(Object.keys(data).length > 0) &&
@@ -385,31 +397,29 @@ export default function HapppySingleOppMobile({
                                 <button className="ghostBtn blue" onClick={undoHandler}>undo</button>
                             </div>
                         }
-                        {((data.ai_mandatory != 1 || (data.assessments?.length ?? 0) > 0) && !data.is_applied)
-                            && (!markedNotInterested && !data.job_not_interested) &&
-                            <>
-                                <SingleOppAssessmentNew
-                                    assessments={data.assessments ?? []}
-                                    allData={data}
-                                    hr_id={data.enc_id}
-                                    isTalentHrCancelled={data.current_talent_hr?.badgeName == 'Cancelled'}
-                                    is_applied={data.is_applied}
-                                    singleOppMobile
-                                    setIsHeaderVisible={() => { }}
-                                    handleCustomizeResume={handleCustomizeResume}
-                                    hideApplyCta={hideApplyCta}
-                                />
-                                <BottomActionDrawer
-                                    data={data}
-                                    isTalentHired={isTalentHired(talentStatus)}
-                                    user={user}
-                                    handleCustomizeResume={handleCustomizeResume}
-                                    hasTailoredCV={hasTailoredCV}
-                                    openReferralModal={openReferralModal}
-                                    setReferralPayloadHtml={setReferralPayloadHtml}
-                                    hideApplyCta={hideApplyCta}
-                                />
-                            </>
+                        {showAssessmentSection &&
+                            <SingleOppAssessmentNew
+                                assessments={data.assessments ?? []}
+                                allData={data}
+                                hr_id={data.enc_id}
+                                isTalentHrCancelled={data.current_talent_hr?.badgeName == 'Cancelled'}
+                                is_applied={data.is_applied}
+                                singleOppMobile
+                                setIsHeaderVisible={() => { }}
+                                handleCustomizeResume={handleCustomizeResume}
+                                hideApplyCta={hideApplyCta}
+                            />
+                        }
+                        {showBottomActionDrawer &&
+                            <BottomActionDrawer
+                                data={data}
+                                isTalentHired={isTalentHired(talentStatus)}
+                                handleCustomizeResume={handleCustomizeResume}
+                                hasTailoredCV={hasTailoredCV}
+                                openReferralModal={openReferralModal}
+                                setReferralPayloadHtml={setReferralPayloadHtml}
+                                hideApplyCta={hideApplyCta}
+                            />
                         }
                         <>
                             {!is_tailored_eligible && !isTalentHired(talentStatus) && !isOppDisabled &&
@@ -676,9 +686,37 @@ const SimilarJobsCompanyLogo = ({ job }) => {
     );
 };
 
+const PHONE_MEDIA_QUERY = '(max-width: 767px)';
+
+function readIsPhoneViewport() {
+    if (typeof window === 'undefined' || !window.matchMedia) {
+        return false;
+    }
+    return window.matchMedia(PHONE_MEDIA_QUERY).matches;
+}
+
+/** Phone only — tablet uses in-flow UTS sticky drawer under job header. */
+function useIsPhoneViewport() {
+    const [isPhone, setIsPhone] = useState(readIsPhoneViewport);
+
+    useEffect(() => {
+        const mq = window.matchMedia(PHONE_MEDIA_QUERY);
+        const onChange = (event) => setIsPhone(event.matches);
+        setIsPhone(mq.matches);
+        if (typeof mq.addEventListener === 'function') {
+            mq.addEventListener('change', onChange);
+            return () => mq.removeEventListener('change', onChange);
+        }
+        mq.addListener(onChange);
+        return () => mq.removeListener(onChange);
+    }, []);
+
+    return isPhone;
+}
 
 function BottomActionDrawer({ data, isTalentHired, hasTailoredCV, handleCustomizeResume, openReferralModal, setReferralPayloadHtml, hideApplyCta = false }) {
     const { user } = useSelector(state => state.auth);
+    const isPhone = useIsPhoneViewport();
     const navigate = useNavigate();
     const handleApply = () => {
         let applyBtn = document.getElementById(`${data.enc_id}+singleOppAppyBtn`)
@@ -732,8 +770,12 @@ function BottomActionDrawer({ data, isTalentHired, hasTailoredCV, handleCustomiz
         return null;
     }
 
-    return (
-        <div className="bottomActionDrawer">
+    const drawerClassName = isPhone
+        ? 'bottomActionDrawer happpy-single-opp-portal-drawer'
+        : 'bottomActionDrawer';
+
+    const drawer = (
+        <div className={drawerClassName}>
             {/* {hasTailoredCV &&
                 <ReferralAgentResumeModal
                     isOpen={isReferralAgentResumeModalVisible}
@@ -800,5 +842,11 @@ function BottomActionDrawer({ data, isTalentHired, hasTailoredCV, handleCustomiz
                 </div>
             } */}
         </div>
-    )
+    );
+
+    if (isPhone && typeof document !== 'undefined') {
+        return createPortal(drawer, document.body);
+    }
+
+    return drawer;
 }
