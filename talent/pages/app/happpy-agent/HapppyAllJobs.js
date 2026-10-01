@@ -7,9 +7,8 @@ import _, { debounce } from "lodash";
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useSearchParams } from '@/talent/navigation/routerCompat';
-import { toast } from "react-toastify";
 import { v4 as uuidv4 } from 'uuid';
-import { BookmarkNotification } from "../../../assets/BookmarkNotify";
+import { showBookmarkNotification } from "../../../helpers/showBookmarkNotification";
 import { ArrowUpIcon, GreenCheckMarkIcon } from "../../../assets/IconSVG";
 import { API_ALL_OPP, API_VIEW_VIDEO_COUNT, IMAGE_URL } from "../../../components/Constant";
 import { MASTER_FILTERS, POST_API, formattedJobCount, isTalentHired } from "../../../components/Helper";
@@ -505,17 +504,10 @@ export default function HapppyAllJobs({ embedded = false, toolbarHost = null }) 
                     let newData = allOpportunity.map(item => item.enc_id == data.enc_id ? { ...item, is_saved: !oldValue } : item);
                     setAllOpportunity(newData);
 
-                    toast.success(
-                        <BookmarkNotification
-                            role={data.role}
-                            newValue={!oldValue}
-                        />,
-                        {
-                            position: 'bottom-center',
-                            theme: 'dark',
-                            closeOnClick: false,
-                            autoClose: 3000,
-                        });
+                    showBookmarkNotification({
+                        role: data.role,
+                        newValue: !oldValue,
+                    });
                     if (filters.is_saved_filter) {
                         setTimeout(() => {
                             let newOpp = [...allOpportunity];

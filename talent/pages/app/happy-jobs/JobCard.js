@@ -5,7 +5,7 @@ import { IMAGE_URL } from "../../../components/Constant";
 import { formatSkillname, formattedYOE } from "../../../components/Helper";
 import CompanyLogo from "./CompanyLogo";
 import UplersPartnerBadge from "./UplersPartnerBadge";
-import { BookmarkNotification } from "../../../assets/BookmarkNotify";
+import { showBookmarkNotification } from "../../../helpers/showBookmarkNotification";
 import { oppBookmark } from "../../../store/actions/UserActions";
 import { useDispatch, useSelector } from "react-redux";
 import { ArrowDropDownIcon, CloseIcon } from "../../../assets/IconSVG";
@@ -13,7 +13,6 @@ import { talentRelevancyTracking, viewJobClickedTracking } from "../../../helper
 import { getJobAgentSimilarJobHref } from "../../../helpers/jobPath";
 import { HapppyAgentInfoBadge, hasHapppyAgentInfo } from "../../../helpers/happpyAgentInfoBadge";
 import { SET_BOOKMARK_SIMILAR_JOBS, SET_LOADER } from "../../../store/actions/actionsTypes";
-import { toast as toastify } from "react-toastify";
 import toast from "react-hot-toast";
 
 export default function JobCard({ data, allData, handleOppBookmark, activeJob, setActiveJob, isAppliedJobs,
@@ -224,20 +223,12 @@ const SimilarJobs = ({ hrDetails, similarJobObj, alreadyShown }) => {
         oppBookmark(reqMap)(dispatch)
             .then((res) => {
                 if (res.data.status == "success") {
-                    toastify.success(
-                        <BookmarkNotification
-                            role={data.role}
-                            newValue={!oldValue}
-                            undoAllowed={true}
-                            onUndo={() => onBookmarkClick(e, data)}
-                        />,
-                        {
-                            position: 'bottom-center',
-                            theme: 'dark',
-                            closeOnClick: false,
-                            autoClose: 3000,
-                        }
-                    );
+                    showBookmarkNotification({
+                        role: data.role,
+                        newValue: !oldValue,
+                        undoAllowed: true,
+                        onUndo: () => onBookmarkClick(e, data),
+                    });
 
                     dispatch({ type: SET_BOOKMARK_SIMILAR_JOBS, payload: { HR_Number: data.HR_Number, data: !oldValue, similarToHR: hrDetails.HR_Number } })
                 } else {

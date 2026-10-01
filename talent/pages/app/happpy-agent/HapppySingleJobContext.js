@@ -5,8 +5,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useSearchParams } from '@/talent/navigation/routerCompat';
-import { toast } from 'react-toastify';
-import { BookmarkNotification } from '../../../assets/BookmarkNotify';
+import { showBookmarkNotification } from '../../../helpers/showBookmarkNotification';
 import { AnimatedCheckMark } from '../../../assets/IconSVG';
 import { IMAGE_URL } from '../../../components/Constant';
 import Loader from '../../../components/Loader';
@@ -280,16 +279,11 @@ export default function HapppySingleJobContextProvider() {
                         let newMatchingOpp = [...matchingOpps];
                         newMatchingOpp[oppIndex].is_saved = !oldValue;
                         setMatchingOpps(newMatchingOpp);
-                        toast.success(
-                            <BookmarkNotification role={oldArgValue.RequestForTalent} newValue={!oldValue} />,
-                            {
-                                position: 'bottom-center',
-                                theme: 'dark',
-                                closeOnClick: false,
-                                autoClose: 3000,
-                                ...(isCompact && { style: { marginBottom: '90px' } }),
-                            }
-                        );
+                        showBookmarkNotification({
+                            role: oldArgValue.RequestForTalent,
+                            newValue: !oldValue,
+                            ...(isCompact && { style: { marginBottom: '90px' } }),
+                        });
                     }
                 })
                 .catch((err) => {
@@ -311,21 +305,13 @@ export default function HapppySingleJobContextProvider() {
                     if (res.data.status == 'success') {
                         setData({ ...data, is_saved: !oldValue });
                         if (!redirectConfirm) {
-                            toast.success(
-                                <BookmarkNotification
-                                    role={data.RequestForTalent}
-                                    newValue={!oldValue}
-                                    undoAllowed={true}
-                                    onUndo={handleOppBookmark}
-                                />,
-                                {
-                                    position: 'bottom-center',
-                                    theme: 'dark',
-                                    closeOnClick: false,
-                                    autoClose: 3000,
-                                    ...(isCompact && { style: { marginBottom: '90px' } }),
-                                }
-                            );
+                            showBookmarkNotification({
+                                role: data.RequestForTalent,
+                                newValue: !oldValue,
+                                undoAllowed: true,
+                                onUndo: handleOppBookmark,
+                                ...(isCompact && { style: { marginBottom: '90px' } }),
+                            });
                         }
                         if (redirectConfirm) {
                             makeFutureRedirectValid();
