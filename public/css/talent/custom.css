@@ -17,7 +17,7 @@
 }
 
 .react-modal-portal .ReactModal__Overlay:has(.resumeModal) {
-    z-index: 1101 !important;
+    z-index: 11001 !important;
 }
 
 .commonModal.ReactModal__Content {
