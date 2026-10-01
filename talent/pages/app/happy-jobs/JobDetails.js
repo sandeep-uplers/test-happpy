@@ -5,11 +5,10 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate, useSearchParams } from "@/talent/navigation/routerCompat";
 import Slider from "react-slick";
-import { toast as toastify } from "react-toastify";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import "../work/similarJobs.css";
-import { BookmarkNotification } from "../../../assets/BookmarkNotify";
+import { showBookmarkNotification } from "../../../helpers/showBookmarkNotification";
 import { ArrowRightIcon } from "../../../assets/IconSVG";
 import { IMAGE_URL } from "../../../components/Constant";
 import { formattedINRJobBudget, formattedYOE, isTalentHired } from "../../../components/Helper";
@@ -314,17 +313,10 @@ export default function JobDetails({
                     let newData = allOpportunity.map(item => item.enc_id == data.enc_id ? { ...item, is_saved: !oldValue } : item);
                     setAllOpportunity(newData)
 
-                    toastify.success(
-                        <BookmarkNotification
-                            role={data.role}
-                            newValue={!oldValue}
-                        />,
-                        {
-                            position: 'bottom-center',
-                            theme: 'dark',
-                            closeOnClick: false,
-                            autoClose: 3000,
-                        });
+                    showBookmarkNotification({
+                        role: data.role,
+                        newValue: !oldValue,
+                    });
                     if (isBookmarkedActive) {
                         setTimeout(() => {
                             let newOpp = [...allOpportunity];
@@ -922,20 +914,12 @@ const SimilarJobs = ({ hrDetails, similarJobObj }) => {
         oppBookmark(reqMap)(dispatch)
             .then((res) => {
                 if (res.data.status == "success") {
-                    toastify.success(
-                        <BookmarkNotification
-                            role={data.role}
-                            newValue={!oldValue}
-                            undoAllowed={true}
-                            onUndo={() => onBookmarkClick(e, data)}
-                        />,
-                        {
-                            position: 'bottom-center',
-                            theme: 'dark',
-                            closeOnClick: false,
-                            autoClose: 3000,
-                        }
-                    );
+                    showBookmarkNotification({
+                        role: data.role,
+                        newValue: !oldValue,
+                        undoAllowed: true,
+                        onUndo: () => onBookmarkClick(e, data),
+                    });
 
                     dispatch({ type: SET_BOOKMARK_SIMILAR_JOBS, payload: { HR_Number: data.HR_Number, data: !oldValue, similarToHR: hrDetails.HR_Number } })
                 } else {

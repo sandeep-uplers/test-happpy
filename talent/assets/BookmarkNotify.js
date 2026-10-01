@@ -1,23 +1,33 @@
-import React from "react"
-import { IMAGE_URL } from "../components/Constant"
+import React from 'react';
+import { IMAGE_URL } from '../components/Constant';
 
-export const BookmarkNotification = ({ closeToast, toastProps, role, newValue, undoAllowed, onUndo }) => {
+/** Content for bookmark save/unsave react-hot-toast (success / error). */
+export function BookmarkToastMessage({ role, saved, undoAllowed, onUndo, onDismiss }) {
+    const showUndo = Boolean(undoAllowed && !saved);
+
     return (
-        <div className="snackbarBody bookmark">
-            <div className="leftContent">
-                <img src={IMAGE_URL + (newValue ? 'bookmarked.png' : 'bookmarkRemoved.png')} />
-                <div className="content">
-                    <p>{newValue ? 'Job added to Saved Jobs!' : 'Job removed from Saved Jobs'}</p>
-                   {role && <h6>{role}</h6>}
-                </div>
+        <div className="bookmark-toast">
+            <img
+                className="bookmark-toast__icon"
+                src={IMAGE_URL + (saved ? 'bookmarked.png' : 'bookmarkRemoved.png')}
+                alt=""
+            />
+            <div className="bookmark-toast__text">
+                <p>{saved ? 'Job added to Saved Jobs!' : 'Job removed from Saved Jobs'}</p>
+                {role ? <strong>{role}</strong> : null}
             </div>
-            <div className="snackbarAction">
-                {(undoAllowed && !newValue) &&
-                    <button className="snackbarBtn undoBtn" onClick={() => { onUndo(newValue); closeToast(); }}>Undo</button>
-                }
-                {(undoAllowed && !newValue) && <div className="middleBar"></div>}
-                <button className="snackbarBtn closeBtn" onClick={closeToast}><img src={IMAGE_URL + 'fi_x-circle.svg'} /></button>
-            </div>
+            {showUndo ? (
+                <button
+                    type="button"
+                    className="bookmark-toast__undo"
+                    onClick={() => {
+                        onUndo?.(saved);
+                        onDismiss?.();
+                    }}
+                >
+                    Undo
+                </button>
+            ) : null}
         </div>
-    )
+    );
 }

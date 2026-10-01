@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import dynamic from 'next/dynamic';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from 'react-hot-toast';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { ensureModalAppElement } from '@/talent/helpers/setModalAppElement';
 import store from '@/talent/store/store';
 import { HYDRATE_AUTH } from '@/talent/store/actions/actionsTypes';
@@ -41,28 +40,28 @@ function AuthHydrator({ children }) {
 }
 
 function ReactHotToast() {
-    return (
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted || typeof document === 'undefined') {
+        return null;
+    }
+
+    return createPortal(
         <Toaster
-            toastOptions={{
-                duration: 6000,
-                style: {
-                    fontSize: '14px',
-                },
-                success: {
-                    style: {
-                        background: 'green',
-                        color: '#fff',
-                    },
-                },
-                error: {
-                    style: {
-                        background: 'red',
-                        color: '#fff',
-                    },
-                },
-            }}
             position="top-right"
-        />
+            toastOptions={{
+                position: 'top-right',
+                duration: 6000,
+                style: { fontSize: '14px' },
+                success: { style: { background: 'green', color: '#fff' } },
+                error: { style: { background: 'red', color: '#fff' } },
+            }}
+        />,
+        document.body
     );
 }
 
@@ -74,7 +73,6 @@ function AppShell({ children }) {
                 <GlobalPopups />
             </HappyAiAgentLayout>
             <ReactHotToast />
-            <ToastContainer position="bottom-center" theme="dark" />
         </AuthHydrator>
     );
 
