@@ -7130,6 +7130,7 @@ white-space: nowrap;}
                         gap: 0.75rem;
                         -webkit-animation:blink-1 .6s both;
                         animation:blink-1 .6s both;
+                        margin-left: 1px;
 
                         &.alreadyShown{
                             -webkit-animation:none;
