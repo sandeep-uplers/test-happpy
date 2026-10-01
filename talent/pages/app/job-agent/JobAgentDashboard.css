@@ -12862,3 +12862,32 @@ button.jad-cta-card__btn:hover {
         max-width: none;
     }
 }
+
+/* Happpy single job detail — tablet CTA band (matches UTS HapppySingleOppMobile.css) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .job-agent-dashboard__main .happpy-single-opp-mobile.single-opp-mobile .bottomActionDrawer {
+        position: sticky !important;
+        top: -32px !important;
+        bottom: auto !important;
+        left: auto !important;
+        right: auto !important;
+        width: calc(100% + 32px) !important;
+        max-width: none !important;
+        background: #ecfef6 !important;
+        border: none !important;
+        border-radius: inherit;
+        padding: 12px 16px !important;
+        padding-bottom: 12px !important;
+        margin-inline: -16px;
+        margin-block: -8px 8px;
+        box-shadow: none !important;
+        border-bottom: 1px solid #f1f1f1;
+        z-index: 2;
+    }
+
+    .job-agent-dashboard__main .happpy-single-opp-mobile.single-opp-mobile .bottomActionDrawer .primaryBtn.applyWithTailorCVBtn {
+        background: #059599 !important;
+        border-color: #059599 !important;
+        color: #ffffff !important;
+    }
+}
