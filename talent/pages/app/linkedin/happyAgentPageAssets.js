@@ -454,8 +454,8 @@ export const HAPPY_PRICING_FOOTNOTE =
 
 /** Display-only plan metadata for unauthenticated public landing pricing cards. */
 export const PUBLIC_LANDING_PLAN_FALLBACKS = {
-    1: { PriceText: 1499, ValidityText: "1 month" },
-    3: { PriceText: 2999, ValidityText: "3 months" },
+    1: { PriceText: 3999, ValidityText: "1 month" },
+    3: { PriceText: 5999, ValidityText: "3 months" },
 };
 
 /* Public auth drawer (Figma 2864:26627) */
