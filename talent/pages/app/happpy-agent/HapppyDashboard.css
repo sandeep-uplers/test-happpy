@@ -1068,14 +1068,13 @@
     color: #ffffff;
 }
 
-.happpy-dash__health-btn--transformed.happpy-dash__health-btn--loading[disabled],
-.happpy-dash__health-btn--transformed[disabled]:not(.happpy-dash__health-btn--loading) {
-    opacity: 0.55;
-}
-
 .happpy-dash__health-btn--transformed.happpy-dash__health-btn--loading[disabled] {
     opacity: 1;
     cursor: wait;
+    background: var(--hd-text) !important;
+    color: #ffffff !important;
+    min-width: 13.5rem;
+    min-height: 2.125rem;
 }
 
 .happpy-dash__health-btn-spinner {

@@ -135,10 +135,15 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
     /** Dashboard “View transformed resume” — until get-transform-data finishes. */
     const [viewTransformedLoading, setViewTransformedLoading] = useState(false);
     const pendingViewTransformIdRef = useRef(null);
-    const viewTransformFetchStartedRef = useRef(false);
+    const viewTransformClickAtRef = useRef(0);
 
     const resumeEditorTransformationId = useSelector((state) => state.resumeEditor.transformation_id);
     const globalLoader = useSelector((state) => state.loader.isLoading);
+
+    const clearViewTransformedLoading = useCallback(() => {
+        setViewTransformedLoading(false);
+        pendingViewTransformIdRef.current = null;
+    }, []);
 
     useEffect(() => {
         if (initialResumeName) {
@@ -182,39 +187,26 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
     useEffect(() => {
         if (!viewTransformedLoading) return;
 
-        if (globalLoader) {
-            viewTransformFetchStartedRef.current = true;
-        }
-
         const pendingId = pendingViewTransformIdRef.current;
         const activeId = resumeEditorTransformationId;
 
-        if (!activeId || activeId !== pendingId) {
-            setViewTransformedLoading(false);
-            viewTransformFetchStartedRef.current = false;
-            pendingViewTransformIdRef.current = null;
+        if (!pendingId || !activeId || String(activeId) !== String(pendingId)) {
+            clearViewTransformedLoading();
             return;
         }
 
-        if (viewTransformFetchStartedRef.current && !globalLoader) {
-            setViewTransformedLoading(false);
-            viewTransformFetchStartedRef.current = false;
-            pendingViewTransformIdRef.current = null;
+        if (globalLoader) return;
+
+        const elapsed = Date.now() - viewTransformClickAtRef.current;
+        const minSpinnerMs = 150;
+        if (elapsed >= minSpinnerMs) {
+            clearViewTransformedLoading();
             return;
         }
 
-        const timeout = window.setTimeout(() => {
-            if (
-                !viewTransformFetchStartedRef.current &&
-                pendingViewTransformIdRef.current === resumeEditorTransformationId
-            ) {
-                setViewTransformedLoading(false);
-                pendingViewTransformIdRef.current = null;
-            }
-        }, 200);
-
+        const timeout = window.setTimeout(clearViewTransformedLoading, minSpinnerMs - elapsed);
         return () => window.clearTimeout(timeout);
-    }, [viewTransformedLoading, globalLoader, resumeEditorTransformationId]);
+    }, [viewTransformedLoading, globalLoader, resumeEditorTransformationId, clearViewTransformedLoading]);
 
     /**
      * Single source of truth for which step is rendered inside the popup.
@@ -516,7 +508,7 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
         }
 
         pendingViewTransformIdRef.current = transformationId;
-        viewTransformFetchStartedRef.current = false;
+        viewTransformClickAtRef.current = Date.now();
         setViewTransformedLoading(true);
 
         dispatch({
