@@ -7459,6 +7459,37 @@ button.jad-cta-card__btn:hover {
     gap: 1.25rem;
 }
 
+.jad-resume-health-modal__body .resume-options .title.disabled[aria-busy='true'] {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.jad-resume-health-modal__body .ghost-btn--loading[disabled] {
+    justify-content: center;
+    gap: 0;
+    cursor: wait;
+    opacity: 1;
+    min-height: 2.5rem;
+    padding-top: 0.6875rem;
+    padding-bottom: 0.6875rem;
+}
+
+.jad-resume-health-ghost-btn-spinner {
+    width: 1.125rem;
+    height: 1.125rem;
+    border: 2px solid rgba(35, 31, 32, 0.2);
+    border-top-color: var(--jad-on-surface, #231f20);
+    border-radius: 50%;
+    animation: jad-resume-health-ghost-btn-spin 0.75s linear infinite;
+    flex: none;
+}
+
+@keyframes jad-resume-health-ghost-btn-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .jad-resume-health-modal__resume-row {
     display: flex;
     align-items: center;

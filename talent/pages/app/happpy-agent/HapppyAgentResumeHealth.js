@@ -127,6 +127,7 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
     /** Resume preview reuses the global ResumeModal. */
     const [isResumePreviewOpen, setIsResumePreviewOpen] = useState(false);
     const [uploadedResumePreview, setUploadedResumePreview] = useState(null);
+    const [resumePreviewLoading, setResumePreviewLoading] = useState(false);
     const [resumeHealthFetched, setResumeHealthFetched] = useState(false);
 
     /** Transform-side state — only used while the stubbed call is pending. */
@@ -340,17 +341,35 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
         setIsKebabOpen(false);
     };
 
-    const onPreviewResume = () => {
-        if (resumeFile) return; // can't preview a freshly picked local file
+    const onPreviewResume = useCallback(() => {
+        if (resumePreviewLoading || resumeFile) return;
+
         if (uploadedResumePreview) {
             setIsResumePreviewOpen(true);
+            setIsKebabOpen(false);
             return;
         }
-        getTalentPreferences()(dispatch).then((res) => {
-            setUploadedResumePreview(res?.data?.resume || null);
-            setIsResumePreviewOpen(true);
-        });
-    };
+
+        setResumePreviewLoading(true);
+        setIsKebabOpen(true);
+        getTalentPreferences(true)(dispatch)
+            .then((res) => {
+                const resume = res?.data?.resume;
+                if (!resume) {
+                    toast.error('Could not load resume preview.', { duration: 4000 });
+                    return;
+                }
+                setUploadedResumePreview(resume);
+                setIsResumePreviewOpen(true);
+                setIsKebabOpen(false);
+            })
+            .catch(() => {
+                toast.error('Could not load resume preview.', { duration: 4000 });
+            })
+            .finally(() => {
+                setResumePreviewLoading(false);
+            });
+    }, [dispatch, resumePreviewLoading, resumeFile, uploadedResumePreview]);
 
     const onPreviewDownloadStub = (e) => {
         // Preview-only context; download isn't exposed here. Keep ResumeModal happy.
@@ -776,6 +795,7 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
                                         }}
                                         onPickReplacement={onPickReplacement}
                                         onPreviewResume={onPreviewResume}
+                                        previewResumeLoading={resumePreviewLoading}
                                         onSubmit={onSubmitHealthCheck}
                                         submitting={healthCheckSubmitting}
                                         isEligible={isEligible}
@@ -864,6 +884,7 @@ function LandingStep({
     onToggleKebab,
     onPickReplacement,
     onPreviewResume,
+    previewResumeLoading,
     onSubmit,
     submitting,
     isEligible,
@@ -908,8 +929,9 @@ function LandingStep({
                             )}
                             <div>
                                 <span
-                                    className={`title ${resumeFile ? 'disabled' : ''}`}
-                                    onClick={onPreviewResume}
+                                    className={`title ${resumeFile || previewResumeLoading ? 'disabled' : ''}`}
+                                    onClick={previewResumeLoading ? undefined : onPreviewResume}
+                                    aria-busy={previewResumeLoading}
                                 >
                                     {formData.resume}
                                 </span>
@@ -937,9 +959,27 @@ function LandingStep({
                                         </div>
                                     </div> */}
                                     {!resumeFile && (
-                                        <button className="ghost-btn" onClick={onPreviewResume}>
-                                            <EyeIconPreview width={18} height={18} />
-                                            Preview this resume
+                                        <button
+                                            type="button"
+                                            className={`ghost-btn${previewResumeLoading ? ' ghost-btn--loading' : ''}`}
+                                            onClick={onPreviewResume}
+                                            disabled={previewResumeLoading}
+                                            aria-busy={previewResumeLoading}
+                                        >
+                                            {previewResumeLoading ? (
+                                                <>
+                                                    <span
+                                                        className="jad-resume-health-ghost-btn-spinner"
+                                                        aria-hidden="true"
+                                                    />
+                                                    <span className="sr-only">Loading resume preview</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <EyeIconPreview width={18} height={18} />
+                                                    Preview this resume
+                                                </>
+                                            )}
                                         </button>
                                     )}
                                 </div>
