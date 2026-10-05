@@ -812,6 +812,7 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
                                         healthCheckId={currentHealthCheckId}
                                         onTransformSubmit={handleTransformSubmit}
                                         onViewTransformedResume={onViewTransformedResume}
+                                        viewTransformedLoading={viewTransformedLoading}
                                         onClose={closePopup}
                                         referralPlanActive={outreachPlanActive}
                                     />
