@@ -2428,7 +2428,7 @@ function HappyJobAgentContent({
 
             </div>
 
-            <section
+            {/* <section
                 ref={pricingRevealRef}
                 className={`happy-agent-pricing-figma${pricingRevealed ? " happy-landing-section--revealed" : ""}`}
                 id="pricing"
@@ -2482,9 +2482,9 @@ function HappyJobAgentContent({
                         </div>
                     </div>
 
-                    {/* <p className="happy-agent-pricing-figma__footnote">{HAPPY_PRICING_FOOTNOTE}</p> */}
+                    <p className="happy-agent-pricing-figma__footnote">{HAPPY_PRICING_FOOTNOTE}</p>
                 </div>
-            </section>
+            </section> */}
 
             {showJobsListing ? (
                 <section className="happy-agent-jobs-listing" id="happy-agent-jobs-listing">
