@@ -9,6 +9,10 @@ import { differenceInMonths } from 'date-fns';
 import { identityReset } from '../../../helpers/Mixpanel';
 import { fetchHapppyAgentPlan, logoutUser, fetchHapppyAgentDailyLimit, fetchDailyReferralRuns, syncHapppyAgentDailyLimitFromOtherTab } from '../../../store/actions/UserActions';
 import { HAPPPY_AGENT_DAILY_LIMIT_SYNC_KEY } from '../../../helpers/happpyAgentDailyLimitSync';
+import {
+    filterHapppyAgentResumeNavItems,
+    shouldHideHapppyAgentResumeFeatures,
+} from '../../../helpers/happpyAgentPlan';
 import { API_JOB_AGENT_MISSED_REPLY_FOLLOWUPS_PENDING } from '../../../components/Constant';
 import { GET_API } from '../../../components/Helper';
 import HapppyAgentLogo from '../../../components/common/HapppyAgentLogo';
@@ -637,10 +641,14 @@ function NavIconWithNewDot({ icon, filled, className, showDot }) {
  * Fixed bottom tab bar for viewports below 768px (Figma 28973:14793).
  * Active tab gets a yellow pill highlight behind the label; icons fill when active.
  */
-function MobileBottomNav({ pathname, lockOutreachSideNav, showConfigureNewBadge }) {
+function MobileBottomNav({ pathname, lockOutreachSideNav, showConfigureNewBadge, hideResumeNavForTrial }) {
+    const bottomNavItems = filterHapppyAgentResumeNavItems(
+        MOBILE_BOTTOM_NAV_ITEMS,
+        hideResumeNavForTrial,
+    );
     return (
         <nav className="job-agent-dashboard__bottom-nav" aria-label="Happpy Agent mobile navigation">
-            {MOBILE_BOTTOM_NAV_ITEMS.map((item) => {
+            {bottomNavItems.map((item) => {
                 const active = isMobileBottomNavActive(item, pathname);
                 const highlight = lockOutreachSideNav ? item.id === 'configure' && active : active;
 
@@ -701,7 +709,12 @@ function MobileDrawerPanel({
     onLeaveReview,
     planCtaCopy,
     showConfigureNewBadge,
+    hideResumeNavForTrial,
 }) {
+    const drawerNavItems = filterHapppyAgentResumeNavItems(
+        MOBILE_DRAWER_NAV_ITEMS,
+        hideResumeNavForTrial,
+    );
     return (
         <div className="job-agent-dashboard__mobile-drawer">
             <div className="job-agent-dashboard__mobile-drawer-head">
@@ -763,7 +776,7 @@ function MobileDrawerPanel({
             <div className="job-agent-dashboard__mobile-drawer-divider" role="presentation" />
 
             <nav className="job-agent-dashboard__mobile-drawer-nav" aria-label="Happpy Agent menu">
-                {MOBILE_DRAWER_NAV_ITEMS.map((item) => {
+                {drawerNavItems.map((item) => {
                     const active = isMobileDrawerNavActive(item, pathname);
                     const label =
                         item.id === 'my-plan'
@@ -1044,12 +1057,17 @@ const JobAgentDashboardLayout = ({ children }) => {
     }, [referralPlan.loaded, referralPlan.gmail_connected, referralPlan.linkedin_connected]);
 
     /** Primary strip: full list when connected; only Configure when Gmail/LinkedIn are not linked */
+    const hideResumeNavForTrial = shouldHideHapppyAgentResumeFeatures(referralPlan);
+
     const primaryNavItems = useMemo(() => {
+        let items;
         if (lockOutreachSideNav) {
-            return navItems.filter((item) => item.to === CONFIGURE_LINK_PATH);
+            items = navItems.filter((item) => item.to === CONFIGURE_LINK_PATH);
+        } else {
+            items = navItems;
         }
-        return navItems;
-    }, [lockOutreachSideNav]);
+        return filterHapppyAgentResumeNavItems(items, hideResumeNavForTrial);
+    }, [lockOutreachSideNav, hideResumeNavForTrial]);
 
     useEffect(() => {
         if (lockOutreachSideNav) {
@@ -1446,6 +1464,7 @@ const JobAgentDashboardLayout = ({ children }) => {
                         onLeaveReview={handleLeaveReviewOpen}
                         planCtaCopy={planCtaCopy}
                         showConfigureNewBadge={showConfigureNewBadge}
+                        hideResumeNavForTrial={hideResumeNavForTrial}
                     />
 
                     <div className="job-agent-dashboard__sidenav-desktop">
@@ -1738,11 +1757,12 @@ const JobAgentDashboardLayout = ({ children }) => {
                     </MatcherModalProvider>
                 </main>
 
-                <MobileBottomNav
-                    pathname={location.pathname}
-                    lockOutreachSideNav={lockOutreachSideNav}
-                    showConfigureNewBadge={showConfigureNewBadge}
-                />
+                    <MobileBottomNav
+                        pathname={location.pathname}
+                        lockOutreachSideNav={lockOutreachSideNav}
+                        showConfigureNewBadge={showConfigureNewBadge}
+                        hideResumeNavForTrial={hideResumeNavForTrial}
+                    />
 
                 <ReferFriendDrawer
                     open={referFriendDrawerOpen}

@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { resumeHealthReportGeneratedTracking } from '../../../helpers/Mixpanel';
 import { getResumeHealthCheck } from '../../../store/actions/resumeActions';
 import { SET_BG_RESUME_HEALTH_CHECK_ID } from '../../../store/actions/actionsTypes';
+import { shouldHideHapppyAgentResumeFeatures } from '../../../helpers/happpyAgentPlan';
 
 /**
  * App-shell-level Pusher subscription for silent "background" resume health checks.
@@ -26,9 +27,11 @@ export default function BackgroundHealthCheckPusher() {
     const bgResumeHealthCheckId = useSelector(
         (state) => state.resume?.bgResumeHealthCheckId
     );
+    const happpyAgent = useSelector((state) => state.happpyAgent);
+    const resumeFeaturesLocked = shouldHideHapppyAgentResumeFeatures(happpyAgent, 'global');
 
     useEffect(() => {
-        if (!bgResumeHealthCheckId) return undefined;
+        if (!bgResumeHealthCheckId || resumeFeaturesLocked) return undefined;
 
         const pusher = new Pusher(process.env.NEXT_PUBLIC_VR_PUSHER_APP_KEY, {
             cluster: process.env.NEXT_PUBLIC_VR_PUSHER_APP_CLUSTER,
@@ -56,7 +59,7 @@ export default function BackgroundHealthCheckPusher() {
             pusher.unsubscribe(channelName);
             pusher.disconnect();
         };
-    }, [bgResumeHealthCheckId, dispatch]);
+    }, [bgResumeHealthCheckId, dispatch, resumeFeaturesLocked]);
 
     return null;
 }

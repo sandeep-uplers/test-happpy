@@ -749,6 +749,7 @@ const Step1AccountConnection = ({
         if (autoHealthCheckTriggeredRef.current) return;
         if (bgResumeHealthCheckId) return;
         if (outreachStepConfig.plan && outreachStepConfig.has_plan_expired) return;
+        if (isFreeTrialPlan || outreachStepConfig.has_plan_expired) return;
         autoHealthCheckTriggeredRef.current = true;
         runBackgroundResumeHealthCheck();
     }

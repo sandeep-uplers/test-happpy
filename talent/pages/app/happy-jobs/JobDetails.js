@@ -39,6 +39,7 @@ import ReferralAgentResumeModal from "../../../components/ReferralAgentResumeMod
 import SkipTailorOptionModal, { useSkipTailorOptionPromise } from "../../../components/SkipTailorOptionModal";
 import ReferralAgentPreviewModal from "../../../components/ReferralAgentPreviewModal";
 import { runOutreachAgentFromPreviewConfirm } from "../../../helpers/runOutreachAgentFromPreviewConfirm";
+import { shouldHideHapppyAgentResumeFeatures } from "../../../helpers/happpyAgentPlan";
 
 export default function JobDetails({
     data, allOpportunity, setAllOpportunity, setActiveJob, bookmarkCount, setBookmarkCount,
@@ -52,6 +53,8 @@ export default function JobDetails({
 
     const hasTailoredCV = data.tailored_status == 2 || sessionStorage.getItem('tailored_resume_generated_' + data.HR_Number);
 
+    const happpyAgent = useSelector((state) => state.happpyAgent);
+    const hideResumeFeatures = shouldHideHapppyAgentResumeFeatures(happpyAgent);
     const { applyingHrNo, applyFlowData, openSignupFlow } = useSelector(state => state.work)
     const { control: { afterTouchPointSteps } } = applyFlowData[applyingHrNo];
 
@@ -348,6 +351,11 @@ export default function JobDetails({
             window.open('/talent/referral-ai-agent?reference=' + reference, '_blank');
             return;
         }
+        if (hideResumeFeatures) {
+            setPayloadHtml('');
+            setShowPreviewModal(true);
+            return;
+        }
         handleCustomizeResume('referral_agent_with_tailored_resume');
 
     }
@@ -359,6 +367,9 @@ export default function JobDetails({
     const isMobile = window.innerWidth <= 768;
 
     const handleCustomizeResume = (from_where = '', tailor_directly = false) => {
+        if (hideResumeFeatures) {
+            return;
+        }
         if (user?.outreach?.disabled_tailor) {
             setShowPreviewModal(true);
             return;
@@ -450,7 +461,9 @@ export default function JobDetails({
                     HR_Number={data.HR_Number}
                 />
             }
-            <SkipTailorOptionModal isOpen={skipTailorOptionModalOpen} onResolve={resolveSkipTailorOption} onClose={closeSkipTailorOption} />
+            {!hideResumeFeatures && (
+                <SkipTailorOptionModal isOpen={skipTailorOptionModalOpen} onResolve={resolveSkipTailorOption} onClose={closeSkipTailorOption} />
+            )}
             {/* {hasTailoredCV &&
                 <ReferralAgentResumeModal
                     isOpen={isReferralAgentResumeModalVisible}
@@ -781,7 +794,7 @@ export default function JobDetails({
 
             {data.skill_boolean?.length > 0 ?
                 <div className="skills">
-                    {!is_tailored_eligible && !isTalentHired(talentStatus) && !isOppDisabled &&
+                    {!hideResumeFeatures && !is_tailored_eligible && !isTalentHired(talentStatus) && !isOppDisabled &&
                         (!markedNotInterested && !data.job_not_interested) &&
                         <JobDetailsResumePromo hrData={data} />
                     }
@@ -808,7 +821,7 @@ export default function JobDetails({
 
                     {data.skills?.length > 0 &&
                         <div className="skills">
-                            {!is_tailored_eligible && !isTalentHired(talentStatus) && !isOppDisabled &&
+                            {!hideResumeFeatures && !is_tailored_eligible && !isTalentHired(talentStatus) && !isOppDisabled &&
                                 (!markedNotInterested && !data.job_not_interested) &&
                                 <JobDetailsResumePromo hrData={data} />
                             }

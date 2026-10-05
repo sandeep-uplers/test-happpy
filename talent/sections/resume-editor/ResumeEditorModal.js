@@ -16,10 +16,13 @@ import { checkResumeMatchWithJob, getSimilarJobs } from "../../store/actions/res
 import { trackResumeMatchedWithJD } from "../../store/actions/trackingActions";
 import { touchpointDoneHrAssociate } from "../../store/actions/UserActions";
 import ResumeDrawer from "./ResumeDrawer";
+import { shouldHideHapppyAgentResumeFeatures } from "../../helpers/happpyAgentPlan";
 
 export default function ResumeEditorModal() {
     const dispatch = useDispatch();
     const { tailor_to_job_modal, is_external_jd, jd_tailor_resume_id, status: TAILOR_STATUS, active_job, is_already_tailored, run_referral_agent, ready_jd } = useSelector(state => state.resumeEditor);
+    const happpyAgent = useSelector((state) => state.happpyAgent);
+    const resumeFeaturesLocked = shouldHideHapppyAgentResumeFeatures(happpyAgent, 'global');
     const isOpen = jd_tailor_resume_id ? jd_tailor_resume_id : tailor_to_job_modal;
     const isRunReferralAgent = (isOpen && run_referral_agent) ? true : false;
     const isModalOpen = Boolean(jd_tailor_resume_id || tailor_to_job_modal);
@@ -34,6 +37,12 @@ export default function ResumeEditorModal() {
     const [confirmCloseeModal, setConfirmCloseeModal] = useState(false);
     const [confirmApplyDirectly, setConfirmApplyDirectly] = useState(false);
     const [similarJobs, setSimilarJobs] = useState([]);
+
+    useEffect(() => {
+        if (resumeFeaturesLocked && (jd_tailor_resume_id || tailor_to_job_modal)) {
+            dispatch({ type: SET_TAILOR_MODAL_OPEN, payload: { hr_enc_id: false, outreach_hr_id: null } });
+        }
+    }, [resumeFeaturesLocked, jd_tailor_resume_id, tailor_to_job_modal, dispatch]);
 
     // DEBUGGING
     // const resumeEditorReduxState = useSelector(state => state.resumeEditor);
