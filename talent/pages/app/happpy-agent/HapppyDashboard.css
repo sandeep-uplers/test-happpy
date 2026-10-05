@@ -1080,8 +1080,10 @@
 }
 
 .happpy-dash__health-btn-spinner {
+    box-sizing: border-box;
     width: 1.125rem;
     height: 1.125rem;
+    flex: none;
     border: 2px solid rgba(255, 255, 255, 0.35);
     border-top-color: #ffffff;
     border-radius: 50%;

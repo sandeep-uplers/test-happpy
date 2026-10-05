@@ -7238,6 +7238,12 @@ button.jad-cta-card__btn:hover {
     font-size: 0.95rem;
 }
 
+.job-agent-dashboard .jad-resume-health__cta > .jad-resume-health-ghost-btn-spinner {
+    box-sizing: border-box;
+    width: 0.95rem;
+    height: 0.95rem;
+}
+
 .job-agent-dashboard .jad-resume-health__cta--primary {
     background: var(--jad-brand-black);
     color: #ffffff;
@@ -7674,8 +7680,9 @@ button.jad-cta-card__btn:hover {
 }
 
 .jad-resume-health-modal__primary-spinner {
-    width: 1.125rem;
-    height: 1.125rem;
+    box-sizing: border-box;
+    width: 1.5rem;
+    height: 1.5rem;
     border: 2px solid rgba(255, 255, 255, 0.35);
     border-top-color: #ffffff;
     border-radius: 50%;
