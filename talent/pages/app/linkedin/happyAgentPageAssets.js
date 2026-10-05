@@ -357,7 +357,7 @@ export const HAPPY_FOOTER_COLUMNS = [
         links: [
             { label: "How it works", scrollTarget: "value_strip" },
             { label: "Results", scrollTarget: "live_results" },
-            { label: "Pricing", scrollTarget: "pricing" },
+            // { label: "Pricing", scrollTarget: "pricing" },
             { label: "FAQ", scrollTarget: "faq" },
         ],
     },
