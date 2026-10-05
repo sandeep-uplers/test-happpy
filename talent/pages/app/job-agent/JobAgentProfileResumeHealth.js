@@ -139,6 +139,19 @@ export default function JobAgentProfileResumeHealth() {
     /** Transform-side state — only used while the stubbed call is pending. */
     const [transformPending, setTransformPending] = useState(false);
 
+    /** “View transformed resume” — until get-transform-data finishes. */
+    const [viewTransformedLoading, setViewTransformedLoading] = useState(false);
+    const pendingViewTransformIdRef = useRef(null);
+    const viewTransformClickAtRef = useRef(0);
+
+    const resumeEditorTransformationId = useSelector((state) => state.resumeEditor.transformation_id);
+    const globalLoader = useSelector((state) => state.loader.isLoading);
+
+    const clearViewTransformedLoading = useCallback(() => {
+        setViewTransformedLoading(false);
+        pendingViewTransformIdRef.current = null;
+    }, []);
+
     useEffect(() => {
         if (initialResumeName) {
             setFormData((prev) => (prev.resume === initialResumeName ? prev : { resume: initialResumeName }));
@@ -177,6 +190,30 @@ export default function JobAgentProfileResumeHealth() {
             setCurrentHealthCheckId(healthCheckSocketLoader);
         }
     }, [healthCheckSocketLoader]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (!viewTransformedLoading) return;
+
+        const pendingId = pendingViewTransformIdRef.current;
+        const activeId = resumeEditorTransformationId;
+
+        if (!pendingId || !activeId || String(activeId) !== String(pendingId)) {
+            clearViewTransformedLoading();
+            return;
+        }
+
+        if (globalLoader) return;
+
+        const elapsed = Date.now() - viewTransformClickAtRef.current;
+        const minSpinnerMs = 150;
+        if (elapsed >= minSpinnerMs) {
+            clearViewTransformedLoading();
+            return;
+        }
+
+        const timeout = window.setTimeout(clearViewTransformedLoading, minSpinnerMs - elapsed);
+        return () => window.clearTimeout(timeout);
+    }, [viewTransformedLoading, globalLoader, resumeEditorTransformationId, clearViewTransformedLoading]);
 
     /**
      * Single source of truth for which step is rendered inside the popup.
@@ -470,17 +507,34 @@ export default function JobAgentProfileResumeHealth() {
     ----------------------------------------------------------- */
 
     const onViewTransformedResume = useCallback(() => {
+        if (viewTransformedLoading) return;
+
         const report = currentHealthCheckId ? resumeHealthReports[currentHealthCheckId] : null;
-        const transformationId = report?.transform?.id || report?.transform?.file_id || null;
+        const transformationId =
+            report?.transform?.id ||
+            report?.transform?.file_id ||
+            resumeHealthControl?.transform?.id ||
+            null;
         if (!transformationId) {
             toast.error('Transformed resume is still being prepared.', { duration: 4000 });
             return;
         }
+
+        pendingViewTransformIdRef.current = transformationId;
+        viewTransformClickAtRef.current = Date.now();
+        setViewTransformedLoading(true);
+
         dispatch({
             type: SET_TRANSFORMED_RESUME_MODAL_OPEN,
             payload: { transformation_id: transformationId },
         });
-    }, [currentHealthCheckId, resumeHealthReports, dispatch]);
+    }, [
+        currentHealthCheckId,
+        resumeHealthReports,
+        resumeHealthControl,
+        dispatch,
+        viewTransformedLoading,
+    ]);
 
     /* -----------------------------------------------------------
        Render
@@ -550,10 +604,19 @@ export default function JobAgentProfileResumeHealth() {
                                 {resumeHealthControl?.transform?.id && resumeHealthControl?.transform?.status === 3 &&
                                     <button
                                         type="button"
-                                        className="jad-resume-health__cta jad-resume-health__cta--ghost jad-font-headline"
+                                        className={`jad-resume-health__cta jad-resume-health__cta--ghost jad-font-headline${viewTransformedLoading ? ' jad-resume-health__cta--loading' : ''}`}
                                         onClick={onViewTransformedResume}
+                                        disabled={viewTransformedLoading}
+                                        aria-busy={viewTransformedLoading}
                                     >
-                                        <MatIcon name="visibility" aria-hidden />
+                                        {viewTransformedLoading ? (
+                                            <span
+                                                className="jad-resume-health-ghost-btn-spinner"
+                                                aria-hidden="true"
+                                            />
+                                        ) : (
+                                            <MatIcon name="visibility" aria-hidden />
+                                        )}
                                         <span>View transformed resume</span>
                                     </button>
                                 }
@@ -691,6 +754,7 @@ export default function JobAgentProfileResumeHealth() {
                                         healthCheckId={currentHealthCheckId}
                                         onTransformSubmit={handleTransformSubmit}
                                         onViewTransformedResume={onViewTransformedResume}
+                                        viewTransformedLoading={viewTransformedLoading}
                                         onClose={closePopup}
                                         referralPlanActive={outreachPlanActive}
                                     />

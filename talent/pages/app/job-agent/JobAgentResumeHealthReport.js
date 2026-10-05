@@ -155,6 +155,7 @@ export default function JobAgentResumeHealthReport({
     healthCheckId,
     onTransformSubmit,
     onViewTransformedResume,
+    viewTransformedLoading = false,
     onClose,
     referralPlanActive,
 }) {
@@ -237,10 +238,19 @@ export default function JobAgentResumeHealthReport({
                     <div className="jad-resume-health-modal__report-banner-actions">
                         <button
                             type="button"
-                            className="jad-resume-health-modal__primary jad-font-headline"
+                            className={`jad-resume-health-modal__primary jad-font-headline${viewTransformedLoading ? ' jad-resume-health-modal__primary--loading' : ''}`}
                             onClick={onViewTransformedResume}
+                            disabled={viewTransformedLoading}
+                            aria-busy={viewTransformedLoading}
                         >
-                            <MatIcon name="visibility" aria-hidden />
+                            {viewTransformedLoading ? (
+                                <span
+                                    className="jad-resume-health-modal__primary-spinner"
+                                    aria-hidden="true"
+                                />
+                            ) : (
+                                <MatIcon name="visibility" aria-hidden />
+                            )}
                             <span>View transformed resume</span>
                         </button>
                     </div>

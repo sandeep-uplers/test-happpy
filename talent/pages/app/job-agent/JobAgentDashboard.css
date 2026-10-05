@@ -7266,6 +7266,15 @@ button.jad-cta-card__btn:hover {
     border-color: var(--jad-yellow-border);
 }
 
+.job-agent-dashboard .jad-resume-health__cta--ghost.jad-resume-health__cta--loading[disabled] {
+    opacity: 1;
+    cursor: wait;
+}
+
+.job-agent-dashboard .jad-resume-health__cta--ghost.jad-resume-health__cta--loading[disabled] > span:last-child {
+    opacity: 0.55;
+}
+
 .job-agent-dashboard .jad-resume-health__cta--ghost:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -7651,6 +7660,33 @@ button.jad-cta-card__btn:hover {
     opacity: 0.55;
     cursor: not-allowed;
     transform: none;
+}
+
+.jad-resume-health-modal__primary--loading[disabled] {
+    opacity: 1;
+    cursor: wait;
+    background: var(--jad-brand-black, #232323);
+    transform: none;
+}
+
+.jad-resume-health-modal__primary--loading[disabled] > span:last-child {
+    opacity: 0.7;
+}
+
+.jad-resume-health-modal__primary-spinner {
+    width: 1.125rem;
+    height: 1.125rem;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: jad-resume-health-modal-primary-spin 0.75s linear infinite;
+    flex: none;
+}
+
+@keyframes jad-resume-health-modal-primary-spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .jad-resume-health-modal__secondary {
