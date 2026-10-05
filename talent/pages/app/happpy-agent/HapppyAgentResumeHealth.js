@@ -132,6 +132,14 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
     /** Transform-side state — only used while the stubbed call is pending. */
     const [transformPending, setTransformPending] = useState(false);
 
+    /** Dashboard “View transformed resume” — until get-transform-data finishes. */
+    const [viewTransformedLoading, setViewTransformedLoading] = useState(false);
+    const pendingViewTransformIdRef = useRef(null);
+    const viewTransformFetchStartedRef = useRef(false);
+
+    const resumeEditorTransformationId = useSelector((state) => state.resumeEditor.transformation_id);
+    const globalLoader = useSelector((state) => state.loader.isLoading);
+
     useEffect(() => {
         if (initialResumeName) {
             setFormData((prev) => (prev.resume === initialResumeName ? prev : { resume: initialResumeName }));
@@ -170,6 +178,43 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
             setCurrentHealthCheckId(healthCheckSocketLoader);
         }
     }, [healthCheckSocketLoader]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (!viewTransformedLoading) return;
+
+        if (globalLoader) {
+            viewTransformFetchStartedRef.current = true;
+        }
+
+        const pendingId = pendingViewTransformIdRef.current;
+        const activeId = resumeEditorTransformationId;
+
+        if (!activeId || activeId !== pendingId) {
+            setViewTransformedLoading(false);
+            viewTransformFetchStartedRef.current = false;
+            pendingViewTransformIdRef.current = null;
+            return;
+        }
+
+        if (viewTransformFetchStartedRef.current && !globalLoader) {
+            setViewTransformedLoading(false);
+            viewTransformFetchStartedRef.current = false;
+            pendingViewTransformIdRef.current = null;
+            return;
+        }
+
+        const timeout = window.setTimeout(() => {
+            if (
+                !viewTransformFetchStartedRef.current &&
+                pendingViewTransformIdRef.current === resumeEditorTransformationId
+            ) {
+                setViewTransformedLoading(false);
+                pendingViewTransformIdRef.current = null;
+            }
+        }, 200);
+
+        return () => window.clearTimeout(timeout);
+    }, [viewTransformedLoading, globalLoader, resumeEditorTransformationId]);
 
     /**
      * Single source of truth for which step is rendered inside the popup.
@@ -457,6 +502,8 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
     ----------------------------------------------------------- */
 
     const onViewTransformedResume = useCallback(() => {
+        if (viewTransformedLoading) return;
+
         const report = currentHealthCheckId ? resumeHealthReports[currentHealthCheckId] : null;
         const transformationId =
             report?.transform?.id ||
@@ -467,11 +514,22 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
             toast.error('Transformed resume is still being prepared.', { duration: 4000 });
             return;
         }
+
+        pendingViewTransformIdRef.current = transformationId;
+        viewTransformFetchStartedRef.current = false;
+        setViewTransformedLoading(true);
+
         dispatch({
             type: SET_TRANSFORMED_RESUME_MODAL_OPEN,
             payload: { transformation_id: transformationId },
         });
-    }, [currentHealthCheckId, resumeHealthReports, resumeHealthControl, dispatch]);
+    }, [
+        currentHealthCheckId,
+        resumeHealthReports,
+        resumeHealthControl,
+        dispatch,
+        viewTransformedLoading,
+    ]);
 
     /* -----------------------------------------------------------
        Render
@@ -657,10 +715,22 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
                                 resumeHealthControl?.transform?.status === 3 && (
                                     <button
                                         type="button"
-                                        className="happpy-dash__health-btn happpy-dash__health-btn--transformed jad-font-headline"
+                                        className={`happpy-dash__health-btn happpy-dash__health-btn--transformed jad-font-headline${viewTransformedLoading ? ' happpy-dash__health-btn--loading' : ''}`}
                                         onClick={onViewTransformedResume}
+                                        disabled={viewTransformedLoading}
+                                        aria-busy={viewTransformedLoading}
                                     >
-                                        <span>VIEW TRANSFORMED RESUME</span>
+                                        {viewTransformedLoading ? (
+                                            <>
+                                                <span
+                                                    className="happpy-dash__health-btn-spinner"
+                                                    aria-hidden="true"
+                                                />
+                                                <span className="sr-only">Loading transformed resume</span>
+                                            </>
+                                        ) : (
+                                            <span>VIEW TRANSFORMED RESUME</span>
+                                        )}
                                     </button>
                                 )}
 
