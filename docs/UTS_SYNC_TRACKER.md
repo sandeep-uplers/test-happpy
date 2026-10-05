@@ -92,7 +92,16 @@ Then apply manual merges listed below.
 | `pages/app/linkedin/happyAgentPageAssets.js` | UTS assets + Razorpay color |
 | `scripts/port-uts-js.mjs` | **New** — UTS → Next porting automation |
 
-Also synced (CSS / no git diff vs prior if identical): `HapppyAllJobs.css`, `HapppySingleOppMobile.css`, `JobAgentDashboard.css`, `jobs-board/*`, `OutreachAgent.css`.
+Also synced (CSS / no git diff vs prior if identical): `HapppyAllJobs.css`, `HapppySingleOppMobile.css`, `JobAgentDashboard.css`, `jobs-board/*`, `linkedin/OutreachAgent.css`.
+
+## Cleanup (2026-10-05) — Outreach styles single source
+
+| Action | Path |
+|--------|------|
+| **Removed (unused duplicate)** | `job-agent/OutreachAgent.css` in UTS + test-happpy |
+| **Canonical stylesheet** | `pages/app/linkedin/OutreachAgent.css` — all JS imports use this path |
+
+Do not recreate `job-agent/OutreachAgent.css`; subscription and outreach pages import `../linkedin/OutreachAgent.css`.
 
 ## Follow-up (2026-09-29) — Verify outreach drawer
 

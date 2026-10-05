@@ -50,7 +50,7 @@
     color: #5c5c5c;
 }
 
-/* Page shell — neutralise the OutreachAgent.css full-screen background and align with the
+/* Page shell — neutralise linkedin/OutreachAgent.css full-screen background and align with the
    off-white #f9f8f4 surface from the Figma frame. */
 .job-agent-dashboard .outreach-container.job-agent-subscription-page {
     background: transparent;

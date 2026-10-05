@@ -35,7 +35,7 @@
     color: var(--jad-on-surface-variant, #5c5c5c);
 }
 
-/* Undo OutreachAgent.css `.outreach-container { background: var(--happpy-slate-50); min-height: 100vh }` inside job-agent shell */
+/* Undo linkedin/OutreachAgent.css `.outreach-container { background: var(--happpy-slate-50); min-height: 100vh }` inside job-agent shell */
 .job-agent-dashboard .outreach-container.job-agent-subscription-page {
     background: transparent;
     min-height: 0;
