@@ -76,8 +76,14 @@
     border-color: #007bff;
 }
 
+.commonModal.ReactModal__Content.resume-editor-modal {
+    display: block !important;
+}
+
 .react-modal-portal .ReactModal__Overlay:has(.resume-editor-modal),
 .resume-editor-modal-portal .resume-editor-modal-overlay {
+    position: fixed;
+    inset: 0;
     z-index: 1100 !important;
     padding: 0 !important;
     height: 100vh !important;
