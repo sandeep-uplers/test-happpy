@@ -374,7 +374,8 @@
         }
 
         .form-group.linkedin,
-        .form-group.phone-number {
+        .form-group.phone-number,
+        .form-group.talent-name {
             label {
                 white-space: nowrap;
             }

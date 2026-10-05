@@ -3,8 +3,7 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from '@/talent/navigation/routerCompat';
 import { resumeHealthReportGeneratedTracking } from "../../../helpers/Mixpanel";
 import { useDispatch } from "react-redux";
-import { SET_HEALTH_CHECK_SOCKET_LOADER, SET_RESUME_HEALTH_REPORTS } from "../../../store/actions/actionsTypes";
-import { getProfilePercent } from "../../../store/actions/UserActions";
+import { SET_HEALTH_CHECK_SOCKET_LOADER } from "../../../store/actions/actionsTypes";
 import toast from "react-hot-toast";
 import { getResumeHealthCheck } from "../../../store/actions/resumeActions";
 
@@ -32,14 +31,7 @@ export default function HealthCheckPusher({ healthCheckId }) {
                 return;
             }
             resumeHealthReportGeneratedTracking(healthCheckId, data?.health_check?.resume_score);
-            // if (location.pathname.includes('resume-health-check')) {
-            //     getProfilePercent(false)(dispatch);
-            //     navigate(`/talent/resume-health-check/${healthCheckId}`);
-            // } else {
-            // dispatch({ type: SET_RESUME_HEALTH_REPORTS, payload: { [healthCheckId]: data } })
-            // getProfilePercent()(dispatch);
             getResumeHealthCheck()(dispatch);
-            // }
         });
 
 
