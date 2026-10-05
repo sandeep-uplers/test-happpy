@@ -13,6 +13,7 @@ import { SET_TAILOR_MODAL_OPEN } from '../../../../store/actions/actionsTypes';
 import { fetchAgentJD } from '../../../../store/actions/resumeActions';
 import allActivityDummyData from './_allActivityDummyData';
 import VerifyOutreachPerson from '../../linkedin/VerifyOutreachPerson';
+import { shouldHideHapppyAgentResumeFeatures } from '../../../../helpers/happpyAgentPlan';
 
 /**
  * All Activity tab — table redesign of `JobAgentJobs`, matching Figma node
@@ -1704,6 +1705,8 @@ const PENDING_DRAWER_OPEN_VALUES = new Set(['1', 'true', 'yes', 'open']);
 
 const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChange }) => {
     const dispatch = useDispatch();
+    const happpyAgent = useSelector((state) => state.happpyAgent);
+    const hideResumeFeatures = shouldHideHapppyAgentResumeFeatures(happpyAgent);
     const [searchParams, setSearchParams] = useSearchParams();
     const pendingDrawerHandledRef = useRef(false);
 
@@ -2002,6 +2005,7 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
      */
     const openTailorModalForRow = useCallback(
         (row) => {
+            if (hideResumeFeatures) return;
             const inner = row?.row || {};
             const hrEncId = row?.hr_enc_id || inner.hr_enc_id;
             const outreachHrId = row?.outreach_hr_id || inner.outreach_hr_id;
@@ -2062,7 +2066,7 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
                 },
             });
         },
-        [dispatch]
+        [dispatch, hideResumeFeatures]
     );
 
     /**
@@ -2134,6 +2138,7 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
 
     const { user } = useSelector((state) => state.auth);
     const isProductTalent = user.is_product;
+    const showTailorResumeUi = isProductTalent && !hideResumeFeatures;
 
     /* Parent owns the full-page blank UI; stay mounted so fetch/blank callbacks keep running. */
     if (isBlankState) {
@@ -2164,7 +2169,7 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
                         options={RUN_BY_FILTER_OPTIONS}
                         onChange={setRunByFilter}
                     />
-                    {isProductTalent &&
+                    {showTailorResumeUi &&
                         <FilterChip
                             label="Tailored Resume"
                             value={tailorFilter}
@@ -2262,7 +2267,7 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
                                         </th>
                                         <th scope="col" className="aa-table__th aa-act__th--company">Company</th>
                                         <th scope="col" className="aa-table__th aa-act__th--role">Role</th>
-                                        {isProductTalent && <th scope="col" className="aa-table__th aa-act__th--tailor">Tailored Resume</th>}
+                                        {showTailorResumeUi && <th scope="col" className="aa-table__th aa-act__th--tailor">Tailored Resume</th>}
                                         <th scope="col" className="aa-table__th aa-act__th--status">
                                             <StatusHeader />
                                         </th>
@@ -2359,7 +2364,7 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
                                                                 </span>
                                                             )}
                                                         </td>
-                                                        {isProductTalent && (
+                                                        {showTailorResumeUi && (
                                                             <td className="aa-table__td aa-act__cell aa-act__cell--tailor">
                                                                 <TailoredCell row={row} onTailor={openTailorModalForRow} />
                                                             </td>
@@ -2439,7 +2444,7 @@ const AllActivityTab = ({ searchQuery = '', onActivityFetched, onBlankStateChang
                                                 row={row}
                                                 idx={idx}
                                                 page={page}
-                                                isProductTalent={isProductTalent}
+                                                isProductTalent={showTailorResumeUi}
                                                 expanded={isOpen}
                                                 onTailor={openTailorModalForRow}
                                                 onReviewOutreach={openOutreachDrawer}

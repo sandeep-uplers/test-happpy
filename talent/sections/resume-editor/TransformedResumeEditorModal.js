@@ -16,6 +16,7 @@ import { SwitchInput } from "../../components/common/Inputs";
 import { generateAwsUploadUrl, getProfilePercent, profileUpsert, updateTransformedResumeInProfile } from "../../store/actions/UserActions";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
 import Loader from "../../components/Loader";
+import { shouldHideHapppyAgentResumeFeatures } from "../../helpers/happpyAgentPlan";
 
 const getTailoredPageCount = () => {
     let pageCount = 1;
@@ -32,6 +33,8 @@ export default function TransformedResumeEditorModal() {
     const isMobile = window.innerWidth < 768;
     const { transformation_id, tailor_json, config_json, sorting_json, generic_sections, inputs: tailorInputs
     } = useSelector(state => state.resumeEditor);
+    const happpyAgent = useSelector((state) => state.happpyAgent);
+    const resumeFeaturesLocked = shouldHideHapppyAgentResumeFeatures(happpyAgent, 'global');
 
     const { isLoading, downloadTailorResume } = useSelector(state => state.loader);
 
@@ -46,6 +49,10 @@ export default function TransformedResumeEditorModal() {
     }
 
     useEffect(() => {
+        if (resumeFeaturesLocked && transformation_id) {
+            handleClose();
+            return;
+        }
         if (transformation_id) {
             if (transformation_id != lastOpen) {
                 getTransformedResume()
@@ -53,7 +60,7 @@ export default function TransformedResumeEditorModal() {
                 setIsModalOpen(true);
             }
         }
-    }, [transformation_id])
+    }, [transformation_id, resumeFeaturesLocked])
     const [transformLoader, setTransformLoader] = useState(false);
 
     const getTransformedResume = () => {

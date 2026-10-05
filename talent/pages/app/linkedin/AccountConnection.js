@@ -635,7 +635,13 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
     const onConnectedAccount= () => {
         if (autoHealthCheckTriggeredRef.current) return;
         if (bgResumeHealthCheckId) return;
-        if(outreachStepConfig.plan && outreachStepConfig.has_plan_expired) return;
+        if (outreachStepConfig.plan && outreachStepConfig.has_plan_expired) return;
+        if (
+            Number(outreachStepConfig?.plan) === 1 &&
+            !outreachStepConfig?.has_plan_expired
+        ) {
+            return;
+        }
         autoHealthCheckTriggeredRef.current = true;
         runBackgroundResumeHealthCheck();
     }

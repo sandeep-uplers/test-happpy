@@ -21,6 +21,7 @@ import { useJobAgentInterviewList } from '../job-agent/useJobAgentInterviewList'
 import InterviewFeedbackModal from '../job-agent/InterviewFeedbackModal';
 import './HapppyDashboard.css';
 import HapppyAgentResumeHealth from './HapppyAgentResumeHealth';
+import { shouldHideHapppyAgentResumeFeatures } from '../../../helpers/happpyAgentPlan';
 import PasteJobLinkDrawer from './configure-tabs/PasteJobLinkDrawer';
 
 /**
@@ -491,6 +492,7 @@ const HapppyDashboard = () => {
      *  fetchHapppyAgentPlan on mount so we can read directly without
      *  re-fetching here. */
     const happpyAgent = useSelector((state) => state.happpyAgent);
+    const hideResumeFeatures = shouldHideHapppyAgentResumeFeatures(happpyAgent);
     const { resumeHealthControl } = useSelector((state) => state.resume);
     const resumeHealthRef = useRef(null);
 
@@ -1623,9 +1625,11 @@ const HapppyDashboard = () => {
                 </div>
             ) : null}
 
-            <div className="happpy-dash__health-slot happpy-dash__health-slot--full">
-                <HapppyAgentResumeHealth compact={false} />
-            </div>
+            {!hideResumeFeatures ? (
+                <div className="happpy-dash__health-slot happpy-dash__health-slot--full">
+                    <HapppyAgentResumeHealth compact={false} />
+                </div>
+            ) : null}
 
             <section className="happpy-dash__actions" aria-labelledby="happpy-dash-actions-heading">
                 <h2
@@ -1636,7 +1640,9 @@ const HapppyDashboard = () => {
                 </h2>
                 <div className="happpy-dash__action-tiles-scroll">
                     <ul className="happpy-dash__action-tiles">
-                        {importantActions.map((action) => {
+                        {importantActions
+                            .filter((action) => !(hideResumeFeatures && action.id === 'health'))
+                            .map((action) => {
                             const tileClass = 'happpy-dash__action-tile';
                             const inner = (
                                 <>

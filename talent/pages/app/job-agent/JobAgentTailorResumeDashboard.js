@@ -14,7 +14,8 @@ import {
     APP_URL,
 } from '@/talent/components/Constant';
 import { GET_API, POST_API } from '@/talent/components/Helper';
-import { useNavigate, useSearchParams } from '@/talent/navigation/routerCompat';
+import { Navigate, useNavigate, useSearchParams } from '@/talent/navigation/routerCompat';
+import { shouldHideHapppyAgentResumeFeatures } from '@/talent/helpers/happpyAgentPlan';
 import ResumeModal from '@/talent/pages/app/preferences/ResumeModal';
 import JobDescriptionViewModal from '@/talent/sections/resume-editor/JobDescriptionViewModal';
 import { SET_TAILOR_DASHBOARD_RESUME, SET_TAILOR_MODAL_OPEN } from '@/talent/store/actions/actionsTypes';
@@ -205,6 +206,7 @@ const JobAgentTailorResumeDashboard = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { user } = useSelector((state) => state.auth);
+    const happpyAgent = useSelector((state) => state.happpyAgent);
     const { is_tailored_paid } = user?.resume_tailored || {};
     const { tailor_dashboard_resume } = useSelector((state) => state.resumeEditor);
     const [page, setPage] = useState(0);
@@ -466,6 +468,10 @@ const JobAgentTailorResumeDashboard = () => {
                 setIsLoading(false);
             });
     };
+
+    if (!happpyAgent.planLoading && shouldHideHapppyAgentResumeFeatures(happpyAgent)) {
+        return <Navigate to="/talent/job-agent/subscription" replace />;
+    }
 
     return (
         <>

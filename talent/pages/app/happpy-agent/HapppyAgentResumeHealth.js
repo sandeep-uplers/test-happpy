@@ -32,6 +32,7 @@ import ResumeModal from '../preferences/ResumeModal';
 import HealthCheckLoaderModal from '../resume/HealthCheckLoaderModal';
 import HealthCheckPusher from '../resume/HealthCheckPusher';
 import TransformLoader from '../resume/payment/TransformLoader';
+import { shouldHideHapppyAgentResumeFeatures } from '../../../helpers/happpyAgentPlan';
 
 const POPUP_STORAGE_KEY = 'jad_resume_health_popup';
 const LOG_PREFIX = '[AgentJ resume-health]';
@@ -157,7 +158,10 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
      * seed it into Redux so the card (score / verdict / attempts / eligibility)
      * reflects the user's current state without waiting for any user action.
      */
+    const hideResumeFeatures = shouldHideHapppyAgentResumeFeatures(referralPlan);
+
     useEffect(() => {
+        if (hideResumeFeatures) return;
         getResumeHealthCheck()(dispatch)
             .then((res) => {
                 const payload = res?.data?.data;
@@ -168,7 +172,7 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
             .catch(() => {
                 /* silent — card falls back to the empty/landing state */
             })
-    }, [dispatch]);
+    }, [dispatch, hideResumeFeatures]);
 
     /**
      * The Pusher socket is bound to a session-stored health-check id so it survives
@@ -449,8 +453,15 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
             }, 2000);
             return;
         }
+        if (shouldHideHapppyAgentResumeFeatures(referralPlan)) {
+            toast.error('Upgrade your plan to transform your resume.', { duration: 5000 });
+            setTimeout(() => {
+                navigate('/talent/job-agent/subscription');
+            }, 2000);
+            return;
+        }
 
-        // If user already has an active outreach plan (free trial or paid), skip Razorpay.
+        // If user already has an active paid outreach plan, skip Razorpay.
         if (isOutreachPlanActive(referralPlan)) {
             if (!currentHealthCheckId) {
                 toast.error('No health check selected. Please re-run the health check.', { duration: 5000 });
@@ -551,6 +562,8 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
     // Hide the entire section if the user doesn't have an active (non-expired)
     // outreach plan — resume health is only surfaced for active plan holders.
     const outreachPlanActive = isOutreachPlanActive(referralPlan);
+    const showResumeHealthSection =
+        outreachPlanActive && !hideResumeFeatures && resumeHealthFetched;
 
     /* -----------------------------------------------------------
        Variant resolution
@@ -595,7 +608,7 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
 
     return (
         <>
-            {outreachPlanActive && resumeHealthFetched &&
+            {showResumeHealthSection &&
                 <section className="happpy-dash__health" aria-label="Resume health">
                     {/* HealthCheckPusher lives at section level so the socket keeps running
                 regardless of whether the popup is open. */}

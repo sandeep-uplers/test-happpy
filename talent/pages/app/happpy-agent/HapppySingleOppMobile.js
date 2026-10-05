@@ -33,6 +33,7 @@ import JobDetailsResumePromo from "../resume/nudges/JobDetailsResumePromo";
 import ReferralAgentResumeModal from "../../../components/ReferralAgentResumeModal";
 import ReferralAgentPreviewModal from "../../../components/ReferralAgentPreviewModal";
 import JobDetailsApply, { JobRoleTitleLink } from "../happy-jobs/JobDetailsApply";
+import { shouldHideHapppyAgentResumeFeatures } from "../../../helpers/happpyAgentPlan";
 
 const HAPPPY_ALL_JOBS_PATH = '/talent/job-agent/recommended-jobs?tab=all-jobs';
 
@@ -45,6 +46,8 @@ export default function HapppySingleOppMobile({
 
     const hasFrom = searchParams.get('from');
     const { user } = useSelector(state => state.auth);
+    const happpyAgent = useSelector((state) => state.happpyAgent);
+    const hideResumeFeatures = shouldHideHapppyAgentResumeFeatures(happpyAgent);
     // const { tailored_plan_validity, is_tailored_paid } = user.resume_tailored;
 
     // const { is_tailored_eligible } = user?.resume_tailored || {};
@@ -73,9 +76,17 @@ export default function HapppySingleOppMobile({
         console.log("Submitted reason:", text);
     };
 
+    const openAgentPreviewModal = () => {
+        setReferralPayloadHtml('');
+        setShowPreviewModal(true);
+    };
+
     const handleCustomizeResume = (from_where = '', tailor_directly = false) => {
+        if (hideResumeFeatures) {
+            return;
+        }
         if (user?.outreach?.disabled_tailor) {
-            setShowPreviewModal(true);
+            openAgentPreviewModal();
             return;
         }
         if (data.tailored_status > 0) {
@@ -200,11 +211,13 @@ export default function HapppySingleOppMobile({
                         gmail_message_id={messageTemplateIds.gmail_message_id}
                         custom_resume_id={messageTemplateIds.custom_resume_id}
                     />
-                    <SkipTailorOptionModal
-                        isOpen={skipTailorOptionModalOpen}
-                        onResolve={resolveSkipTailorOption}
-                        onClose={closeSkipTailorOption}
-                    />
+                    {!hideResumeFeatures && (
+                        <SkipTailorOptionModal
+                            isOpen={skipTailorOptionModalOpen}
+                            onResolve={resolveSkipTailorOption}
+                            onClose={closeSkipTailorOption}
+                        />
+                    )}
                     <div className="happpy-single-opp-mobile single-opp-mobile">
 
                         <div className="breadcrumb">
@@ -419,10 +432,12 @@ export default function HapppySingleOppMobile({
                                 openReferralModal={openReferralModal}
                                 setReferralPayloadHtml={setReferralPayloadHtml}
                                 hideApplyCta={hideApplyCta}
+                                hideResumeFeatures={hideResumeFeatures}
+                                openAgentPreviewModal={openAgentPreviewModal}
                             />
                         }
                         <>
-                            {!is_tailored_eligible && !isTalentHired(talentStatus) && !isOppDisabled &&
+                            {!hideResumeFeatures && !is_tailored_eligible && !isTalentHired(talentStatus) && !isOppDisabled &&
                                 (!markedNotInterested && !data.job_not_interested) &&
                                 <JobDetailsResumePromo hrData={data} />
                             }
@@ -714,7 +729,10 @@ function useIsPhoneViewport() {
     return isPhone;
 }
 
-function BottomActionDrawer({ data, isTalentHired, hasTailoredCV, handleCustomizeResume, openReferralModal, setReferralPayloadHtml, hideApplyCta = false }) {
+function BottomActionDrawer({
+    data, isTalentHired, hasTailoredCV, handleCustomizeResume, openReferralModal, setReferralPayloadHtml,
+    hideApplyCta = false, hideResumeFeatures = false, openAgentPreviewModal = () => {},
+}) {
     const { user } = useSelector(state => state.auth);
     const isPhone = useIsPhoneViewport();
     const navigate = useNavigate();
@@ -759,6 +777,10 @@ function BottomActionDrawer({ data, isTalentHired, hasTailoredCV, handleCustomiz
         if (!user?.outreach?.onboard_with_agent) {
             const reference = window.location.href;
             window.open('/talent/referral-ai-agent?reference=' + reference, '_blank');
+            return;
+        }
+        if (hideResumeFeatures) {
+            openAgentPreviewModal();
             return;
         }
         handleCustomizeResume('referral_agent_with_tailored_resume');
