@@ -842,19 +842,14 @@ function LandingStep({
                                             aria-busy={previewResumeLoading}
                                         >
                                             {previewResumeLoading ? (
-                                                <>
-                                                    <span
-                                                        className="jad-resume-health-ghost-btn-spinner"
-                                                        aria-hidden="true"
-                                                    />
-                                                    <span className="sr-only">Loading resume preview</span>
-                                                </>
+                                                <span
+                                                    className="jad-resume-health-ghost-btn-spinner"
+                                                    aria-hidden="true"
+                                                />
                                             ) : (
-                                                <>
-                                                    <EyeIconPreview width={18} height={18} />
-                                                    Preview this resume
-                                                </>
+                                                <EyeIconPreview width={18} height={18} />
                                             )}
+                                            <span>Preview this resume</span>
                                         </button>
                                     )}
                                 </div>
