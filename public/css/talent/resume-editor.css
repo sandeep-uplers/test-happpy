@@ -84,7 +84,7 @@
 .resume-editor-modal-portal .resume-editor-modal-overlay {
     position: fixed;
     inset: 0;
-    z-index: 1100 !important;
+    z-index: 10000 !important;
     padding: 0 !important;
     height: 100vh !important;
     overflow-y: hidden !important;

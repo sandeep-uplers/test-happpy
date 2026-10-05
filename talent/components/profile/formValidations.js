@@ -14,6 +14,16 @@ const email = /^\w+([\.-]?\w+)*@\w+([\.+-]?\w+)*(\.\w{2,})+$/
 export const validateWordsOnly = (val) => {
     return val.match(wordsOnly)
 }
+
+/** First and last name: at least two words, letters only, each word min 2 characters. */
+export const validateFullName = (val) => {
+    const trimmed = String(val || '').trim().replace(/\s+/g, ' ');
+    if (!trimmed || trimmed.length < 2) return false;
+    if (/^(user|talent|guest|unknown|test|there)$/i.test(trimmed)) return false;
+    const parts = trimmed.split(/\s+/).filter(Boolean);
+    if (parts.length < 2) return false;
+    return parts.every((part) => part.length >= 2 && validateWordsOnly(part));
+}
 export const validateWordsSymbols = (val) => {
     return val.match(wordsLimitedCharacter)
 }

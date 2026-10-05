@@ -13,7 +13,7 @@ import { JAD_PREF_FIGMA_COLORS } from './preference/JobAgentManagePreferences.co
 import _, { debounce } from 'lodash';
 import { fetchOppRoleMaster, fetchOppSkillMaster, generateAwsUploadUrl, getJobFunctionMaster, getProfilePercent, getTalentLocationMaster, getTalentPreferences, profileResumeDownload, profileUpsert } from '../../../store/actions/UserActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { validateContactNo, validateNumber, validateURL } from '../../../components/profile/formValidations';
+import { validateContactNo, validateFullName, validateNumber, validateURL } from '../../../components/profile/formValidations';
 import { SET_PROFILE_DATA, SET_TALENT_PREFERENCES, UPDATE_CURRENT_USER } from '../../../store/actions/actionsTypes';
 import Loader from '../../../components/Loader';
 import toast from 'react-hot-toast';
@@ -179,6 +179,7 @@ export default function JobAgentManagePreferences({
     const [selectedJSTillDate, setSelectedJSTillDate] = useState(null)
     const [isContactNumberLocked, setIsContactNumberLocked] = useState(false);
     const [formData, setFormData] = useState({
+        name: '',
         contact_number: '',
         linkedin_id: '',
         joining_period: {},
@@ -281,6 +282,15 @@ export default function JobAgentManagePreferences({
         if (!formData.joining_period) {
             isValid = false;
             newErrors.joining_period = "Please select your notice period"
+        }
+
+        const trimmedName = String(formData.name || '').trim().replace(/\s+/g, ' ');
+        if (!trimmedName) {
+            isValid = false;
+            newErrors.name = 'Please enter your first and last name';
+        } else if (!validateFullName(trimmedName)) {
+            isValid = false;
+            newErrors.name = 'Please enter your first and last name (letters only)';
         }
 
         if (!isModalOpen && (!formData.contact_number || !validateContactNo(formData.contact_number))) {
@@ -531,7 +541,8 @@ export default function JobAgentManagePreferences({
         const contactNumber = normalizeContactNumber(user?.contact_number || data.contact_number || '');
         const locked = validateContactNo(contactNumber);
         setIsContactNumberLocked(locked);
-        return { ...data, contact_number: contactNumber };
+        const name = String(data.name || user?.name || '').trim().replace(/\s+/g, ' ');
+        return { ...data, contact_number: contactNumber, name };
     };
 
     useEffect(() => {
@@ -925,6 +936,9 @@ export default function JobAgentManagePreferences({
             delete obj.target_company_types;
             delete obj.interested_job_functions;
         }
+        if (formData.name) {
+            obj.name = String(formData.name).trim().replace(/\s+/g, ' ');
+        }
         if (!isModalOpen && formData.contact_number) {
             obj.contact_number = formData.contact_number;
             obj.contact_number_country_code = '+91';
@@ -971,6 +985,7 @@ export default function JobAgentManagePreferences({
                         job_search_preference: res?.data?.data?.job_search_preference,
                         job_search_unavailable_until: res?.data?.data?.job_search_unavailable_until,
                         ...(!isModalOpen && formData.contact_number && { contact_number: formData.contact_number }),
+                        ...(formData.name && { name: String(formData.name).trim().replace(/\s+/g, ' ') }),
                     }
                 })
                 if (!isModalOpen && validateContactNo(formData.contact_number)) {
@@ -1628,6 +1643,24 @@ export default function JobAgentManagePreferences({
                                     renderEmptyResumeUpload()
                                 }
                                 {errors.resume && <div className='error-msg'>{errors.resume}</div>}
+                            </div>
+                        </div>
+
+                        <div className="form-group talent-name">
+                            <label className="required_label sectionTitle">Full name</label>
+                            <div className="form-input">
+                                <input
+                                    type="text"
+                                    placeholder="Add your full name"
+                                    name="name"
+                                    value={formData.name || ''}
+                                    onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                    maxLength={70}
+                                    data-hj-allow
+                                />
+                                {errors.name && (
+                                    <div className="error-msg">{errors.name}</div>
+                                )}
                             </div>
                         </div>
 
