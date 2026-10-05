@@ -1,0 +1,24 @@
+.happpy-chat-page {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+}
+
+.happpy-chat-page .happpy-chatbot--fullscreen {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.happpy-chat-page .happpy-chatbot--fullscreen .hc-fs {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+}

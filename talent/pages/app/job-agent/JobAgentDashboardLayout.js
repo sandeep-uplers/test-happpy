@@ -26,6 +26,8 @@ const PasteJobLinkDrawer = dynamic(
     () => import('../happpy-agent/configure-tabs/PasteJobLinkDrawer'),
     { ssr: false },
 );
+const HapppyChatbot = dynamic(() => import('./HapppyChatbot'), { ssr: false });
+import { HAPPPY_CHAT_PAGE_PATH, isHapppyChatPagePath } from './HapppyChatbot';
 import {
     clearOnboardingTemplatePending,
     clearPublicSignupHandoff,
@@ -224,6 +226,11 @@ const PlanCtaIcon = () => (
 
 const RECOMMENDED_JOBS_PATH = '/talent/job-agent/recommended-jobs';
 
+/** From `user/me` → `reactSessionData` → `outreach.chatbot` (TalentService::getOutreachData). */
+function isHapppyChatbotEnabled(user) {
+    return user?.outreach?.chatbot === true;
+}
+
 /** Primary sidebar (above Referral block): overview → setup → reminders → activity → resumes. */
 const navItems = [
     { to: '/talent/job-agent', label: 'Dashboard', end: true, icon: 'dashboard' },
@@ -304,6 +311,37 @@ function isHelpGuidePath(pathname) {
         pathname.startsWith(`${HELP_GUIDE_LINK_PATH}/`) ||
         pathname === '/talent/job-agent/help-guide' ||
         pathname.startsWith('/talent/job-agent/help-guide/')
+    );
+}
+
+function SidenavHapppyChatButton({ onNavigate, className = '', variant = 'desktop' }) {
+    const linkClass =
+        variant === 'mobile'
+            ? 'job-agent-dashboard__mobile-drawer-link jad-font-headline'
+            : 'job-agent-dashboard__sidenav-link jad-font-headline';
+
+    return (
+        <NavLink
+            to={HAPPPY_CHAT_PAGE_PATH}
+            className={({ isActive }) =>
+                `${linkClass}${isActive ? ' job-agent-dashboard__sidenav-link--active' : ''}${
+                    className ? ` ${className}` : ''
+                }`
+            }
+            aria-label="Open HAPPPY Chat"
+            onClick={onNavigate}
+        >
+            <MatIcon name="chat" />
+            <span
+                className={
+                    variant === 'mobile'
+                        ? 'job-agent-dashboard__mobile-drawer-link-label'
+                        : 'job-agent-dashboard__sidenav-link-label'
+                }
+            >
+                Chat
+            </span>
+        </NavLink>
     );
 }
 
@@ -709,6 +747,7 @@ function MobileDrawerPanel({
     onLeaveReview,
     planCtaCopy,
     showConfigureNewBadge,
+    showHapppyChat,
     hideResumeNavForTrial,
 }) {
     const drawerNavItems = filterHapppyAgentResumeNavItems(
@@ -824,6 +863,9 @@ function MobileDrawerPanel({
                         </NavLink>
                     );
                 })}
+                {showHapppyChat ? (
+                    <SidenavHapppyChatButton variant="mobile" onNavigate={onNavigate} />
+                ) : null}
             </nav>
 
             <div className="job-agent-dashboard__mobile-drawer-divider bottom-divider" role="presentation" />
@@ -932,6 +974,9 @@ const JobAgentDashboardLayout = ({ children }) => {
         [location.pathname]
     );
 
+    const showHapppyChat = isHapppyChatbotEnabled(user);
+    const isHapppyChatFullPage = isHapppyChatPagePath(location.pathname);
+
     /** Only the Referral accordion exists now. Need help? is a nav row above the plan CTA. */
     const initialOpenNavGroup = referralSectionActive ? 'referral' : null;
     const [openNavGroup, setOpenNavGroup] = useState(initialOpenNavGroup);
@@ -945,6 +990,13 @@ const JobAgentDashboardLayout = ({ children }) => {
     const [upgradePlanDrawerOpen, setUpgradePlanDrawerOpen] = useState(false);
     const [onboardingTemplateDrawerOpen, setOnboardingTemplateDrawerOpen] = useState(false);
     const [pasteJobLinkOpen, setPasteJobLinkOpen] = useState(false);
+
+    /** Keep in sync with `HAPPPY_CHATBOT_OPEN_PASTE_JOB` in HapppyChatbot.js */
+    useEffect(() => {
+        const openPasteJob = () => setPasteJobLinkOpen(true);
+        window.addEventListener('happpy-chatbot:open-paste-job', openPasteJob);
+        return () => window.removeEventListener('happpy-chatbot:open-paste-job', openPasteJob);
+    }, []);
 
     /** After onboarding completes, open unclosable template drawer on dashboard. */
     useEffect(() => {
@@ -1218,7 +1270,7 @@ const JobAgentDashboardLayout = ({ children }) => {
 
     return (
         <>
-            <div className="job-agent-dashboard">
+            <div className={`job-agent-dashboard${isHapppyChatFullPage ? ' job-agent-dashboard--happpy-chat-full' : ''}`}>
                 <nav className="job-agent-dashboard__topnav" aria-label="Happpy Agent top navigation">
                     <div className="job-agent-dashboard__topnav-left">
                         <button
@@ -1464,6 +1516,7 @@ const JobAgentDashboardLayout = ({ children }) => {
                         onLeaveReview={handleLeaveReviewOpen}
                         planCtaCopy={planCtaCopy}
                         showConfigureNewBadge={showConfigureNewBadge}
+                        showHapppyChat={showHapppyChat}
                         hideResumeNavForTrial={hideResumeNavForTrial}
                     />
 
@@ -1709,6 +1762,10 @@ const JobAgentDashboardLayout = ({ children }) => {
                                         </span>
                                     </NavLink>
 
+                                    {showHapppyChat ? (
+                                        <SidenavHapppyChatButton onNavigate={() => setMobileDrawerOpen(false)} />
+                                    ) : null}
+
                                 </div>
                                 {lockOutreachSideNav ? (
                                     <div
@@ -1748,7 +1805,9 @@ const JobAgentDashboardLayout = ({ children }) => {
                 </aside>
 
                 <main
-                    className={`job-agent-dashboard__main${isRunAgentPage ? ' job-agent-dashboard__main--plain-bg' : ''}`}
+                    className={`job-agent-dashboard__main${
+                        isRunAgentPage ? ' job-agent-dashboard__main--plain-bg' : ''
+                    }${isHapppyChatFullPage ? ' job-agent-dashboard__main--chat-full' : ''}`}
                 >
                     <MatcherModalProvider>
                         <JobAgentDashboardProvider value={dashboardOutletContext}>
@@ -1757,12 +1816,14 @@ const JobAgentDashboardLayout = ({ children }) => {
                     </MatcherModalProvider>
                 </main>
 
+                {!isHapppyChatFullPage ? (
                     <MobileBottomNav
                         pathname={location.pathname}
                         lockOutreachSideNav={lockOutreachSideNav}
                         showConfigureNewBadge={showConfigureNewBadge}
                         hideResumeNavForTrial={hideResumeNavForTrial}
                     />
+                ) : null}
 
                 <ReferFriendDrawer
                     open={referFriendDrawerOpen}
@@ -1786,6 +1847,7 @@ const JobAgentDashboardLayout = ({ children }) => {
                     open={pasteJobLinkOpen}
                     onClose={() => setPasteJobLinkOpen(false)}
                 />
+                {showHapppyChat && !isHapppyChatFullPage ? <HapppyChatbot /> : null}
             </div>
         </>
     );
