@@ -254,7 +254,7 @@ export const getSimilarJobs = (payload) => (dispatch) => {
 export const fetchTransformedResume = (transformation_id) => (dispatch) => {
     dispatch({ type: SET_LOADER, payload: true })
     return new Promise((resolve, reject) => {
-        GET_API(API_TRANSFORMED_RESUME + "/" + transformation_id)
+        GET_API(`${API_TRANSFORMED_RESUME}/${encodeURIComponent(String(transformation_id))}`)
             .then((res) => {
                 resolve(res);
             })

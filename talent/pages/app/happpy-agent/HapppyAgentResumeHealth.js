@@ -458,7 +458,11 @@ export default function HapppyAgentResumeHealth({ compact = false } = {}) {
 
     const onViewTransformedResume = useCallback(() => {
         const report = currentHealthCheckId ? resumeHealthReports[currentHealthCheckId] : null;
-        const transformationId = report?.transform?.id || report?.transform?.file_id || resumeHealthControl?.transform?.id || null;
+        const transformationId =
+            report?.transform?.id ||
+            report?.transform?.file_id ||
+            resumeHealthControl?.transform?.id ||
+            null;
         if (!transformationId) {
             toast.error('Transformed resume is still being prepared.', { duration: 4000 });
             return;
