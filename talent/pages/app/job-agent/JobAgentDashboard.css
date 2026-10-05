@@ -7465,13 +7465,12 @@ button.jad-cta-card__btn:hover {
 }
 
 .jad-resume-health-modal__body .ghost-btn--loading[disabled] {
-    justify-content: center;
-    gap: 0;
     cursor: wait;
     opacity: 1;
-    min-height: 2.5rem;
-    padding-top: 0.6875rem;
-    padding-bottom: 0.6875rem;
+}
+
+.jad-resume-health-modal__body .ghost-btn--loading[disabled] > span:last-child {
+    opacity: 0.55;
 }
 
 .jad-resume-health-ghost-btn-spinner {

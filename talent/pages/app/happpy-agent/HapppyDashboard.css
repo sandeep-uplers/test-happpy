@@ -1073,8 +1073,10 @@
     cursor: wait;
     background: var(--hd-text) !important;
     color: #ffffff !important;
-    min-width: 13.5rem;
-    min-height: 2.125rem;
+}
+
+.happpy-dash__health-btn--transformed.happpy-dash__health-btn--loading[disabled] > span:last-child {
+    opacity: 0.7;
 }
 
 .happpy-dash__health-btn-spinner {
