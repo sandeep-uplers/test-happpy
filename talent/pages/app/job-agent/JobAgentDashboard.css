@@ -7281,6 +7281,12 @@ button.jad-cta-card__btn:hover {
 
 /* ----- Resume Health Drawer (right-attached, full height) ----- */
 
+/* Transformed resume editor (GlobalPopups) — above job-agent resume-health drawer (998) */
+.react-modal-portal .ReactModal__Overlay:has(.resume-editor-modal),
+.resume-editor-modal-portal .resume-editor-modal-overlay {
+    z-index: 1200 !important;
+}
+
 .jad-resume-health-modal-overlay {
     position: fixed;
     inset: 0;

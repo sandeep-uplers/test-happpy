@@ -29,6 +29,8 @@ export default function RootLayout({ children }) {
             <head>
                 {/* Single rem scale file — re-linked last by TalentResumeStyles after style.css */}
                 <link href="/css/talent/rem-root.css" rel="stylesheet" />
+                {/* UTS index.blade.php loads this globally; required for TransformedResumeEditorModal z-index/layout */}
+                <link href="/css/talent/resume-editor.css" rel="stylesheet" />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
                 <link
