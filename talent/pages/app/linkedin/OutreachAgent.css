@@ -4371,6 +4371,7 @@
 
 .outreach-container .card-body {
     padding: 24px;
+    flex: 1 1 auto;
 }
 
 /* Form Styles */
