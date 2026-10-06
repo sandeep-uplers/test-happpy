@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from 'react-select';
@@ -15,6 +15,9 @@ import Loader from '../../../components/Loader';
 import toast from 'react-hot-toast';
 import { savePreferencesCtaTrack, skipPreferencesModalTrack, resumeReplacedInProfileTracking, saveAndAnalyzeResumeTracking } from '../../../helpers/Mixpanel';
 import { useNavigate } from '@/talent/navigation/routerCompat';
+import { usePathname } from 'next/navigation';
+import UnsavedChangesBar, { UnsavedChangesIndicator } from '../job-agent/preference/UnsavedChangesBar';
+import { serializeUtsPreferencesSnapshot, UTS_UNSAVED_LEAVE_MESSAGE } from './preferencesUnsaved.utils';
 import { IMAGE_URL, JobSearchPrefMonthsOptions } from '../../../components/Constant';
 import { checkIfFilePasswordProtected } from '@/talent/components/Helper';
 import { CheckedRoundedIcon, MenuDots, MenuResumeDownload, MenuResumeUpload } from '../../../assets/IconSVG';
@@ -47,6 +50,14 @@ export default function ManagePreferences({
     const suppressSaveAnalyzeResumeCta = Boolean(isModalOpen || hideSaveAnalyzeResumeButton);
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const pathname = usePathname() || '/';
+    const formRef = useRef(null);
+    const savedFormRestoreRef = useRef(null);
+    const saveSuccessTimeoutRef = useRef(null);
+    const resumeUploadToastShownRef = useRef(false);
+    const [savedBaseline, setSavedBaseline] = useState(null);
+    const [showSavedFlash, setShowSavedFlash] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
     const { isLoading } = useSelector(state => state.loader)
     const { user } = useSelector(state => state.auth)
     const isDirectPayUser = checkDirectPayUser(user);
@@ -226,7 +237,7 @@ export default function ManagePreferences({
     const [modalDataLoading, setModalDataLoading] = useState(true)
 
 
-    const fetchJobFunctionMaster = async (jobFunction) => {
+    const fetchJobFunctionMaster = async (jobFunction, { syncSavedRestore = false } = {}) => {
         let masterData = jobFunctionMaster;
 
         if (!masterData || masterData.length === 0) {
@@ -241,7 +252,30 @@ export default function ManagePreferences({
             return match ? { label: match.label, value: match.value } : null;
         })();
         setSelectedJobFunction(selectedJobFunction);
+        if (syncSavedRestore && savedFormRestoreRef.current) {
+            savedFormRestoreRef.current.selectedJobFunction = selectedJobFunction
+                ? { ...selectedJobFunction }
+                : null;
+        }
     };
+
+    const commitSavedFormState = useCallback((data, {
+        selectedJSTillDate: jsTill = null,
+        selectedResume: resumeSnapshot = null,
+        selectedJobFunction: jobFnSnapshot = null,
+    } = {}) => {
+        if (isModalOpen) return;
+        setSavedBaseline(serializeUtsPreferencesSnapshot(data, {
+            selectedJSTillDate: jsTill,
+            pendingResumeFile: false,
+        }));
+        savedFormRestoreRef.current = {
+            formData: _.cloneDeep(data),
+            selectedJSTillDate: jsTill ? _.cloneDeep(jsTill) : null,
+            selectedResume: resumeSnapshot,
+            selectedJobFunction: jobFnSnapshot ? { ...jobFnSnapshot } : null,
+        };
+    }, [isModalOpen]);
 
     useEffect(() => {
 
@@ -274,10 +308,15 @@ export default function ManagePreferences({
                 preferred_modes: preferencesData?.talent?.preferred_modes?.map(item => PREFERRED_WORK_OF_MODE_OPTIONS.find(option => option.value == item)) || [],
             }
             setFormData(formattedData);
-            fetchJobFunctionMaster(formattedData.job_function_id)
+            fetchJobFunctionMaster(formattedData.job_function_id, { syncSavedRestore: !isModalOpen })
 
             if (isModalOpen) {
                 setProfileData(formattedData);
+            } else {
+                commitSavedFormState(formattedData, {
+                    selectedJSTillDate: null,
+                    selectedResume: preferencesData?.resume,
+                });
             }
             console.log('preferencesData?.resume', preferencesData?.resume);
 
@@ -313,10 +352,15 @@ export default function ManagePreferences({
                         preferred_modes: res.data?.talent?.preferred_modes?.map(item => PREFERRED_WORK_OF_MODE_OPTIONS.find(option => option.value == item)) || [],
                     }
                     setFormData(formattedData);
-                    fetchJobFunctionMaster(formattedData.job_function_id)
+                    fetchJobFunctionMaster(formattedData.job_function_id, { syncSavedRestore: !isModalOpen })
 
                     if (isModalOpen) {
                         setProfileData(formattedData);
+                    } else {
+                        commitSavedFormState(formattedData, {
+                            selectedJSTillDate: null,
+                            selectedResume: res.data?.resume,
+                        });
                     }
                     console.log('setSelectedResume', res.data?.resume);
                     setSelectedResume(res.data?.resume)
@@ -489,6 +533,23 @@ export default function ManagePreferences({
 
     const [saveLoader, setSaveLoader] = useState(false)
 
+    const completePageSaveSuccessFlow = useCallback((saveAndAnalyzeResume = false) => {
+        if (isModalOpen) {
+            setIsModalOpen(false);
+            successCallback();
+        }
+
+        getProfilePercent()(dispatch).then(() => {
+            if (saveAndAnalyzeResume) {
+                navigate("/talent/resume-health-check/new");
+                return;
+            }
+            if (!isModalOpen) {
+                navigate(saveRedirectPath);
+            }
+        });
+    }, [dispatch, isModalOpen, navigate, saveRedirectPath, setIsModalOpen, successCallback]);
+
     const handleSubmit = async (e, saveAndAnalyzeResume = false) => {
         e.preventDefault()
 
@@ -615,18 +676,27 @@ export default function ManagePreferences({
                         resume: selectedResume
                     }
                 });
-                if (isModalOpen) {
-                    setIsModalOpen(false)
-                    successCallback()
-                }
-
-                getProfilePercent()(dispatch).then(() => {
-                    if (saveAndAnalyzeResume) {
-                        navigate("/talent/resume-health-check/new");
-                        return;
+                if (!isModalOpen) {
+                    uploadResumeRef.current = null;
+                    setResumeData(null);
+                    resumeUploadToastShownRef.current = false;
+                    commitSavedFormState(formData, {
+                        selectedJSTillDate,
+                        selectedResume,
+                        selectedJobFunction,
+                    });
+                    setShowSavedFlash(true);
+                    if (saveSuccessTimeoutRef.current != null) {
+                        window.clearTimeout(saveSuccessTimeoutRef.current);
                     }
-                    !isModalOpen && navigate(saveRedirectPath);
-                })
+                    saveSuccessTimeoutRef.current = window.setTimeout(() => {
+                        saveSuccessTimeoutRef.current = null;
+                        setShowSavedFlash(false);
+                        completePageSaveSuccessFlow(saveAndAnalyzeResume);
+                    }, 1500);
+                } else {
+                    completePageSaveSuccessFlow(saveAndAnalyzeResume);
+                }
             })
             .catch(err => {
                 if (err.response && err.response.status && err.response.status == 422) {
@@ -698,6 +768,12 @@ export default function ManagePreferences({
                             if (res?.status === 200) {
                                 setResumeData(file);
                                 setSelectedResume(file);
+                                if (!isModalOpen && !resumeUploadToastShownRef.current) {
+                                    resumeUploadToastShownRef.current = true;
+                                    toast('Resume added to your profile. Click Save Preferences to apply it.', {
+                                        duration: 5000,
+                                    });
+                                }
                             }
                         })
                         .catch(err => {
@@ -811,7 +887,112 @@ export default function ManagePreferences({
         };
     }, [showPopover]);
 
-    const isMobile = window.innerWidth < 768;
+    const isFormDirty = useMemo(() => {
+        if (isModalOpen || modalDataLoading || !savedBaseline) {
+            return false;
+        }
+        const current = serializeUtsPreferencesSnapshot(formData, {
+            selectedJSTillDate,
+            pendingResumeFile: Boolean(resumeData),
+        });
+        return !_.isEqual(current, savedBaseline);
+    }, [
+        formData,
+        selectedJSTillDate,
+        resumeData,
+        isModalOpen,
+        modalDataLoading,
+        savedBaseline,
+    ]);
+
+    const handleDiscardUnsavedChanges = useCallback(() => {
+        const saved = savedFormRestoreRef.current;
+        if (!saved || isModalOpen) return;
+        setFormData(_.cloneDeep(saved.formData));
+        setSelectedJSTillDate(saved.selectedJSTillDate ? _.cloneDeep(saved.selectedJSTillDate) : null);
+        setSelectedResume(saved.selectedResume ?? null);
+        setSelectedJobFunction(saved.selectedJobFunction ? { ...saved.selectedJobFunction } : null);
+        setResumeData(null);
+        uploadResumeRef.current = null;
+        resumeUploadToastShownRef.current = false;
+        setErrors({});
+    }, [isModalOpen]);
+
+    const handleUnsavedBarSave = useCallback(() => {
+        formRef.current?.requestSubmit();
+    }, []);
+
+    useEffect(() => () => {
+        if (saveSuccessTimeoutRef.current != null) {
+            window.clearTimeout(saveSuccessTimeoutRef.current);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!isFormDirty || isModalOpen) return undefined;
+        const onBeforeUnload = (event) => {
+            event.preventDefault();
+            event.returnValue = '';
+        };
+        window.addEventListener('beforeunload', onBeforeUnload);
+        return () => window.removeEventListener('beforeunload', onBeforeUnload);
+    }, [isFormDirty, isModalOpen]);
+
+    useEffect(() => {
+        if (isModalOpen) return undefined;
+        const onKeyDown = (event) => {
+            if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== 's') return;
+            event.preventDefault();
+            if (!saveLoader && isFormDirty) {
+                formRef.current?.requestSubmit();
+            }
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [isModalOpen, saveLoader, isFormDirty]);
+
+    useEffect(() => {
+        if (!isFormDirty || isModalOpen) return undefined;
+        const handleDocumentClick = (event) => {
+            const anchor = event.target?.closest?.('a[href]');
+            if (!anchor) return;
+            if (anchor.target === '_blank' || anchor.hasAttribute('download')) return;
+            const href = anchor.getAttribute('href');
+            if (!href || href.startsWith('#')) return;
+            let url;
+            try {
+                url = new URL(href, window.location.origin);
+            } catch {
+                return;
+            }
+            if (url.origin !== window.location.origin) return;
+            const targetPath = url.pathname.replace(/\/+$/, '') || '/';
+            const currentPath = pathname.replace(/\/+$/, '') || '/';
+            if (targetPath === currentPath && url.search === window.location.search) return;
+            if (!window.confirm(UTS_UNSAVED_LEAVE_MESSAGE)) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        };
+        document.addEventListener('click', handleDocumentClick, true);
+        return () => document.removeEventListener('click', handleDocumentClick, true);
+    }, [isFormDirty, isModalOpen, pathname]);
+
+    useEffect(() => {
+        const mq = window.matchMedia('(max-width: 767px)');
+        const onChange = () => setIsMobile(mq.matches);
+        onChange();
+        if (typeof mq.addEventListener === 'function') {
+            mq.addEventListener('change', onChange);
+            return () => mq.removeEventListener('change', onChange);
+        }
+        mq.addListener(onChange);
+        return () => mq.removeListener(onChange);
+    }, []);
+
+    const showFloatingUnsavedBar = !isModalOpen && !isMobile && (isFormDirty || saveLoader || showSavedFlash);
+    const showMobileUnsavedHint = !isModalOpen && isMobile && (isFormDirty || saveLoader || showSavedFlash);
+    const showUnsavedBarSpace = !isModalOpen && (showFloatingUnsavedBar || isMobile);
 
     const handleSkip = () => {
         setIsModalOpen(false);
@@ -835,7 +1016,7 @@ export default function ManagePreferences({
         <section className="containSection">
             {(isLoading || modalDataLoading) && <Loader />}
             {!isLoading && !modalDataLoading &&
-                <div className={`manage-preferences ${isModalOpen ? "preferences-modal-open" : ""} ${(isMobile && !isModalOpen) ? "mobile-profile" : ""}`}>
+                <div className={`manage-preferences ${isModalOpen ? "preferences-modal-open" : ""} ${(isMobile && !isModalOpen) ? "mobile-profile" : ""} ${showUnsavedBarSpace ? "manage-preferences--unsaved-bar-space" : ""}`}>
                     {(isMobile && !isModalOpen) ?
                         <div className="mobile-profile-header">
                             <div className="rank-higher">
@@ -888,7 +1069,7 @@ export default function ManagePreferences({
                     }
                     {saveLoader && !isModalOpen && <Loader />}
 
-                    <form onSubmit={handleSubmit}>
+                    <form ref={formRef} onSubmit={handleSubmit}>
                         <div className='form-group labelTop linkedin resume'>
                             <div className='labelCol'>
                                 <label className='required_label'>
@@ -1358,8 +1539,11 @@ export default function ManagePreferences({
                             <>
                                 <div className='bottomAction'>
                                     {isModalOpen && !applyAggregator && !disableSkip && <button type='button' className='outlinedBtn' onClick={handleSkip}>Skip</button>}
-                                    <button type='submit' className='primaryBtn CTA'>
-                                        Update Profile
+                                    {showMobileUnsavedHint && (
+                                        <UnsavedChangesIndicator saving={saveLoader} savedFlash={showSavedFlash} />
+                                    )}
+                                    <button type='submit' className='primaryBtn CTA' disabled={saveLoader}>
+                                        {saveLoader ? 'Saving…' : 'Update Profile'}
                                     </button>
                                     {resumeData && !resumeHealthControl.is_paid && !suppressSaveAnalyzeResumeCta && (
                                         <button type='button' className='primaryBtn gradientBtn' onClick={e => handleSubmit(e, true)}>
@@ -1387,10 +1571,15 @@ export default function ManagePreferences({
                                 }
                             </>
                             :
+                            (!isModalOpen && (isFormDirty || saveLoader)) ? null : (
                             <div className='modal-btns'>
                                 {isModalOpen && !applyAggregator && !disableSkip && <button type='button' className='outlinedBtn' onClick={handleSkip}>Skip</button>}
-                                <button type='submit' className='primaryBtn CTA'>
-                                    {isModalOpen ? (user.status >= 1 ? "Update & Save" : "Save") : "Save"} my {isModalOpen ? "Profile" : "Preferences"}
+                                <button type='submit' className='primaryBtn CTA' disabled={saveLoader}>
+                                    {saveLoader ? 'Saving…' : (
+                                        <>
+                                            {isModalOpen ? (user.status >= 1 ? "Update & Save" : "Save") : "Save"} my {isModalOpen ? "Profile" : "Preferences"}
+                                        </>
+                                    )}
                                 </button>
                                 {resumeData && !resumeHealthControl.is_paid && !suppressSaveAnalyzeResumeCta && (
                                     <button type='button' className='primaryBtn gradientBtn' onClick={e => handleSubmit(e, true)}>
@@ -1398,10 +1587,21 @@ export default function ManagePreferences({
                                     </button>
                                 )}
                             </div>
+                            )
                         }
 
 
                     </form>
+                    {showFloatingUnsavedBar && (
+                        <UnsavedChangesBar
+                            layout="uts"
+                            dirty={isFormDirty}
+                            saving={saveLoader}
+                            savedFlash={showSavedFlash}
+                            onSave={handleUnsavedBarSave}
+                            onDiscard={handleDiscardUnsavedChanges}
+                        />
+                    )}
                 </div>
             }
             {isResumeModalOpen && <ResumeModal isOpen={isResumeModalOpen} setOpen={setIsResumeModalOpen} data={selectedResume} onDownloadClick={onDownloadClick} />}
