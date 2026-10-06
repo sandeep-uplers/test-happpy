@@ -97,7 +97,7 @@
 
     .happpy-dash__hero-limit {
         display: block;
-        flex: 0 1 11.5rem;
+        /* flex: 0 1 11.5rem; */
         min-width: 0;
         max-width: 52%;
     }

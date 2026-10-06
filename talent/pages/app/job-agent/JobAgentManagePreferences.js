@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import '../../../../styles/talent/index.css';
@@ -18,7 +18,7 @@ import { SET_PROFILE_DATA, SET_TALENT_PREFERENCES, UPDATE_CURRENT_USER } from '.
 import Loader from '../../../components/Loader';
 import toast from 'react-hot-toast';
 import { savePreferencesCtaTrack, skipPreferencesModalTrack, resumeReplacedInProfileTracking } from '../../../helpers/Mixpanel';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { IMAGE_URL, JobSearchPrefMonthsOptions } from '../../../components/Constant';
 import { Clock, EyeIconPreview, MenuDots, MenuResumeDownload, MenuResumeUpload } from '../../../assets/IconSVG';
 import { format } from 'date-fns';
@@ -32,6 +32,7 @@ import JobAgentTargetRolesField from './preference/JobAgentTargetRolesField';
 import JobAgentSkillsField from './preference/JobAgentSkillsField';
 import JobAgentWorkLocationField from './preference/JobAgentWorkLocationField';
 import JobAgentJobJourneyStatusField from './preference/JobAgentJobJourneyStatusField';
+import UnsavedChangesBar, { UnsavedChangesIndicator } from './preference/UnsavedChangesBar';
 import {
     buildApiUserJourneyRowFromForm,
     buildUserJourneyStatusPayload,
@@ -159,6 +160,66 @@ const isCompanyTypeSelected = (selectedTypes, optionValue) => {
     return normalizeCompanyTypeList(selectedTypes).includes(normalizedOption);
 };
 
+const UNSAVED_LEAVE_MESSAGE = 'You have unsaved changes. Leave without saving?';
+
+const normalizeSelectValues = (items = []) => (items || [])
+    .filter(Boolean)
+    .map((item) => (item?.value != null ? item.value : item))
+    .filter((v) => v !== 'None')
+    .sort((a, b) => String(a).localeCompare(String(b)));
+
+const normalizeOptionIdList = (items = []) => (items || [])
+    .map((item) => item?.value)
+    .filter((v) => v != null)
+    .sort((a, b) => String(a).localeCompare(String(b)));
+
+const formatLastWorkingDayForSnapshot = (value) => {
+    if (!value) return null;
+    if (value instanceof Date) return format(value, 'yyyy-MM-dd');
+    return String(value);
+};
+
+const serializePreferencesSnapshot = (formData, { selectedJSTillDate, pendingResumeFile, hideDeferredProfileFields }) => {
+    const jobSearchUntil = selectedJSTillDate?.[0]?.value
+        ?? formData.job_search_unavailable_until?.[0]?.value
+        ?? (Array.isArray(formData.job_search_unavailable_until)
+            ? null
+            : formData.job_search_unavailable_until)
+        ?? null;
+
+    const snapshot = {
+        name: String(formData.name || '').trim().replace(/\s+/g, ' '),
+        contact_number: normalizeContactNumber(formData.contact_number),
+        linkedin_id: buildLinkedinProfileUrl(formData.linkedin_id) || '',
+        resume: String(formData.resume || ''),
+        pendingResumeFile: Boolean(pendingResumeFile),
+        total_experience: String(formData.total_experience ?? '').replaceAll(' ', ''),
+        job_function_id: formData.job_function_id ?? null,
+        current_ctc: String(formData.current_ctc ?? ''),
+        expected_ctc: String(formData.expected_ctc ?? ''),
+        joining_period: formData.joining_period?.value ?? formData.joining_period ?? null,
+        serving_notice_period: formData.serving_notice_period ?? null,
+        last_working_day: formatLastWorkingDayForSnapshot(formData.last_working_day),
+        preferred_method: normalizeSelectValues(formData.preferred_method),
+        preferred_cities: normalizeSelectValues(formData.preferred_cities),
+        preferred_modes: normalizeSelectValues(formData.preferred_modes),
+        job_search_preference: formData.job_search_preference?.[0]?.value ?? null,
+        job_search_unavailable_until: jobSearchUntil,
+        talent_top_skills: normalizeOptionIdList(formData.talent_top_skills),
+        ctc_breakdown: formData.ctc_breakdown ? JSON.stringify(formData.ctc_breakdown) : null,
+    };
+
+    if (!hideDeferredProfileFields) {
+        snapshot.target_company_types = normalizeCompanyTypeList(formData.target_company_types).sort((a, b) => a - b);
+        snapshot.interested_job_functions = normalizeOptionIdList(formData.interested_job_functions);
+        snapshot.user_journey_status = formData.user_journey_status
+            ? JSON.stringify(formData.user_journey_status)
+            : null;
+    }
+
+    return snapshot;
+};
+
 export default function JobAgentManagePreferences({
     isModalOpen,
     lastPreferenceUpdate,
@@ -189,6 +250,7 @@ export default function JobAgentManagePreferences({
     const { resumeHealthControl } = useSelector(state => state.resume);
     const dispatch = useDispatch()
     const router = useRouter()
+    const pathname = usePathname() || '/';
     const { isLoading } = useSelector(state => state.loader)
     const { user } = useSelector(state => state.auth)
     const resumeInputId = formId ? `${formId}-resume` : 'resumeUpload';
@@ -233,6 +295,12 @@ export default function JobAgentManagePreferences({
     const [selectedResume, setSelectedResume] = useState(null)
     const [isResumeModalOpen, setIsResumeModalOpen] = useState(false)
     const uploadResumeRef = useRef(null);
+    const resumeUploadToastShownRef = useRef(false);
+    const savedFormRestoreRef = useRef(null);
+    const formRef = useRef(null);
+    const saveSuccessTimeoutRef = useRef(null);
+    const [savedBaseline, setSavedBaseline] = useState(null);
+    const [showSavedFlash, setShowSavedFlash] = useState(false);
     const [resumeData, setResumeData] = useState(null);
     const [resumeUploading, setResumeUploading] = useState(false);
     const [fileId, setFileId] = useState(null);
@@ -430,7 +498,7 @@ export default function JobAgentManagePreferences({
     const [modalDataLoading, setModalDataLoading] = useState(true)
 
 
-    const fetchJobFunctionMaster = async (jobFunction) => {
+    const fetchJobFunctionMaster = async (jobFunction, { syncSavedRestore = false } = {}) => {
         let masterData = jobFunctionMaster;
 
         if (!masterData || masterData.length === 0) {
@@ -440,11 +508,16 @@ export default function JobAgentManagePreferences({
 
         const options = groupOptionsByCategory(masterData);
         setJobFunctionOptions(options);
-        const selectedJobFunction = (() => {
+        const nextSelectedJobFunction = (() => {
             const match = masterData.find(({ value }) => value === jobFunction);
             return match ? { label: match.label, value: match.value } : null;
         })();
-        setSelectedJobFunction(selectedJobFunction);
+        setSelectedJobFunction(nextSelectedJobFunction);
+        if (syncSavedRestore && savedFormRestoreRef.current) {
+            savedFormRestoreRef.current.selectedJobFunction = nextSelectedJobFunction
+                ? { ...nextSelectedJobFunction }
+                : null;
+        }
     };
 
     const fetchInterestedJobFunctionMaster = async () => {
@@ -557,6 +630,25 @@ export default function JobAgentManagePreferences({
         updateErrors({ target_company_types: null });
     };
 
+    const commitSavedFormState = useCallback((data, {
+        selectedJSTillDate: jsTill = null,
+        selectedResume: resumeSnapshot = null,
+        selectedJobFunction: jobFnSnapshot = null,
+    } = {}) => {
+        if (isModalOpen) return;
+        setSavedBaseline(serializePreferencesSnapshot(data, {
+            selectedJSTillDate: jsTill,
+            pendingResumeFile: false,
+            hideDeferredProfileFields,
+        }));
+        savedFormRestoreRef.current = {
+            formData: _.cloneDeep(data),
+            selectedJSTillDate: jsTill ? _.cloneDeep(jsTill) : null,
+            selectedResume: resumeSnapshot,
+            selectedJobFunction: jobFnSnapshot ? { ...jobFnSnapshot } : null,
+        };
+    }, [hideDeferredProfileFields, isModalOpen]);
+
     const applyContactNumberState = (data) => {
         const contactNumber = normalizeContactNumber(user?.contact_number || data.contact_number || '');
         const locked = validateContactNo(contactNumber);
@@ -603,10 +695,15 @@ export default function JobAgentManagePreferences({
                 ...formatAgentPreferenceFields(preferencesData?.talent),
             });
             setFormData(formattedData);
-            fetchJobFunctionMaster(formattedData.job_function_id)
+            fetchJobFunctionMaster(formattedData.job_function_id, { syncSavedRestore: !isModalOpen })
 
             if (isModalOpen) {
                 setProfileData(formattedData);
+            } else {
+                commitSavedFormState(formattedData, {
+                    selectedJSTillDate: null,
+                    selectedResume: preferencesData?.resume,
+                });
             }
             console.log('preferencesData?.resume', preferencesData?.resume);
 
@@ -647,10 +744,15 @@ export default function JobAgentManagePreferences({
                         ...formatAgentPreferenceFields(res.data?.talent),
                     });
                     setFormData(formattedData);
-                    fetchJobFunctionMaster(formattedData.job_function_id)
+                    fetchJobFunctionMaster(formattedData.job_function_id, { syncSavedRestore: !isModalOpen })
 
                     if (isModalOpen) {
                         setProfileData(formattedData);
+                    } else {
+                        commitSavedFormState(formattedData, {
+                            selectedJSTillDate: null,
+                            selectedResume: res.data?.resume,
+                        });
                     }
                     console.log('setSelectedResume', res.data?.resume);
                     setSelectedResume(res.data?.resume)
@@ -845,6 +947,99 @@ export default function JobAgentManagePreferences({
     }
 
     const [saveLoader, setSaveLoader] = useState(false)
+
+    const isFormDirty = useMemo(() => {
+        if (isModalOpen || modalDataLoading || !savedBaseline) {
+            return false;
+        }
+        const current = serializePreferencesSnapshot(formData, {
+            selectedJSTillDate,
+            pendingResumeFile: Boolean(resumeData),
+            hideDeferredProfileFields,
+        });
+        return !_.isEqual(current, savedBaseline);
+    }, [
+        formData,
+        selectedJSTillDate,
+        resumeData,
+        isModalOpen,
+        modalDataLoading,
+        savedBaseline,
+        hideDeferredProfileFields,
+    ]);
+
+    const handleDiscardUnsavedChanges = useCallback(() => {
+        const saved = savedFormRestoreRef.current;
+        if (!saved || isModalOpen) return;
+        setFormData(_.cloneDeep(saved.formData));
+        setSelectedJSTillDate(saved.selectedJSTillDate ? _.cloneDeep(saved.selectedJSTillDate) : null);
+        setSelectedResume(saved.selectedResume ?? null);
+        setSelectedJobFunction(saved.selectedJobFunction ? { ...saved.selectedJobFunction } : null);
+        setResumeData(null);
+        uploadResumeRef.current = null;
+        resumeUploadToastShownRef.current = false;
+        setErrors({});
+    }, [isModalOpen]);
+
+    const handleUnsavedBarSave = useCallback(() => {
+        formRef.current?.requestSubmit();
+    }, []);
+
+    useEffect(() => () => {
+        if (saveSuccessTimeoutRef.current != null) {
+            window.clearTimeout(saveSuccessTimeoutRef.current);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!isFormDirty || isModalOpen) return undefined;
+        const onBeforeUnload = (event) => {
+            event.preventDefault();
+            event.returnValue = '';
+        };
+        window.addEventListener('beforeunload', onBeforeUnload);
+        return () => window.removeEventListener('beforeunload', onBeforeUnload);
+    }, [isFormDirty, isModalOpen]);
+
+    useEffect(() => {
+        if (isModalOpen) return undefined;
+        const onKeyDown = (event) => {
+            if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== 's') return;
+            event.preventDefault();
+            if (!saveLoader && isFormDirty) {
+                formRef.current?.requestSubmit();
+            }
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [isModalOpen, saveLoader, isFormDirty]);
+
+    useEffect(() => {
+        if (!isFormDirty || isModalOpen) return undefined;
+        const handleDocumentClick = (event) => {
+            const anchor = event.target?.closest?.('a[href]');
+            if (!anchor) return;
+            if (anchor.target === '_blank' || anchor.hasAttribute('download')) return;
+            const href = anchor.getAttribute('href');
+            if (!href || href.startsWith('#')) return;
+            let url;
+            try {
+                url = new URL(href, window.location.origin);
+            } catch {
+                return;
+            }
+            if (url.origin !== window.location.origin) return;
+            const targetPath = url.pathname.replace(/\/+$/, '') || '/';
+            const currentPath = pathname.replace(/\/+$/, '') || '/';
+            if (targetPath === currentPath && url.search === window.location.search) return;
+            if (!window.confirm(UNSAVED_LEAVE_MESSAGE)) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        };
+        document.addEventListener('click', handleDocumentClick, true);
+        return () => document.removeEventListener('click', handleDocumentClick, true);
+    }, [isFormDirty, isModalOpen, pathname]);
 
     useEffect(() => {
         onSaveLoadingChange?.(saveLoader);
@@ -1054,7 +1249,27 @@ export default function JobAgentManagePreferences({
                     }
                 });
 
-                completeModalSuccessFlow();
+                if (!isModalOpen) {
+                    uploadResumeRef.current = null;
+                    setResumeData(null);
+                    resumeUploadToastShownRef.current = false;
+                    commitSavedFormState(formData, {
+                        selectedJSTillDate,
+                        selectedResume: selectedResume,
+                        selectedJobFunction,
+                    });
+                    setShowSavedFlash(true);
+                    if (saveSuccessTimeoutRef.current != null) {
+                        window.clearTimeout(saveSuccessTimeoutRef.current);
+                    }
+                    saveSuccessTimeoutRef.current = window.setTimeout(() => {
+                        saveSuccessTimeoutRef.current = null;
+                        setShowSavedFlash(false);
+                        completeModalSuccessFlow();
+                    }, 1500);
+                } else {
+                    completeModalSuccessFlow();
+                }
             })
             .catch(err => {
                 if (err.response && err.response.status && err.response.status == 422) {
@@ -1121,6 +1336,12 @@ export default function JobAgentManagePreferences({
                             if (res?.status === 200) {
                                 setResumeData(file);
                                 setSelectedResume(file);
+                                if (!isModalOpen && !resumeUploadToastShownRef.current) {
+                                    resumeUploadToastShownRef.current = true;
+                                    toast('Resume added to your profile. Click Save Preferences to apply it.', {
+                                        duration: 5000,
+                                    });
+                                }
                             }
                         })
                         .catch(err => {
@@ -1312,6 +1533,10 @@ export default function JobAgentManagePreferences({
         mq.addListener(onChange);
         return () => mq.removeListener(onChange);
     }, []);
+
+    const showFloatingUnsavedBar = !isModalOpen && !isMobile && (isFormDirty || saveLoader || showSavedFlash);
+    const showMobileUnsavedHint = !isModalOpen && isMobile && (isFormDirty || saveLoader || showSavedFlash);
+    const showUnsavedBarSpace = !isModalOpen && (showFloatingUnsavedBar || isMobile);
 
     const wrapPrefGrid = (nodes) =>
         twoColumnLocationPreferences ? (
@@ -1560,7 +1785,7 @@ export default function JobAgentManagePreferences({
                 </div>
             }
             {!isLoading && !modalDataLoading &&
-                <div className={`manage-preferences ${isModalOpen ? "preferences-modal-open" : ""} ${(isMobile && !isModalOpen) ? "mobile-profile" : ""}`}>
+                <div className={`manage-preferences ${isModalOpen ? "preferences-modal-open" : ""} ${(isMobile && !isModalOpen) ? "mobile-profile" : ""} ${showUnsavedBarSpace ? "manage-preferences--unsaved-bar-space" : ""}`}>
                     {/* {(isMobile && !isModalOpen) ?
                         <div className="mobile-profile-header">
                             <div className="rank-higher">
@@ -1579,10 +1804,12 @@ export default function JobAgentManagePreferences({
                     } */}
                     {saveLoader && !isModalOpen && <Loader />}
 
-                    <form id={formId || undefined} onSubmit={handleSubmit}>
+                    <form id={formId || undefined} ref={formRef} onSubmit={handleSubmit}>
                         {!isModalOpen &&
                             <div className="jad-pref-save-top">
-                                <h3 className="jad-pref-save-top__title">Job Preferences</h3>
+                                <div className="jad-pref-save-top__heading">
+                                    <h3 className="jad-pref-save-top__title">Job Preferences</h3>
+                                </div>
                                 <div className="jad-pref-save-top__actions">
                                     <button type="submit" className="primaryBtn CTA" disabled={saveLoader}>
                                         {saveLoader ? "Saving…" : getSaveButtonLabel()}
@@ -2151,10 +2378,13 @@ export default function JobAgentManagePreferences({
                             <>
                                 <div className='bottomAction'>
                                     {isModalOpen && !applyAggregator && !disableSkip && <button type='button' className='outlinedBtn' onClick={handleSkip}>Skip</button>}
+                                    {showMobileUnsavedHint && (
+                                        <UnsavedChangesIndicator saving={saveLoader} savedFlash={showSavedFlash} />
+                                    )}
                                     <button type='submit' className='primaryBtn CTA' disabled={saveLoader}>
                                         {saveLoader ? "Saving…" : getSaveButtonLabel()}
                                     </button>
-                                    {lastUpdatedLabel}
+                                    {!isModalOpen && lastUpdatedLabel}
                                 </div>
                                 {isModalOpen && user.last_preference_at && isValidDate(user.last_preference_at) &&
                                     <div className='bottomAction'>
@@ -2168,16 +2398,26 @@ export default function JobAgentManagePreferences({
                                 }
                             </>
                             :
+                            (!isModalOpen && (isFormDirty || saveLoader)) ? null : (
                             <div className='modal-btns'>
                                 {isModalOpen && !applyAggregator && !disableSkip && <button type='button' className='outlinedBtn' onClick={handleSkip}>Skip</button>}
                                 <button type='submit' className='primaryBtn CTA' disabled={saveLoader}>
                                     {saveLoader ? "Saving…" : getSaveButtonLabel()}
                                 </button>
                             </div>
+                            )
                         )}
 
-
                     </form>
+                    {showFloatingUnsavedBar && (
+                        <UnsavedChangesBar
+                            dirty={isFormDirty}
+                            saving={saveLoader}
+                            savedFlash={showSavedFlash}
+                            onSave={handleUnsavedBarSave}
+                            onDiscard={handleDiscardUnsavedChanges}
+                        />
+                    )}
                 </div>
             }
             {isResumeModalOpen && <ResumeModal isOpen={isResumeModalOpen} setOpen={setIsResumeModalOpen} data={selectedResume} onDownloadClick={onDownloadClick} />}

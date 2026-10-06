@@ -1558,4 +1558,14 @@
 
 
 
+.containSection .manage-preferences.manage-preferences--unsaved-bar-space form {
+    padding-bottom: 7rem;
+}
+
+@media (max-width: 767px) {
+    .containSection .manage-preferences.manage-preferences--unsaved-bar-space form {
+        padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
+    }
+}
+
 /* Mobile Profile Related css over here */
