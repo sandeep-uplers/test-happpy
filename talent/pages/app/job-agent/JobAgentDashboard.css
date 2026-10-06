@@ -13006,3 +13006,134 @@ button.jad-cta-card__btn:hover {
         color: #ffffff !important;
     }
 }
+
+/* ===========================================================================
+ * Raise-a-query drawer — referral landing Need Help (right rail / bottom sheet)
+ * =========================================================================== */
+
+@keyframes jad-raise-query-drawer-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes jad-raise-query-drawer-slide {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes jad-raise-query-drawer-slide-up {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.jad-raise-query-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.jad-raise-query-drawer__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 20, 20, 0.5);
+    backdrop-filter: blur(2px);
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    animation: jad-raise-query-drawer-fade 0.18s ease-out;
+}
+
+.jad-raise-query-drawer__panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    width: min(960px, 100vw);
+    max-width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+    box-sizing: border-box;
+    background: #ffffff;
+    box-shadow: -20px 0 48px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    animation: jad-raise-query-drawer-slide 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.jad-raise-query-drawer__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 3;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #6b6b6b;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.jad-raise-query-drawer__close:hover,
+.jad-raise-query-drawer__close:focus-visible {
+    background: #f0eeea;
+    color: #231f20;
+    outline: none;
+}
+
+.jad-raise-query-drawer__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px 24px 32px;
+}
+
+.jad-raise-query-drawer__dashboard.job-agent-dashboard {
+    width: 100%;
+    min-height: 0;
+}
+
+.jad-raise-query-drawer__dashboard .jad-helpguide-raise {
+    padding-top: 8px;
+}
+
+.jad-raise-query-drawer__dashboard .jad-helpguide-raise__header {
+    padding-right: 40px;
+}
+
+@media (max-width: 767px) {
+    .jad-raise-query-drawer {
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: stretch;
+    }
+
+    .jad-raise-query-drawer__panel {
+        width: 100vw;
+        max-width: 100vw;
+        height: calc(100dvh - 64px);
+        max-height: calc(100dvh - 64px);
+        border-top-left-radius: 1.25rem;
+        border-top-right-radius: 1.25rem;
+        box-shadow: 0 -24px 48px -24px rgba(15, 15, 20, 0.45), 0 -12px 24px -16px rgba(15, 15, 20, 0.35);
+        animation: jad-raise-query-drawer-slide-up 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .jad-raise-query-drawer__body {
+        padding: 12px 16px 24px;
+    }
+
+    .jad-raise-query-drawer__close {
+        top: 12px;
+        right: 12px;
+    }
+}

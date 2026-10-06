@@ -25,6 +25,7 @@ export default function HappyAgentLandingNavbar({
     onLoginClick = null,
     onGetStartedClick = null,
     onOpenDashboardClick = null,
+    onNeedHelpClick = null,
     showGetStarted = true,
 }) {
     const navigate = useNavigate();
@@ -110,6 +111,12 @@ export default function HappyAgentLandingNavbar({
         navigate("/talent/job-agent");
     };
 
+    const handleNeedHelp = () => {
+        if (typeof onNeedHelpClick === "function") {
+            onNeedHelpClick();
+        }
+    };
+
     return (
         <>
             <header
@@ -152,6 +159,15 @@ export default function HappyAgentLandingNavbar({
                             </>
                         ) : (
                             <>
+                                {typeof onNeedHelpClick === "function" ? (
+                                    <button
+                                        type="button"
+                                        className="happy-agent-landing-navbar__btn happy-agent-landing-navbar__btn--help"
+                                        onClick={handleNeedHelp}
+                                    >
+                                        Need Help?
+                                    </button>
+                                ) : null}
                                 {showGetStarted ? (
                                     <button
                                         type="button"
