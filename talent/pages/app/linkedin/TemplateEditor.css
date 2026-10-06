@@ -185,10 +185,10 @@
     transform: rotate(180deg);
 }
 
-/* Variables dropdown (portaled to document.body) */
+/* Variables dropdown (portaled to document.body; above agent-onb drawer at 1100) */
 .template-editor-variables-dropdown {
     position: fixed;
-    z-index: 1050;
+    z-index: 1300;
     min-width: 200px;
     max-height: 300px;
     overflow-y: auto;
