@@ -146,6 +146,7 @@ const Step1AccountConnection = ({
     onAdvance,
     onBack,
     showBack = true,
+    isLastStep = false,
 }) => {
     const dispatch = useDispatch();
     const location = useLocation();
@@ -1275,11 +1276,11 @@ const Step1AccountConnection = ({
                 )}
                 <button
                     type="button"
-                    className="agent-onb-footer__cta"
+                    className={`agent-onb-footer__cta${isLastStep ? ' agent-onb-footer__cta--wide' : ''}`}
                     onClick={onAdvance}
                     disabled={nextDisabled}
                 >
-                    <span>Next step</span>
+                    <span>{isLastStep ? 'Go to dashboard' : 'Next step'}</span>
                     <svg
                         width="20"
                         height="20"

@@ -14,7 +14,7 @@ const HAPPY_PUBLIC_PROFILE_FORM_ID = 'happy-onboarding-profile-form';
  * Profile preferences previously shown in HappyAgentProfileDrawer after
  * onboarding; now the second step inside AgentOnboarding.
  */
-export default function Step2ProfileCreation({ onAdvance, onBack, showBack = true }) {
+export default function Step2ProfileCreation({ onAdvance, onBack, showBack = true, isLastStep = false }) {
     const [saveLoading, setSaveLoading] = useState(false);
     const [prefsLoading, setPrefsLoading] = useState(true);
     const ctaDisabled = saveLoading || prefsLoading;
@@ -87,7 +87,15 @@ export default function Step2ProfileCreation({ onAdvance, onBack, showBack = tru
                     disabled={ctaDisabled}
                     aria-busy={saveLoading || prefsLoading}
                 >
-                    <span>{saveLoading ? 'Saving…' : prefsLoading ? 'Loading…' : 'Save & continue'}</span>
+                    <span>
+                        {saveLoading
+                            ? 'Saving…'
+                            : prefsLoading
+                              ? 'Loading…'
+                              : isLastStep
+                                ? 'Go to dashboard'
+                                : 'Save & continue'}
+                    </span>
                     {!ctaDisabled && (
                         <svg className="happy-public-profile-drawer__cta-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
                             <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

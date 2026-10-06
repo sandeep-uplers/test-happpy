@@ -139,7 +139,7 @@ function IndeedPlatformIcon() {
     );
 }
 
-const Step3ExtensionInstall = ({ outreachStepConfig, onRefresh, onAdvance, onBack }) => {
+const Step3ExtensionInstall = ({ outreachStepConfig, onRefresh, onAdvance, onBack, isLastStep = false }) => {
     const [downloaded, setDownloaded] = useState(false);
     const didSyncFromStorage = useRef(false);
 
@@ -332,10 +332,10 @@ const Step3ExtensionInstall = ({ outreachStepConfig, onRefresh, onAdvance, onBac
                 </button>
                 <button
                     type="button"
-                    className="agent-onb-footer__cta agent-onb-footer__cta--dark"
+                    className={`agent-onb-footer__cta agent-onb-footer__cta--dark${isLastStep ? ' agent-onb-footer__cta--wide' : ''}`}
                     onClick={handleNext}
                 >
-                    <span>Next step</span>
+                    <span>{isLastStep ? 'Go to dashboard' : 'Next step'}</span>
                     <svg
                         width="20"
                         height="20"

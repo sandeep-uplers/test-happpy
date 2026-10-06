@@ -5,6 +5,7 @@ import Modal from 'react-modal';
 import { ensureModalAppElement } from '@/talent/helpers/setModalAppElement';
 ensureModalAppElement();
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 import { GET_API } from '../../../components/Helper';
 import { API_GET_OUTREACH_STEP } from '../../../components/Constant';
 import { trackHappyAgentMixpanel } from '../../../store/actions/happyAgentTracking';
@@ -22,10 +23,10 @@ import { isDesktopPc } from '../../../helpers/happpyGtmOnboarding';
 import Step1AccountConnection from './Step1AccountConnection';
 import Step2ProfileCreation from './Step2ProfileCreation';
 import Step3ExtensionInstall from './Step3ExtensionInstall';
-import Step4ModeSelection from './Step4ModeSelection';
-import Step5UpgradePlan from './Step5UpgradePlan';
+// import Step4ModeSelection from './Step4ModeSelection';
+// import Step5UpgradePlan from './Step5UpgradePlan';
 import './AgentOnboarding.css';
-import { pageActivityTracker } from '../../../store/actions/UserActions';
+import { pageActivityTracker, storeRecommendedJobs } from '../../../store/actions/UserActions';
 import { useDispatch } from 'react-redux';
 
 /**
@@ -48,8 +49,8 @@ import { useDispatch } from 'react-redux';
  *                          signup handoff so the template drawer can open after
  *                          onboarding exits.
  */
-const STEPS_PROFILE_FIRST = ['profile', 'accounts', 'extension', 'mode'];
-const STEPS_ACCOUNTS_FIRST = ['accounts', 'profile', 'extension', 'mode'];
+const STEPS_PROFILE_FIRST = ['profile', 'accounts', 'extension' /* , 'mode' */];
+const STEPS_ACCOUNTS_FIRST = ['accounts', 'profile', 'extension' /* , 'mode' */];
 
 /** Extension install is desktop-only (same gate as Happpy GTM onboarding). */
 const getActiveSteps = (accountsFirst = false) => {
@@ -73,13 +74,12 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
     const [currentStep, setCurrentStep] = useState(0);
     const [outreachStepConfig, setOutreachStepConfig] = useState(null);
     const [stepConfigLoading, setStepConfigLoading] = useState(false);
-    /** Side-step toggle for the upgrade-plan screen. When true we render the
-     *  pricing branch instead of the current linear step; the user returns to
-     *  Step 4 via the back arrow OR auto-returns on payment success. */
-    const [showUpgrade, setShowUpgrade] = useState(false);
+    // /** Side-step toggle for the upgrade-plan screen (was Step 4 → Step 5). */
+    // const [showUpgrade, setShowUpgrade] = useState(false);
     const [accountsFirst, setAccountsFirst] = useState(false);
     const steps = getActiveSteps(accountsFirst);
     const activeStepKey = steps[currentStep];
+    const isLastStep = currentStep === steps.length - 1;
 
     /** Pull the outreach checklist so steps can drive their CTA enabled state. */
     const fetchOutreachStep = useCallback(() => {
@@ -109,7 +109,7 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
         setAccountsFirst(emailAuth);
         clearPublicAuthPath();
         setCurrentStep(0);
-        setShowUpgrade(false);
+        // setShowUpgrade(false);
         fetchOutreachStep();
         trackHappyAgentMixpanel('agent_onb_popup_opened').catch(() => {});
         setOnboardingActivityUrlParam(
@@ -121,24 +121,22 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
         pageActivityTracker(newPath)(dispatch)
     }, [isOpen, fetchOutreachStep, dispatch]);
 
-    const openUpgrade = () => {
-        trackHappyAgentMixpanel('agent_onb_upgrade_opened', {
-            from_step: activeStepKey,
-        }).catch(() => {});
-        setShowUpgrade(true);
-    };
+    // const openUpgrade = () => {
+    //     trackHappyAgentMixpanel('agent_onb_upgrade_opened', {
+    //         from_step: activeStepKey,
+    //     }).catch(() => {});
+    //     setShowUpgrade(true);
+    // };
 
-    const closeUpgrade = () => {
-        trackHappyAgentMixpanel('agent_onb_upgrade_closed').catch(() => {});
-        setShowUpgrade(false);
-    };
+    // const closeUpgrade = () => {
+    //     trackHappyAgentMixpanel('agent_onb_upgrade_closed').catch(() => {});
+    //     setShowUpgrade(false);
+    // };
 
-    /** Razorpay success — refresh outreach state, then return the user to
-     *  Step 4 so they can confirm Manual mode against their new plan. */
-    const handleUpgradeSuccess = () => {
-        fetchOutreachStep();
-        setShowUpgrade(false);
-    };
+    // const handleUpgradeSuccess = () => {
+    //     fetchOutreachStep();
+    //     setShowUpgrade(false);
+    // };
 
     /** Once Gmail is hooked up the user has effectively activated the agent,
      *  so any exit from the drawer (X / Esc / finishing the last step) should
@@ -172,7 +170,7 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
         finishExit(false);
     };
 
-    const goToNextStep = () => {
+    const goToNextStep = async () => {
         const completedParam = STEP_COMPLETED_URL_PARAM[activeStepKey];
         if (completedParam) {
             setOnboardingActivityUrlParam(completedParam);
@@ -180,7 +178,33 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
         trackHappyAgentMixpanel('agent_onb_next_step', {
             from_step: activeStepKey,
         }).catch(() => {});
-        if (currentStep + 1 >= steps.length) {
+
+        const isFinishing = currentStep + 1 >= steps.length;
+        if (isFinishing) {
+            const needsDefaultMode =
+                !outreachStepConfig?.outreach_mode ||
+                outreachStepConfig.outreach_mode === 'unknown';
+            if (needsDefaultMode) {
+                try {
+                    await dispatch(
+                        storeRecommendedJobs({
+                            jobs: [],
+                            auto_run: true,
+                            outreach_mode: 'auto',
+                        })
+                    );
+                    trackHappyAgentMixpanel('agent_onb_mode_step_completed', {
+                        mode: 'auto',
+                    }).catch(() => {});
+                    setOnboardingActivityUrlParam(ONBOARDING_URL_PARAM.OUTREACH_MODE_SELECTED);
+                } catch (error) {
+                    toast.error(
+                        error?.response?.data?.message ||
+                            'Could not save your preferred mode. Please try again.'
+                    );
+                    return;
+                }
+            }
             finishExit(true);
             return;
         }
@@ -203,6 +227,7 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
                         onAdvance={goToNextStep}
                         onBack={goToPrevStep}
                         showBack={currentStep > 0}
+                        isLastStep={isLastStep}
                     />
                 );
             case 'accounts':
@@ -214,6 +239,7 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
                         onAdvance={goToNextStep}
                         onBack={goToPrevStep}
                         showBack={currentStep > 0}
+                        isLastStep={isLastStep}
                     />
                 );
             case 'extension':
@@ -223,32 +249,33 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
                         onRefresh={fetchOutreachStep}
                         onAdvance={goToNextStep}
                         onBack={goToPrevStep}
+                        isLastStep={isLastStep}
                     />
                 );
-            case 'mode':
-                return (
-                    <Step4ModeSelection
-                        outreachStepConfig={outreachStepConfig}
-                        onRefresh={fetchOutreachStep}
-                        onAdvance={goToNextStep}
-                        onBack={goToPrevStep}
-                        onUpgrade={openUpgrade}
-                    />
-                );
+            // case 'mode':
+            //     return (
+            //         <Step4ModeSelection
+            //             outreachStepConfig={outreachStepConfig}
+            //             onRefresh={fetchOutreachStep}
+            //             onAdvance={goToNextStep}
+            //             onBack={goToPrevStep}
+            //             onUpgrade={openUpgrade}
+            //         />
+            //     );
             default:
                 return null;
         }
     };
 
     const renderBody = () => {
-        if (showUpgrade) {
-            return (
-                <Step5UpgradePlan
-                    onBack={closeUpgrade}
-                    onPaymentSuccess={handleUpgradeSuccess}
-                />
-            );
-        }
+        // if (showUpgrade) {
+        //     return (
+        //         <Step5UpgradePlan
+        //             onBack={closeUpgrade}
+        //             onPaymentSuccess={handleUpgradeSuccess}
+        //         />
+        //     );
+        // }
         return renderStep();
     };
 

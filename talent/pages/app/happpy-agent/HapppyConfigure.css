@@ -66,6 +66,13 @@
     transition: background 0.15s ease, color 0.15s ease;
     position: relative;
 
+    @media (max-width: 1340px) {
+        padding: 8px 10px;
+    }
+
+    @media (max-width: 1220px) {
+        font-size: 11px;
+    }
 
     @media (max-width: 1150px) {
         padding: 0.625rem 0.9375rem;
