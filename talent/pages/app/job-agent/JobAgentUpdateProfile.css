@@ -1649,6 +1649,49 @@
     color: var(--jad-pref-placeholder);
 }
 
+.jad-update-profile-wrap .manage-preferences form .form-group.linkedin .contactInput.linkedin-url-input {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    padding: 0.25rem 0.75rem;
+    border-radius: 8px;
+}
+
+.jad-update-profile-wrap .manage-preferences form .form-group.linkedin .linkedin-url-prefix {
+    flex-shrink: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: normal;
+    color: var(--jad-pref-black);
+    user-select: none;
+}
+
+.jad-update-profile-wrap .manage-preferences form .form-group.linkedin .contactInput.linkedin-url-input input {
+    flex: 1;
+    min-width: 0;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0.75rem 0 0.75rem 0.125rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: normal;
+    color: var(--jad-pref-black);
+}
+
+.jad-update-profile-wrap .manage-preferences form .form-group.linkedin .contactInput.linkedin-url-input input:focus,
+.jad-update-profile-wrap .manage-preferences form .form-group.linkedin .contactInput.linkedin-url-input input:focus-visible {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.jad-update-profile-wrap .manage-preferences form .form-group.linkedin .contactInput.linkedin-url-input input::placeholder {
+    color: var(--jad-pref-placeholder);
+}
+
 .jad-update-profile-wrap .manage-preferences form .form-group input::placeholder,
 .jad-update-profile-wrap .manage-preferences form .form-group .date-input::placeholder {
     color: var(--jad-pref-placeholder);

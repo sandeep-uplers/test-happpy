@@ -3026,6 +3026,7 @@ export const getAccountStatus = () => (dispatch) => {
             .then((res) => {
                 resolve(res);
             })
+            .catch((err) => reject(err))
             .finally(() => dispatch({ type: SET_LOADER, payload: false }))
     })
 }

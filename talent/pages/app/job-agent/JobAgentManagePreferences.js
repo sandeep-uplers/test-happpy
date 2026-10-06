@@ -13,7 +13,7 @@ import { JAD_PREF_FIGMA_COLORS } from './preference/JobAgentManagePreferences.co
 import _, { debounce } from 'lodash';
 import { fetchOppRoleMaster, fetchOppSkillMaster, generateAwsUploadUrl, getJobFunctionMaster, getProfilePercent, getTalentLocationMaster, getTalentPreferences, profileResumeDownload, profileUpsert } from '../../../store/actions/UserActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { validateContactNo, validateFullName, validateNumber, validateURL } from '../../../components/profile/formValidations';
+import { validateContactNo, validateNumber, validateURL, validateWordsOnly } from '../../../components/profile/formValidations';
 import { SET_PROFILE_DATA, SET_TALENT_PREFERENCES, UPDATE_CURRENT_USER } from '../../../store/actions/actionsTypes';
 import Loader from '../../../components/Loader';
 import toast from 'react-hot-toast';
@@ -39,6 +39,11 @@ import {
     parseUserJourneyFromTalent,
     validateUserJourneyStatus,
 } from './jobAgentUserJourney.utils';
+import {
+    buildLinkedinProfileUrl,
+    LINKEDIN_HTTPS_PREFIX,
+    stripLinkedinUrlScheme,
+} from './jobAgentLinkedinUrl.utils';
 
 const ResumeModal = dynamic(() => import('../preferences/ResumeModal'), { ssr: false });
 
@@ -54,6 +59,24 @@ const AGENT_FORM_DEFAULTS = {
 const MAX_AGENT_TOP_SKILLS = 7;
 const MAX_INTERESTED_JOB_FUNCTIONS = 3;
 const DEFAULT_PREFERRED_METHOD_VALUE = 2; // Remote or Office
+
+/** Backend default display names — treat as empty so the field is not prefilled. */
+const PLACEHOLDER_PROFILE_NAME = /^(user|talent|guest|unknown|test|there)$/i;
+
+const sanitizePrefilledProfileName = (name) => {
+    const trimmed = String(name || '').trim().replace(/\s+/g, ' ');
+    if (!trimmed || PLACEHOLDER_PROFILE_NAME.test(trimmed)) return '';
+    return trimmed;
+};
+
+/** Name: one or more words, letters only, each word at least 2 characters. */
+const validatePreferenceName = (val) => {
+    const trimmed = String(val || '').trim().replace(/\s+/g, ' ');
+    if (!trimmed || trimmed.length < 2) return false;
+    if (PLACEHOLDER_PROFILE_NAME.test(trimmed)) return false;
+    const parts = trimmed.split(/\s+/).filter(Boolean);
+    return parts.length >= 1 && parts.every((part) => part.length >= 2 && validateWordsOnly(part));
+};
 
 const formatPreferredMethodsFromApi = (preferredMethod, preferredMethodMaster, useAgentDefaults = false) => {
     let mapped = preferredMethod
@@ -287,10 +310,10 @@ export default function JobAgentManagePreferences({
         const trimmedName = String(formData.name || '').trim().replace(/\s+/g, ' ');
         if (!trimmedName) {
             isValid = false;
-            newErrors.name = 'Please enter your first and last name';
-        } else if (!validateFullName(trimmedName)) {
+            newErrors.name = 'Please enter your name';
+        } else if (!validatePreferenceName(trimmedName)) {
             isValid = false;
-            newErrors.name = 'Please enter your first and last name (letters only)';
+            newErrors.name = 'Please enter a valid name (letters only, at least 2 characters)';
         }
 
         if (!isModalOpen && (!formData.contact_number || !validateContactNo(formData.contact_number))) {
@@ -298,16 +321,13 @@ export default function JobAgentManagePreferences({
             newErrors.contact_number = 'Please enter your 10 digit contact number';
         }
 
-        const linkedinId = String(formData.linkedin_id || '').trim();
+        const linkedinId = buildLinkedinProfileUrl(formData.linkedin_id);
         if (!linkedinOptional && !linkedinId) {
             isValid = false;
             newErrors.linkedin_id = "Linkedin profile url is a required field"
         } else if (linkedinId && (!validateURL(linkedinId) || !linkedinId?.toLowerCase()?.split("linkedin.com/")[1])) {
             isValid = false;
-            newErrors.linkedin_id = "Please enter valid linkedin url. eg: https://www.linkedin.com/in/username";
-            if (!linkedinId.includes("https://")) {
-                newErrors.linkedin_id = "Linkedin profile url must start with https://";
-            }
+            newErrors.linkedin_id = "Please enter a valid LinkedIn profile path, e.g. www.linkedin.com/in/username";
         }
         if (formData.joining_period) {
             if (convertNpToDays(formData.joining_period) != 0 &&
@@ -541,8 +561,9 @@ export default function JobAgentManagePreferences({
         const contactNumber = normalizeContactNumber(user?.contact_number || data.contact_number || '');
         const locked = validateContactNo(contactNumber);
         setIsContactNumberLocked(locked);
-        const name = String(data.name || user?.name || '').trim().replace(/\s+/g, ' ');
-        return { ...data, contact_number: contactNumber, name };
+        const name = sanitizePrefilledProfileName(data.name || user?.name || '');
+        const linkedin_id = data.linkedin_id ? buildLinkedinProfileUrl(data.linkedin_id) : '';
+        return { ...data, contact_number: contactNumber, name, linkedin_id };
     };
 
     useEffect(() => {
@@ -665,6 +686,10 @@ export default function JobAgentManagePreferences({
         if (isContactNumberLocked) return;
         if (isNaN(e.target.value)) return;
         handleInputChange('contact_number', e.target.value);
+    };
+
+    const handleLinkedinIdChange = (inputValue) => {
+        handleInputChange('linkedin_id', buildLinkedinProfileUrl(inputValue));
     };
 
     const handleInputChange = (field, value) => {
@@ -875,7 +900,12 @@ export default function JobAgentManagePreferences({
         }
 
         // let reqMap = { ...formData, snooze: emailForm }
-        let reqMap = { ...formData }
+        let reqMap = {
+            ...formData,
+            ...(formData.linkedin_id && {
+                linkedin_id: buildLinkedinProfileUrl(formData.linkedin_id),
+            }),
+        }
         let filteredMethod = formData.preferred_method.filter((item) => item.value != "None")
         reqMap.preferred_method = filteredMethod.map(i => i.value);
         reqMap.preferred_cities = formData.preferred_cities.map(item => item.value);
@@ -1647,11 +1677,11 @@ export default function JobAgentManagePreferences({
                         </div>
 
                         <div className="form-group talent-name">
-                            <label className="required_label sectionTitle">Full name</label>
+                            <label className="required_label sectionTitle">Name</label>
                             <div className="form-input">
                                 <input
                                     type="text"
-                                    placeholder="Add your full name"
+                                    placeholder="Add your name"
                                     name="name"
                                     value={formData.name || ''}
                                     onChange={(e) => handleInputChange(e.target.name, e.target.value)}
@@ -1667,14 +1697,20 @@ export default function JobAgentManagePreferences({
                         <div className='form-group linkedin'>
                             <label className={`sectionTitle${linkedinOptional ? '' : ' required_label'}`}>LinkedIn Profile</label>
                             <div className='form-input'>
-                                <input
-                                    type={"text"}
-                                    placeholder="Add your linkedin profile url"
-                                    name="linkedin_id"
-                                    value={formData.linkedin_id}
-                                    onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-                                    data-hj-allow
-                                />
+                                <div className={`contactInput linkedin-url-input${errors.linkedin_id ? ' err' : ''}`}>
+                                    <span className="linkedin-url-prefix" aria-hidden="true">
+                                        {LINKEDIN_HTTPS_PREFIX}
+                                    </span>
+                                    <input
+                                        type="text"
+                                        placeholder="www.linkedin.com/in/username"
+                                        name="linkedin_id"
+                                        value={stripLinkedinUrlScheme(formData.linkedin_id)}
+                                        onChange={(e) => handleLinkedinIdChange(e.target.value)}
+                                        data-hj-allow
+                                        autoComplete="url"
+                                    />
+                                </div>
                                 {errors.linkedin_id && (
                                     <div className="error-msg">{errors.linkedin_id}</div>
                                 )}
