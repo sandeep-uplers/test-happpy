@@ -46,8 +46,9 @@ import HappyAgentLandingNavbar from "../../../components/HappyAgentLandingNavbar
 import HapppyAgentLogo from "../../../components/common/HapppyAgentLogo";
 import { REFERRAL_AI_AGENT_PATH } from "../../../components/HappyAiAgentLayout";
 import MechanicalScoreboardNumber, { randomScoreboardStart } from "../../../components/common/MechanicalScoreboardNumber";
-import JobsBoardSkeleton from "../jobs-board/JobsBoardSkeleton";
+// import JobsBoardSkeleton from "../jobs-board/JobsBoardSkeleton";
 import AgentOnboarding from "../agent-onboarding/AgentOnboarding";
+import HappyLandingPasteJobSection from "./HappyLandingPasteJobSection";
 import {
     clearLandingPendingActiveJobHr,
     clearPublicOnbSection,
@@ -56,7 +57,7 @@ import {
     getPublicOnbSection,
     isPublicSignupPending,
     setLandingJobsBoardFilterResetForHr,
-    setLandingPendingActiveJobHr,
+    setPasteJobLinkPrefill,
     setPublicOnbSection,
 } from "../../../helpers/happyAgentPublicSignupSession";
 import { buildJobAgentRecommendedJobsActivePath } from "../../../helpers/jobPath";
@@ -281,14 +282,11 @@ function HappyMatIcon({ name, className = "" }) {
     );
 }
 
-/** `?show_jobs_listing=true` renders the standalone job board inside the landing page. */
-const JOBS_LISTING_QUERY_PARAM = "show_jobs_listing";
-
-/** Own chunk — public landings always load it; authenticated landing still needs the query param. */
-const JobsBoard = dynamic(() => import("../jobs-board/JobsBoard"), {
-    ssr: false,
-    loading: () => <JobsBoardSkeleton />,
-});
+/** Browse jobs board — replaced by inline paste job link section (keep for easy revert). */
+// const JobsBoard = dynamic(() => import("../jobs-board/JobsBoard"), {
+//     ssr: false,
+//     loading: () => <JobsBoardSkeleton />,
+// });
 
 const JobAgentRaiseQueryDrawer = dynamic(
     () => import("../job-agent/JobAgentRaiseQueryDrawer"),
@@ -617,9 +615,8 @@ function HappyJobAgentContent({
      * Public landings (`HappyJobAgentPublic`, Happpy GTM) use guest endpoints; "Ask a referral"
      * opens the auth drawer instead of queueing a run.
      */
-    const [jobsListingRequested] = useState(() => searchParams.get(JOBS_LISTING_QUERY_PARAM) === "true");
-    const showJobsListing = (true || (jobsListingRequested && isAuthenticated)) || publicSignupMode;
-
+    const [landingPasteJobUrl, setLandingPasteJobUrl] = useState("");
+    const [landingPasteJobError, setLandingPasteJobError] = useState(null);
     /** Mixpanel funnel: authenticated landing on `/talent/referral-ai-agent` (once per mount). */
     useEffect(() => {
         if (publicSignupMode) return;
@@ -1629,68 +1626,61 @@ function HappyJobAgentContent({
     }, [fetchOutreachStep, publicSignupMode]);
 
     /**
-     * Jobs board "Ask a referral". The agent sends from the talent's Gmail, so an unconnected talent gets
-     * the connect-accounts popup (`AgentOnboarding` opens on its profile step first) instead of a job
-     * queued against nothing; returning false leaves the button ready to retry after connecting.
-     *
-     * Connected state comes from either source that reports it — `OutreachConfigureAccountsOnly`
-     * further down the page, or the outreach-step fetch above — since whichever resolves first wins.
+     * Jobs board "Ask a referral" — browse jobs section commented out; keep for revert.
      */
-    const handleJobsBoardRunAgent = useCallback(async (job) => {
-        const gmailConnected = gmailAccountsConnected || Boolean(outreachStepConfig?.status?.step1);
+    // const handleJobsBoardRunAgent = useCallback(async (job) => { ... }, [...]);
 
-        trackHappyAgentMixpanel("happy_agent_jobs_board_run_agent_clicked", {
-            hr_number: job?.HR_Number ?? null,
-            gmail_connected: gmailConnected,
-            public_signup: !!publicSignupMode,
-        }).catch(() => { });
+    const handleLandingPasteJobUrlChange = useCallback((value) => {
+        setLandingPasteJobUrl(value);
+        if (landingPasteJobError) setLandingPasteJobError(null);
+    }, [landingPasteJobError]);
 
-        if (publicSignupMode) {
-            if (job?.HR_Number) {
-                setLandingPendingActiveJobHr(job.HR_Number);
-            }
-            openPublicAuth(null, "jobs_board_run_agent");
-            return false;
-        }
+    const handleLandingPasteJobSubmit = useCallback(
+        (e) => {
+            e.preventDefault();
+            setLandingPasteJobError(null);
 
-        if (!gmailConnected) {
-            if (job?.HR_Number) {
-                setLandingPendingActiveJobHr(job.HR_Number);
+            const trimmed = (landingPasteJobUrl || "").trim();
+            if (!trimmed) {
+                setLandingPasteJobError("Please enter a job link");
+                return;
             }
-            openAgentOnboarding("jobs_board_run_agent");
-            return false;
-        }
+            if (!looksLikeHttpUrl(trimmed)) {
+                setLandingPasteJobError(
+                    "Please enter a valid job link (e.g. https://linkedin.com/jobs/view/…)"
+                );
+                return;
+            }
 
-        const jobUrl = (job?.detail?.apply_url || "").trim()
-            || `${window.location.origin}/talent/job/${job?.HR_Number}`;
+            const gmailConnected = gmailAccountsConnected || Boolean(outreachStepConfig?.status?.step1);
 
-        try {
-            const res = await dispatch(
-                submitReferralJobApplyByLinksBatch(buildReferralJobLinksBatchPayload([jobUrl]))
-            );
-            const body = res?.data;
-            if (body?.status === "success") {
-                persistJobAgentDisplayUrlsOnly([jobUrl]);
-                toast.success("Referral request added — your agent will reach out.");
-                return true;
+            trackHappyAgentMixpanel("happy_agent_landing_paste_job_run_clicked", {
+                gmail_connected: gmailConnected,
+                public_signup: !!publicSignupMode,
+                has_url: true,
+            }).catch(() => {});
+
+            if (publicSignupMode) {
+                openPublicAuth(null, "paste_job_link");
+                return;
             }
-            const message = body?.message || "";
-            if (isAlreadyQueuedDashboardError(message)) {
-                toast(message);
-                return true;
+            if (!gmailConnected) {
+                openAgentOnboarding("paste_job_link");
+                return;
             }
-            toast.error(message || "Couldn’t request a referral for this job. Please try again.");
-            return false;
-        } catch (err) {
-            const message = err?.response?.data?.message || "";
-            if (isAlreadyQueuedDashboardError(message)) {
-                toast(message);
-                return true;
-            }
-            toast.error(message || "Couldn’t request a referral for this job. Please try again.");
-            return false;
-        }
-    }, [gmailAccountsConnected, outreachStepConfig, openAgentOnboarding, openPublicAuth, publicSignupMode, buildReferralJobLinksBatchPayload, dispatch]);
+            setPasteJobLinkPrefill(trimmed);
+            navigate("/talent/job-agent/my-activity?paste-job=1");
+        },
+        [
+            landingPasteJobUrl,
+            gmailAccountsConnected,
+            outreachStepConfig,
+            publicSignupMode,
+            openPublicAuth,
+            openAgentOnboarding,
+            navigate,
+        ]
+    );
 
     /** Reserve scrollbar width so react-modal body lock does not shift fixed nav / layout. */
     useEffect(() => {
@@ -2495,7 +2485,7 @@ function HappyJobAgentContent({
                 </div>
             </section> */}
 
-            {showJobsListing ? (
+            {/* {showJobsListing ? (
                 <section className="happy-agent-jobs-listing" id="happy-agent-jobs-listing">
                     <JobsBoard
                         subtitle="Filter live openings by experience, function, location and how you want to work — then ask your agent for a referral on the ones you want."
@@ -2503,7 +2493,16 @@ function HappyJobAgentContent({
                         publicMode={publicSignupMode}
                     />
                 </section>
-            ) : null}
+            ) : null} */}
+
+            <section className="happy-agent-jobs-listing" id="happy-agent-jobs-listing">
+                <HappyLandingPasteJobSection
+                    jobUrl={landingPasteJobUrl}
+                    onJobUrlChange={handleLandingPasteJobUrlChange}
+                    onSubmit={handleLandingPasteJobSubmit}
+                    errorMessage={landingPasteJobError}
+                />
+            </section>
 
             {/* <section
                 ref={kineticRevealRef}

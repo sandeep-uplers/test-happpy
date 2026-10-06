@@ -19,6 +19,8 @@ export const SESSION_KEY_PUBLIC_AUTH_PATH = 'happy_agent_public_auth_path';
 export const SESSION_KEY_LANDING_PENDING_ACTIVE_JOB_HR = 'happy_agent_landing_pending_active_job_hr';
 /** One-shot: clear All Jobs filters on recommended-jobs only after HappyJobAgent JobsBoard handoff. */
 export const SESSION_KEY_LANDING_JOBS_BOARD_FILTER_RESET_HR = 'happy_agent_landing_jobs_board_filter_reset_hr';
+/** Landing paste job URL → open My Activity paste drawer with input prefilled (consumed on drawer open). */
+export const SESSION_KEY_PASTE_JOB_LINK_PREFILL = 'happy_agent_paste_job_link_prefill';
 
 export function setPublicSignupPending() {
     try {
@@ -227,6 +229,35 @@ export function clearLandingJobsBoardFilterResetHr() {
         sessionStorage.removeItem(SESSION_KEY_LANDING_JOBS_BOARD_FILTER_RESET_HR);
     } catch {
         /* ignore */
+    }
+}
+
+export function setPasteJobLinkPrefill(url) {
+    const trimmed = url != null ? String(url).trim() : '';
+    if (!trimmed) return;
+    try {
+        sessionStorage.setItem(SESSION_KEY_PASTE_JOB_LINK_PREFILL, trimmed);
+    } catch {
+        /* ignore */
+    }
+}
+
+export function getPasteJobLinkPrefill() {
+    try {
+        const value = sessionStorage.getItem(SESSION_KEY_PASTE_JOB_LINK_PREFILL) || '';
+        return value.trim() || null;
+    } catch {
+        return null;
+    }
+}
+
+export function consumePasteJobLinkPrefill() {
+    try {
+        const value = getPasteJobLinkPrefill();
+        sessionStorage.removeItem(SESSION_KEY_PASTE_JOB_LINK_PREFILL);
+        return value;
+    } catch {
+        return null;
     }
 }
 
