@@ -46,6 +46,17 @@ const REQUIRED_VARS = [
     '{{jobLink}}',
 ];
 
+/** Shown while default templates are generated from profile + resume data. */
+const TEMPLATE_LOADING_MESSAGES = [
+    'Considering your preferences…',
+    'Reading your resume…',
+    'Going through your skills…',
+    'Reviewing your experience and projects…',
+    'Personalizing your outreach messages…',
+];
+
+const TEMPLATE_LOADING_STEP_MS = 3000;
+
 /** Inert state for both tabs — kept identical so the editor never sees `undefined`. */
 const EMPTY_DRAFT = { subject: '', body: '' };
 
@@ -145,6 +156,7 @@ const Step2TemplateSelection = ({
     const [templateAppliedAt, setTemplateAppliedAt] = useState({ 1: null, 2: null });
 
     const [isLoading, setIsLoading] = useState(false);
+    const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
     const [isSavingNext, setIsSavingNext] = useState(false);
     const [isAutosaving, setIsAutosaving] = useState(false);
     const [tooltipDismissed, setTooltipDismissed] = useState(false);
@@ -205,6 +217,20 @@ const Step2TemplateSelection = ({
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch]);
+
+    useEffect(() => {
+        if (!isLoading) {
+            setLoadingMessageIndex(0);
+            return undefined;
+        }
+
+        setLoadingMessageIndex(0);
+        const interval = setInterval(() => {
+            setLoadingMessageIndex((prev) => (prev + 1) % TEMPLATE_LOADING_MESSAGES.length);
+        }, TEMPLATE_LOADING_STEP_MS);
+
+        return () => clearInterval(interval);
+    }, [isLoading]);
 
     /** Seed both tabs' editors from the API response (saved → custom; otherwise default 1). */
     const hydrateDrafts = (savedTemplates, defaults) => {
@@ -485,8 +511,17 @@ const Step2TemplateSelection = ({
                         </div>
 
                         {isLoading ? (
-                            <div className="agent-onb-tpl-card__locked">
-                                <p className="agent-onb-tpl-card__locked-lede">Loading templates…</p>
+                            <div
+                                className="agent-onb-tpl-card__locked agent-onb-tpl-card__locked--loading"
+                                aria-busy="true"
+                            >
+                                <p
+                                    key={loadingMessageIndex}
+                                    className="agent-onb-tpl-card__locked-lede agent-onb-tpl-card__loading-message"
+                                    aria-live="polite"
+                                >
+                                    {TEMPLATE_LOADING_MESSAGES[loadingMessageIndex]}
+                                </p>
                             </div>
                         ) : isLinkedinLocked ? (
                             <div className="agent-onb-tpl-card__locked">
