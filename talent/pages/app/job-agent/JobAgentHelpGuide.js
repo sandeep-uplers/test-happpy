@@ -16,6 +16,7 @@ const CHROME_EXTENSION_URL =
     'https://chromewebstore.google.com/detail/job-referral-agent-uplers/mbajhdldnhgbgncakknckdpnjmhemgcn?hl=en';
 
 const TICKET_PAGE_LABEL = 'AgentJ / Job agent / Help Guide / Raise a Query';
+export const TICKET_PAGE_LABEL_REFERRAL_LANDING = 'AgentJ / Referral AI Agent / Raise a Query';
 const PER_PAGE = 10;
 
 const NEED_HELP_PATH = '/talent/job-agent/need-help';
@@ -267,7 +268,11 @@ function statusLabelText(status) {
         .join(' ');
 }
 
-function RaiseSubView({ onOpenGuide }) {
+export function JobAgentRaiseQuery({
+    onOpenGuide,
+    showGuideCta = true,
+    ticketPageLabel = TICKET_PAGE_LABEL,
+}) {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState(null);
@@ -339,7 +344,7 @@ function RaiseSubView({ onOpenGuide }) {
         try {
             const res = await POST_API(API_OUTREACH_SUPPORT, {
                 message: trimmed,
-                page: TICKET_PAGE_LABEL,
+                page: ticketPageLabel,
             });
             const ok = res?.data?.status === 200;
             const msg = res?.data?.message;
@@ -372,21 +377,23 @@ function RaiseSubView({ onOpenGuide }) {
                         and update status here.
                     </p>
                 </div>
-                <button
-                    type="button"
-                    className="jad-helpguide-raise__guide-cta jad-font-headline"
-                    onClick={onOpenGuide}
-                >
-                    <img
-                        className="jad-helpguide-raise__guide-cta-icon"
-                        src={SEE_HOW_HAPPPY_ICON}
-                        alt=""
-                        width={14}
-                        height={14}
-                        aria-hidden="true"
-                    />
-                    See how HAPPPY works
-                </button>
+                {showGuideCta && onOpenGuide ? (
+                    <button
+                        type="button"
+                        className="jad-helpguide-raise__guide-cta jad-font-headline"
+                        onClick={onOpenGuide}
+                    >
+                        <img
+                            className="jad-helpguide-raise__guide-cta-icon"
+                            src={SEE_HOW_HAPPPY_ICON}
+                            alt=""
+                            width={14}
+                            height={14}
+                            aria-hidden="true"
+                        />
+                        See how HAPPPY works
+                    </button>
+                ) : null}
             </header>
 
             <section className="jad-tickets__raise" aria-labelledby="jad-helpguide-raise-title">
@@ -726,7 +733,7 @@ const JobAgentHelpGuide = () => {
     return showGuide ? (
         <HowSubView onBack={handleBackFromGuide} />
     ) : (
-        <RaiseSubView onOpenGuide={openGuide} />
+        <JobAgentRaiseQuery onOpenGuide={openGuide} showGuideCta />
     );
 };
 

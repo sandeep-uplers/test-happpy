@@ -290,6 +290,11 @@ const JobsBoard = dynamic(() => import("../jobs-board/JobsBoard"), {
     loading: () => <JobsBoardSkeleton />,
 });
 
+const JobAgentRaiseQueryDrawer = dynamic(
+    () => import("../job-agent/JobAgentRaiseQueryDrawer"),
+    { ssr: false }
+);
+
 /** Session: job URL already auto-submitted via ?reference= background POST (avoid duplicate on refresh). */
 const SESSION_KEY_REF_BATCH_BG_OK = "happy_agent_ref_batch_bg_ok";
 
@@ -816,6 +821,7 @@ function HappyJobAgentContent({
     const [paymentLoader, setPaymentLoader] = useState(false);
     const [demoModalOpen, setDemoModalOpen] = useState(false);
     const [agentOnboardingOpen, setAgentOnboardingOpen] = useState(false);
+    const [helpQueryDrawerOpen, setHelpQueryDrawerOpen] = useState(false);
     const heroCtaRef = useRef(null);
     const [heroCtaInView, setHeroCtaInView] = useState(true);
     const [isMobileViewport, setIsMobileViewport] = useState(() => {
@@ -1714,6 +1720,9 @@ function HappyJobAgentContent({
                             onOpenAuthDrawer?.();
                         }
                         : undefined
+                }
+                onNeedHelpClick={
+                    isAuthenticated ? () => setHelpQueryDrawerOpen(true) : undefined
                 }
                 onGetStartedClick={
                     isPublicLandingNav
@@ -2875,6 +2884,13 @@ function HappyJobAgentContent({
                     onClose={closeAgentOnboarding}
                     onAccountsStepChange={handleAccountsStepChange}
                     onExit={handleAgentOnboardingExit}
+                />
+            ) : null}
+
+            {isAuthenticated ? (
+                <JobAgentRaiseQueryDrawer
+                    open={helpQueryDrawerOpen}
+                    onClose={() => setHelpQueryDrawerOpen(false)}
                 />
             ) : null}
 

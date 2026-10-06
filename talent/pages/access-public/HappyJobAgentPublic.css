@@ -12339,6 +12339,18 @@ body.happy-agent-modal-open {
     filter: brightness(1.06);
 }
 
+.happy-agent-landing-navbar__btn--help {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    color: #fff;
+    padding: 11px 16px;
+}
+
+.happy-agent-landing-navbar__btn--help:hover {
+    filter: brightness(1.06);
+    background: rgba(255, 255, 255, 0.08);
+}
+
 .happy-agent-landing-navbar__btn--primary {
     background: #46eccd;
     color: #231f20;
