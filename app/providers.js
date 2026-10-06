@@ -53,6 +53,7 @@ function ReactHotToast() {
     return createPortal(
         <Toaster
             position="top-right"
+            containerStyle={{ zIndex: 101000 }}
             toastOptions={{
                 position: 'top-right',
                 duration: 6000,

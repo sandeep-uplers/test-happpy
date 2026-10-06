@@ -1263,7 +1263,7 @@ h2 .agent-onb-step-header__lede-strong {
     right: 48px;
     width: auto;
     max-width: none;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
 }
 
@@ -1544,6 +1544,26 @@ h2 .agent-onb-step-header__lede-strong {
     margin: 0;
     max-width: 360px;
     line-height: 1.5;
+}
+
+.agent-onb-tpl-card__locked--loading {
+    min-height: 120px;
+    justify-content: center;
+}
+
+.agent-onb-tpl-card__loading-message {
+    animation: agent-onb-tpl-loading-fade 400ms ease;
+}
+
+@keyframes agent-onb-tpl-loading-fade {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .agent-onb-tpl-card__locked-action {
