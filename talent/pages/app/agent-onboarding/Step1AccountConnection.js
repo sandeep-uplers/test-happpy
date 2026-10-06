@@ -607,8 +607,12 @@ const Step1AccountConnection = ({
                     toast.success('Gmail account connected successfully!');
                     track('agent_onb_gmail_connected');
                     trackJourneyClick(OUTREACH_JOURNEY_KEY_ONB_GMAIL_CONNECTED);
-                    onConnectedAccount();
-                    if (onRefresh) onRefresh();
+                    try {
+                        onConnectedAccount();
+                        if (onRefresh) onRefresh();
+                    } catch (_) {
+                        // Connect + refresh succeeded; don't treat post-connect side effects as a refresh failure.
+                    }
                 })
                 .catch(() => toast.error('Failed to refresh account status'))
                 .finally(() => setGmailConnecting(false));
@@ -748,8 +752,8 @@ const Step1AccountConnection = ({
 
         if (autoHealthCheckTriggeredRef.current) return;
         if (bgResumeHealthCheckId) return;
-        if (outreachStepConfig.plan && outreachStepConfig.has_plan_expired) return;
-        if (isFreeTrialPlan || outreachStepConfig.has_plan_expired) return;
+        if (outreachStepConfig?.plan && outreachStepConfig?.has_plan_expired) return;
+        if (isFreeTrialPlan || outreachStepConfig?.has_plan_expired) return;
         autoHealthCheckTriggeredRef.current = true;
         runBackgroundResumeHealthCheck();
     }

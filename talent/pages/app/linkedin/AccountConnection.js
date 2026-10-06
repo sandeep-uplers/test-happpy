@@ -481,15 +481,18 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
                     toast.success('Gmail account connected successfully!');
                     localStorage.setItem('outreach_account_connected', 'true');
                     trackAccountsOnlyEvent('happy_agent_gmail_connected');
-                    onConnectedAccount();
-                    // Check if we should show jobs popup
-                    if (res?.data?.data?.gmail?.status == 2 && res?.data?.jobs?.length > 0) {
-                        setShowJobsPopup(true);
-                    }
-                    
-                    // Refresh outreach step config in parent component
-                    if (onRefresh) {
-                        onRefresh();
+                    try {
+                        onConnectedAccount();
+                        // Check if we should show jobs popup
+                        if (res?.data?.data?.gmail?.status == 2 && res?.data?.jobs?.length > 0) {
+                            setShowJobsPopup(true);
+                        }
+                        // Refresh outreach step config in parent component
+                        if (onRefresh) {
+                            onRefresh();
+                        }
+                    } catch (_) {
+                        // Connect + refresh succeeded; don't treat post-connect side effects as a refresh failure.
                     }
                 })
                 .catch(() => {
@@ -635,7 +638,7 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
     const onConnectedAccount= () => {
         if (autoHealthCheckTriggeredRef.current) return;
         if (bgResumeHealthCheckId) return;
-        if (outreachStepConfig.plan && outreachStepConfig.has_plan_expired) return;
+        if (outreachStepConfig?.plan && outreachStepConfig?.has_plan_expired) return;
         if (
             Number(outreachStepConfig?.plan) === 1 &&
             !outreachStepConfig?.has_plan_expired
