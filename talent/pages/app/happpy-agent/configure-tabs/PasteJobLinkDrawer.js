@@ -9,6 +9,10 @@ import { API_URL } from '../../../../components/Constant';
 import ReferralAgentPreviewModal from '../../../../components/ReferralAgentPreviewModal';
 import { fetchDailyReferralRuns, fetchHapppyAgentDailyLimit, submitReferralJobApplyByLink } from '../../../../store/actions/UserActions';
 import { trackHappyAgentMixpanel } from '../../../../store/actions/happyAgentTracking';
+import {
+    consumePasteJobLinkPrefill,
+    getPasteJobLinkPrefill,
+} from '../../../../helpers/happyAgentPublicSignupSession';
 import JobPlatformIconRow from './JobPlatformIconRow';
 
 const CHROME_EXTENSION_URL =
@@ -63,14 +67,28 @@ const PasteJobLinkDrawer = ({ open, onClose }) => {
     const [successMessage, setSuccessMessage] = useState(null);
     const [previewOpen, setPreviewOpen] = useState(false);
     const firstInputRef = useRef(null);
+    /** Landing handoff: after jobUrls state catches up, same as Run Agent (open preview). */
+    const landingPrefillAutoAdvanceRef = useRef(false);
 
     useEffect(() => {
-        if (!open) return undefined;
-        setJobUrls(['']);
+        if (!open) {
+            landingPrefillAutoAdvanceRef.current = false;
+            return undefined;
+        }
+        const trimmed = getPasteJobLinkPrefill() || '';
+        setJobUrls(trimmed ? [trimmed] : ['']);
         setErrorMessage(null);
         setSuccessMessage(null);
         setPreviewOpen(false);
         trackHappyAgentMixpanel('agent_configure_paste_job_drawer_opened').catch(() => {});
+
+        if (trimmed && isValidHttpUrl(trimmed)) {
+            landingPrefillAutoAdvanceRef.current = true;
+            return undefined;
+        }
+        if (trimmed) {
+            setErrorMessage('Please enter a valid job link (e.g. https://linkedin.com/jobs/view/…)');
+        }
         const id = requestAnimationFrame(() => firstInputRef.current?.focus());
         return () => cancelAnimationFrame(id);
     }, [open]);
@@ -218,6 +236,20 @@ const PasteJobLinkDrawer = ({ open, onClose }) => {
 
     const handlePreviewConfirm = (messageTemplateIds = {}, { customResumeFile } = {}) =>
         submitJobLinks({ ...messageTemplateIds, customResumeFile });
+
+    /** Landing prefill: auto-trigger Run Agent (validate → ReferralAgentPreviewModal → confirm → POST). */
+    useEffect(() => {
+        if (!open || !landingPrefillAutoAdvanceRef.current) return undefined;
+        const urls = jobUrls.map((s) => (s || '').trim()).filter(Boolean);
+        if (urls.length !== 1 || !isValidHttpUrl(urls[0])) return undefined;
+        landingPrefillAutoAdvanceRef.current = false;
+        consumePasteJobLinkPrefill();
+        setPreviewOpen(true);
+        trackHappyAgentMixpanel('agent_configure_paste_job_landing_prefill_auto_advance', {
+            count: 1,
+        }).catch(() => {});
+        return undefined;
+    }, [open, jobUrls]);
 
     if (!open || typeof document === 'undefined') return null;
 

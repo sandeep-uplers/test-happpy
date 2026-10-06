@@ -242,12 +242,14 @@ export const ONB_POP_OPENED_SECTIONS = {
     try_free_band: "Try Free Band",
     payment_success: "Payment Success",
     sticky_mobile: "Sticky Mobile CTA",
+    paste_job_link: "Paste Job Link",
 };
 
 /** Writable slugs for Auth Drawer Open link tracking (must match PHP `authDrawerCtaWritableSections`). */
 export const AUTH_DRAWER_CTA_SECTIONS = {
     ...ONB_POP_OPENED_SECTIONS,
     jobs_board_run_agent: "Jobs Board — Run Agent",
+    paste_job_link: "Paste Job Link — Run Agent",
     navbar_login: "Navbar — Login",
     happpy_gtm_cta: "Happpy GTM — main CTA",
 };

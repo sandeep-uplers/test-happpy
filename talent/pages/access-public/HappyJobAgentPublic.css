@@ -14115,3 +14115,188 @@ body.happy-agent-modal-open {
         padding: 32px 16px;
     }
 }
+
+/* Inline paste job link — Figma 3639:38681 */
+.happy-job-agent-landing .happy-agent-paste-job {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: stretch;
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__intro {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px 32px;
+    width: 100%;
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__title {
+    margin: 0;
+    flex: 0 1 448px;
+    max-width: 448px;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 800;
+    font-size: 40px;
+    line-height: 56px;
+    letter-spacing: -0.3589px;
+    color: #231f20;
+    overflow-wrap: break-word;
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__desc {
+    margin: 0;
+    flex: 0 1 470px;
+    max-width: 470px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    color: #6b6b6b;
+    overflow-wrap: break-word;
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__alert {
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__alert--error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__alert-link {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    margin: 0;
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__input-wrap {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 56px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow:
+        inset 0 1px 4px 0 rgba(0, 0, 0, 0.25),
+        inset 0 1px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__input {
+    display: block;
+    width: 100%;
+    height: 56px;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    background: #fff9;
+    box-sizing: border-box;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: -0.0762px;
+    color: #231f20;
+    outline: 1px solid #cecccc;
+    outline-offset: -1px;
+    transition: border 0.15s ease, background 0.15s ease;
+    /* box-shadow: inset 0 1px 4px 0 rgba(0, 0, 0, 0.35), inset 0 1px 4px 0 rgba(0, 0, 0, 0.3); */
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__input::placeholder {
+    color: rgba(107, 107, 107, 0.6);
+    font-weight: 500;
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__input:focus {
+    outline: 2px solid #059599;
+    background: #fefefe;
+    outline-offset: -2px;
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__submit {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    margin: 0;
+    padding: 12px 34px;
+    border: none;
+    border-radius: 28px;
+    background: #059599;
+    font-family: 'Telegraf', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+    line-height: normal;
+    text-transform: uppercase;
+    color: #ffffff;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: filter 0.15s ease, background 0.15s ease;
+}
+
+.happy-job-agent-landing .happy-agent-paste-job__submit:hover,
+.happy-job-agent-landing .happy-agent-paste-job__submit:focus-visible {
+    filter: brightness(1.05);
+    outline: none;
+}
+
+@media screen and (max-width: 991px) {
+    .happy-job-agent-landing .happy-agent-paste-job__intro {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .happy-job-agent-landing .happy-agent-paste-job__title,
+    .happy-job-agent-landing .happy-agent-paste-job__desc {
+        flex: none;
+        max-width: none;
+        width: 100%;
+    }
+
+    .happy-job-agent-landing .happy-agent-paste-job__title {
+        font-size: clamp(28px, 6vw, 40px);
+        line-height: 1.25;
+    }
+
+    .happy-job-agent-landing .happy-agent-paste-job__desc {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .happy-job-agent-landing .happy-agent-paste-job__inner {
+        gap: 24px;
+    }
+
+    .happy-job-agent-landing .happy-agent-paste-job__form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .happy-job-agent-landing .happy-agent-paste-job__submit {
+        width: 100%;
+    }
+}
