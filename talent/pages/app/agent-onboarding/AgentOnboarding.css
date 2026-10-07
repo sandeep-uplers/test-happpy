@@ -3321,4 +3321,594 @@ h2 .agent-onb-step-header__lede-strong {
     .jad-referral-trial-unlocked__title {
         font-size: 1.25rem;
     }
+}/* ---------- Public signup payment (Figma 3628:33186) ---------------- */
+
+.agent-onb-scroll--public-payment {
+    padding: 64px 56px 32px;
+}
+
+.agent-onb-public-pay {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    /* max-width: 646px; */
+    /* margin: 0 auto; */
+    width: 100%;
+}
+
+.agent-onb-public-pay-step {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.agent-onb-public-pay__hero {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: #1f4c41;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow:
+        inset 0 -1px 4px rgba(161, 239, 207, 0.25),
+        inset 0 1px 4px #a1efcf;
+}
+
+.agent-onb-public-pay__hero-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.agent-onb-public-pay__hero-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.agent-onb-public-pay__hero-close {
+    display: none;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #9eded1;
+    font-family: 'Rubik', sans-serif;
+    font-size: 15px;
+    line-height: 23px;
+    cursor: pointer;
+}
+
+.agent-onb-public-pay__hero-close:hover,
+.agent-onb-public-pay__hero-close:focus-visible {
+    color: #c8f0e6;
+    outline: none;
+}
+
+.agent-onb-public-pay__hero-lede {
+    margin: 0;
+    font-size: 28px;
+    line-height: 33px;
+    font-weight: 400;
+    color: #f6f4ef;
+}
+
+.agent-onb-public-pay__hero-price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.agent-onb-public-pay__hero-amount {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+    color: #ffffff;
+}
+
+.agent-onb-public-pay__hero-badge {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 7px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #231f20;
+    background: linear-gradient(172deg, #82ffbf 15.36%, rgba(184, 255, 237, 0) 163.42%);
+}
+
+.agent-onb-public-pay__hero-features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 12px;
+    line-height: normal;
+    color: #ffffff;
+}
+
+.agent-onb-public-pay__hero-features li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.agent-onb-public-pay__check {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #a1f3b6;
+    line-height: 1.4;
+}
+
+.agent-onb-public-pay__check--dark {
+    color: #0e4f45;
+}
+
+.agent-onb-public-pay__hero-note {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: #a1f3b6;
+}
+
+.agent-onb-public-pay__hero-note--mobile {
+    display: none;
+}
+
+.agent-onb-public-pay__why {
+    position: relative;
+    padding: 12px;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow:
+        inset 0 1px 4px rgba(0, 0, 0, 0.25),
+        inset 0 6px 7px #f3f3f3;
+}
+
+.agent-onb-public-pay__why-title {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #0e4f45;
+}
+
+.agent-onb-public-pay__why-body {
+    margin: 0 0 8px;
+    font-size: 12px;
+    line-height: 20px;
+    color: #231f20;
+}
+
+.agent-onb-public-pay__why-foot {
+    margin: 0;
+    font-size: 12px;
+    line-height: normal;
+    color: #6b6b6b;
+}
+
+.agent-onb-public-pay__trial-cta {
+    width: 100%;
+    min-height: 48px;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 100px;
+    background: #231f20;
+    color: #ffffff;
+    font-family: 'Telegraf', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 120ms ease, transform 80ms ease;
+}
+
+.agent-onb-public-pay__trial-cta:hover:not(:disabled),
+.agent-onb-public-pay__trial-cta:focus-visible:not(:disabled) {
+    background: #0d0c0d;
+    outline: none;
+}
+
+.agent-onb-public-pay__trial-cta:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.agent-onb-public-pay__trial-cta:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.agent-onb-public-pay__sticky-foot {
+    display: none;
+}
+
+.agent-onb-public-pay__trial-cta-label--mobile {
+    display: none;
+}
+
+.agent-onb-public-pay__sticky-next {
+    display: none;
+}
+
+.agent-onb-public-pay__divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+}
+
+.agent-onb-public-pay__divider-line {
+    flex: 1;
+    height: 1px;
+    background: #d1cfcb;
+}
+
+.agent-onb-public-pay__divider-text {
+    flex-shrink: 0;
+    font-size: 12.5px;
+    line-height: 19px;
+    color: #8a8987;
+}
+
+.agent-onb-public-pay__plans {
+    display: flex;
+    gap: 14px;
+    align-items: stretch;
+}
+
+.agent-onb-public-pay__plan {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #d1cfcb;
+    background: #ffffff;
+}
+
+.agent-onb-public-pay__plan--featured {
+    border-width: 2px;
+    border-color: #74b3a8;
+    box-shadow: 1px 4px 16px 5px rgba(0, 0, 0, 0.16);
+}
+
+.agent-onb-public-pay__plan-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.agent-onb-public-pay__plan-tag {
+    margin: 0;
+    flex: 1;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #0e4f45;
+}
+
+.agent-onb-public-pay__plan-chip {
+    flex-shrink: 0;
+    padding: 4px 9px;
+    border-radius: 100px;
+    background: #46eccd;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    color: #0e4f45;
+}
+
+.agent-onb-public-pay__plan-price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.agent-onb-public-pay__plan-amount {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 31px;
+    color: #231f20;
+}
+
+.agent-onb-public-pay__plan-sub,
+.agent-onb-public-pay__plan-compare {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 19px;
+    color: #6b6b6b;
+}
+
+.agent-onb-public-pay__plan-compare-old {
+    text-decoration: line-through;
+    margin-right: 6px;
+    color: #8a8987;
+}
+
+.agent-onb-public-pay__plan-features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    font-size: 12px;
+    flex: 1;
+}
+
+.agent-onb-public-pay__plan-features li {
+    display: flex;
+    gap: 9px;
+    align-items: flex-start;
+    line-height: 19px;
+    color: #231f20;
+}
+
+.agent-onb-public-pay__plan-features li + li {
+    margin-top: 0;
+}
+
+.agent-onb-public-pay__plan-cta {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 100px;
+    border: 1.2px solid #231f20;
+    background: #ffffff;
+    color: #231f20;
+    font-family: 'Telegraf', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.9px;
+    cursor: pointer;
+    transition: background 120ms ease, transform 80ms ease;
+}
+
+.agent-onb-public-pay__plan-cta--primary {
+    border-color: transparent;
+    background: #46eccd;
+}
+
+.agent-onb-public-pay__plan-cta:hover:not(:disabled),
+.agent-onb-public-pay__plan-cta:focus-visible:not(:disabled) {
+    filter: brightness(0.97);
+    outline: none;
+}
+
+.agent-onb-public-pay__plan-cta:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.agent-onb-public-pay__footnote {
+    margin: 0;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b6b6b;
+}
+
+@media screen and (max-width: 767px) {
+    .agent-onb-drawer:has(.agent-onb-public-pay-step) .agent-onb-close {
+        display: none;
+    }
+
+    .agent-onb-scroll--public-payment {
+        padding: 24px 16px 16px;
+        padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .agent-onb-public-pay {
+        gap: 16px;
+    }
+
+    .agent-onb-public-pay__hero {
+        gap: 16px;
+        padding: 0;
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .agent-onb-public-pay__hero-card {
+        gap: 8px;
+        padding: 20px;
+        border-radius: 26px;
+        border: 1px solid rgba(70, 236, 205, 0.35);
+        background: rgba(13, 61, 49, 0.88);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        box-shadow: 0 10px 26px -6px rgba(5, 31, 23, 0.28);
+    }
+
+    .agent-onb-public-pay__hero-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 24px;
+        min-height: 24px;
+    }
+
+    .agent-onb-public-pay__hero-lede {
+        flex: 1;
+        min-width: 0;
+        margin: 0;
+        font-size: 24px;
+        line-height: normal;
+        white-space: normal;
+    }
+
+    .agent-onb-public-pay__hero-price {
+        margin-top: 4px;
+    }
+
+    .agent-onb-public-pay__hero-amount {
+        font-size: 40px;
+    }
+
+    .agent-onb-public-pay__hero-features {
+        gap: 12px;
+        font-size: 11px;
+    }
+
+    .agent-onb-public-pay__hero-note {
+        font-size: 11px;
+    }
+
+    .agent-onb-public-pay__hero-note--desktop {
+        display: none;
+    }
+
+    .agent-onb-public-pay__hero-note--mobile {
+        display: inline;
+    }
+
+    .agent-onb-public-pay__why {
+        display: flex;
+        gap: 11px;
+        align-items: stretch;
+        padding: 2px 3px;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .agent-onb-public-pay__why-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
+        min-width: 0;
+        position: relative;
+        padding-left: 14px;
+    }
+
+    .agent-onb-public-pay__why-copy::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 2px;
+        bottom: 2px;
+        width: 3px;
+        border-radius: 2px;
+        background: #57d3ae;
+    }
+
+    .agent-onb-public-pay__why-title {
+        margin: 0 0 6px;
+    }
+
+    .agent-onb-public-pay__why-body {
+        margin: 0 0 12px;
+        font-size: 11px;
+        line-height: 18px;
+    }
+
+    .agent-onb-public-pay__why-foot {
+        font-size: 11px;
+        line-height: 15px;
+    }
+
+    .agent-onb-public-pay__trial-cta--inline {
+        display: none;
+    }
+
+    .agent-onb-public-pay__sticky-foot {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex-shrink: 0;
+        padding: 17px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+        border-top: 1px solid rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.74);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.16);
+    }
+
+    .agent-onb-public-pay__sticky-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .agent-onb-public-pay__sticky-back {
+        flex-shrink: 0;
+    }
+
+    .agent-onb-public-pay__trial-cta--sticky {
+        flex: 1 1 auto;
+        width: auto;
+        min-width: 0;
+        min-height: 49px;
+        padding: 16px 20px;
+        border: 1px solid rgba(70, 236, 205, 0.3);
+        border-radius: 100px;
+        font-size: 14px;
+        letter-spacing: 1px;
+        box-shadow: 0 8px 20px -6px rgba(5, 31, 23, 0.3);
+    }
+
+    .agent-onb-public-pay__trial-cta-label--desktop {
+        display: none;
+    }
+
+    .agent-onb-public-pay__trial-cta-label--mobile {
+        display: inline;
+    }
+
+    .agent-onb-public-pay__sticky-next {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        flex: 1 1 auto;
+        width: auto;
+        min-width: 0;
+        min-height: 48px;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 100px;
+        background: #231f20;
+        color: #fff;
+        font-family: 'Telegraf', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+
+    .agent-onb-public-pay__sticky-next:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+
+    .agent-onb-footer--public-payment {
+        display: none;
+    }
+
+    .agent-onb-public-pay__plans {
+        flex-direction: column;
+    }
+
+    .agent-onb-public-pay__divider-text {
+        font-size: 11px;
+        text-align: center;
+        max-width: 140px;
+        white-space: normal;
+    }
 }
