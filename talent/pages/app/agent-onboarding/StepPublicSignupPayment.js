@@ -350,7 +350,7 @@ const StepPublicSignupPayment = ({ onAdvance, onBack, onClose, showBack }) => {
                             </div>
                             <div className="agent-onb-public-pay__hero-price">
                                 <span className="agent-onb-public-pay__hero-amount">₹99</span>
-                                <span className="agent-onb-public-pay__hero-badge">One time</span>
+                                <span className="agent-onb-public-pay__hero-badge">Trial</span>
                             </div>
                             <ul className="agent-onb-public-pay__hero-features">
                                 {TRIAL_FEATURES.map((line) => (
