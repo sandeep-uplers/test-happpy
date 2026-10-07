@@ -1,20 +1,26 @@
 'use client';
 
-/** Query-param keys emitted during the Happy Agent onboarding funnel. */
+/**
+ * Happy Agent onboarding URL flags — milestone / entry only (one param at a time).
+ * While a step is in progress the URL keeps the previous milestone until the user completes the step.
+ */
 export const ONBOARDING_URL_PARAM = {
+    /** Agent onboarding drawer opened (always set on open). */
     CONNECT_ACCOUNTS: 'connect-your-accounts',
-    /** Happpy GTM drawer opened (account created / signed in). */
+    /** Deep-link handoff only — opens drawer; URL is then normalized to connect-your-accounts on open. */
     CREATE_PROFILE: 'create-profile',
     ACCOUNT_LINKED: 'account-linked',
+    TRIAL_STARTED: 'trial-started',
     PROFILE_CREATED: 'profile-created',
     EXTENSION_AWARE: 'extension-aware',
-    OUTREACH_MODE_SELECTED: 'outreach-mode-selected',
+    /** Template drawer (Step2TemplateSelection) opened on job-agent. */
+    CREATE_TEMPLATES: 'create-templates',
     SETUP_COMPLETE: 'setupcomplete',
 };
 
 /** Logged-in landing handoff after public signup — opens AgentOnboarding on load. */
 export const REFERRAL_AI_AGENT_ONBOARDING_PATH =
-    `/talent/referral-ai-agent?${ONBOARDING_URL_PARAM.CREATE_PROFILE}=true`;
+    `/talent/referral-ai-agent?${ONBOARDING_URL_PARAM.CONNECT_ACCOUNTS}=true`;
 
 /**
  * Sets a Happy Agent onboarding activity flag on the current page URL without

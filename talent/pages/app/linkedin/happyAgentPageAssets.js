@@ -337,6 +337,20 @@ export const HAPPY_TRY_FREE_TITLE_LINES = [
 export const HAPPY_TRY_FREE_SUBTITLE =
     "No credit card · Disconnect anytime · Fresh postings (24–48h) reply fastest.";
 
+/** Public Happpy landing (`HappyJobAgentPublic`) — paid ₹99 trial (not “try free”). */
+export const HAPPY_PUBLIC_PAID_TRIAL_TITLE_LINES = [
+    "₹99 Until You",
+    'Hear "Yes"',
+];
+
+export const HAPPY_PUBLIC_PAID_TRIAL_SUBTITLE =
+    'Upgrade only when someone replies · Cancel anytime · Fresh postings (24–48h) reply fastest.';
+
+export const HAPPY_PUBLIC_PAID_TRIAL_HERO_NOTE =
+    '₹99 until your first "yes" — upgrade only when someone replies';
+
+export const HAPPY_PUBLIC_PAID_TRIAL_CHIP_LABEL = '₹99 until your first "yes"';
+
 /* Section 13 — Footer */
 export const HAPPY_FOOTER_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/footer`;
 export const HAPPY_FOOTER_LOGO_SRC = `${HAPPY_FOOTER_ASSET_BASE}/happpy-agent-logo-light.svg`;

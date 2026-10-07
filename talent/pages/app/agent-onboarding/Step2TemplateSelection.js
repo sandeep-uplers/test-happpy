@@ -171,10 +171,9 @@ const Step2TemplateSelection = ({
 
     const linkedinConnected = !!outreachStepConfig?.step1?.linkedin_connected;
 
-    /** Post–mode-selection handoff lands on /job-agent; set the funnel param here
-     *  so it survives the redirect away from the onboarding landing page. */
+    /** Template drawer open on /talent/job-agent — GTM milestone (create-templates). */
     useEffect(() => {
-        setOnboardingActivityUrlParam(ONBOARDING_URL_PARAM.OUTREACH_MODE_SELECTED);
+        setOnboardingActivityUrlParam(ONBOARDING_URL_PARAM.CREATE_TEMPLATES);
     }, []);
 
     /** Initial load — saved templates + the two default templates per provider. */

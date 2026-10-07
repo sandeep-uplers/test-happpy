@@ -14300,3 +14300,41 @@ body.happy-agent-modal-open {
         width: 100%;
     }
 }
+.happy-job-agent-landing .happy-agent-hero-mesh__paid-trial-note {
+    margin: 0;
+    max-width: 360px;
+    font-size: 11px;
+    line-height: 1.5;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.92);
+    text-align: center;
+}
+
+.happy-public-join-agent-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 100010;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(243, 240, 232, 0.92);
+    pointer-events: all;
+}
+
+.happy-public-join-agent-loader__title {
+    margin: 8px 0 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: #231f20;
+    text-align: center;
+}
+
+.happy-public-join-agent-loader__subtitle {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b6b6b;
+    text-align: center;
+}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import { ensureModalAppElement } from '@/talent/helpers/setModalAppElement';
 ensureModalAppElement();
@@ -11,10 +11,9 @@ import { API_GET_OUTREACH_STEP } from '../../../components/Constant';
 import { trackHappyAgentMixpanel } from '../../../store/actions/happyAgentTracking';
 import {
     clearPublicAuthPath,
-    getPublicAuthPath,
-    isPublicEmailAuthPath,
     setOnboardingTemplatePending,
 } from '../../../helpers/happyAgentPublicSignupSession';
+import { publicSignupPaymentComplete } from '../../../helpers/happyAgentPublicTrialPayment';
 import {
     ONBOARDING_URL_PARAM,
     setOnboardingActivityUrlParam,
@@ -25,63 +24,107 @@ import Step2ProfileCreation from './Step2ProfileCreation';
 import Step3ExtensionInstall from './Step3ExtensionInstall';
 // import Step4ModeSelection from './Step4ModeSelection';
 // import Step5UpgradePlan from './Step5UpgradePlan';
+import StepPublicSignupPayment from './StepPublicSignupPayment';
 import './AgentOnboarding.css';
 import { pageActivityTracker, storeRecommendedJobs } from '../../../store/actions/UserActions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 /**
- * Right-side drawer that hosts the new agent onboarding flow.
- *
- * Acts as the shared chrome (overlay, slide-in panel, close affordance) around
- * an ordered list of step components. Each step renders its own scroll body
- * AND its own sticky footer so the visual style (CTA color, back button,
- * warning chip) can vary per step without leaking into this parent.
- *
- * Props
- *  - isOpen:               boolean — controls drawer visibility.
- *  - onClose:              () => void — invoked on close (X / Esc / finish).
- *  - onAccountsStepChange: ({ gmailConnected, linkedinConnected }) => void
- *                          Fires whenever account status changes so the parent
- *                          landing page can update its hero CTA / banner state.
- *  - onExit:               optional ({ wouldRedirectToDashboard, completed }) => void
- *                          When provided, parent owns post-close navigation (no
- *                          internal dashboard navigate). Used by the public
- *                          signup handoff so the template drawer can open after
- *                          onboarding exits.
+ * Unpaid onboarding step order (everyone: new signup + authenticated refresh).
+ * Today: `'accounts-first'` → accounts → payment → profile → extension.
+ * Switch to `'payment-first'` for payment → accounts → profile → extension.
  */
-const STEPS_PROFILE_FIRST = ['profile', 'accounts', 'extension' /* , 'mode' */];
-const STEPS_ACCOUNTS_FIRST = ['accounts', 'profile', 'extension' /* , 'mode' */];
+export const ONBOARDING_UNPAID_STEP_ORDER = 'accounts-first';
 
-/** Extension install is desktop-only (same gate as Happpy GTM onboarding). */
-const getActiveSteps = (accountsFirst = false) => {
-    const base = accountsFirst ? STEPS_ACCOUNTS_FIRST : STEPS_PROFILE_FIRST;
-    return isDesktopPc() ? base : base.filter((step) => step !== 'extension');
+const STEPS_UNPAID_BY_ORDER = {
+    'payment-first': ['payment', 'accounts', 'profile', 'extension' /* , 'mode' */],
+    'accounts-first': ['accounts', 'payment', 'profile', 'extension' /* , 'mode' */],
 };
 
+/** After trial/plan is active — payment step omitted; same tail as the unpaid sequence. */
+const STEPS_PAID = ['accounts', 'profile', 'extension' /* , 'mode' */];
+
+const filterOnboardingExtensionStep = (steps) =>
+    isDesktopPc() ? steps : steps.filter((step) => step !== 'extension');
+
+function isGmailConnectedForOnboarding(user, outreachStepConfig) {
+    if (outreachStepConfig?.status?.step1) {
+        return true;
+    }
+    const outreach = user?.outreach ?? user?.userdata?.outreach ?? user?.userData?.outreach;
+    return Boolean(outreach?.account_connected || outreach?.gmail_connected);
+}
+
+/** Extension install is desktop-only (same gate as Happpy GTM onboarding). */
+const getActiveSteps = ({
+    needsPayment,
+    unpaidStepOrder = ONBOARDING_UNPAID_STEP_ORDER,
+}) => {
+    if (needsPayment) {
+        const base =
+            STEPS_UNPAID_BY_ORDER[unpaidStepOrder] ?? STEPS_UNPAID_BY_ORDER['accounts-first'];
+        return filterOnboardingExtensionStep(base);
+    }
+    return filterOnboardingExtensionStep(STEPS_PAID);
+};
+
+/** Set when the user finishes a step (Next, Save & continue, or ₹99 pay success). */
 const STEP_COMPLETED_URL_PARAM = {
     accounts: ONBOARDING_URL_PARAM.ACCOUNT_LINKED,
+    payment: ONBOARDING_URL_PARAM.TRIAL_STARTED,
     profile: ONBOARDING_URL_PARAM.PROFILE_CREATED,
     extension: ONBOARDING_URL_PARAM.EXTENSION_AWARE,
 };
 
-/** Route the user lands on after finishing (or bailing out of) onboarding
- *  once their Gmail account is connected — the Job Agent dashboard. */
 const JOB_AGENT_DASHBOARD_ROUTE = '/talent/job-agent';
 
 const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
     const router = useRouter();
     const dispatch = useDispatch();
+    const authUser = useSelector((state) => state.auth)?.user;
     const [currentStep, setCurrentStep] = useState(0);
     const [outreachStepConfig, setOutreachStepConfig] = useState(null);
     const [stepConfigLoading, setStepConfigLoading] = useState(false);
-    // /** Side-step toggle for the upgrade-plan screen (was Step 4 → Step 5). */
-    // const [showUpgrade, setShowUpgrade] = useState(false);
-    const [accountsFirst, setAccountsFirst] = useState(false);
-    const steps = getActiveSteps(accountsFirst);
+
+    const hasActiveTrialOrPaidPlan = useCallback(() => {
+        const sessionUser = JSON.parse(localStorage.getItem('user') || 'null');
+        return (
+            publicSignupPaymentComplete(sessionUser) || publicSignupPaymentComplete(authUser)
+        );
+    }, [authUser]);
+
+    const needsPayment = !hasActiveTrialOrPaidPlan();
+
+    const steps = useMemo(
+        () =>
+            getActiveSteps({
+                needsPayment,
+                unpaidStepOrder: ONBOARDING_UNPAID_STEP_ORDER,
+            }),
+        [needsPayment]
+    );
+
+    const stepsRef = useRef(steps);
+    useEffect(() => {
+        const prevSteps = stepsRef.current;
+        if (prevSteps === steps) {
+            return;
+        }
+        const stepKeyAtIndex = prevSteps[currentStep];
+        if (stepKeyAtIndex && steps.includes(stepKeyAtIndex)) {
+            setCurrentStep(steps.indexOf(stepKeyAtIndex));
+        } else if (stepKeyAtIndex === 'payment' && !steps.includes('payment')) {
+            const profileIdx = steps.indexOf('profile');
+            setCurrentStep(profileIdx >= 0 ? profileIdx : 0);
+        } else {
+            setCurrentStep((idx) => Math.min(idx, Math.max(0, steps.length - 1)));
+        }
+        stepsRef.current = steps;
+    }, [steps, currentStep]);
+
     const activeStepKey = steps[currentStep];
     const isLastStep = currentStep === steps.length - 1;
 
-    /** Pull the outreach checklist so steps can drive their CTA enabled state. */
     const fetchOutreachStep = useCallback(() => {
         setStepConfigLoading(true);
         return GET_API(API_GET_OUTREACH_STEP)
@@ -101,52 +144,32 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
             .finally(() => setStepConfigLoading(false));
     }, [onAccountsStepChange]);
 
-    /** Refetch the checklist whenever the drawer is (re)opened so we never show stale state. */
     useEffect(() => {
         if (!isOpen) return;
-        const authPath = getPublicAuthPath();
-        const emailAuth = isPublicEmailAuthPath(authPath);
-        setAccountsFirst(emailAuth);
+        const sessionUser = JSON.parse(localStorage.getItem('user') || 'null');
+        const alreadyPaid =
+            publicSignupPaymentComplete(sessionUser) || publicSignupPaymentComplete(authUser);
+        const unpaidOnOpen = !alreadyPaid;
         clearPublicAuthPath();
         setCurrentStep(0);
-        // setShowUpgrade(false);
+        stepsRef.current = getActiveSteps({
+            needsPayment: unpaidOnOpen,
+            unpaidStepOrder: ONBOARDING_UNPAID_STEP_ORDER,
+        });
         fetchOutreachStep();
+        setOnboardingActivityUrlParam(ONBOARDING_URL_PARAM.CONNECT_ACCOUNTS);
         trackHappyAgentMixpanel('agent_onb_popup_opened').catch(() => {});
-        setOnboardingActivityUrlParam(
-            emailAuth ? ONBOARDING_URL_PARAM.CONNECT_ACCOUNTS : ONBOARDING_URL_PARAM.CREATE_PROFILE
-        );
-        let newPath= {
-            url: "/talent/referral-create-profile",
-        }
-        pageActivityTracker(newPath)(dispatch)
+        const newPath = {
+            url: '/talent/referral-create-profile',
+        };
+        pageActivityTracker(newPath)(dispatch);
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- authUser read once per open; omit to avoid reset on payment refresh
     }, [isOpen, fetchOutreachStep, dispatch]);
 
-    // const openUpgrade = () => {
-    //     trackHappyAgentMixpanel('agent_onb_upgrade_opened', {
-    //         from_step: activeStepKey,
-    //     }).catch(() => {});
-    //     setShowUpgrade(true);
-    // };
-
-    // const closeUpgrade = () => {
-    //     trackHappyAgentMixpanel('agent_onb_upgrade_closed').catch(() => {});
-    //     setShowUpgrade(false);
-    // };
-
-    // const handleUpgradeSuccess = () => {
-    //     fetchOutreachStep();
-    //     setShowUpgrade(false);
-    // };
-
-    /** Once Gmail is hooked up the user has effectively activated the agent,
-     *  so any exit from the drawer (X / Esc / finishing the last step) should
-     *  drop them on the Job Agent dashboard rather than back on the marketing
-     *  landing page they came from — unless the parent supplies `onExit`. */
-    const shouldRedirectToDashboard = () =>
-        !!outreachStepConfig?.status?.step1;
-
     const finishExit = (completed) => {
-        const wouldRedirectToDashboard = completed || shouldRedirectToDashboard();
+        const paid = hasActiveTrialOrPaidPlan();
+        const gmailConnected = isGmailConnectedForOnboarding(authUser, outreachStepConfig);
+        const wouldRedirectToDashboard = completed ? paid : paid && gmailConnected;
         if (completed) {
             setOnboardingTemplatePending();
         }
@@ -179,8 +202,22 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
             from_step: activeStepKey,
         }).catch(() => {});
 
-        const isFinishing = currentStep + 1 >= steps.length;
+        if (activeStepKey === 'payment') {
+            const profileIdx = steps.indexOf('profile');
+            if (profileIdx >= 0) {
+                setCurrentStep(profileIdx);
+            } else {
+                setCurrentStep((s) => Math.min(s + 1, steps.length - 1));
+            }
+            return;
+        }
+
+        const isFinishing = activeStepKey === steps[steps.length - 1];
         if (isFinishing) {
+            if (!hasActiveTrialOrPaidPlan()) {
+                toast.error('Start your ₹99 trial or choose a plan before continuing.');
+                return;
+            }
             const needsDefaultMode =
                 !outreachStepConfig?.outreach_mode ||
                 outreachStepConfig.outreach_mode === 'unknown';
@@ -193,10 +230,6 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
                             outreach_mode: 'auto',
                         })
                     );
-                    trackHappyAgentMixpanel('agent_onb_mode_step_completed', {
-                        mode: 'auto',
-                    }).catch(() => {});
-                    setOnboardingActivityUrlParam(ONBOARDING_URL_PARAM.OUTREACH_MODE_SELECTED);
                 } catch (error) {
                     toast.error(
                         error?.response?.data?.message ||
@@ -242,6 +275,15 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
                         isLastStep={isLastStep}
                     />
                 );
+            case 'payment':
+                return (
+                    <StepPublicSignupPayment
+                        onAdvance={goToNextStep}
+                        onBack={goToPrevStep}
+                        onClose={handleClose}
+                        showBack={currentStep > 0}
+                    />
+                );
             case 'extension':
                 return (
                     <Step3ExtensionInstall
@@ -252,31 +294,9 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
                         isLastStep={isLastStep}
                     />
                 );
-            // case 'mode':
-            //     return (
-            //         <Step4ModeSelection
-            //             outreachStepConfig={outreachStepConfig}
-            //             onRefresh={fetchOutreachStep}
-            //             onAdvance={goToNextStep}
-            //             onBack={goToPrevStep}
-            //             onUpgrade={openUpgrade}
-            //         />
-            //     );
             default:
                 return null;
         }
-    };
-
-    const renderBody = () => {
-        // if (showUpgrade) {
-        //     return (
-        //         <Step5UpgradePlan
-        //             onBack={closeUpgrade}
-        //             onPaymentSuccess={handleUpgradeSuccess}
-        //         />
-        //     );
-        // }
-        return renderStep();
     };
 
     return (
@@ -315,7 +335,7 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
                 </svg>
             </button>
 
-            {renderBody()}
+            {renderStep()}
         </Modal>
     );
 };

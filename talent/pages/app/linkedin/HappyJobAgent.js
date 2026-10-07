@@ -61,6 +61,7 @@ import {
     setPublicOnbSection,
 } from "../../../helpers/happyAgentPublicSignupSession";
 import { buildJobAgentRecommendedJobsActivePath } from "../../../helpers/jobPath";
+import { publicSignupPaymentComplete } from "../../../helpers/happyAgentPublicTrialPayment";
 import {
     ONBOARDING_URL_PARAM,
 } from "../../../helpers/onboardingUrlParams";
@@ -131,6 +132,10 @@ import {
     HAPPY_PRIVACY_TITLE_UNDERLINE_SRC,
     HAPPY_SETUP_CHECKMARK_SRC,
     HAPPY_SETUP_HANDWRITING,
+    HAPPY_PUBLIC_PAID_TRIAL_CHIP_LABEL,
+    HAPPY_PUBLIC_PAID_TRIAL_HERO_NOTE,
+    HAPPY_PUBLIC_PAID_TRIAL_SUBTITLE,
+    HAPPY_PUBLIC_PAID_TRIAL_TITLE_LINES,
     HAPPY_TRY_FREE_SUBTITLE,
     HAPPY_TRY_FREE_TITLE_LINES,
     HAPPY_WORKS_ANYWHERE_FOOTER_HANDWRITING,
@@ -628,6 +633,7 @@ function HappyJobAgentContent({
         trackHappyAgentMixpanel("happy_agent_referral_landing_viewed", {
             from_public_signup: isPublicSignupPending(),
             connect_your_accounts: !!params.get(ONBOARDING_URL_PARAM.CONNECT_ACCOUNTS),
+            trial_started: !!params.get(ONBOARDING_URL_PARAM.TRIAL_STARTED),
             create_profile: !!params.get(ONBOARDING_URL_PARAM.CREATE_PROFILE),
             has_reference_param: !!params.get("reference"),
             entry_source: params.get("src") || params.get("entry_source") || "direct",
@@ -746,9 +752,14 @@ function HappyJobAgentContent({
     const trialPromoBadge = availableForInterviewTrial
         ? "Try Free Until Your First Interview"
         : "Try Free Until You Hear “Yes”";
-    const trialChipLabel = availableForInterviewTrial
-        ? "Free until your first interview"
-        : "Free until you hear yes";
+    const trialChipLabel = publicSignupMode
+        ? HAPPY_PUBLIC_PAID_TRIAL_CHIP_LABEL
+        : availableForInterviewTrial
+            ? "Free until your first interview"
+            : "Free until you hear yes";
+
+    const tryFreeBandTitleLines = publicSignupMode ? HAPPY_PUBLIC_PAID_TRIAL_TITLE_LINES : HAPPY_TRY_FREE_TITLE_LINES;
+    const tryFreeBandSubtitle = publicSignupMode ? HAPPY_PUBLIC_PAID_TRIAL_SUBTITLE : HAPPY_TRY_FREE_SUBTITLE;
 
     /** Logged-in `/talent/referral-ai-agent?reference=<job url>`: queue in background. Optional `src` / `entry_source`. */
     useEffect(() => {
@@ -854,7 +865,8 @@ function HappyJobAgentContent({
     useEffect(() => {
         const opensOnboarding =
             searchParams.get(ONBOARDING_URL_PARAM.CREATE_PROFILE) === 'true'
-            || searchParams.get(ONBOARDING_URL_PARAM.CONNECT_ACCOUNTS) === 'true';
+            || searchParams.get(ONBOARDING_URL_PARAM.CONNECT_ACCOUNTS) === 'true'
+            || isPublicSignupPending();
         if (!opensOnboarding) return;
         const section = getPublicOnbSection();
         clearPublicOnbSection();
@@ -1357,14 +1369,6 @@ function HappyJobAgentContent({
     }, [heroReveal]);
 
     useEffect(() => {
-        // paid and not connected to gmail
-        if (user?.outreach?.is_outreach_paid && outreachAccountConnected) {
-            navigate('/talent/job-agent');
-            return;
-        }
-    }, []);
-
-    useEffect(() => {
         const groups = getReferralCompaniesGrouped();
         const seen = new Set();
         const uniqueCompanies = [];
@@ -1558,7 +1562,14 @@ function HappyJobAgentContent({
         openPublicAuth(null, "pricing_plan_card");
     }, [openPublicAuth]);
 
-    const showGetStartedSectionCta = publicSignupMode || !gmailAccountsConnected;
+    const hasAgentTrialOrPaidPlan = useMemo(
+        () => publicSignupPaymentComplete(user),
+        [user]
+    );
+    const canOpenJobAgentDashboard = gmailAccountsConnected && hasAgentTrialOrPaidPlan;
+
+    const showGetStartedSectionCta =
+        publicSignupMode || !gmailAccountsConnected || !hasAgentTrialOrPaidPlan;
     const onGetStartedSectionCtaClick = useCallback((section) => {
         if (publicSignupMode) {
             openPublicAuth(null, section);
@@ -1664,7 +1675,7 @@ function HappyJobAgentContent({
                 openPublicAuth(null, "paste_job_link");
                 return;
             }
-            if (!gmailConnected) {
+            if (!gmailConnected || !hasAgentTrialOrPaidPlan) {
                 openAgentOnboarding("paste_job_link");
                 return;
             }
@@ -1675,6 +1686,7 @@ function HappyJobAgentContent({
             landingPasteJobUrl,
             gmailAccountsConnected,
             outreachStepConfig,
+            hasAgentTrialOrPaidPlan,
             publicSignupMode,
             openPublicAuth,
             openAgentOnboarding,
@@ -1724,6 +1736,10 @@ function HappyJobAgentContent({
                 }
                 showGetStarted={showGetStartedSectionCta}
                 onOpenDashboardClick={() => {
+                    if (!canOpenJobAgentDashboard) {
+                        openAgentOnboarding("navbar");
+                        return;
+                    }
                     trackHappyAgentMixpanel("happy_agent_hero_open_job_agent_dashboard_clicked", {}).catch(() => { });
                     navigate("/talent/job-agent");
                 }}
@@ -1850,7 +1866,7 @@ function HappyJobAgentContent({
                                 </span>
                                 <ArrowForwardIcon color="#231f20" />
                             </button>
-                        ) : !gmailAccountsConnected ? (
+                        ) : !canOpenJobAgentDashboard ? (
                             <button
                                 type="button"
                                 className="happy-agent-hero-mesh__pill happy-agent-hero-mesh__pill--primary HERO"
@@ -1877,6 +1893,9 @@ function HappyJobAgentContent({
                                 <ArrowForwardIcon color="#231f20" />
                             </button>
                         )}
+                        {publicSignupMode ? (
+                            <p className="happy-agent-hero-mesh__paid-trial-note">{HAPPY_PUBLIC_PAID_TRIAL_HERO_NOTE}</p>
+                        ) : null}
                     </div>
                 </div>
 
@@ -2683,13 +2702,13 @@ function HappyJobAgentContent({
                 <div className="happy-agent-try-free-figma__inner">
                     <header className="happy-agent-try-free-figma__header">
                         <h2 id="happy-agent-try-free-heading" className="happy-agent-try-free-figma__title">
-                            {HAPPY_TRY_FREE_TITLE_LINES.map((line) => (
+                            {tryFreeBandTitleLines.map((line) => (
                                 <span key={line} className="happy-agent-try-free-figma__title-line">
                                     {line}
                                 </span>
                             ))}
                         </h2>
-                        <p className="happy-agent-try-free-figma__sub">{HAPPY_TRY_FREE_SUBTITLE}</p>
+                        <p className="happy-agent-try-free-figma__sub">{tryFreeBandSubtitle}</p>
                     </header>
 
                     <button
@@ -2700,7 +2719,7 @@ function HappyJobAgentContent({
                                 openPublicAuth(null, "try_free_band");
                                 return;
                             }
-                            if (gmailAccountsConnected) {
+                            if (canOpenJobAgentDashboard) {
                                 trackHappyAgentMixpanel("happy_agent_try_free_open_dashboard_clicked", {}).catch(() => { });
                                 navigate("/talent/job-agent");
                                 return;
@@ -2711,7 +2730,7 @@ function HappyJobAgentContent({
                             openAgentOnboarding("try_free_band");
                         }}
                     >
-                        {publicSignupMode || !gmailAccountsConnected ? (
+                        {publicSignupMode || !canOpenJobAgentDashboard ? (
                             <span className={`happy-agent-try-free-figma__pill-text ${HAPPY_HANDWRITING_CLASS} happy-agent-handwriting--uppercase`}>
                                 Start Getting Interviews
                             </span>

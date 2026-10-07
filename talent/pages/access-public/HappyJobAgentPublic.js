@@ -18,10 +18,12 @@ import {
 } from "../../components/Constant";
 import { getLinkTrackingDeviceCategory } from "../../components/common/linkTrackingDeviceCategory";
 import { getDomain, POST_API } from "../../components/Helper";
+import Loader from "../../components/Loader";
 import { ensureModalAppElement } from "../../helpers/setModalAppElement";
 import {
     getPublicOnbSection,
     hasPublicAuthDrawerTracked,
+    isPublicSignupPending,
     markPublicAuthDrawerTracked,
     setPublicAuthPath,
     setPublicReferralCode,
@@ -601,6 +603,8 @@ function HappyJobAgentPublicInner() {
     const navigate = useNavigate();
     const { isAuthenticated, user } = useSelector((state) => state.auth);
     const [authDrawerOpen, setAuthDrawerOpen] = useState(false);
+    /** Full-page loader while handing off to connect-accounts onboarding on the referral landing. */
+    const [joinAgentLoading, setJoinAgentLoading] = useState(false);
     // Continue with Google CTA disabled on this public landing.
     // const dispatch = useDispatch();
     // const [googleAuthing, setGoogleAuthing] = useState(false);
@@ -622,7 +626,14 @@ function HappyJobAgentPublicInner() {
             navigate("/talent/job-agent", { replace: true });
         }
         if (isAuthenticated && user?.expected_ctc) {
-            navigate(buildReferralAiAgentPath(searchParams), { replace: true });
+            navigate(
+                isPublicSignupPending()
+                    ? buildReferralAiAgentPath(searchParams, {
+                          onboardingParam: ONBOARDING_URL_PARAM.CONNECT_ACCOUNTS,
+                      })
+                    : buildReferralAiAgentPath(searchParams),
+                { replace: true }
+            );
         }
         if (publicPageViewTrackedRef.current) {
             return;
@@ -641,11 +652,18 @@ function HappyJobAgentPublicInner() {
         setPublicSignupPending();
         navigate(
             buildReferralAiAgentPath(searchParams, {
-                onboardingParam: ONBOARDING_URL_PARAM.CREATE_PROFILE,
+                onboardingParam: ONBOARDING_URL_PARAM.CONNECT_ACCOUNTS,
             }),
             { replace: true },
         );
     }, [navigate, searchParams]);
+
+    /** After auth: connect Gmail/LinkedIn first; payment runs in AgentOnboarding. */
+    const handleAfterAuth = useCallback(() => {
+        setPublicSignupPending();
+        setJoinAgentLoading(true);
+        continueToConnectAccounts();
+    }, [continueToConnectAccounts]);
 
     // Continue with Google CTA — commented out on this public landing (email/OTP only).
     // continueAfterGoogleRef.current = async () => {
@@ -709,14 +727,21 @@ function HappyJobAgentPublicInner() {
     const openAuthDrawer = useCallback(() => {
         if (isAuthenticated && user && Object.keys(user).length > 0) {
             if (user.expected_ctc) {
-                navigate(buildReferralAiAgentPath(searchParams), { replace: true });
+                navigate(
+                    isPublicSignupPending()
+                        ? buildReferralAiAgentPath(searchParams, {
+                              onboardingParam: ONBOARDING_URL_PARAM.CONNECT_ACCOUNTS,
+                          })
+                        : buildReferralAiAgentPath(searchParams),
+                    { replace: true }
+                );
                 return;
             }
-            continueToConnectAccounts();
+            void handleAfterAuth();
             return;
         }
         setAuthDrawerOpen(true);
-    }, [continueToConnectAccounts, isAuthenticated, navigate, searchParams, user]);
+    }, [handleAfterAuth, isAuthenticated, navigate, searchParams, user]);
 
     const closeAuthDrawer = useCallback(() => {
         setAuthDrawerOpen(false);
@@ -724,6 +749,13 @@ function HappyJobAgentPublicInner() {
 
     return (
         <>
+            {joinAgentLoading ? (
+                <div className="happy-public-join-agent-loader" aria-live="polite" aria-busy="true">
+                    <Loader pageLoader />
+                    <p className="happy-public-join-agent-loader__title">Join HAPPPY Agent</p>
+                    <p className="happy-public-join-agent-loader__subtitle">Configure in less than 60 seconds</p>
+                </div>
+            ) : null}
             <HappyJobAgentContent
                 publicSignupMode
                 onOpenAuthDrawer={openAuthDrawer}
@@ -732,7 +764,7 @@ function HappyJobAgentPublicInner() {
             <HappyJobAgentPublicAuthDrawer
                 isOpen={authDrawerOpen}
                 onClose={closeAuthDrawer}
-                onAuthSuccess={continueToConnectAccounts}
+                onAuthSuccess={handleAfterAuth}
                 // Continue with Google CTA commented out — email/OTP only on this landing.
                 // onGoogleSignIn={handleGoogleSignIn}
                 // googleAuthing={googleAuthing}
