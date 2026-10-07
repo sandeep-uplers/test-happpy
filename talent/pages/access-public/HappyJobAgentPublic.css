@@ -12394,6 +12394,7 @@ body.happy-agent-modal-open {
         padding: 10px 16px;
         border-radius: 80px;
         background: rgba(48, 48, 48, 0.48);
+        background: rgba(248, 248, 248, 0.48);
     }
 
     .happy-agent-landing-navbar__logo.happpy-agent-logo {
@@ -12413,6 +12414,8 @@ body.happy-agent-modal-open {
         min-height: 36px;
         padding: 10px 18px;
         font-size: 13px;
+        color: #6b6b6b;
+        outline: 1px solid #cecccc;
     }
 
     .happy-agent-landing-navbar__btn--primary {
