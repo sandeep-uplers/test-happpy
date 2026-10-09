@@ -1,0 +1,72 @@
+[
+    {
+        "name": "Loganathan P",
+        "title": "Principal Software Engineer",
+        "image": "",
+        "company": "Tata Communications",
+        "company_logo": "tata_communication_logo.jpeg",
+        "rating": "Extremely Good",
+        "heading": "Extremely Good",
+        "details": "It was an **extremely good** experience with HAPPPY agent."
+    },
+    {
+        "name": "Pravin Sanjay Bhor",
+        "title": "Assistant Project Manager",
+        "image": "pravin_sanjay_bhor.jpeg",
+        "company": "Avery Dennison",
+        "company_logo": "avery_dennison_logo.jpeg",
+        "rating": "Amazing",
+        "heading": "A total game changer",
+        "details": "HAPPPY agent automates **referral outreach** right from my browser, and I landed **interviews much faster** than traditional applications."
+    },
+    {
+        "name": "Debdeep Pal",
+        "title": "Software Development Engineer - II",
+        "image": "debdeep_pal.jpeg",
+        "company": "HighRadius",
+        "company_logo": "highradius_logo.jpeg",
+        "rating": "Amazing",
+        "heading": "Built with care",
+        "details": "A **great repository** of outreach email addresses, and the **follow-up email** feature is a thoughtful touch."
+    },
+    {
+        "name": "Nandini Karad",
+        "title": "Quantitative Analyst Specialist",
+        "image": "nandini_karad.png",
+        "company": "Wells Fargo",
+        "company_logo": "wellsfargo_logo.jpeg",
+        "rating": "Amazing",
+        "heading": "Referral that worked",
+        "details": "Got an **interview** at **Muthoot Fincorp** through HAPPPY's referral, and I **cleared it**."
+    },
+    {
+        "name": "Sudipta Mohanty",
+        "title": "SQA Engineer",
+        "image": "sudipta_mohanty.png",
+        "company": "GridCrest by Kaynes",
+        "company_logo": "gridcrest_logo.jpeg",
+        "rating": "Amazing",
+        "heading": "Absolutely crazy",
+        "details": "Applied one day, and **the next day** I got an **interview** scheduled."
+    },
+    {
+        "name": "Aditya Harikumar",
+        "title": "Technical Lead",
+        "image": "",
+        "company": "Qentelli",
+        "company_logo": "qentelli_logo.jpeg",
+        "rating": "Amazing",
+        "heading": "Time well spent",
+        "details": "Saved hours on **outreach**, who to contact, what to send, and follow-ups, so I could focus on **interview prep**."
+    },
+    {
+        "name": "Shivangi Prapti Panigrahy",
+        "title": "Senior Software Engineer",
+        "image": "Shivangi_Prapti_Panigrahy.jpeg",
+        "company": "Magic EdTech",
+        "company_logo": "magic_edtech_logo.jpeg",
+        "rating": "Amazing",
+        "heading": "Simply amazing",
+        "details": "HAPPPY agent is **amazing**, and it made my job search noticeably easier."
+    }
+]

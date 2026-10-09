@@ -1,5 +1,5 @@
 /* Happpy Agent public landing — Uplers yellow & white (tokens align with JobAgentDashboard.css) */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&family=Geist:wght@400;600;700&family=Geologica&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat+Brush&family=JetBrains+Mono:wght@500&display=swap');
 
 .grecaptcha-badge{
@@ -8988,6 +8988,7 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-agent-works-anywhere,
 .happy-job-agent-landing .happy-agent-jobs-listing,
 .happy-job-agent-landing .happy-agent-setup-figma,
+.happy-job-agent-landing .happy-agent-candidate-proof,
 .happy-job-agent-landing .happy-agent-footer-figma  {
     position: relative;
 }
@@ -9002,6 +9003,7 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-agent-works-anywhere::before,
 .happy-job-agent-landing .happy-agent-jobs-listing::before,
 .happy-job-agent-landing .happy-agent-setup-figma::before,
+.happy-job-agent-landing .happy-agent-candidate-proof::before,
 .happy-job-agent-landing .happy-agent-footer-figma::before {
     content: "";
     position: absolute;
@@ -16300,4 +16302,278 @@ body.happy-agent-modal-open {
     font-weight: 500;
     color: #6b6b6b;
     text-align: center;
+}
+
+/* Candidate proof — Figma 3682:35486 */
+.happy-job-agent-landing .happy-agent-candidate-proof {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+    padding: 80px 0;
+    background: #fff;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__header {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 0 16px;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    color: #231f20;
+    text-align: center;
+    letter-spacing: -1.2px;
+    line-height: 1.207;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__count {
+    position: relative;
+    display: inline-block;
+    font-family: "Rubik", sans-serif;
+    font-weight: 700;
+    font-size: 54px;
+    white-space: nowrap;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__label {
+    font-family: "Rubik", sans-serif;
+    font-weight: 400;
+    font-size: 50px;
+    white-space: nowrap;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__underline {
+    position: absolute;
+    left: 50%;
+    bottom: 1px;
+    display: block;
+    max-width: none;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__scroller {
+    width: 100%;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__track {
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
+    width: max-content;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    animation: candidate-proof-marquee var(--candidate-proof-duration, 60s) linear infinite;
+    will-change: transform;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__scroller:hover .happy-agent-candidate-proof__track,
+.happy-job-agent-landing .happy-agent-candidate-proof__scroller:focus-within .happy-agent-candidate-proof__track,
+.happy-job-agent-landing .happy-agent-candidate-proof__scroller.is-held .happy-agent-candidate-proof__track {
+    animation-play-state: paused;
+}
+
+@keyframes candidate-proof-marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(-1 * var(--candidate-proof-shift, 50%)));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .happy-job-agent-landing .happy-agent-candidate-proof__scroller {
+        overflow-x: auto;
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-candidate-proof__track {
+        animation: none;
+    }
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__card {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    width: 290px;
+    flex: 0 0 290px;
+    padding: 16px;
+    border: 1px solid #4c4c4c;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__quote {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    width: 100%;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__mark {
+    display: block;
+    height: 22px;
+    overflow: visible;
+    font-family: "Geologica", Georgia, "Times New Roman", serif;
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 41px;
+    color: #231f20;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    width: 100%;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__headline {
+    margin: 0;
+    width: 100%;
+    font-family: "Geist", "Rubik", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: normal;
+    color: #231f20;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__text {
+    margin: 0;
+    width: 100%;
+    font-family: "Geist", "Rubik", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    color: #6b6b6b;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__text strong {
+    font-weight: 700;
+    color: #231f20;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__person {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+    margin-top: auto;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__avatar {
+    position: relative;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__avatar-img,
+.happy-job-agent-landing .happy-agent-candidate-proof__initials {
+    display: block;
+    width: 44px;
+    height: 44px;
+    border-radius: 100px;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__avatar-img {
+    object-fit: cover;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #dfefec;
+    color: #032e35;
+    font-family: "Rubik", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__person-icon {
+    display: block;
+    width: 22px;
+    height: 22px;
+    max-width: none;
+    color: #032e35;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__company-logo {
+    position: absolute;
+    left: 28px;
+    top: 28px;
+    display: block;
+    width: 16px;
+    height: 16px;
+    max-width: none;
+    border-radius: 3px;
+    background: #fff;
+    box-shadow: 0 0 0 1px #fff;
+    object-fit: cover;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__identity {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__name {
+    font-family: "Rubik", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    color: #202020;
+}
+
+.happy-job-agent-landing .happy-agent-candidate-proof__role {
+    font-family: "Geist", "Rubik", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    color: #646464;
+}
+
+@media (max-width: 767px) {
+    .happy-job-agent-landing .happy-agent-candidate-proof {
+        gap: 32px;
+        padding: 48px 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-candidate-proof__count {
+        font-size: 36px;
+        letter-spacing: -0.8px;
+    }
+
+    .happy-job-agent-landing .happy-agent-candidate-proof__label {
+        font-size: 28px;
+        letter-spacing: -0.6px;
+    }
+
+    .happy-job-agent-landing .happy-agent-candidate-proof__underline {
+        transform: translateX(-50%) scale(0.62);
+        transform-origin: center bottom;
+    }
 }

@@ -41,7 +41,8 @@ import {
     ReferralAgentRaPersonCard,
     ReferralAgentYourPitchCard,
 } from "./referralAgentRaTeam";
-import TestimonialsSlider from "./TestimonialsSlider";
+import CandidateProofSection from "./CandidateProofSection";
+// import TestimonialsSlider from "./TestimonialsSlider";
 import HappyAgentLandingNavbar from "../../../components/HappyAgentLandingNavbar";
 import HapppyAgentLogo from "../../../components/common/HapppyAgentLogo";
 import { REFERRAL_AI_AGENT_PATH } from "../../../components/HappyAiAgentLayout";
@@ -2149,9 +2150,9 @@ function HappyJobAgentContent({
                     </div>
                 </section>
 
-                <div className="happy-outreach-testimonials-wrap" data-happy-landing-section="testimonials">
+                {/* <div className="happy-outreach-testimonials-wrap" data-happy-landing-section="testimonials">
                     <TestimonialsSlider />
-                </div>
+                </div> */}
 
                 <section
                     ref={worksAnywhereRevealRef}
@@ -2252,6 +2253,8 @@ function HappyJobAgentContent({
                         />
                     </div>
                 </section>
+
+                <CandidateProofSection />
 
                 <section
                     ref={privacyRevealRef}
