@@ -1,0 +1,58 @@
+[
+    {
+        "title": "Engineering Leader",
+        "company": "IBM",
+        "company_logo": "ibm_logo.jpeg",
+        "rating": "amazing",
+        "heading": "Interview within a week",
+        "details": "I let the agent handle **cold emails**, **referrals** and **follow-ups**, and I landed an **interview within a week** of deploying it!"
+    },
+    {
+        "title": "Software Engineer",
+        "company": "ModMed",
+        "company_logo": "modmed_logo.jpeg",
+        "rating": "amazing",
+        "heading": "Works great",
+        "details": "Works great for **reaching out to recruiters** and finding **relevant opportunities**."
+    },
+    {
+        "title": "Technology Leader",
+        "company": "Prestanda Consulting",
+        "company_logo": "prestandaconsulting1_logo.jpeg",
+        "rating": "amazing",
+        "heading": "It really works",
+        "details": "HAPPPY really works. Once you land a **referral**, you get an **interview**."
+    },
+    {
+        "title": "Engineering Leader",
+        "company": "Amagi",
+        "company_logo": "amagicorporation_logo.jpeg",
+        "rating": "amazing",
+        "heading": "A great idea",
+        "details": "It's indeed a **great idea**, and a **smarter way** to approach a job search."
+    },
+    {
+        "title": "Software Engineer",
+        "company": "IBM",
+        "company_logo": "ibm_logo.jpeg",
+        "rating": "amazing",
+        "heading": "Effective and amazing",
+        "details": "An **amazing** and **effective** way to find jobs, **without the endless scrolling** through job boards."
+    },
+    {
+        "title": "Software Engineer",
+        "company": "WEX",
+        "company_logo": "wexinc_logo.jpeg",
+        "rating": "amazing",
+        "heading": "Love it",
+        "details": "**Love, love, love** it! **Easy to use** and genuinely **helpful**."
+    },
+    {
+        "title": "Software Engineer",
+        "company": "Expedia Group",
+        "company_logo": "expediagroup_logo.jpeg",
+        "rating": "amazing",
+        "heading": "Great product",
+        "details": "A **great** product, **well thought out** from start to finish."
+    }
+]

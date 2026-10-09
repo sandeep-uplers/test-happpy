@@ -2,6 +2,9 @@
 
 /** Happpy Agent landing page — shared static assets (Figma redesign sections) */
 
+import candidateProofTestimonials from "./candidateProofTestimonials.json";
+import candidateProofAnonymousTestimonials from "./candidateProofAnonymousTestimonials.json";
+
 const OUTREACH_IMAGE_ROOT = "/images/talent/outreach";
 
 /** Razorpay checkout accent — matches payment modals across Happpy surfaces. */
@@ -343,6 +346,55 @@ export const HAPPY_PRIVACY_BADGES = [
 
 /* Testimonials */
 export const HAPPY_TESTIMONIALS_TITLE_UNDERLINE_SRC = `${OUTREACH_IMAGE_ROOT}/testimonials-title-underline.svg`;
+
+/* Candidate proof — Figma 3523:3332. Data: candidateProofTestimonials.json */
+const HAPPY_CANDIDATE_PROOF_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/candidate-proof`;
+export const HAPPY_CANDIDATE_PROOF_UNDERLINE_SRC = `${HAPPY_CANDIDATE_PROOF_ASSET_BASE}/headline-underline.svg`;
+
+export const HAPPY_CANDIDATE_PROOF_HEADLINE = {
+    count: "7,000+",
+    label: "HAPPPY USERS",
+};
+
+/** `**text**` in `details` renders bold. */
+function parseCandidateProofDetails(details) {
+    return details
+        .split(/(\*\*[^*]+\*\*)/)
+        .filter(Boolean)
+        .map((part) => (
+            part.startsWith("**") && part.endsWith("**")
+                ? { text: part.slice(2, -2), bold: true }
+                : { text: part }
+        ));
+}
+
+function candidateProofInitials(name) {
+    const words = name.trim().split(/\s+/);
+    const first = words[0]?.[0] || "";
+    const last = words.length > 1 ? words[words.length - 1][0] : "";
+    return `${first}${last}`.toUpperCase();
+}
+
+function mapCandidateProofItem(item, index) {
+    const anonymous = !item.name;
+    return {
+        id: `candidate-proof-${index + 1}`,
+        title: item.heading,
+        quote: parseCandidateProofDetails(item.details),
+        name: anonymous ? item.title : item.name,
+        role: anonymous ? item.company : item.title,
+        company: item.company,
+        anonymous,
+        avatar: item.image ? `${HAPPY_CANDIDATE_PROOF_ASSET_BASE}/people/${item.image}` : "",
+        initials: anonymous || item.image ? "" : candidateProofInitials(item.name),
+        companyLogo: item.company_logo ? `${HAPPY_CANDIDATE_PROOF_ASSET_BASE}/logos/${item.company_logo}` : "",
+    };
+}
+
+export const HAPPY_CANDIDATE_PROOF_ITEMS = [
+    ...candidateProofTestimonials,
+    ...candidateProofAnonymousTestimonials,
+].map(mapCandidateProofItem);
 
 /* Section 11 — FAQ */
 export const HAPPY_FAQ_GROUPS = [
