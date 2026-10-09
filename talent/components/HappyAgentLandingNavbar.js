@@ -122,7 +122,9 @@ export default function HappyAgentLandingNavbar({
             <header
                 className={[
                     "happy-agent-landing-navbar",
-                    variant === "public" ? "happy-agent-landing-navbar--scroll-away" : "happy-agent-landing-navbar--auto-hide",
+                    variant === "public"
+                        ? "happy-agent-landing-navbar--scroll-away happy-agent-landing-navbar--public-bar"
+                        : "happy-agent-landing-navbar--auto-hide",
                     isNavHidden ? "happy-agent-landing-navbar--hidden" : "",
                 ].filter(Boolean).join(" ")}
                 role="banner"
@@ -130,6 +132,7 @@ export default function HappyAgentLandingNavbar({
                 inert={isNavHidden ? "" : undefined}
             >
                 <div className="happy-agent-landing-navbar__pill">
+                    <div className="happy-agent-landing-navbar__pill-inner">
                     <a
                         href="#happyJobAgentPublic"
                         className="happy-agent-landing-navbar__brand"
@@ -197,6 +200,7 @@ export default function HappyAgentLandingNavbar({
                                 ) : null}
                             </>
                         )}
+                    </div>
                     </div>
                 </div>
             </header>

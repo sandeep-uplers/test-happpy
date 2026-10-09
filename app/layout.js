@@ -5,8 +5,7 @@ import '../styles/happpy-tokens.css';
 import '../styles/fonts.css';
 
 const GTM_CONTAINER_ID = 'GTM-P6GXD64V';
-const HAPPY_HERO_WEBP_SRCSET =
-    '/images/talent/outreach/hero/hero-bg-768.webp 768w, /images/talent/outreach/hero/hero-bg-1280.webp 1280w, /images/talent/outreach/hero/hero-bg.webp 1536w';
+const HAPPY_HERO_SCENE_SRC = '/images/talent/outreach/hero/hero-scene-base.jpg';
 
 export const metadata = {
     title: 'Happpy Agent',
@@ -55,10 +54,9 @@ export default function RootLayout({ children }) {
                 <link
                     rel="preload"
                     as="image"
-                    type="image/webp"
+                    type="image/jpeg"
                     fetchPriority="high"
-                    imageSrcSet={HAPPY_HERO_WEBP_SRCSET}
-                    imageSizes="100vw"
+                    href={HAPPY_HERO_SCENE_SRC}
                 />
             </head>
             <body>

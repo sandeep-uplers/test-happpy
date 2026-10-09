@@ -24,13 +24,13 @@
     --happy-footer: #ffffff;
     --happy-lavender: var(--happy-yellow-soft);
     --happy-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-    --happy-landing-cream: #f3f0e8;
+    --happy-landing-cream: #fff;
     --happy-landing-section-divider: #dcd9c6;
     /* Shared horizontal inset for all section separator lines */
     --happy-landing-divide-inset-x: 80px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: var(--happy-ink);
-    background: #F3F0E8;
+    background: #fff;
     min-height: 100vh;
     min-height: 100dvh;
     overflow-x: clip;
@@ -56,6 +56,11 @@
 /* Reserve scrollbar gutter so modal/drawer body lock does not shift fixed nav or content. */
 html.happy-job-agent-landing-active {
     scrollbar-gutter: stable;
+    background: #fff;
+}
+
+html.happy-job-agent-landing-active body {
+    background: #fff;
 }
 
 html.happy-job-agent-landing-active body.happy-agent-modal-open,
@@ -4756,6 +4761,598 @@ html.happy-job-agent-landing-active #app {
     }
 }
 
+/* Figma 3523:2499 — referral hero v2 (white header + scene + progress card) */
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 {
+    background: #fff;
+    min-height: auto;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__bg {
+    display: none;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__inner--referral-v2 {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding-top: calc(109px + env(safe-area-inset-top, 0px));
+    padding-bottom: 45px;
+    padding-inline: max(24px, min(100px, calc((100vw - 1235px) / 2)));
+    text-align: left;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 45px;
+}
+
+/* 1235px content column; inline padding on inner is extra (outside this width) */
+.happy-job-agent-landing .happy-agent-hero-mesh__inner--referral-v2 .happy-agent-hero-mesh__top,
+.happy-job-agent-landing .happy-agent-hero-mesh__inner--referral-v2 .happy-agent-hero-mesh__visual {
+    width: 100%;
+    max-width: 1235px;
+    margin-inline: auto;
+}
+.happy-job-agent-landing .happy-agent-hero-mesh__inner--referral-v2 .happy-agent-hero-mesh__visual {
+    min-height: 400px;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__inner.happy-agent-hero-mesh__inner--with-landing-nav.happy-agent-hero-mesh__inner--referral-v2 {
+    padding-top: calc(109px + env(safe-area-inset-top, 0px));
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__top {
+    display: grid;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+}
+
+/* Figma 3523:2499 — title | / | chips + subtitle + CTA (fluid columns, 494:627 at max) */
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__top {
+    grid-template-columns: minmax(0, 494fr) clamp(16px, 2.5vw, 24px) minmax(0, 627fr);
+    grid-template-rows: auto auto;
+    column-gap: clamp(16px, 3.6vw, 45px);
+    row-gap: 0;
+    align-items: end;
+    
+    @media screen and (max-width: 1201px) {
+        align-items: start;
+    }
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__title--referral-v2 {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    margin: 0;
+    max-width: 100%;
+    min-width: 0;
+    align-items: flex-start;
+    gap: 4px;
+    z-index: 1;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__top-divider--referral-v2 {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: end;
+    justify-self: center;
+    width: 100%;
+    max-width: 24px;
+    margin: 0;
+    font-family: "Rubik", sans-serif;
+    font-size: clamp(1.75rem, 3.8vw, 3rem);
+    font-weight: 400;
+    line-height: 1;
+    color: #231f20;
+    text-align: center;
+
+    /* @media screen and (max-width: 1201px) {
+        display: none;
+    } */
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__aside--referral-v2 {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    padding-left: 7px;
+    overflow: visible;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__chips {
+    align-self: flex-start;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__title-set--desktop {
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__title-line {
+    display: block;
+    font-family: "Rubik", sans-serif;
+    font-size: clamp(2.25rem, 4.2vw + 0.35rem, 4.5rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #231f20 !important;
+    line-height: 1.05;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__title-days {
+    display: block;
+    font-family: "Rubik", sans-serif;
+    font-size: clamp(2.5rem, 4.6vw + 0.4rem, 5rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #231f20 !important;
+    line-height: 1.05;
+    white-space: nowrap;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    max-width: 100%;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Rubik", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: normal;
+    color: #086d7e;
+    white-space: nowrap;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__chip-sparkle {
+    flex-shrink: 0;
+    display: block;
+    width: 16px;
+    height: 16px;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__intro-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: clamp(12px, 2vw, 24px) clamp(16px, 3vw, 40px);
+    width: 100%;
+    margin: clamp(16px, 2.5vw, 24px) 0 0;
+    padding: 0;
+    min-width: 0;
+    overflow: visible;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__aside-lead {
+    margin: 0;
+    flex: 1 1 12rem;
+    width: auto;
+    max-width: 228px;
+    min-width: min(100%, 180px);
+    font-family: "Rubik", sans-serif;
+    font-size: clamp(0.875rem, 1.1vw + 0.5rem, 1rem);
+    font-weight: 400;
+    line-height: 1.5;
+    color: #231f20;
+
+    @media screen and (max-width: 1201px) {
+        max-width: unset;
+    }
+    @media screen and (max-width: 1023px) {
+        flex: unset;
+    }
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__actions--aside {
+    width: auto;
+    flex-shrink: 0;
+    align-items: flex-start;
+    margin: 0 0 4px;
+    overflow: visible;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__cta-wrap {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-shrink: 0;
+}
+
+/* Figma 3746:2118 — overlaps lower-right of 352×48 CTA */
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__cta-sparkle {
+    position: absolute;
+    width: 79px;
+    height: 77px;
+    right: -40px;
+    bottom: -42px;
+    max-width: none;
+    pointer-events: none;
+    user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .happy-job-agent-landing .happy-agent-hero-mesh__cta-sparkle {
+        opacity: 0.85;
+    }
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__actions--mobile-hero {
+    display: none;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__inline-brand {
+    display: none;
+}
+
+/* Figma 3715:38355 — public mobile hero copy (hidden on desktop; see @media below) */
+.happy-job-agent-landing .happy-agent-hero-mesh__copy--figma-38355 {
+    display: none;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__pill--cta-dark {
+    background: #231f20 !important;
+    border-color: #231f20 !important;
+    color: #fff !important;
+    box-shadow: 2px 4px 2px rgba(129, 127, 127, 0.24);
+    min-height: 48px;
+    width: 352px;
+    max-width: 100%;
+    padding: 12px 24px;
+    justify-content: center;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__pill--cta-dark .happy-agent-hero-mesh__pill-label {
+    color: #fff !important;
+    font-family: "Telegraf", "Rubik", sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__pill--cta-dark.HERO svg path {
+    fill: #fff;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__visual {
+    position: relative;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    height: auto;
+    aspect-ratio: 214 / 83;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__scene {
+    pointer-events: none;
+    user-select: none;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__scene--base {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: 50% 50%;
+    background-color: #f5e6c8;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress {
+    position: absolute;
+    left: clamp(12px, 14.596%, 10rem);
+    top: 12.165%;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: min(434px, 88%);
+    max-width: calc(100% - 24px);
+    pointer-events: none;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__card {
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px 26px 22px;
+    pointer-events: auto;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__title {
+    margin: 0 0 18px;
+    font-family: "Rubik", sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: normal;
+    color: #231f20;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__title strong {
+    font-weight: 600;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__bar-row {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 20px;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__rocket {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__track {
+    flex: 1 1 auto;
+    height: 12px;
+    border-radius: 48px;
+    background: #f3f3f5;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__fill {
+    height: 100%;
+    border-radius: 48px;
+    background: linear-gradient(179.84deg, #2dc9a7 1.05%, rgba(49, 220, 177, 0) 148.38%);
+    transition: width 0.45s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .happy-job-agent-landing .happy-hero-interview-progress__fill {
+        transition: none;
+    }
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__pct {
+    flex-shrink: 0;
+    font-family: "Rubik", sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    color: #6b6b6b;
+    min-width: 2.5em;
+    text-align: right;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 16px;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__indicator {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__step--pending .happy-hero-interview-progress__indicator {
+    border-radius: 50%;
+    border: 0.8px solid rgba(107, 107, 107, 0.6);
+    box-sizing: border-box;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__indicator-num {
+    font-family: "Rubik", sans-serif;
+    font-size: 9.6px;
+    font-weight: 400;
+    line-height: 1;
+    color: #231f20;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__step--pending .happy-hero-interview-progress__indicator-num {
+    color: rgba(107, 107, 107, 0.6);
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__step-label {
+    font-family: "Rubik", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: normal;
+    color: #231f20;
+    white-space: nowrap;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__step--pending .happy-hero-interview-progress__step-label {
+    color: rgba(107, 107, 107, 0.6);
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 381px;
+    min-height: 33px;
+    padding: 4px 8px 4px 4px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.88);
+    pointer-events: auto;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__status-sparkle {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+}
+
+.happy-job-agent-landing .happy-hero-interview-progress__status-copy {
+    font-family: "Rubik", sans-serif;
+    font-size: 10.8px;
+    font-weight: 400;
+    letter-spacing: -0.43px;
+    color: #231f20;
+    line-height: normal;
+    white-space: nowrap;
+}
+
+/* Figma 3523:5727 — live results below referral hero */
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__live-results {
+    background: #fff;
+    border-top: none;
+}
+
+.happy-job-agent-landing .happy-agent-live-results__stack--referral-v2 {
+    gap: 16px;
+    max-width: 1280px;
+    padding: 40px max(24px, min(100px, calc((100vw - 1235px) / 2))) 40px;
+}
+
+.happy-job-agent-landing .happy-agent-live-results--referral-v2.happy-agent-live-results--hero {
+    background: #fff;
+    border-bottom: none;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results__eyebrow--hero {
+    color: #231f20;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results__eyebrow-dot {
+    background: #2dc9a7;
+}
+
+.happy-job-agent-landing .happy-agent-live-results__eyebrow-sparkle {
+    flex-shrink: 0;
+    display: block;
+    width: 8px;
+    height: 8px;
+    color: #c9c4b5;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results--hero .happy-agent-live-results__pill::before {
+    background: rgba(243, 243, 245, 0.95);
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results--hero .happy-agent-live-results__pill {
+    border: 1px solid transparent;
+    box-shadow:
+        inset 2.146px 2px 9.24px 0 rgba(255, 255, 255, 0.13),
+        inset 1.217px 1.134px 4.62px 0 rgba(255, 255, 255, 0.13);
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results--hero .happy-agent-live-results__pill-label {
+    font-family: "Rubik", sans-serif;
+    font-weight: 500;
+    color: #6b6b6b;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results--hero .happy-agent-live-results__pill:hover {
+    border-color: rgba(107, 107, 107, 0.12);
+    box-shadow:
+        inset 2.146px 2px 9.24px 0 rgba(255, 255, 255, 0.18),
+        inset 1.217px 1.134px 4.62px 0 rgba(255, 255, 255, 0.18),
+        0 4px 16px rgba(35, 31, 32, 0.06);
+    transform: translateY(-1px);
+}
+
+/* Figma 3523:2499 frame ends before duplicate stat row — chips cover trust copy */
+.happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__trust-stats {
+    display: none;
+}
+
+@media (max-width: 1199px) {
+    .happy-job-agent-landing .happy-hero-interview-progress__step-label,
+    .happy-job-agent-landing .happy-hero-interview-progress__status-copy {
+        white-space: normal;
+    }
+}
+
+/* Tablet — stack hero header; keep desktop copy + scene */
+@media (max-width: 991px) {
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__top {
+        grid-template-columns: 1fr;
+        row-gap: clamp(20px, 4vw, 28px);
+        align-items: start;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__title--referral-v2 {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__top-divider--referral-v2 {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__aside--referral-v2 {
+        grid-column: 2;
+        grid-row: auto;
+        width: 100%;
+        padding-left: 0;
+
+        @media screen and (max-width: 872px) {
+            grid-column: 1;
+        }
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__aside-lead {
+        flex: 1 1 100%;
+        max-width: 36rem;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__cta-sparkle {
+        right: -32px;
+        bottom: -28px;
+        width: 64px;
+        height: 62px;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__title-days {
+        white-space: normal;
+    }
+}
+
+@media (max-width: 1023px) {
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__intro-row.happy-agent-hero-mesh__lead-set--desktop {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__actions--aside {
+        width: auto;
+        max-width: 100%;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__pill--cta-dark {
+        width: 100%;
+        max-width: 352px;
+    }
+}
+
 /* Hero live results — Figma 2232:12944, full-bleed 100vw marquee at hero foot */
 .happy-job-agent-landing .happy-agent-hero-mesh__live-results {
     position: relative;
@@ -4803,6 +5400,13 @@ html.happy-job-agent-landing-active #app {
     text-transform: uppercase;
     color: #f0f1f1;
     white-space: nowrap;
+}
+
+.happy-job-agent-landing .happy-agent-live-results__eyebrow-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
 }
 
 .happy-job-agent-landing .happy-agent-live-results__eyebrow-label,
@@ -4912,7 +5516,7 @@ html.happy-job-agent-landing-active #app {
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    max-width: 100%;
+    max-width: 494px;
     width: 100%;
 }
 
@@ -5043,8 +5647,16 @@ html.happy-job-agent-landing-active #app {
     justify-content: center;
     align-items: center;
     margin-top: 8px;
-    width: 100%;
-    max-width: 494px;
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__paid-trial-note {
+    margin: 0;
+    max-width: 360px;
+    font-size: 11px;
+    line-height: 1.5;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.92);
+    text-align: center;
 }
 
 .happy-job-agent-landing .happy-agent-hero-mesh__pill {
@@ -5052,7 +5664,7 @@ html.happy-job-agent-landing-active #app {
     align-items: center;
     gap: 12px;
     min-height: 48px;
-    padding: 12px 32px;
+    padding: 12px 24px;
     border-radius: 80px;
     border: none;
     cursor: pointer;
@@ -5196,6 +5808,22 @@ html.happy-job-agent-landing-active #app {
         background: #3ad4b8 !important;
         svg path {
             fill: var(--happy-hero-mesh-ink);
+        }
+    }
+}
+
+.happy-job-agent-landing .happy-agent-hero-mesh__pill--primary.HERO.happy-agent-hero-mesh__pill--cta-dark {
+    background: #231f20 !important;
+    color: #fff !important;
+
+    svg path {
+        fill: #fff !important;
+    }
+
+    &:hover {
+        background: #3a3536 !important;
+        svg path {
+            fill: #fff !important;
         }
     }
 }
@@ -5350,8 +5978,260 @@ html.happy-job-agent-landing-active #app {
 }
 
 @media (max-width: 767px) {
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 {
+        min-height: auto;
+        background: #fff;
+    }
+
+    .happy-job-agent-landing:not(.happy-job-agent-landing--public-unauth) .happy-agent-hero-mesh__inner--referral-v2 {
+        padding: calc(102px + env(safe-area-inset-top, 0px)) 24px 32px;
+        gap: 32px;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__top {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__title--referral-v2 {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__top-divider--referral-v2 {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__aside--referral-v2 {
+        grid-column: 1;
+        grid-row: auto;
+        padding-left: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__chips {
+        margin: 0;
+        flex-wrap: wrap;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__intro-row.happy-agent-hero-mesh__lead-set--desktop {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__cta-sparkle {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__lead-set--mobile {
+        grid-column: 1;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__actions--mobile-hero {
+        display: flex;
+        width: 100%;
+        margin-top: 16px;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__visual {
+        border-radius: 0;
+        width: 100%;
+        aspect-ratio: 214 / 83;
+        height: auto;
+        min-height: 0;
+        padding-bottom: 0;
+    }
+
+    .happy-job-agent-landing .happy-hero-interview-progress {
+        left: -48px;
+        top: -32px;
+        bottom: auto;
+        width: auto;
+        max-width: none;
+        scale: 0.6;
+    }
+
+    .happy-job-agent-landing .happy-hero-interview-progress__card {
+        padding: 16px 18px;
+    }
+
+    .happy-job-agent-landing .happy-hero-interview-progress__step-label {
+        white-space: normal;
+    }
+
+    /* Figma 3715:38343 — public unauthenticated mobile hero (inline logo, no top bar) */
+    .happy-job-agent-landing--public-unauth .happy-agent-landing-navbar--public-bar {
+        display: none;
+    }
+
+    .happy-job-agent-landing--public-unauth .happy-agent-hero-mesh__inline-brand {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: 1235px;
+        margin-inline: auto;
+        padding: calc(20px + env(safe-area-inset-top, 0px)) 20px 12px;
+        box-sizing: border-box;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .happy-job-agent-landing--public-unauth .happy-agent-hero-mesh__inline-brand-logo.happpy-agent-logo {
+        --happpy-logo-text-size: 20px;
+        color: #231f20;
+    }
+
+    .happy-job-agent-landing--public-unauth .happy-agent-hero-mesh__inline-brand-logo .happpy-agent-logo__mark {
+        width: 48px;
+        height: 48px;
+    }
+
+    .happy-job-agent-landing--public-unauth .happy-agent-hero-mesh__inner--referral-v2 {
+        padding-top: 0;
+        padding-inline: 0;
+        padding-bottom: 0;
+        gap: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__top {
+        padding: 0;
+        gap: 0;
+        width: 100%;
+        max-width: none;
+        margin-inline: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__title--referral-v2,
+    .happy-job-agent-landing .happy-agent-hero-mesh__top-divider--referral-v2,
+    .happy-job-agent-landing .happy-agent-hero-mesh__aside--referral-v2,
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__lead-set--mobile {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__copy--figma-38355 {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        width: 100%;
+        padding: 32px 20px 24px;
+        overflow: clip;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__copy-title {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 0;
+        width: 100%;
+        font-family: "Rubik", sans-serif;
+        color: #231f20;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__copy-title-line {
+        display: block;
+        font-size: 44px;
+        font-weight: 500;
+        line-height: 1.08;
+        letter-spacing: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__copy-title-highlight {
+        display: block;
+        font-size: 52px;
+        font-weight: 700;
+        line-height: 1.08;
+        letter-spacing: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__copy-lead {
+        margin: 0;
+        width: 100%;
+        font-family: "Rubik", sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #6b6b6b;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__copy-action-stack {
+        position: relative;
+        width: 100%;
+        min-height: 92px;
+        overflow: visible;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__copy-action-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        width: 100%;
+        max-width: 350px;
+        padding-top: 20px;
+        box-sizing: border-box;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__copy-action-inner .happy-agent-hero-mesh__cta-wrap {
+        width: 100%;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__copy-action-inner .happy-agent-hero-mesh__pill--cta-dark {
+        width: 100%;
+        max-width: none;
+        min-height: 48px;
+        padding: 16px 24px;
+        border-radius: 80px;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__pill-label--referral-mobile-cta {
+        font-family: "Telegraf", sans-serif;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: normal;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__cta-sparkle--copy {
+        display: block;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__chips--copy {
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+        max-width: 100%;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__chips--copy .happy-agent-hero-mesh__chip {
+        font-size: 10px;
+        font-weight: 400;
+        gap: 4px;
+        color: #086d7e;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh__chips--copy .happy-agent-hero-mesh__chip-sparkle {
+        width: 11px;
+        height: 11px;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__visual {
+        width: 100%;
+        max-width: none;
+        margin-inline: 0;
+        padding: 0 20px 32px;
+        box-sizing: border-box;
+        min-height: 240px;
+    }
+
+    .happy-job-agent-landing--public-unauth .happy-agent-hero-mesh__inner.happy-agent-hero-mesh__inner--with-landing-nav {
+        padding-top: 0;
+    }
+
     /* Figma 3200:41273 — mobile hero mesh (fixed spec; viewport height tuning later) */
-    .happy-job-agent-landing .happy-agent-hero-mesh {
+    .happy-job-agent-landing .happy-agent-hero-mesh:not(.happy-agent-hero-mesh--referral-v2) {
         border-radius: 0;
         min-height: 100vh;
         min-height: 100dvh;
@@ -5378,7 +6258,7 @@ html.happy-job-agent-landing-active #app {
         pointer-events: none;
     }
 
-    .happy-job-agent-landing .happy-agent-hero-mesh__inner {
+    .happy-job-agent-landing:not(.happy-job-agent-landing--public-unauth) .happy-agent-hero-mesh__inner {
         flex: 1 1 auto;
         padding: 0 24px;
         gap: 32px;
@@ -5420,20 +6300,101 @@ html.happy-job-agent-landing-active #app {
         max-width: 287px;
     }
 
+    /* After generic mobile lead-set display — public referral uses __copy--figma-38355 only */
+    .happy-job-agent-landing--public-unauth .happy-agent-hero-mesh__lead-set--mobile {
+        display: none;
+    }
+
     .happy-job-agent-landing .happy-agent-hero-mesh__pill-label--mobile {
         display: inline;
     }
 
     /* Must come after the shorthand above — that rule was wiping
        padding-top reserved for the authenticated landing navbar. */
-    .happy-job-agent-landing .happy-agent-hero-mesh__inner.happy-agent-hero-mesh__inner--with-landing-nav {
+    .happy-job-agent-landing:not(.happy-job-agent-landing--public-unauth) .happy-agent-hero-mesh__inner.happy-agent-hero-mesh__inner--with-landing-nav {
         padding-top: calc(102px + env(safe-area-inset-top, 0px));
     }
 
     /* Header lives inside `.happy-job-agent-landing`, then next to the hero —
        not as a sibling of the landing root (unlike `.top-toolbar ~ .landing`). */
-    .happy-job-agent-landing .happy-agent-landing-navbar--scroll-away ~ .happy-agent-hero-mesh .happy-agent-hero-mesh__inner.happy-agent-hero-mesh__inner--with-landing-nav {
+    .happy-job-agent-landing:not(.happy-job-agent-landing--public-unauth) .happy-agent-landing-navbar--scroll-away ~ .happy-agent-hero-mesh .happy-agent-hero-mesh__inner.happy-agent-hero-mesh__inner--with-landing-nav {
         padding-top: calc(72px + env(safe-area-inset-top, 0px));
+    }
+
+    /* Authenticated referral hero: same flush layout as public (__copy--figma-38355 owns the 20px inset) */
+    .happy-job-agent-landing:not(.happy-job-agent-landing--public-unauth) .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__inner.happy-agent-hero-mesh__inner--referral-v2 {
+        padding-inline: 0;
+        padding-bottom: 0;
+        gap: 0;
+    }
+
+    /* Figma 3715:38343 — one horizontal inset (20px) on hero rows only; inner stays flush */
+    .happy-job-agent-landing--public-unauth .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__inner.happy-agent-hero-mesh__inner--referral-v2 {
+        padding: 0;
+    }
+
+    /* Figma 3715:38398 — live results (header inset 20px; marquee full bleed). Shared by public and authenticated mobile. */
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results__stack--referral-v2 {
+        padding: 32px 20px;
+        gap: 16px;
+        align-items: stretch;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results__header--hero {
+        justify-content: flex-start;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results__eyebrow--hero {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        flex-wrap: nowrap;
+        width: 100%;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0;
+        line-height: normal;
+        text-transform: uppercase;
+        white-space: normal;
+        color: #231f20;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results__eyebrow-kicker {
+        gap: 7px;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results__eyebrow-sparkle {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results__eyebrow-label {
+        font-weight: 700;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results__eyebrow-stat {
+        width: 100%;
+        justify-content: flex-start;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        line-height: normal;
+        text-transform: uppercase;
+        white-space: normal;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results__eyebrow-copy--desktop {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results__eyebrow-copy--mobile {
+        display: inline;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results--hero .happy-agent-live-results__marquee-row {
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     }
 
     .happy-job-agent-landing .happy-agent-hero-mesh__live-results {
@@ -5442,7 +6403,11 @@ html.happy-job-agent-landing-active #app {
         width: 100%;
     }
 
-    .happy-job-agent-landing .happy-agent-live-results__stack--hero {
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-hero-mesh__live-results {
+        border-top: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-live-results__stack--hero:not(.happy-agent-live-results__stack--referral-v2) {
         padding: 24px 20px 20px;
         gap: 12px;
         align-items: center;
@@ -5470,21 +6435,21 @@ html.happy-job-agent-landing-active #app {
         color: #231f20;
     }
 
-    .happy-job-agent-landing .happy-agent-live-results--hero .happy-agent-live-results__pill {
+    .happy-job-agent-landing .happy-agent-live-results--hero:not(.happy-agent-live-results--referral-v2) .happy-agent-live-results__pill {
         border: none;
         box-shadow: none;
     }
 
-    .happy-job-agent-landing .happy-agent-live-results--hero .happy-agent-live-results__pill::before {
+    .happy-job-agent-landing .happy-agent-live-results--hero:not(.happy-agent-live-results--referral-v2) .happy-agent-live-results__pill::before {
         background: #E3DED2;
     }
 
-    .happy-job-agent-landing .happy-agent-live-results--hero .happy-agent-live-results__pill-label {
+    .happy-job-agent-landing .happy-agent-live-results--hero:not(.happy-agent-live-results--referral-v2) .happy-agent-live-results__pill-label {
         color: #231f20;
         line-height: 1.4;
     }
 
-    .happy-job-agent-landing .happy-agent-live-results--hero .happy-agent-live-results__pill:hover {
+    .happy-job-agent-landing .happy-agent-live-results--hero:not(.happy-agent-live-results--referral-v2) .happy-agent-live-results__pill:hover {
         border-color: transparent;
         box-shadow: 0 2px 8px rgba(35, 31, 32, 0.08);
     }
@@ -5494,17 +6459,25 @@ html.happy-job-agent-landing-active #app {
         mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
     }
 
-    .happy-job-agent-landing .happy-agent-live-results__eyebrow--hero .happy-agent-live-results__eyebrow-label,
-    .happy-job-agent-landing .happy-agent-live-results__eyebrow--hero .happy-agent-live-results__eyebrow-copy--desktop {
+    .happy-job-agent-landing .happy-agent-hero-mesh:not(.happy-agent-hero-mesh--referral-v2) .happy-agent-live-results__eyebrow--hero .happy-agent-live-results__eyebrow-label,
+    .happy-job-agent-landing .happy-agent-hero-mesh:not(.happy-agent-hero-mesh--referral-v2) .happy-agent-live-results__eyebrow--hero .happy-agent-live-results__eyebrow-copy--desktop {
         display: none;
     }
 
-    .happy-job-agent-landing .happy-agent-live-results__eyebrow--hero .happy-agent-live-results__eyebrow-copy--mobile {
+    .happy-job-agent-landing .happy-agent-hero-mesh:not(.happy-agent-hero-mesh--referral-v2) .happy-agent-live-results__eyebrow--hero .happy-agent-live-results__eyebrow-copy--mobile {
         display: inline;
     }
 
-    .happy-job-agent-landing .happy-agent-live-results__eyebrow--hero .happy-agent-live-results__eyebrow-dot {
+    .happy-job-agent-landing .happy-agent-hero-mesh:not(.happy-agent-hero-mesh--referral-v2) .happy-agent-live-results__eyebrow--hero .happy-agent-live-results__eyebrow-dot {
         display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results--hero .happy-agent-live-results__pill::before {
+        background: rgba(243, 243, 245, 0.95);
+    }
+
+    .happy-job-agent-landing .happy-agent-hero-mesh--referral-v2 .happy-agent-live-results--hero .happy-agent-live-results__pill-label {
+        color: #6b6b6b;
     }
 
     .happy-job-agent-landing .happy-agent-live-results__eyebrow-label,
@@ -5614,8 +6587,12 @@ html.happy-job-agent-landing-active #app {
     .happy-job-agent-landing .happy-agent-hero-mesh__pill--primary.HERO {
         min-height: 40px;
         max-width: 100%;
-        padding: 12px 32px;
+        padding: 12px 24px;
         box-shadow: 2px 4px 2px rgba(129, 127, 127, 0.24);
+
+        @media screen and (max-width: 390px) {
+            padding: 12px 16px;
+        }
     }
 
     .happy-job-agent-landing .happy-agent-hero-mesh__pill-label--mobile {
@@ -6046,7 +7023,7 @@ html.happy-job-agent-landing-active #app {
     --happy-hiw-ink: #231f20;
     --happy-hiw-title: #231f20;
     --happy-hiw-muted: #6b6b6b;
-    background: #f3f0e8;
+    background: #fff;
     padding: 80px 100px;
 }
 
@@ -6398,8 +7375,10 @@ html.happy-job-agent-landing-active #app {
     gap: 8px;
     padding: 8px;
     border-radius: 48px;
-    border: 1px solid transparent;
-    background: linear-gradient(270deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%) padding-box, linear-gradient(90deg, var(--happy-wa-chip-border-start) 0%, var(--happy-wa-chip-border-end) 100%) border-box;
+    border: 1px solid #FFF5F5;
+    background: linear-gradient(179deg, rgba(255, 255, 255, 0.80) 0.75%, rgba(255, 255, 255, 0.00) 196.52%);
+    /* border: 1px solid transparent;
+    background: linear-gradient(270deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%) padding-box, linear-gradient(90deg, var(--happy-wa-chip-border-start) 0%, var(--happy-wa-chip-border-end) 100%) border-box; */
    
     @media (max-width: 767px) {
         &.large{
@@ -6477,6 +7456,376 @@ html.happy-job-agent-landing-active #app {
     padding: 16px 16px 0;
 }
 
+/* Figma 3523:2999 — “We are not a job board” split section (illustration + copy) */
+.happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 {
+    padding: 80px max(24px, min(100px, calc((100vw - 1231px) / 2)));
+    background: #fff;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__inner {
+    max-width: 1235px;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 64px;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere__visual {
+    width: 425px;
+    max-width: 100%;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere__scene {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere__copy {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__header {
+    align-items: flex-start;
+    text-align: left;
+    max-width: none;
+    width: 100%;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__title {
+    align-items: flex-start;
+    text-align: left;
+    width: 100%;
+}
+
+/* Figma 3523:3112 — 374×82 bracket + centered Rubik Medium kicker */
+.happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__title-kicker {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 374px;
+    max-width: 100%;
+    aspect-ratio: 374 / 82;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: normal;
+    text-align: center;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__title-bracket {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    pointer-events: none;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__title-kicker-text {
+    position: relative;
+    z-index: 1;
+    padding: 0 22px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__title-text {
+    text-align: left;
+    width: 100%;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__chips {
+    justify-content: flex-start;
+    gap: 8px;
+    padding-top: 24px;
+    max-width: 653px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__footer {
+    margin: 0;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 6px;
+    padding-top: 8px;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__footer-handwriting {
+    font-size: 12px;
+    line-height: normal;
+    letter-spacing: 1px;
+    color: #6b6b6b;
+    padding-top: 0;
+    white-space: nowrap;
+}
+
+.happy-job-agent-landing .happy-agent-works-anywhere__footer-sparkle {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    transform: rotate(58deg);
+}
+
+@media (max-width: 991px) {
+    .happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__inner {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__copy {
+        align-items: center;
+        width: 100%;
+    }
+
+    .happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__header,
+    .happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__title,
+    .happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__title-text {
+        align-items: center;
+        text-align: center;
+    }
+
+    .happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__chips {
+        justify-content: center;
+    }
+
+    .happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__footer {
+        justify-content: center;
+    }
+}
+
+/* Manual vs — Referral desktop stage (Figma 3682:37039); mobile keeps legacy block until mobile Figma */
+.happy-job-agent-landing .happy-agent-manual-vs-figma__referral-stage {
+    display: none;
+    width: 100%;
+}
+
+.happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__legacy {
+    width: 100%;
+}
+
+.happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-body-mobile {
+    display: none;
+}
+
+.happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-action {
+    width: 100%;
+}
+
+/* Referral CTA base (desktop sizes live in @media min-width 901px) */
+.happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-cta {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 14px 24px;
+    border: 0;
+    background: #231f20;
+    color: #fff;
+    cursor: pointer;
+    font-family: "Telegraf", "Rubik", sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+@media (min-width: 901px) {
+    /* Figma 3682:37039 — 100vw band, 100px left gutter only; cream card + portrait on white */
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 {
+        width: 100vw;
+        max-width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        box-sizing: border-box;
+        padding: 80px 0 80px;
+        overflow: visible;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__inner {
+        max-width: none;
+        width: 100%;
+        margin: 0;
+        align-items: stretch;
+        gap: 0;
+        padding-right: 0;
+        box-sizing: border-box;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-stage {
+        display: block;
+        position: relative;
+        width: 100%;
+        min-height: 473px;
+
+        @media (max-width: 1300px) {
+            min-height: 400px;
+           .happy-agent-manual-vs-figma__referral-card{
+                min-height: 400px;
+            }
+        }
+        @media (max-width: 1100px) {
+            min-height: 364px;
+           .happy-agent-manual-vs-figma__referral-card{
+                min-height: 364px;
+            }
+        }
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__legacy {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-card {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+        width: auto;
+        max-width: 100%;
+        min-height: 473px;
+        box-sizing: border-box;
+        max-width: 1152px;
+        margin-inline: auto;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-copy {
+        position: relative;
+        z-index: 2;
+        max-width: 654px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-title {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        font-family: "Rubik", sans-serif;
+        line-height: normal;
+        text-align: left;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-title-muted {
+        font-size: 40px;
+        font-weight: 500;
+        color: #6b6b6b;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-title-emphasis {
+        font-size: 54px;
+        font-weight: 700;
+        color: #231f20;
+        line-height: normal;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-title-accent {
+        color: #059974;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-body {
+        max-width: 538px;
+        font-family: "Rubik", sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 22px;
+        color: #6b6b6b;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-body p {
+        margin: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        padding: 12px 24px;
+        border: 0;
+        border-radius: 27px;
+        background: #231f20;
+        cursor: pointer;
+        font-family: "Telegraf", "Rubik", sans-serif;
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+        color: #fff;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-cta:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(35, 31, 32, 0.18);
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-cta-label {
+        line-height: normal;
+        white-space: nowrap;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-cta-arrow {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-visual {
+        position: absolute;
+        z-index: 0;
+        bottom: 0;
+        right: 0;
+        width: min(603px, 42vw);
+        max-width: 603px;
+        pointer-events: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-scene {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        object-position: right center;
+    }
+}
+@media (min-width: 1300px) {
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-card {
+        max-width: 1170px;
+    }
+}
+@media (min-width: 901px) and (max-width: 1100px) {
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-title-muted {
+        font-size: clamp(28px, 3.5vw, 40px);
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-title-emphasis {
+        font-size: clamp(36px, 4.5vw, 54px);
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-card {
+        width: min(1240px, 72vw);
+        margin-inline: unset;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-visual {
+        width: min(480px, 44vw);
+    }
+}
+
 /* Manual vs Happpy Agent comparison */
 .happy-job-agent-landing .happy-agent-manual-vs-figma {
     overflow-x: clip;
@@ -6489,8 +7838,8 @@ html.happy-job-agent-landing-active #app {
     --happy-mv-stripe: #f6f6f6;
     --happy-mv-stat-bg: #fdfcf9;
 
-    background: #f3f0e8;
-    padding: 80px 41px;
+    background: #fff;
+    padding: 80px 0 0 24px;
 }
 
 .happy-job-agent-landing .happy-agent-manual-vs-figma__inner {
@@ -7057,6 +8406,234 @@ html.happy-job-agent-landing-active #app {
     }
 }
 
+/* Figma 3715:38700 — referral manual vs mobile (desktop referral rules unchanged above 901px) */
+@media (max-width: 900px) {
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        padding: 40px 0 0;
+        overflow-x: clip;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__inner {
+        max-width: none;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        gap: 0;
+        align-items: stretch;
+        align-self: stretch;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-stage {
+        display: flex !important;
+        flex-direction: column;
+        align-items: stretch;
+        align-self: stretch;
+        width: 100%;
+        max-width: none;
+        min-height: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__legacy {
+        display: none !important;
+        visibility: hidden;
+        height: 0;
+        overflow: hidden;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-card {
+        position: static;
+        z-index: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        width: 100%;
+        max-width: none;
+        min-height: 0;
+        margin: 0;
+        padding: 0 20px;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-sizing: border-box;
+        z-index: 1;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-copy {
+        width: 100%;
+        max-width: none;
+        align-items: flex-start;
+        text-align: left;
+        gap: 24px;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-body--desktop {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-body-mobile {
+        display: block;
+        margin: 0;
+        width: 100%;
+        font-family: "Rubik", sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 18px;
+        color: #6b6b6b;
+        text-align: left;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-action {
+        width: 100%;
+        margin-top: 24px;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-title {
+        width: 100%;
+        gap: 12px;
+        text-align: left;
+        align-items: flex-start;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 24px;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-title-muted {
+        display: block;
+        width: 100%;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 1.3;
+        color: #6b6b6b;
+        text-align: left;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-title-emphasis {
+        display: block;
+        width: 100%;
+        font-size: 29px;
+        font-weight: 700;
+        line-height: 1.15;
+        color: #231f20;
+        text-align: left;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-title-accent {
+        font-size: 31px;
+        line-height: 1.15;
+        color: #059974;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-cta {
+        box-sizing: border-box;
+        display: flex;
+        width: 100%;
+        max-width: none;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        min-height: 40px;
+        padding: 12px 24px;
+        border: 0;
+        border-radius: 80px;
+        background: #231f20 !important;
+        color: #fff !important;
+        font-size: 14px;
+        letter-spacing: 0;
+        box-shadow: 2px 4px 2px rgba(129, 127, 127, 0.24);
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-cta:hover {
+        transform: none;
+        background: #231f20;
+        color: #fff;
+        box-shadow: 2px 4px 2px rgba(129, 127, 127, 0.24);
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-cta-label {
+        color: #fff;
+        white-space: nowrap;
+        text-align: center;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-cta-arrow {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-visual {
+        position: relative;
+        z-index: 0;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0 0 0 20px;
+        box-sizing: border-box;
+        pointer-events: none;
+        height: 357px;
+
+        @media (max-width: 400px) {
+            height: 324px;
+            padding: 0 0 0 16px;
+        }
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-visual picture {
+        display: block;
+        width: 370px;
+        height: 357px;
+        max-width: none;
+        margin: 0;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        @media (max-width: 400px) {
+            height: 324px;
+            width: auto;
+            aspect-ratio: 370 / 357;
+        }
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-scene {
+        display: block;
+        width: 100%;
+        max-width: none;
+        height: auto;
+        margin: 0;
+        object-fit: contain;
+        object-position: left bottom;
+    }
+}
+
+@media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-stage.happy-landing-enter {
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 {
+        padding: 40px 0 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__inner {
+        gap: 0;
+        align-items: stretch;
+    }
+}
+
 @media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
     .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row--manual:nth-child(odd) .happy-agent-manual-vs-figma__pill,
     .happy-job-agent-landing .happy-agent-manual-vs-figma.happy-landing-section--revealed .happy-agent-manual-vs-figma__row--manual:nth-child(even) .happy-agent-manual-vs-figma__pill,
@@ -7287,12 +8864,20 @@ html.happy-job-agent-landing-active #app {
         padding: 56px 0;
     }
 
+    .happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 {
+        padding: 56px 16px;
+    }
+
+    .happy-job-agent-landing--public-unauth .happy-agent-works-anywhere--referral-v2 {
+        padding-inline: 20px;
+    }
+
     .happy-job-agent-landing .happy-agent-works-anywhere__title-kicker {
         font-size: clamp(1.375rem, 4.5vw, 32px);
         letter-spacing: -0.4px;
     }
 
-    .happy-job-agent-landing .happy-agent-works-anywhere__title-underline {
+    .happy-job-agent-landing .happy-agent-works-anywhere:not(.happy-agent-works-anywhere--referral-v2) .happy-agent-works-anywhere__title-underline {
         left: 24%;
         width: min(200px, 68%);
         max-width: 68%;
@@ -7310,10 +8895,23 @@ html.happy-job-agent-landing-active #app {
         white-space: normal;
     }
 
-    .happy-job-agent-landing .happy-agent-works-anywhere__footer-handwriting {
+    .happy-job-agent-landing .happy-agent-works-anywhere:not(.happy-agent-works-anywhere--referral-v2) .happy-agent-works-anywhere__footer-handwriting {
         font-size: 20px;
         white-space: normal;
         text-align: center;
+    }
+
+    .happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__footer-handwriting {
+        white-space: normal;
+        text-align: center;
+    }
+
+    .happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__title-kicker {
+        font-size: clamp(1.375rem, 4.5vw, 32px);
+    }
+
+    .happy-job-agent-landing .happy-agent-works-anywhere--referral-v2 .happy-agent-works-anywhere__title-kicker-text {
+        white-space: normal;
     }
 }
 
@@ -7388,7 +8986,9 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-agent-privacy-figma,
 .happy-job-agent-landing .happy-agent-manual-vs-figma,
 .happy-job-agent-landing .happy-agent-works-anywhere,
-.happy-job-agent-landing .happy-agent-setup-figma  {
+.happy-job-agent-landing .happy-agent-jobs-listing,
+.happy-job-agent-landing .happy-agent-setup-figma,
+.happy-job-agent-landing .happy-agent-footer-figma  {
     position: relative;
 }
 
@@ -7400,13 +9000,17 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-agent-privacy-figma::before,
 .happy-job-agent-landing .happy-agent-manual-vs-figma::before,
 .happy-job-agent-landing .happy-agent-works-anywhere::before,
-.happy-job-agent-landing .happy-agent-setup-figma::before {
+.happy-job-agent-landing .happy-agent-jobs-listing::before,
+.happy-job-agent-landing .happy-agent-setup-figma::before,
+.happy-job-agent-landing .happy-agent-footer-figma::before {
     content: "";
     position: absolute;
     top: 0;
-    left: var(--happy-landing-divide-inset-x);
-    right: var(--happy-landing-divide-inset-x);
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 2;
+    width: 1280px;
+    max-width: calc(100% - 48px);
     border-top: 1px solid var(--happy-landing-section-divider);
     pointer-events: none;
 }
@@ -9435,7 +11039,7 @@ html.happy-job-agent-landing-active #app {
 
 /* Logged-in landing — Connect Accounts (Figma Section 5) */
 .happy-job-agent-landing .happy-agent-setup-figma {
-    --happy-setup-cream: #f3f0e8;
+    --happy-setup-cream: #fff;
     --happy-setup-ink: #231f20;
     --happy-setup-title: #202020;
     --happy-setup-muted: #6b6b6b;
@@ -9671,6 +11275,19 @@ html.happy-job-agent-landing-active #app {
     font-size: 14px;
     font-weight: 300;
     color: var(--happy-setup-muted);
+    position: relative;
+    z-index: 1;
+
+    &::before {
+        content: "";
+        position: absolute;
+        bottom: 1px;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: #ADFFD9;
+        z-index: -1;
+    }
 }
 
 .happy-job-agent-landing .account-connection--happy-setup-figma .benefits-list {
@@ -9709,6 +11326,9 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .account-connection--happy-setup-figma .benefit-item-label {
     font-weight: 600;
     color: var(--happy-setup-ink);
+    &.optional{
+        color: #6b6b6b;
+    }
 }
 
 .happy-job-agent-landing .account-connection--happy-setup-figma .card-body {
@@ -10564,7 +12184,7 @@ html.happy-job-agent-landing-active #app {
 
 /* Pricing — Figma Section 6 */
 .happy-job-agent-landing .happy-agent-pricing-figma {
-    background: #f3f0e8;
+    background: #fff;
     padding: 80px 100px;
 }
 
@@ -10720,6 +12340,12 @@ html.happy-job-agent-landing-active #app {
     width: 100%;
 }
 
+.happy-job-agent-landing .happy-agent-privacy-figma__cards-cluster {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .happy-job-agent-landing .happy-agent-privacy-figma__cards {
     list-style: none;
     margin: 0;
@@ -10738,6 +12364,50 @@ html.happy-job-agent-landing-active #app {
     border: 1px solid #e5e4e4;
     background: #ffffff;
     box-sizing: border-box;
+}
+
+/* Figma 3523:3607 — mascot anchored to desktop cards grid (bottom-left) */
+.happy-job-agent-landing .happy-agent-privacy-figma__mascot-message--cards {
+    position: absolute;
+    left: -24px;
+    bottom: 8px;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    transform: translateY(42%);
+    pointer-events: none;
+}
+
+.happy-job-agent-landing .happy-agent-privacy-figma__mascot-message--mobile {
+    display: none;
+}
+
+.happy-job-agent-landing .happy-agent-privacy-figma__mascot-message-art {
+    display: block;
+    width: 80px;
+    height: auto;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.happy-job-agent-landing .happy-agent-privacy-figma__mascot-message-bubble {
+    box-sizing: border-box;
+    width: 160px;
+    max-width: calc(100vw - 120px);
+    padding: 10px 14px;
+    border: 1px solid #c9c4b5;
+    border-radius: 16px;
+    background: #fff;
+}
+
+.happy-job-agent-landing .happy-agent-privacy-figma__mascot-message-copy {
+    margin: 0;
+    font-family: "Rubik", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    color: #086d7e;
 }
 
 .happy-job-agent-landing .happy-agent-privacy-figma__card-title {
@@ -10833,67 +12503,14 @@ html.happy-job-agent-landing-active #app {
     }
 }
 
+/* Tablet + mobile — Figma mobile privacy cards (≤900px) */
 @media (max-width: 900px) {
     .happy-job-agent-landing .happy-agent-privacy-figma {
         padding: 56px 20px;
     }
 
     .happy-job-agent-landing .happy-agent-privacy-figma__inner {
-        gap: 36px;
-    }
-
-    .happy-job-agent-landing .happy-agent-privacy-figma__cards {
-        grid-template-columns: 1fr;
-        max-width: 420px;
-    }
-
-    .happy-job-agent-landing .happy-agent-privacy-figma__card {
-        min-height: 0;
-    }
-}
-
-@media (max-width: 600px) {
-    .happy-job-agent-landing .happy-agent-privacy-figma {
-        padding: 40px 16px;
-    }
-
-    .happy-job-agent-landing .happy-agent-privacy-figma__title {
-        letter-spacing: -0.8px;
-    }
-
-    .happy-job-agent-landing .happy-agent-privacy-figma__badges {
-        gap: 12px 10px;
-    }
-
-    .happy-job-agent-landing .happy-agent-privacy-figma__badge-label {
-        white-space: normal;
-        text-align: center;
-        line-height: 1.2;
-    }
-}
-
-@media (max-width: 767px) {
-    .happy-job-agent-landing .happy-agent-privacy-figma {
-        padding: 56px 16px;
-    }
-
-    .happy-job-agent-landing .happy-agent-privacy-figma__inner {
-        gap: 28px;
-    }
-
-    .happy-job-agent-landing .happy-agent-privacy-figma__header {
-        gap: 8px;
-    }
-
-    .happy-job-agent-landing .happy-agent-privacy-figma__eyebrow {
-        font-weight: 700;
-        letter-spacing: 1.5px;
-    }
-
-    .happy-job-agent-landing .happy-agent-privacy-figma__title {
-        font-size: 28px;
-        line-height: 34px;
-        letter-spacing: -0.8px;
+        gap: 32px;
     }
 
     .happy-job-agent-landing .happy-agent-privacy-figma__title-underline {
@@ -10906,6 +12523,11 @@ html.happy-job-agent-landing-active #app {
 
     .happy-job-agent-landing .happy-agent-privacy-figma__body {
         gap: 28px;
+        align-items: center;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__cards-cluster {
+        display: none;
     }
 
     .happy-job-agent-landing .happy-agent-privacy-figma__cards--desktop {
@@ -10917,6 +12539,8 @@ html.happy-job-agent-landing-active #app {
         flex-direction: column;
         gap: 16px;
         width: 100%;
+        max-width: 420px;
+        margin-inline: auto;
     }
 
     .happy-job-agent-landing .happy-agent-privacy-figma__access-card,
@@ -11044,10 +12668,40 @@ html.happy-job-agent-landing-active #app {
         object-fit: contain;
     }
 
+    .happy-job-agent-landing .happy-agent-privacy-figma__mascot-message--cards {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__mascot-message--mobile {
+        position: relative;
+        left: auto;
+        bottom: auto;
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        transform: none;
+        margin-top: 4px;
+        align-self: flex-start;
+        pointer-events: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__mascot-message--mobile .happy-agent-privacy-figma__mascot-message-art {
+        width: 72px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__mascot-message--mobile .happy-agent-privacy-figma__mascot-message-bubble {
+        width: auto;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
     .happy-job-agent-landing .happy-agent-privacy-figma__badges {
         padding-top: 16px;
         gap: 8px;
         justify-content: center;
+        width: 100%;
+        max-width: 420px;
+        margin-inline: auto;
     }
 
     .happy-job-agent-landing .happy-agent-privacy-figma__badge-wrap {
@@ -11084,10 +12738,71 @@ html.happy-job-agent-landing-active #app {
     }
 }
 
+@media (max-width: 767px) {
+    .happy-job-agent-landing .happy-agent-privacy-figma {
+        padding: 56px 16px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__inner {
+        gap: 28px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__header {
+        gap: 8px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__eyebrow {
+        font-weight: 700;
+        letter-spacing: 1.5px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__title {
+        font-size: 28px;
+        line-height: 34px;
+        letter-spacing: -0.8px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__mobile {
+        max-width: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__badges {
+        max-width: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__mascot-message--mobile .happy-agent-privacy-figma__mascot-message-art {
+        width: 68px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__mascot-message--mobile .happy-agent-privacy-figma__mascot-message-bubble {
+        width: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .happy-job-agent-landing .happy-agent-privacy-figma {
+        padding: 40px 16px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__title {
+        letter-spacing: -0.8px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__badges {
+        gap: 12px 10px;
+    }
+
+    .happy-job-agent-landing .happy-agent-privacy-figma__badge-label {
+        white-space: normal;
+        text-align: center;
+        line-height: 1.2;
+    }
+}
+
 /* FAQ — Figma Section 11 */
 .happy-job-agent-landing .happy-agent-faq-figma {
     padding: 80px 32px;
-    background: #f3f0e8;
+    background: #fff;
 }
 
 .happy-job-agent-landing .happy-agent-faq-figma__inner {
@@ -11162,16 +12877,16 @@ html.happy-job-agent-landing-active #app {
 
 .happy-job-agent-landing .happy-agent-faq-figma__item {
     align-self: start;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 16px;
-    background: rgb(255,255,255, 0.4);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    background: rgba(255, 255, 255, 0.40);
+    box-shadow: 2px 4px 4px 0 rgba(129, 127, 127, 0.24);
     overflow: hidden;
-    transition: border-color 0.4s var(--happy-ease-out), box-shadow 0.4s var(--happy-ease-out);
+    transition: border-color 0.4s var(--happy-ease-out);
 }
 
 .happy-job-agent-landing .happy-agent-faq-figma__item--open {
     border-color: #46eccd;
-    box-shadow: none;
 }
 
 .happy-job-agent-landing .happy-agent-faq-figma__trigger {
@@ -11310,19 +13025,12 @@ html.happy-job-agent-landing-active #app {
 @media (max-width: 767px) {
     .happy-job-agent-landing .happy-agent-faq-figma {
         padding: 40px 16px;
-        background: #f3f0e8;
+        background: #fff;
     }
 
     .happy-job-agent-landing .happy-agent-faq-figma__header {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
+        align-items: flex-start;
+        gap: 10px;
     }
 
     .happy-job-agent-landing .happy-agent-faq-figma__inner {
@@ -11346,6 +13054,7 @@ html.happy-job-agent-landing-active #app {
 
     .happy-job-agent-landing .happy-agent-faq-figma__title {
         letter-spacing: -0.8px;
+        font-size: 30px;
     }
 
     .happy-job-agent-landing .happy-agent-faq-figma__trigger {
@@ -11389,30 +13098,50 @@ html.happy-job-agent-landing-active #app {
     }
 }
 
-/* Try free CTA — Figma Section 12 */
+/* Try free CTA — Figma 3682:37013 */
 .happy-job-agent-landing .happy-agent-try-free-figma {
     --happy-try-free-ink: #231f20;
+    --happy-try-free-teal: #46eccd;
+    padding: 48px;
+    background: #fff;
+}
+
+.happy-job-agent-landing .happy-agent-try-free-figma__card {
     position: relative;
+    width: 100%;
+    max-width: 1184px;
+    min-height: 440px;
+    margin: 0 auto;
     overflow: hidden;
-    border-radius: 0;
+    border-radius: 24px;
+    background: var(--happy-try-free-ink);
 }
 
 .happy-job-agent-landing .happy-agent-try-free-figma__bg {
     position: absolute;
     inset: 0;
-    border-radius: inherit;
-    background: url('/images/talent/outreach/try-free-bg.png') no-repeat center center;
-    background-size: cover;
+    opacity: 0.1;
     pointer-events: none;
 }
 
-.happy-job-agent-landing .happy-agent-try-free-figma__bg::after {
-    content: "";
+.happy-job-agent-landing .happy-agent-try-free-figma__bg img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.happy-job-agent-landing .happy-agent-try-free-figma__glow {
     position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    opacity: 0.08;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    top: -96px;
+    right: -96px;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: var(--happy-try-free-teal);
+    opacity: 0.1;
+    filter: blur(64px);
     pointer-events: none;
 }
 
@@ -11420,85 +13149,88 @@ html.happy-job-agent-landing-active #app {
     position: relative;
     z-index: 1;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: space-between;
     gap: 32px;
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 100px 32px 80px;
-    text-align: center;
+    min-height: 440px;
+    padding: 70px 64px;
 }
 
 .happy-job-agent-landing .happy-agent-try-free-figma__header {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 603px;
+}
+
+.happy-job-agent-landing .happy-agent-try-free-figma__eyebrow {
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    width: 100%;
+    justify-content: center;
+    margin: 0 0 10px;
+    min-height: 24px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(70, 236, 205, 0.12);
+    font-family: "Rubik", sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--happy-try-free-teal);
 }
 
 .happy-job-agent-landing .happy-agent-try-free-figma__title {
     margin: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    max-width: 603px;
     font-family: "Rubik", sans-serif;
-    font-size: clamp(2.5rem, 6.5vw, 68px);
+    font-size: 48px;
     font-weight: 700;
-    line-height: 1;
-    letter-spacing: -1.7px;
-    color: var(--happy-try-free-ink);
+    line-height: 59px;
+    color: #fff;
 }
 
 .happy-job-agent-landing .happy-agent-try-free-figma__title-line {
     display: block;
-    line-height: 1;
+}
+
+.happy-job-agent-landing .happy-agent-try-free-figma__title-line--accent {
+    color: var(--happy-try-free-teal);
 }
 
 .happy-job-agent-landing .happy-agent-try-free-figma__sub {
-    margin: 0;
+    margin: 16px 0 0;
+    max-width: 440px;
     font-family: "Rubik", sans-serif;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 400;
-    line-height: normal;
-    color: var(--happy-try-free-ink);
+    line-height: 25.5px;
+    color: rgba(255, 255, 255, 0.55);
 }
 
 .happy-job-agent-landing .happy-agent-try-free-figma__pill {
     display: inline-flex;
     align-items: center;
-    gap: 16px;
-    min-height: 48px;
-    padding: 4px 4px 4px 32px;
+    gap: 24px;
+    height: 48px;
+    margin-top: 32px;
+    padding: 12px 4px 12px 32px;
     border: none;
     border-radius: 80px;
-    background: var(--happy-try-free-ink);
+    background: var(--happy-try-free-teal);
     box-shadow: 2px 4px 2px rgba(129, 127, 127, 0.24);
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.15s ease;
-
-    @media (max-width: 767px) {
-        background-color: transparent !important;
-        box-shadow: none !important;
-        border: 1px solid #231f20 !important;
-
-        .happy-agent-try-free-figma__pill-text{
-            color: #231f20 !important;
-        }
-        .happy-agent-try-free-figma__pill-icon{
-            background: rgba(0, 0, 0, 0.1) !important;
-            outline: 1px solid #231f20 !important;
-
-            svg path{
-                fill: #231f20 !important;
-                stroke: none !important;
-            }
-        }
-    }
+    transition: filter 0.2s ease, transform 0.15s ease;
 }
 
 .happy-job-agent-landing .happy-agent-try-free-figma__pill:hover {
-    background: #175f5d;
+    filter: brightness(1.06);
     transform: translateY(-1px);
 }
 
@@ -11510,32 +13242,19 @@ html.happy-job-agent-landing-active #app {
     outline: none;
     box-shadow:
         2px 4px 2px rgba(129, 127, 127, 0.24),
-        0 0 0 3px rgba(42, 155, 159, 0.45);
-}
-
-.happy-job-agent-landing .happy-agent-try-free-figma__pill-label {
-    font-size: 1.25rem;
-    line-height: 1;
-    letter-spacing: 1px;
-    color: #ffffff;
-    white-space: nowrap;
-    font-family: 'Telegraf', sans-serif;
+        0 0 0 3px rgba(70, 236, 205, 0.45);
 }
 
 .happy-job-agent-landing .happy-agent-try-free-figma__pill-text {
-    font-family: 'Telegraf', sans-serif;
-    font-size: 1.25rem;
+    font-family: "Telegraf", sans-serif;
+    font-size: 20px;
     font-weight: 400;
     font-style: normal;
     letter-spacing: 1px;
     line-height: normal;
     text-transform: uppercase;
     white-space: nowrap;
-    color: #ffffff;
-}
-
-.happy-job-agent-landing .happy-agent-try-free-figma__pill-text b {
-    font-weight: 700;
+    color: var(--happy-try-free-ink);
 }
 
 .happy-job-agent-landing .happy-agent-try-free-figma__pill-icon {
@@ -11545,71 +13264,163 @@ html.happy-job-agent-landing-active #app {
     width: 39px;
     height: 39px;
     border-radius: 50%;
-    background: #ffffff;
+    background: var(--happy-try-free-ink);
     flex-shrink: 0;
-    color: var(--happy-try-free-ink);
 }
 
-.happy-job-agent-landing .happy-agent-try-free-figma__pill-icon svg {
+.happy-job-agent-landing .happy-agent-try-free-figma__pill-arrow {
+    display: block;
     width: 24px;
     height: 24px;
-    path {
-        fill: #231f20 !important;
+}
+
+.happy-job-agent-landing .happy-agent-try-free-figma__portraits {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    flex: 0 0 auto;
+    gap: 12px;
+    width: 314px;
+}
+
+.happy-job-agent-landing .happy-agent-try-free-figma__portrait {
+    width: 151px;
+    height: 176px;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--happy-try-free-ink);
+    flex-shrink: 0;
+}
+
+.happy-job-agent-landing .happy-agent-try-free-figma__portrait--offset {
+    margin-top: 32px;
+}
+
+.happy-job-agent-landing .happy-agent-try-free-figma__portrait img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media (max-width: 1100px) {
+    .happy-job-agent-landing .happy-agent-try-free-figma {
+        padding: 40px 24px;
     }
-}
 
-.happy-job-agent-landing .happy-agent-try-free-figma__pill:hover .happy-agent-try-free-figma__pill-icon {
-    color: #175f5d;
-}
-
-@media (max-width: 900px) {
     .happy-job-agent-landing .happy-agent-try-free-figma__inner {
-        padding: 72px 24px 64px;
-        gap: 28px;
+        padding: 48px 40px;
+        gap: 24px;
+    }
+
+    .happy-job-agent-landing .happy-agent-try-free-figma__title {
+        font-size: 40px;
+        line-height: 48px;
     }
 }
 
-@media screen and (max-width: 767px) {
-    .happy-job-agent-landing .happy-agent-try-free-figma__pill-label {
-        color: #231f20 !important;
+@media (max-width: 860px) {
+    .happy-job-agent-landing .happy-agent-try-free-figma__inner {
+        flex-direction: column;
+        align-items: flex-start;
+        min-height: 0;
+        padding: 32px 24px 28px;
+    }
+
+    .happy-job-agent-landing .happy-agent-try-free-figma__card {
+        min-height: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-try-free-figma__portraits {
+        align-self: flex-end;
     }
 }
 
 @media (max-width: 600px) {
+    .happy-job-agent-landing .happy-agent-try-free-figma {
+        padding: 0 20px 48px;
+    }
+
+    .happy-job-agent-landing .happy-agent-try-free-figma__card {
+        border-radius: 20px;
+    }
 
     .happy-job-agent-landing .happy-agent-try-free-figma__inner {
-        padding: 56px 16px 48px;
+        padding: 24px;
+        gap: 20px;
+    }
+
+    .happy-job-agent-landing .happy-agent-try-free-figma__header {
+        gap: 20px;
+    }
+
+    .happy-job-agent-landing .happy-agent-try-free-figma__glow {
+        display: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-try-free-figma__eyebrow {
+        min-height: 24px;
+        margin: 0;
+        padding: 6px 10px;
+        letter-spacing: normal;
     }
 
     .happy-job-agent-landing .happy-agent-try-free-figma__title {
-        letter-spacing: -0.8px;
+        font-size: 33px;
+        line-height: 1.18;
+    }
+
+    .happy-job-agent-landing .happy-agent-try-free-figma__sub {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.55;
+        color: rgba(255, 255, 255, 0.7);
     }
 
     .happy-job-agent-landing .happy-agent-try-free-figma__pill {
-        min-height: 48px;
-        padding-left: 20px;
-        gap: 12px;
+        gap: 24px;
+        height: 44px;
+        margin-top: 0;
         max-width: 100%;
-    }
-
-    .happy-job-agent-landing .happy-agent-try-free-figma__pill-label {
-        font-size: 1.1rem;
-        letter-spacing: 1.2px;
-        white-space: normal;
-        text-align: center;
+        padding: 4px 4px 4px 32px;
     }
 
     .happy-job-agent-landing .happy-agent-try-free-figma__pill-text {
-        font-size: 1.1rem;
-        letter-spacing: 1.2px;
-        white-space: normal;
+        font-size: 16px;
+        white-space: nowrap;
         text-align: center;
+    }
+
+    .happy-job-agent-landing .happy-agent-try-free-figma__pill-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .happy-job-agent-landing .happy-agent-try-free-figma__portrait {
+        width: 145px;
+        height: 156px;
+        border-radius: 12px;
+        flex: 0 0 145px;
+    }
+
+    .happy-job-agent-landing .happy-agent-try-free-figma__portraits {
+        align-self: flex-end;
+        width: auto;
+        gap: 12px;
+    }
+
+    .happy-job-agent-landing .happy-agent-try-free-figma__portrait img {
+        border-radius: 12px;
+    }
+
+    .happy-job-agent-landing .happy-agent-try-free-figma__portrait--offset {
+        margin-top: 22px;
     }
 }
 
 /* Footer — Figma Section 13 */
 .happy-job-agent-landing .happy-agent-footer-figma {
-    background: #fbf9f8;
+    background: #fff;
     color: #4c4c4c;
 }
 
@@ -11775,7 +13586,6 @@ html.happy-job-agent-landing-active #app {
 .happy-job-agent-landing .happy-agent-footer-figma__link {
     display: inline-block;
     border: none;
-    padding: 8px 0;
     background: transparent;
     font-family: "Rubik", sans-serif;
     font-size: 14px;
@@ -11785,7 +13595,6 @@ html.happy-job-agent-landing-active #app {
     text-decoration: none;
     cursor: pointer;
     text-align: left;
-    min-height: 36px;
 }
 
 .happy-job-agent-landing .happy-agent-footer-figma__link:hover,
@@ -12234,7 +14043,7 @@ body.happy-agent-modal-open {
     }
 }
 
-/* Happpy Agent landing — floating pill navbar (Figma: New top navigation bar) */
+/* Happpy Agent landing — navbar (authenticated: floating pill; public: Figma 3523:5798) */
 .happy-agent-landing-navbar {
     position: fixed;
     top: calc(14px + env(safe-area-inset-top, 0px));
@@ -12245,16 +14054,71 @@ body.happy-agent-modal-open {
     pointer-events: none;
 }
 
-.happy-agent-landing-navbar--scroll-away {
+/* Public unauthenticated — full-width white bar, scrolls with page */
+.happy-agent-landing-navbar--scroll-away.happy-agent-landing-navbar--public-bar {
     position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: none;
+    transform: none;
+}
 
+.happy-agent-landing-navbar--public-bar .happy-agent-landing-navbar__pill {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    margin: 0;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) max(24px, min(100px, calc((100vw - 1235px) / 2))) 16px;
+    gap: 16px;
+    border-radius: 0 0 12px 12px;
+    background: #fff;
+    border-bottom: 1px solid #e0e1e0;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
 
-    .happy-agent-landing-navbar__pill {
-        padding: 10px 12px;
-        background: transparent;
-        border-bottom: none;
-        min-height: 0;
-    }
+.happy-agent-landing-navbar--public-bar .happy-agent-landing-navbar__pill-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    max-width: 1235px;
+    margin-inline: auto;
+}
+
+.happy-agent-landing-navbar--public-bar .happy-agent-landing-navbar__logo.happpy-agent-logo {
+    --happpy-logo-text-size: 20px;
+    color: #231f20;
+}
+
+.happy-agent-landing-navbar--public-bar .happy-agent-landing-navbar__logo .happpy-agent-logo__mark {
+    width: 48px;
+    height: 48px;
+}
+
+.happy-agent-landing-navbar--public-bar .happy-agent-landing-navbar__btn--login {
+    background: #fff;
+    border: 1px solid #6b6b6b;
+    color: #231f20;
+}
+
+.happy-agent-landing-navbar--public-bar .happy-agent-landing-navbar__btn--login:hover {
+    filter: none;
+    background: #f7f7f7;
+}
+
+.happy-agent-landing-navbar--public-bar .happy-agent-landing-navbar__btn--primary {
+    background: #231f20;
+    color: #fff;
+}
+
+.happy-agent-landing-navbar--public-bar .happy-agent-landing-navbar__btn--primary:hover {
+    filter: brightness(1.08);
+    transform: none;
 }
 
 .happy-agent-landing-navbar--auto-hide {
@@ -12267,6 +14131,82 @@ body.happy-agent-modal-open {
     pointer-events: none;
 }
 
+/* Authenticated desktop — full-width white bar; slides away on scroll down */
+@media (min-width: 768px) {
+    .happy-agent-landing-navbar--auto-hide {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: none;
+        transform: none;
+        pointer-events: none;
+    }
+
+    .happy-agent-landing-navbar--auto-hide.happy-agent-landing-navbar--hidden {
+        transform: translateY(-100%);
+        pointer-events: none;
+    }
+
+    .happy-agent-landing-navbar--auto-hide .happy-agent-landing-navbar__pill {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: none;
+        min-height: 0;
+        margin: 0;
+        padding: calc(16px + env(safe-area-inset-top, 0px)) max(24px, min(100px, calc((100vw - 1235px) / 2))) 16px;
+        gap: 16px;
+        border-radius: 0 0 12px 12px;
+        background: #fff;
+        border-bottom: 1px solid #e0e1e0;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        pointer-events: auto;
+    }
+
+    .happy-agent-landing-navbar--auto-hide .happy-agent-landing-navbar__pill-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        width: 100%;
+        max-width: 1235px;
+        margin-inline: auto;
+    }
+
+    .happy-agent-landing-navbar--auto-hide .happy-agent-landing-navbar__logo.happpy-agent-logo {
+        --happpy-logo-text-size: 20px;
+        color: #231f20;
+    }
+
+    .happy-agent-landing-navbar--auto-hide .happy-agent-landing-navbar__btn--help {
+        background: #fff;
+        border: 1px solid #6b6b6b;
+        color: #231f20;
+        padding: 11px 24px;
+    }
+
+    .happy-agent-landing-navbar--auto-hide .happy-agent-landing-navbar__btn--help:hover {
+        filter: none;
+        background: #f7f7f7;
+    }
+
+    .happy-agent-landing-navbar--auto-hide .happy-agent-landing-navbar__btn--primary {
+        background: #231f20;
+        color: #fff;
+    }
+
+    .happy-agent-landing-navbar--auto-hide .happy-agent-landing-navbar__btn--primary:hover {
+        filter: brightness(1.08);
+        transform: none;
+    }
+
+    .happy-agent-landing-navbar--auto-hide .happy-agent-landing-navbar__profile {
+        border-color: rgba(200, 200, 200, 0.72);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .happy-agent-landing-navbar--auto-hide {
         transition: none;
@@ -12275,9 +14215,8 @@ body.happy-agent-modal-open {
 
 .happy-agent-landing-navbar__pill {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    align-items: stretch;
+    justify-content: center;
     min-height: 56px;
     padding: 12px 40px;
     border-radius: 80px;
@@ -12286,6 +14225,15 @@ body.happy-agent-modal-open {
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     pointer-events: auto;
+}
+
+.happy-agent-landing-navbar__pill-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
 }
 
 .happy-agent-landing-navbar__brand {
@@ -12384,20 +14332,34 @@ body.happy-agent-modal-open {
 }
 
 @media (max-width: 767px) {
-    .happy-agent-landing-navbar {
+    .happy-agent-landing-navbar:not(.happy-agent-landing-navbar--public-bar) {
         width: calc(100% - 20px);
         top: calc(10px + env(safe-area-inset-top, 0px));
     }
 
-    .happy-agent-landing-navbar__pill {
+    .happy-agent-landing-navbar:not(.happy-agent-landing-navbar--public-bar) .happy-agent-landing-navbar__pill {
         min-height: 52px;
         padding: 10px 16px;
         border-radius: 80px;
-        background: rgba(48, 48, 48, 0.48);
         background: rgba(248, 248, 248, 0.48);
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.6);
     }
 
-    .happy-agent-landing-navbar__logo.happpy-agent-logo {
+    .happy-agent-landing-navbar--public-bar .happy-agent-landing-navbar__pill {
+        padding: calc(12px + env(safe-area-inset-top, 0px)) 24px 12px;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .happy-agent-landing-navbar--public-bar .happy-agent-landing-navbar__logo.happpy-agent-logo {
+        --happpy-logo-text-size: 16px;
+    }
+
+    .happy-agent-landing-navbar--public-bar .happy-agent-landing-navbar__logo .happpy-agent-logo__mark {
+        width: 40px;
+        height: 40px;
+    }
+
+    .happy-agent-landing-navbar:not(.happy-agent-landing-navbar--public-bar) .happy-agent-landing-navbar__logo.happpy-agent-logo {
         --happpy-logo-text-size: 16px;
         color: #231f20;
     }
@@ -12406,21 +14368,27 @@ body.happy-agent-modal-open {
         gap: 6px;
     }
 
-    .happy-agent-landing-navbar__btn--login {
+    .happy-agent-landing-navbar:not(.happy-agent-landing-navbar--public-bar) .happy-agent-landing-navbar__btn--login {
         display: none;
     }
 
-    .happy-agent-landing-navbar__btn {
+    .happy-agent-landing-navbar:not(.happy-agent-landing-navbar--public-bar) .happy-agent-landing-navbar__btn {
         min-height: 36px;
         padding: 10px 18px;
         font-size: 13px;
-        color: #6b6b6b;
+        color: #231f20;
         outline: 1px solid #cecccc;
     }
 
-    .happy-agent-landing-navbar__btn--primary {
+    .happy-agent-landing-navbar:not(.happy-agent-landing-navbar--public-bar) .happy-agent-landing-navbar__btn--primary {
         padding: 10px 20px;
         display: none;
+    }
+
+    .happy-agent-landing-navbar--public-bar .happy-agent-landing-navbar__btn {
+        min-height: 36px;
+        padding: 10px 18px;
+        font-size: 13px;
     }
 
     .happy-agent-landing-navbar__profile {
@@ -12868,7 +14836,7 @@ body.happy-agent-modal-open {
 }
 
 .happy-public-auth-email-card {
-    background: #f3f0e8;
+    background: #fff;
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 24px;
@@ -14213,17 +16181,18 @@ body.happy-agent-modal-open {
     padding: 16px;
     border: none;
     border-radius: 12px;
-    background: #fff9;
+    background: #EFEFEF;
     box-sizing: border-box;
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 14px;
     letter-spacing: -0.0762px;
     color: #231f20;
-    outline: 1px solid #cecccc;
+    outline: 1px solid transparent;
     outline-offset: -1px;
     transition: border 0.15s ease, background 0.15s ease;
-    /* box-shadow: inset 0 1px 4px 0 rgba(0, 0, 0, 0.35), inset 0 1px 4px 0 rgba(0, 0, 0, 0.3); */
+    border-radius: 12px;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25) inset, 0 1px 4px 0 rgba(0, 0, 0, 0.20) inset;
 }
 
 .happy-job-agent-landing .happy-agent-paste-job__input::placeholder {
@@ -14302,15 +16271,6 @@ body.happy-agent-modal-open {
     .happy-job-agent-landing .happy-agent-paste-job__submit {
         width: 100%;
     }
-}
-.happy-job-agent-landing .happy-agent-hero-mesh__paid-trial-note {
-    margin: 0;
-    max-width: 360px;
-    font-size: 11px;
-    line-height: 1.5;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.92);
-    text-align: center;
 }
 
 .happy-public-join-agent-loader {

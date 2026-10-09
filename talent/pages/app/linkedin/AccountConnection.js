@@ -888,7 +888,7 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
                         </svg>
                         )}
                         <span>
-                            <span className="benefit-item-label">Optional:</span>{' '}
+                            <span className="benefit-item-label optional">Optional:</span>{' '}
                             {accountsOnlyMode
                                 ? 'LinkedIn is optional - Gmail alone can run your outreach.'
                                 : 'LinkedIn is optional—Gmail alone can run your outreach.'}
@@ -942,7 +942,7 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
                         )}
                         <span>Send resumes directly to LinkedIn InMail</span>
                     </div>
-                    <div className="benefit-item">
+                    {/* <div className="benefit-item">
                         {accountsOnlyMode ? (
                             <img className="benefit-item__check" src={HAPPY_SETUP_CHECKMARK_SRC} alt="" aria-hidden />
                         ) : (
@@ -951,7 +951,7 @@ export const AccountConnection = ({ outreachStepConfig, onRefresh, accountsOnlyM
                         </svg>
                         )}
                         <span>Smart follow-up sequences</span>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className="card-body">

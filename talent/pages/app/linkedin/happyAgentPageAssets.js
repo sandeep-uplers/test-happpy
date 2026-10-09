@@ -19,14 +19,38 @@ export const HAPPY_HERO_BG_WEBP_SRCSET = [
 ].join(", ");
 export const HAPPY_HERO_BG_SIZES = "100vw";
 export const HAPPY_HERO_PRELOAD_ID = "happy-agent-hero-bg-preload";
+/** Figma 3523:2499 — full hero scene (single composite) */
+export const HAPPY_HERO_SCENE_BASE_SRC = `${HAPPY_HERO_ASSET_BASE}/hero-scene-base.jpg`;
+export const HAPPY_HERO_SCENE_SRC = HAPPY_HERO_SCENE_BASE_SRC;
+/** Figma 3746:2118 — sparkle aura + cursor beside hero CTA */
+export const HAPPY_HERO_CTA_SPARKLE_AURA_SRC = `${HAPPY_HERO_ASSET_BASE}/hero-cta-sparkle-aura.png`;
+/** @deprecated use HAPPY_HERO_SCENE_BASE_SRC */
+export const HAPPY_HERO_SCENE_SKY_SRC = HAPPY_HERO_SCENE_BASE_SRC;
+export const HAPPY_HERO_PROGRESS_STEPS = [
+    "Configure Agent in just 60 seconds",
+    "HAPPPY presents top matches from over 40k jobs...",
+    "Run agent on your desired jobs",
+    "HAPPPY finds & reached out to relevant referral contacts",
+    "You have an insider job referral and an interview offer",
+];
+export const HAPPY_HERO_PROGRESS_STATUS =
+    "HAPPPY reaching out to hiring managers on your behalf...";
+/** Figma header chips (3523:2560) — order left to right */
+export const HAPPY_HERO_TRUST_CHIPS = [
+    "60-second setup",
+    "2x interviews",
+    "Trusted by 6450+ candidates",
+];
+export const HAPPY_HERO_TITLE_LINE_1 = "Get interviews";
+export const HAPPY_HERO_TITLE_LINE_2 = "in as little as";
 export const HAPPY_HERO_TRUST_SPARKLE_SRC = `${HAPPY_HERO_ASSET_BASE}/trust-sparkle.svg`;
 export const HAPPY_HERO_EYEBROW_LEFT = "AI referral agent";
 export const HAPPY_HERO_EYEBROW_RIGHT = "Not a job board";
 export const HAPPY_HERO_TITLE_PREFIX = "Get interviews in as little as";
-export const HAPPY_HERO_TITLE_HIGHLIGHT = "4 Days";
+export const HAPPY_HERO_TITLE_HIGHLIGHT = "4 days";
 export const HAPPY_HERO_MOBILE_TITLE_LINE_1 = "Get interviews";
 export const HAPPY_HERO_MOBILE_TITLE_LINE_2 = "in as little as";
-export const HAPPY_HERO_MOBILE_TITLE_HIGHLIGHT = "4 Days";
+export const HAPPY_HERO_MOBILE_TITLE_HIGHLIGHT = "4 days";
 export const HAPPY_HERO_TITLE_UNDERLINE_SRC = `${HAPPY_HERO_ASSET_BASE}/title-highlight-underline.svg`;
 /** Mobile hero stats — underline under “candidates using it” (Figma hero foot) */
 export const HAPPY_HERO_CANDIDATES_UNDERLINE_SRC = `${HAPPY_HERO_ASSET_BASE}/candidates-underline.png`;
@@ -36,9 +60,15 @@ export const HAPPY_HERO_MOBILE_SUBTITLE_LINES = [
     "A referral agent that finds people inside the target companies and introduces you - ",
     "so real recruiters reply instead of ghosting.",
 ];
-export const HAPPY_HERO_MOBILE_CTA_LABEL = "Start Getting Interviews";
-export const HAPPY_HERO_SUBTITLE_LINE_1 =
+/** Figma 3715:38357 — public referral mobile hero subtitle (single paragraph) */
+export const HAPPY_HERO_MOBILE_SUBTITLE_REFERRAL =
     "A referral agent that finds people inside the company and introduces you - so a real recruiter replies";
+export const HAPPY_HERO_MOBILE_CTA_LABEL = "Start Getting Interviews";
+/** Figma 3715:38981 — mobile hero primary CTA (Telegraf uppercase) */
+export const HAPPY_HERO_MOBILE_CTA_LABEL_UPPER = "START GETTING INTERVIEWS";
+export const HAPPY_HERO_SUBTITLE_LINE_1 =
+    "A referral agent that finds people inside the company and introduces you -";
+export const HAPPY_HERO_SUBTITLE_LINE_2 = "so a real recruiter replies";
 /** Desktop: sparkle + `desktop` label above the H1. Mobile: value/label stats under the hero CTA. */
 export const HAPPY_HERO_TRUST_ITEMS = [
     { value: "2x", label: "more interviews", desktop: "2x interviews" },
@@ -159,11 +189,37 @@ export const HAPPY_MANUAL_VS_MOBILE_COMPARE = [
     { value: "<60 sec", label: "Per job, with HAPPPY", accent: true },
 ];
 
+/** Referral landing desktop stage (Figma 3682:37039) — mobile Figma pending */
+export const HAPPY_MANUAL_VS_REFERRAL_V2_ASSET_BASE = `${HAPPY_MANUAL_VS_ASSET_BASE}/referral-v2`;
+export const HAPPY_MANUAL_VS_REFERRAL_V2_PORTRAIT_SRC = `${HAPPY_MANUAL_VS_REFERRAL_V2_ASSET_BASE}/hero-portrait.png`;
+/** Portrait + doodles + testimonial stack (Figma 3682:37045) */
+export const HAPPY_MANUAL_VS_REFERRAL_V2_SCENE_SRC = `${HAPPY_MANUAL_VS_REFERRAL_V2_ASSET_BASE}/scene-right.png`;
+/** Mobile scene (Figma 3738:52629) */
+export const HAPPY_MANUAL_VS_REFERRAL_V2_SCENE_MOBILE_SRC = `${HAPPY_MANUAL_VS_REFERRAL_V2_ASSET_BASE}/scene-mobile.png`;
+export const HAPPY_MANUAL_VS_REFERRAL_V2_TESTIMONIAL_HEART_SRC = `${HAPPY_MANUAL_VS_REFERRAL_V2_ASSET_BASE}/testimonial-heart.svg`;
+export const HAPPY_MANUAL_VS_REFERRAL_V2_CTA_ARROW_SRC = `${HAPPY_MANUAL_VS_REFERRAL_V2_ASSET_BASE}/cta-arrow-right.svg`;
+export const HAPPY_MANUAL_VS_REFERRAL_V2_CELEBRATE_MASCOT_SRC = `${OUTREACH_IMAGE_ROOT}/mascot-celebrate.svg`;
+export const HAPPY_MANUAL_VS_REFERRAL_V2_CTA_LABEL = HAPPY_HERO_MOBILE_CTA_LABEL_UPPER;
+export const HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_1 =
+    "Manual job hunting is slow, with hours of searching, ATS rejections and forgotten follow-ups. Happpy Agent replaces that with one-time setup, outreach in under ";
+export const HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_2 =
+    "60 seconds per job, automated follow-ups and 40,000+ contacts already mapped";
+/** Figma 3715:38704 — single paragraph on mobile */
+export const HAPPY_MANUAL_VS_REFERRAL_V2_BODY_MOBILE = `${HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_1}${HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_2}`;
+export const HAPPY_MANUAL_VS_REFERRAL_V2_TESTIMONIAL = "Love it!  Recommended it to my friends";
+
 /* Section 4 — Works Anywhere */
 export const HAPPY_WORKS_ANYWHERE_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/works-anywhere`;
-export const HAPPY_WORKS_ANYWHERE_TITLE_UNDERLINE_SRC = `${HAPPY_WORKS_ANYWHERE_ASSET_BASE}/title-underline.png`;
+/** Figma 3523:3112 / 3523:3114 — teal bracket frame (374×82) behind kicker title */
+export const HAPPY_WORKS_ANYWHERE_TITLE_BRACKET_SRC = `${HAPPY_WORKS_ANYWHERE_ASSET_BASE}/title-bracket.svg`;
+/** @deprecated use HAPPY_WORKS_ANYWHERE_TITLE_BRACKET_SRC */
+export const HAPPY_WORKS_ANYWHERE_TITLE_UNDERLINE_SRC = HAPPY_WORKS_ANYWHERE_TITLE_BRACKET_SRC;
+/** Figma 3523:3002 — left illustration (photo, globe, platform bubbles) */
+export const HAPPY_WORKS_ANYWHERE_SCENE_SRC = `${HAPPY_WORKS_ANYWHERE_ASSET_BASE}/works-anywhere-scene.png`;
 export const HAPPY_WORKS_ANYWHERE_SECTION_BG_SRC = `${HAPPY_WORKS_ANYWHERE_ASSET_BASE}/section-bg.png`;
+export const HAPPY_WORKS_ANYWHERE_FOOTER_SPARKLE_SRC = `${HAPPY_WORKS_ANYWHERE_ASSET_BASE}/footer-sparkle.svg`;
 export const HAPPY_WORKS_ANYWHERE_FOOTER_HANDWRITING = "And more! same one-click flow";
+export const HAPPY_WORKS_ANYWHERE_SUBTITLE = "but we work perfectly fine on all of them";
 
 /* Section 5 — Connect Accounts */
 export const HAPPY_SETUP_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/setup`;
@@ -189,6 +245,9 @@ export const HAPPY_PRIVACY_BADGE_UNDERLINE_OAUTH_SRC = `${HAPPY_PRIVACY_ASSET_BA
 export const HAPPY_PRIVACY_BADGE_UNDERLINE_MONITORING_SRC = `${HAPPY_PRIVACY_ASSET_BASE}/badge-underline-monitoring.svg`;
 export const HAPPY_PRIVACY_SPARKLE_SRC = `${HAPPY_PRIVACY_ASSET_BASE}/sparkle.svg`;
 export const HAPPY_PRIVACY_SHIELD_SRC = `${HAPPY_PRIVACY_ASSET_BASE}/shield.svg`;
+export const HAPPY_MASCOT_CHILL_SRC = `${OUTREACH_IMAGE_ROOT}/mascot-chill.svg`;
+/** Figma 3523:3607 — Gmail Access card mascot bubble */
+export const HAPPY_PRIVACY_GMAIL_MASCOT_MESSAGE = "HAPPPY Agent takes data security seriously";
 
 /** Mobile privacy cards (Figma 2922:4883) — desktop still uses HAPPY_PRIVACY_CARDS. */
 export const HAPPY_PRIVACY_MOBILE = {
@@ -329,13 +388,20 @@ export const HAPPY_FAQ_GROUPS = [
 
 export const HAPPY_FAQ_ITEMS = HAPPY_FAQ_GROUPS.flatMap((group) => group.items);
 
-/* Section 12 — Try free CTA band */
+/* Section 12 — Try free CTA band (Figma 3682:37013) */
+export const HAPPY_TRY_FREE_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/try-free`;
+export const HAPPY_TRY_FREE_BG_SRC = `${HAPPY_TRY_FREE_ASSET_BASE}/bg.png`;
+export const HAPPY_TRY_FREE_PORTRAIT_AGENT_SRC = `${HAPPY_TRY_FREE_ASSET_BASE}/portrait-agent.png`;
+export const HAPPY_TRY_FREE_PORTRAIT_PROFESSIONAL_SRC = `${HAPPY_TRY_FREE_ASSET_BASE}/portrait-professional.png`;
+export const HAPPY_TRY_FREE_CTA_ARROW_SRC = `${HAPPY_TRY_FREE_ASSET_BASE}/cta-arrow-right.svg`;
+export const HAPPY_TRY_FREE_EYEBROW = "Start today";
+export const HAPPY_TRY_FREE_CTA_LABEL = "Get started now";
 export const HAPPY_TRY_FREE_TITLE_LINES = [
     "Try Free Until You",
     'Hear "Yes"',
 ];
 export const HAPPY_TRY_FREE_SUBTITLE =
-    "No credit card · Disconnect anytime · Fresh postings (24–48h) reply fastest.";
+    "Fresh postings (24–48h), fastest replies, no credit card, no lock-in, no fluff.";
 
 /** Public Happpy landing (`HappyJobAgentPublic`) — paid ₹99 trial (not “try free”). */
 export const HAPPY_PUBLIC_PAID_TRIAL_TITLE_LINES = [
