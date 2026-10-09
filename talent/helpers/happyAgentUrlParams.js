@@ -6,8 +6,6 @@ import { ONBOARDING_URL_PARAM } from './onboardingUrlParams';
 /** Query keys preserved across public landing → referral-ai-agent navigation. */
 export const HAPPY_AGENT_PRESERVED_PARAM_KEYS = ['r', 'reference', 'src', 'entry_source', 'source'];
 
-const TALENT_LOGIN_PATH = '/login';
-
 function toUrlSearchParams(source) {
     if (!source) return new URLSearchParams();
     if (source instanceof URLSearchParams) return new URLSearchParams(source);
@@ -62,10 +60,14 @@ export function buildReferralAgentLogoutPath(search) {
     return qs ? `${HAPPPY_AI_AGENT_PATH}?${qs}` : HAPPPY_AI_AGENT_PATH;
 }
 
-/** Post-logout destination: public agent landing (with params) or login. */
+/**
+ * Post-logout destination. UTS sends referral-agent logout to `/talent/happpy-ai-agent`
+ * and everything else to `/login`. This app's public landing is `/`, so both cases land there.
+ * Marketing params are kept when leaving the referral page.
+ */
 export function getTalentLogoutDestination({ pathname, search }) {
     if (isReferralAiAgentPath(pathname)) {
         return buildReferralAgentLogoutPath(search);
     }
-    return TALENT_LOGIN_PATH;
+    return HAPPPY_AI_AGENT_PATH;
 }
