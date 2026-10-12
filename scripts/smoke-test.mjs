@@ -21,8 +21,8 @@ const ROUTES = [
 
 /** Landing-page assets from happyAgentPageAssets.js — extend when new sections ship. */
 const ASSETS = [
-    '/happpy-agent/how-it-works-pc.mp4',
-    '/happpy-agent/how-it-works-mobile-final.mp4',
+    '/happpy-agent/how-it-works-white.mp4',
+    '/happpy-agent/how-it-work-white-mobile.mp4',
     '/images/talent/happpy-agent/wellfound-logo-black.png',
     '/images/talent/happpy-agent/lever-logo.png',
     '/images/talent/outreach/happpy-bat-fly.svg',

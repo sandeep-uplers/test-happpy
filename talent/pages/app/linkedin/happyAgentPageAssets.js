@@ -86,8 +86,8 @@ export const HAPPY_LIVE_RESULTS_HEADLINE_UNDERLINE_SRC = `${OUTREACH_IMAGE_ROOT}
 /* Section 3 — How It Works */
 export const HAPPY_HIW_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/hiw`;
 export const HAPPY_HIW_HEADLINE_HIGHLIGHT_SRC = `${HAPPY_HIW_ASSET_BASE}/headline-highlight.svg`;
-export const HAPPY_HIW_DEMO_VIDEO_PC_SRC = "/happpy-agent/how-it-works-pc.mp4";
-export const HAPPY_HIW_DEMO_VIDEO_MOBILE_SRC = "/happpy-agent/how-it-works-mobile-final.mp4";
+export const HAPPY_HIW_DEMO_VIDEO_PC_SRC = "/happpy-agent/how-it-works-white.mp4";
+export const HAPPY_HIW_DEMO_VIDEO_MOBILE_SRC = "/happpy-agent/how-it-work-white-mobile.mp4";
 
 export const HAPPY_HOW_IT_WORKS_PILLARS = [
     {

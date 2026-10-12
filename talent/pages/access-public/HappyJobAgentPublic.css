@@ -7219,6 +7219,8 @@ html.happy-job-agent-landing-active #app {
     outline: 1px solid var(--happy-hiw-border);
     overflow: hidden;
     box-shadow: 0 24px 60px rgba(35, 31, 32, 0.12);
+    box-shadow: unset;
+    outline: unset;
 }
 
 .happy-job-agent-landing .happy-agent-hiw-figma__demo-frame {
