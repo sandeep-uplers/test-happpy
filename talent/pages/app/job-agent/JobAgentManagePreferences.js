@@ -162,6 +162,22 @@ const isCompanyTypeSelected = (selectedTypes, optionValue) => {
 
 const UNSAVED_LEAVE_MESSAGE = 'You have unsaved changes. Leave without saving?';
 
+const fileToResumePreview = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+        const result = String(reader.result || '');
+        const base64 = result.includes(',') ? result.split(',')[1] : result;
+        resolve({
+            ext: file.name.split('.').pop()?.toLowerCase(),
+            blob: base64,
+            data: '',
+            filename: file.name,
+        });
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+});
+
 const normalizeSelectValues = (items = []) => (items || [])
     .filter(Boolean)
     .map((item) => (item?.value != null ? item.value : item))
@@ -179,7 +195,7 @@ const formatLastWorkingDayForSnapshot = (value) => {
     return String(value);
 };
 
-const serializePreferencesSnapshot = (formData, { selectedJSTillDate, pendingResumeFile, hideDeferredProfileFields }) => {
+const serializePreferencesSnapshot = (formData, { selectedJSTillDate, hideDeferredProfileFields }) => {
     const jobSearchUntil = selectedJSTillDate?.[0]?.value
         ?? formData.job_search_unavailable_until?.[0]?.value
         ?? (Array.isArray(formData.job_search_unavailable_until)
@@ -191,8 +207,6 @@ const serializePreferencesSnapshot = (formData, { selectedJSTillDate, pendingRes
         name: String(formData.name || '').trim().replace(/\s+/g, ' '),
         contact_number: normalizeContactNumber(formData.contact_number),
         linkedin_id: buildLinkedinProfileUrl(formData.linkedin_id) || '',
-        resume: String(formData.resume || ''),
-        pendingResumeFile: Boolean(pendingResumeFile),
         total_experience: String(formData.total_experience ?? '').replaceAll(' ', ''),
         job_function_id: formData.job_function_id ?? null,
         current_ctc: String(formData.current_ctc ?? ''),
@@ -295,7 +309,8 @@ export default function JobAgentManagePreferences({
     const [selectedResume, setSelectedResume] = useState(null)
     const [isResumeModalOpen, setIsResumeModalOpen] = useState(false)
     const uploadResumeRef = useRef(null);
-    const resumeUploadToastShownRef = useRef(false);
+    const resumeUploadTokenRef = useRef(0);
+    const resumePreviewRef = useRef(null);
     const savedFormRestoreRef = useRef(null);
     const formRef = useRef(null);
     const saveSuccessTimeoutRef = useRef(null);
@@ -638,7 +653,6 @@ export default function JobAgentManagePreferences({
         if (isModalOpen) return;
         setSavedBaseline(serializePreferencesSnapshot(data, {
             selectedJSTillDate: jsTill,
-            pendingResumeFile: false,
             hideDeferredProfileFields,
         }));
         savedFormRestoreRef.current = {
@@ -954,14 +968,12 @@ export default function JobAgentManagePreferences({
         }
         const current = serializePreferencesSnapshot(formData, {
             selectedJSTillDate,
-            pendingResumeFile: Boolean(resumeData),
             hideDeferredProfileFields,
         });
         return !_.isEqual(current, savedBaseline);
     }, [
         formData,
         selectedJSTillDate,
-        resumeData,
         isModalOpen,
         modalDataLoading,
         savedBaseline,
@@ -971,13 +983,13 @@ export default function JobAgentManagePreferences({
     const handleDiscardUnsavedChanges = useCallback(() => {
         const saved = savedFormRestoreRef.current;
         if (!saved || isModalOpen) return;
-        setFormData(_.cloneDeep(saved.formData));
+        setFormData((current) => {
+            const restored = _.cloneDeep(saved.formData);
+            restored.resume = current.resume;
+            return restored;
+        });
         setSelectedJSTillDate(saved.selectedJSTillDate ? _.cloneDeep(saved.selectedJSTillDate) : null);
-        setSelectedResume(saved.selectedResume ?? null);
         setSelectedJobFunction(saved.selectedJobFunction ? { ...saved.selectedJobFunction } : null);
-        setResumeData(null);
-        uploadResumeRef.current = null;
-        resumeUploadToastShownRef.current = false;
         setErrors({});
     }, [isModalOpen]);
 
@@ -1088,11 +1100,7 @@ export default function JobAgentManagePreferences({
         // console.log('formData', { ...formData, snooze: emailForm }, new Date());
         if (!validate()) return
 
-        let resumeFileId = null;
         setSaveLoader(true);
-        if (uploadResumeRef.current) {
-            resumeFileId = await uploadResumeRef.current;
-        }
 
         // let reqMap = { ...formData, snooze: emailForm }
         let reqMap = {
@@ -1118,14 +1126,6 @@ export default function JobAgentManagePreferences({
         if (hideDeferredProfileFields) {
             delete reqMap.target_company_types;
             delete reqMap.user_journey_status;
-        }
-        if (!isModalOpen) {
-            if (resumeData) {
-                reqMap.resume = resumeData;
-            }
-            if (resumeFileId) {
-                reqMap.resume_file_id = resumeFileId;
-            }
         }
         if (formData?.preferred_modes?.length > 0) {
             reqMap.preferred_modes = formData.preferred_modes.map(item => item.value);
@@ -1217,9 +1217,6 @@ export default function JobAgentManagePreferences({
                     setIsContactNumberLocked(true);
                 }
                 toast.success("Preferences Updated Successfully", { duration: 3800 })
-                if (resumeData) {
-                    sessionStorage.setItem("fetchLatestResume", true)
-                }
                 const apiUserJourneyRow = twoColumnLocationPreferences
                     ? buildApiUserJourneyRowFromForm(formData.user_journey_status, masters)
                     : null;
@@ -1250,12 +1247,9 @@ export default function JobAgentManagePreferences({
                 });
 
                 if (!isModalOpen) {
-                    uploadResumeRef.current = null;
-                    setResumeData(null);
-                    resumeUploadToastShownRef.current = false;
                     commitSavedFormState(formData, {
                         selectedJSTillDate,
-                        selectedResume: selectedResume,
+                        selectedResume,
                         selectedJobFunction,
                     });
                     setShowSavedFlash(true);
@@ -1306,6 +1300,10 @@ export default function JobAgentManagePreferences({
             return;
         }
 
+        const previousResume = {
+            name: formData.resume,
+            selected: selectedResume,
+        };
         let _formData = { ...formData }
         _formData.resume = file.name;
         setFormData(_formData);
@@ -1317,64 +1315,63 @@ export default function JobAgentManagePreferences({
             resumeError = "File size should be less than 2 MB";
         }
 
+        updateErrors({ resume: resumeError });
+        if (resumeError) {
+            setFormData((current) => (
+                current.resume === file.name
+                    ? { ...current, resume: previousResume.name || '' }
+                    : current
+            ));
+            if (e.target) e.target.value = "";
+            return;
+        }
+
+        const uploadToken = resumeUploadTokenRef.current + 1;
+        resumeUploadTokenRef.current = uploadToken;
+        resumePreviewRef.current = null;
+        fileToResumePreview(file).then((preview) => {
+            if (resumeUploadTokenRef.current !== uploadToken) return;
+            resumePreviewRef.current = preview;
+            setSelectedResume(preview);
+        }).catch((err) => {
+            console.error("Resume preview error:", err);
+        });
         setResumeUploading(true);
         const extension = file.name.split('.')?.pop()?.toLowerCase();
 
         const uploadResumePromise = generateAwsUploadUrl({ file_type: extension }, true)(dispatch)
             .then(async (res) => {
-                if (res?.status === 200) {
-                    setFileId(res?.data?.file_id);
-                    await fetch(res?.data?.url,
-                        {
-                            method: "PUT",
-                            headers: {
-                                "Content-Type": file?.type
-                            },
-                            body: file
-                        })
-                        .then(res => {
-                            if (res?.status === 200) {
-                                setResumeData(file);
-                                setSelectedResume(file);
-                                if (!isModalOpen && !resumeUploadToastShownRef.current) {
-                                    resumeUploadToastShownRef.current = true;
-                                    toast('Resume added to your profile. Click Save Preferences to apply it.', {
-                                        duration: 5000,
-                                    });
-                                }
-                            }
-                        })
-                        .catch(err => {
-                            console.error("Resume upload error:", err);
-                            toast.error("Resume upload failed");
-                        })
-                        .finally(() => {
-                            setResumeUploading(false);
-                        });
-                    return res?.data?.file_id
+                if (res?.status !== 200) return null;
+                setFileId(res?.data?.file_id);
+                const putRes = await fetch(res?.data?.url, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": file?.type
+                    },
+                    body: file
+                });
+                if (putRes?.status !== 200) {
+                    throw new Error("Resume upload failed");
                 }
+                setResumeData(file);
+                return res?.data?.file_id;
             })
             .catch((err) => {
                 const apiErrors = err?.response?.data?.errors;
                 if (apiErrors && typeof apiErrors === "object" && apiErrors.value) {
                     const msg = Array.isArray(apiErrors.value) ? apiErrors.value[0] : apiErrors.value;
-                    resumeError = typeof msg === "string" ? msg : "Failed to upload resume";
-                } else {
-                    resumeError = "Something went wrong. Please try again.";
+                    updateErrors({ resume: typeof msg === "string" ? msg : "Failed to upload resume" });
                 }
                 toast.error("Resume upload failed");
                 console.error("Resume upload error:", err);
+                return null;
             })
             .finally(() => {
-                setResumeUploading(false);
                 if (e.target) e.target.value = "";
             });
 
-        updateErrors({ resume: resumeError })
         uploadResumeRef.current = uploadResumePromise;
-        if (isModalOpen) {
-            updateResume(file);
-        }
+        updateResume(file, previousResume, uploadToken);
         if (!resumeHealthControl.is_paid) {
             let floatingRocketHealthcheck = document.getElementById('floatingRocketHealthcheck');
             if (floatingRocketHealthcheck) {
@@ -1385,24 +1382,42 @@ export default function JobAgentManagePreferences({
         if (showPopover) setShowPopover(false);
     };
 
-    const updateResume = async (file) => {
-        let reqMap = {};
-        var payload = {};
-        // if (resumeData) {
-        //     reqMap.resume = file;
-        // }
+    const revertResumeSelection = (file, previousResume) => {
+        setFormData((current) => (
+            current.resume === file.name
+                ? { ...current, resume: previousResume?.name || '' }
+                : current
+        ));
+        setSelectedResume((current) => (
+            current === file || current?.filename === file.name
+                ? (previousResume?.selected ?? null)
+                : current
+        ));
+        setResumeData((current) => (current === file ? null : current));
+    };
 
+    const finishResumeUpload = (uploadToken) => {
+        if (resumeUploadTokenRef.current === uploadToken) {
+            setResumeUploading(false);
+        }
+    };
+
+    const updateResume = async (file, previousResume, uploadToken) => {
         let resumeFileId = null;
         if (uploadResumeRef.current) {
             resumeFileId = await uploadResumeRef.current;
         }
 
-        if (resumeFileId) {
-            reqMap.resume_file_id = resumeFileId;
+        if (!resumeFileId) {
+            revertResumeSelection(file, previousResume);
+            finishResumeUpload(uploadToken);
+            return;
         }
 
-        payload["field"] = "resume_file_id";
-        payload["value"] = reqMap;
+        const payload = {
+            field: "resume_file_id",
+            value: { resume_file_id: resumeFileId },
+        };
 
         let payloadFormData = new FormData();
         for (let [key, data] of Object.entries(payload)) {
@@ -1411,26 +1426,59 @@ export default function JobAgentManagePreferences({
 
         profileUpsert(payloadFormData, true)(dispatch)
             .then((res) => {
+                const serverResumeName = res?.data?.data?.resume;
+                const nextResumeName = typeof serverResumeName === 'string' && serverResumeName.trim()
+                    ? serverResumeName.trim()
+                    : file.name;
+
                 dispatch({
                     type: SET_PROFILE_DATA,
                     payload: {
                         ...res.data.data,
                     },
                 });
+                const preview = resumePreviewRef.current;
                 dispatch({
                     type: SET_TALENT_PREFERENCES,
                     payload: {
                         ...preferencesData,
-                        resume: file
+                        talent: {
+                            ...(preferencesData?.talent || {}),
+                            resume: nextResumeName,
+                        },
+                        resume: preview || preferencesData?.resume,
                     }
                 });
+                if (preview) {
+                    setSelectedResume(preview);
+                }
+                setFormData((current) => (
+                    current.resume === file.name
+                        ? { ...current, resume: nextResumeName }
+                        : current
+                ));
+                sessionStorage.setItem("fetchLatestResume", true);
+                if (!isModalOpen && savedFormRestoreRef.current?.formData) {
+                    savedFormRestoreRef.current = {
+                        ...savedFormRestoreRef.current,
+                        formData: {
+                            ...savedFormRestoreRef.current.formData,
+                            resume: nextResumeName,
+                        },
+                        selectedResume: resumePreviewRef.current || savedFormRestoreRef.current.selectedResume,
+                    };
+                }
+                if (!isModalOpen) {
+                    toast.success("Resume saved to your profile", { duration: 3800 });
+                }
             })
             .catch(err => {
                 console.error("Resume upload error:", err);
                 toast.error("Resume upload failed");
+                revertResumeSelection(file, previousResume);
             })
             .finally(() => {
-                setSaveLoader(false)
+                finishResumeUpload(uploadToken);
             })
     }
 
@@ -1841,8 +1889,10 @@ export default function JobAgentManagePreferences({
                                                 <img src={IMAGE_URL + "fi_file.svg"} />
                                         }
                                         <div>
-                                            <span className="title">
-                                                {formData.resume}
+                                            <span className={`title${resumeUploading ? ' title--shimmer' : ''}`}>
+                                                {resumeUploading
+                                                    ? <span className="title-shimmer-line" aria-hidden="true" />
+                                                    : formData.resume}
                                             </span>
                                             {resumeData?.size && <span className="size">{Number(resumeData?.size / (1024 * 1024)).toFixed(2)} MB</span>}
                                         </div>
@@ -1852,20 +1902,21 @@ export default function JobAgentManagePreferences({
                                             key={'bottom'}
                                             placement={'bottom-end'}
                                             rootClose={true}
-                                            show={showPopover}
-                                            onToggle={handleToggle}
+                                            show={resumeUploading ? false : showPopover}
+                                            onToggle={(show) => {
+                                                if (resumeUploading) return;
+                                                handleToggle(show);
+                                            }}
                                             overlay={
                                                 <Popover id={`popover-positioned-bottom`} className='resume-menu-options happpy-pref' ref={popoverRef}>
-                                                    {!resumeData && <>
-                                                        <button onClick={() => { setIsResumeModalOpen(true); handleToggle(false); }} className='viewBtn'>
-                                                            <EyeIconPreview width={'1.5rem'} height={'1.5rem'} /> View resume
-                                                        </button>
-                                                        <button onClick={(e) => { onDownloadClick(e); handleToggle(false); }}>
-                                                            <MenuResumeDownload /> Download resume
-                                                        </button>
-                                                    </>}
-                                                    <button className={`uploadBtn ${resumeData ? 'replace' : ''}`}>
-                                                        <MenuResumeUpload /> {resumeData ? 'Replace' : 'Upload new'} resume
+                                                    <button onClick={() => { setIsResumeModalOpen(true); handleToggle(false); }} className='viewBtn'>
+                                                        <EyeIconPreview width={'1.5rem'} height={'1.5rem'} /> View resume
+                                                    </button>
+                                                    <button onClick={(e) => { onDownloadClick(e); handleToggle(false); }}>
+                                                        <MenuResumeDownload /> Download resume
+                                                    </button>
+                                                    <button className="uploadBtn">
+                                                        <MenuResumeUpload /> Upload new resume
                                                         <p className='comment mt-0'>PDF, DOCX | Max: 2 MB</p>
                                                         <input
                                                             id={resumeInputId}
@@ -1881,7 +1932,9 @@ export default function JobAgentManagePreferences({
                                             <button
                                                 type='button'
                                                 className="menuBtn"
-                                                title="Resume Menu"
+                                                title={resumeUploading ? "Resume is uploading" : "Resume Menu"}
+                                                disabled={resumeUploading}
+                                                aria-disabled={resumeUploading}
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
                                                     <rect x="2.79753e-06" width="32" height="32" rx="16" fill="#DFEFEC" />
@@ -2407,6 +2460,7 @@ export default function JobAgentManagePreferences({
                             </div>
                             )
                         )}
+
 
                     </form>
                     {showFloatingUnsavedBar && (
