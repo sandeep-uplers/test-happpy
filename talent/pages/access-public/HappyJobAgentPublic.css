@@ -5033,7 +5033,7 @@ html.happy-job-agent-landing-active #app {
     max-width: none;
     margin: 0;
     height: auto;
-    aspect-ratio: 214 / 83;
+    aspect-ratio: 1240 / 485;
     border-radius: 20px;
     overflow: hidden;
 }
@@ -5054,6 +5054,10 @@ html.happy-job-agent-landing-active #app {
     object-fit: cover;
     object-position: 50% 50%;
     background-color: #f5e6c8;
+
+    @media (max-width: 767px) {
+        object-position: 25% 50%;
+    }
 }
 
 .happy-job-agent-landing .happy-hero-interview-progress {
@@ -5117,7 +5121,6 @@ html.happy-job-agent-landing-active #app {
     height: 100%;
     border-radius: 48px;
     background: linear-gradient(179.84deg, #2dc9a7 1.05%, rgba(49, 220, 177, 0) 148.38%);
-    transition: width 0.45s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -6034,7 +6037,7 @@ html.happy-job-agent-landing-active #app {
     .happy-job-agent-landing .happy-agent-hero-mesh__visual {
         border-radius: 0;
         width: 100%;
-        aspect-ratio: 214 / 83;
+        aspect-ratio: 1240 / 485;
         height: auto;
         min-height: 0;
         padding-bottom: 0;

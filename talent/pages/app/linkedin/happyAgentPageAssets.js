@@ -22,8 +22,8 @@ export const HAPPY_HERO_BG_WEBP_SRCSET = [
 ].join(", ");
 export const HAPPY_HERO_BG_SIZES = "100vw";
 export const HAPPY_HERO_PRELOAD_ID = "happy-agent-hero-bg-preload";
-/** Figma 3523:2499 — full hero scene (single composite) */
-export const HAPPY_HERO_SCENE_BASE_SRC = `${HAPPY_HERO_ASSET_BASE}/hero-scene-base.jpg`;
+/** Full hero scene */
+export const HAPPY_HERO_SCENE_BASE_SRC = `${HAPPY_HERO_ASSET_BASE}/hero-sunrise-trek.png`;
 export const HAPPY_HERO_SCENE_SRC = HAPPY_HERO_SCENE_BASE_SRC;
 /** Figma 3746:2118 — sparkle aura + cursor beside hero CTA */
 export const HAPPY_HERO_CTA_SPARKLE_AURA_SRC = `${HAPPY_HERO_ASSET_BASE}/hero-cta-sparkle-aura.png`;
