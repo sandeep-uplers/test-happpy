@@ -5,7 +5,7 @@ import '../styles/happpy-tokens.css';
 import '../styles/fonts.css';
 
 const GTM_CONTAINER_ID = 'GTM-P6GXD64V';
-const HAPPY_HERO_SCENE_SRC = '/images/talent/outreach/hero/hero-scene-base.jpg';
+const HAPPY_HERO_SCENE_SRC = '/images/talent/outreach/hero/hero-sunrise-trek.png';
 
 export const metadata = {
     title: 'Happpy Agent',
@@ -54,7 +54,7 @@ export default function RootLayout({ children }) {
                 <link
                     rel="preload"
                     as="image"
-                    type="image/jpeg"
+                    type="image/png"
                     fetchPriority="high"
                     href={HAPPY_HERO_SCENE_SRC}
                 />

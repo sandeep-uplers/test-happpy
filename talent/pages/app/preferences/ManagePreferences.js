@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Select from 'react-select';
 import { customSelectTheme, JobFunctionGroupLabel, JobFunctionSelectStyles, ReactSelectStyles } from '../../../components/common/CustomStyleReactSelect';
 import { CheckboxInput, MoneyInput, RadioInput } from '../../../components/common/Inputs';
-import { base64ToBlob, buildFormData, convertNpToDays, formatErrors, groupOptionsByCategory, formattedCTC, getLastWorkingDayBounds, getLastWorkingDayBoundsError, getPlaceholderLWD, isLastWorkingDayInBounds, isValidDate, sanitizePayload, scrollToFirstError, isAllEmpty, formatCTCBreakdown, formatCTCBreakdownLPA, checkDirectPayUser, createRequestCancelSource } from '../../../components/Helper';
+import { base64ToBlob, buildFormData, convertNpToDays, formatErrors, groupOptionsByCategory, formattedCTC, getLastWorkingDayBounds, getLastWorkingDayBoundsError, getPlaceholderLWD, isLastWorkingDayInBounds, isServingNoticePeriod, isValidDate, isValidServingNoticeAnswer, normalizeServingNoticePeriod, sanitizePayload, scrollToFirstError, isAllEmpty, formatCTCBreakdown, formatCTCBreakdownLPA, checkDirectPayUser, createRequestCancelSource } from '../../../components/Helper';
 import './preferences.css';
 import _, { debounce } from 'lodash';
 import { generateAwsUploadUrl, getJobFunctionMaster, getProfilePercent, getTalentLocationMaster, getTalentPreferences, profileResumeDownload, profileUpsert } from '../../../store/actions/UserActions';
@@ -31,6 +31,16 @@ import CTCBreakdown from '../../../components/common/CTCBreakdown';
 import { PREFERRED_WORK_OF_MODE_OPTIONS } from '../../../components/Constant';
 
 const internationMaster = [{ label: "Yes", value: "Yes" }, { label: "No", value: "No" }];
+
+const normalizeLoadedServingNotice = (talent) => {
+    const serving_notice_period = normalizeServingNoticePeriod(talent?.serving_notice_period);
+    const clearLastWorkingDay = normalizeServingNoticePeriod(serving_notice_period, true) === 2
+        && convertNpToDays(talent?.joining_period) !== 0;
+    return {
+        serving_notice_period,
+        ...(clearLastWorkingDay ? { last_working_day: '' } : {}),
+    };
+};
 
 const fileRegex = /(\.pdf|\.docx)$/i;
 
@@ -143,18 +153,18 @@ export default function ManagePreferences({
         }
         if (formData.joining_period) {
             if (convertNpToDays(formData.joining_period) != 0 &&
-                !["Yes", "No"].includes(formData.serving_notice_period)) {
+                !isValidServingNoticeAnswer(formData.serving_notice_period)) {
                 isValid = false;
                 newErrors.serving_notice_period = "Please select your answer";
             }
             if ((convertNpToDays(formData.joining_period) == 0 ||
-                formData.serving_notice_period == "Yes") &&
+                isServingNoticePeriod(formData.serving_notice_period)) &&
                 !formData.last_working_day
             ) {
                 isValid = false;
                 newErrors.last_working_day = "Please add your last working day";
             } else if ((convertNpToDays(formData.joining_period) == 0 ||
-                formData.serving_notice_period == "Yes") &&
+                isServingNoticePeriod(formData.serving_notice_period)) &&
                 formData.last_working_day &&
                 !isLastWorkingDayInBounds(
                     formData.last_working_day,
@@ -306,6 +316,7 @@ export default function ManagePreferences({
                         [],
                 job_search_preference: jobSearchPreference,
                 preferred_modes: preferencesData?.talent?.preferred_modes?.map(item => PREFERRED_WORK_OF_MODE_OPTIONS.find(option => option.value == item)) || [],
+                ...normalizeLoadedServingNotice(preferencesData?.talent),
             }
             setFormData(formattedData);
             fetchJobFunctionMaster(formattedData.job_function_id, { syncSavedRestore: !isModalOpen })
@@ -350,6 +361,7 @@ export default function ManagePreferences({
                                 [],
                         job_search_preference: jobSearchPreference,
                         preferred_modes: res.data?.talent?.preferred_modes?.map(item => PREFERRED_WORK_OF_MODE_OPTIONS.find(option => option.value == item)) || [],
+                        ...normalizeLoadedServingNotice(res.data?.talent),
                     }
                     setFormData(formattedData);
                     fetchJobFunctionMaster(formattedData.job_function_id, { syncSavedRestore: !isModalOpen })
@@ -424,9 +436,15 @@ export default function ManagePreferences({
         }
         if (field == 'serving_notice_period') {
             _formData = clearInvalidLastWorkingDay(_formData);
+            if (val == 'Not applicable') {
+                _formData.last_working_day = '';
+            }
         }
         setFormData(_formData);
-        updateErrors({ [field]: null })
+        updateErrors({
+            [field]: null,
+            ...(field == 'serving_notice_period' && val == 'Not applicable' && { last_working_day: null }),
+        })
     }
     const updateErrors = (newErrorObj) => {
         let oldErrors = { ...errors };
@@ -1241,15 +1259,21 @@ export default function ManagePreferences({
                                                         name={"serving_notice_period_yes"}
                                                         label={'Yes'}
                                                         // id="serving_notice_period_yes"
-                                                        checked={formData.serving_notice_period == "Yes"}
+                                                        checked={normalizeServingNoticePeriod(formData.serving_notice_period) == "Yes"}
                                                         onChange={(e) => handleDropdownChange('serving_notice_period', 'Yes')}
                                                     />
                                                     <RadioInput
                                                         name={"serving_notice_period_no"}
                                                         label={'No'}
                                                         // id="serving_notice_period_no"
-                                                        checked={formData.serving_notice_period == "No"}
+                                                        checked={normalizeServingNoticePeriod(formData.serving_notice_period) == "No"}
                                                         onChange={(e) => handleDropdownChange('serving_notice_period', 'No')}
+                                                    />
+                                                    <RadioInput
+                                                        name={"serving_notice_period_na"}
+                                                        label={'Not applicable'}
+                                                        checked={normalizeServingNoticePeriod(formData.serving_notice_period) == "Not applicable"}
+                                                        onChange={(e) => handleDropdownChange('serving_notice_period', 'Not applicable')}
                                                     />
 
                                                 </div>
@@ -1258,7 +1282,7 @@ export default function ManagePreferences({
                                         </div>
                                     }
                                     {(convertNpToDays(formData.joining_period) == 0 ||
-                                        formData.serving_notice_period == "Yes") &&
+                                        isServingNoticePeriod(formData.serving_notice_period)) &&
                                         <div>
                                             <div className="lwd" id='last_working_day'>
                                                 <span className="required_label">Let us know your last working day</span>

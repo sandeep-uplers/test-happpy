@@ -7,7 +7,7 @@ import '../../../../styles/talent/index.css';
 import Select from 'react-select';
 import { customSelectTheme, JobFunctionGroupLabel, JobFunctionSelectStyles, ReactSelectStyles } from '../../../components/common/CustomStyleReactSelect';
 import { CheckboxInput, MoneyInput, RadioInput } from '../../../components/common/Inputs';
-import { base64ToBlob, buildFormData, checkIfFilePasswordProtected, convertNpToDays, formatErrors, groupOptionsByCategory, formattedCTC, getLastWorkingDayBounds, getLastWorkingDayBoundsError, getPlaceholderLWD, isLastWorkingDayInBounds, isValidDate, sanitizePayload, scrollToFirstError, isAllEmpty, formatCTCBreakdown, formatCTCBreakdownLPA, checkDirectPayUser } from '../../../components/Helper';
+import { base64ToBlob, buildFormData, checkIfFilePasswordProtected, convertNpToDays, formatErrors, groupOptionsByCategory, formattedCTC, getLastWorkingDayBounds, getLastWorkingDayBoundsError, getPlaceholderLWD, isLastWorkingDayInBounds, isServingNoticePeriod, isValidDate, isValidServingNoticeAnswer, normalizeServingNoticePeriod, sanitizePayload, scrollToFirstError, isAllEmpty, formatCTCBreakdown, formatCTCBreakdownLPA, checkDirectPayUser } from '../../../components/Helper';
 import '../preferences/preferences.css';
 import { JAD_PREF_FIGMA_COLORS } from './preference/JobAgentManagePreferences.colors';
 import _, { debounce } from 'lodash';
@@ -193,6 +193,16 @@ const formatLastWorkingDayForSnapshot = (value) => {
     if (!value) return null;
     if (value instanceof Date) return format(value, 'yyyy-MM-dd');
     return String(value);
+};
+
+const normalizeLoadedServingNotice = (talent) => {
+    const serving_notice_period = normalizeServingNoticePeriod(talent?.serving_notice_period);
+    const clearLastWorkingDay = normalizeServingNoticePeriod(serving_notice_period, true) === 2
+        && convertNpToDays(talent?.joining_period) !== 0;
+    return {
+        serving_notice_period,
+        ...(clearLastWorkingDay ? { last_working_day: '' } : {}),
+    };
 };
 
 const serializePreferencesSnapshot = (formData, { selectedJSTillDate, hideDeferredProfileFields }) => {
@@ -414,18 +424,18 @@ export default function JobAgentManagePreferences({
         }
         if (formData.joining_period) {
             if (convertNpToDays(formData.joining_period) != 0 &&
-                !["Yes", "No"].includes(formData.serving_notice_period)) {
+                !isValidServingNoticeAnswer(formData.serving_notice_period)) {
                 isValid = false;
                 newErrors.serving_notice_period = "Please select your answer";
             }
             if ((convertNpToDays(formData.joining_period) == 0 ||
-                formData.serving_notice_period == "Yes") &&
+                isServingNoticePeriod(formData.serving_notice_period)) &&
                 !formData.last_working_day
             ) {
                 isValid = false;
                 newErrors.last_working_day = "Please add your last working day";
             } else if ((convertNpToDays(formData.joining_period) == 0 ||
-                formData.serving_notice_period == "Yes") &&
+                isServingNoticePeriod(formData.serving_notice_period)) &&
                 formData.last_working_day &&
                 !isLastWorkingDayInBounds(
                     formData.last_working_day,
@@ -707,6 +717,7 @@ export default function JobAgentManagePreferences({
                     preferencesData?.masters
                 ),
                 ...formatAgentPreferenceFields(preferencesData?.talent),
+                ...normalizeLoadedServingNotice(preferencesData?.talent),
             });
             setFormData(formattedData);
             fetchJobFunctionMaster(formattedData.job_function_id, { syncSavedRestore: !isModalOpen })
@@ -756,6 +767,7 @@ export default function JobAgentManagePreferences({
                             res.data?.masters
                         ),
                         ...formatAgentPreferenceFields(res.data?.talent),
+                        ...normalizeLoadedServingNotice(res.data?.talent),
                     });
                     setFormData(formattedData);
                     fetchJobFunctionMaster(formattedData.job_function_id, { syncSavedRestore: !isModalOpen })
@@ -853,9 +865,15 @@ export default function JobAgentManagePreferences({
         }
         if (field == 'serving_notice_period') {
             _formData = clearInvalidLastWorkingDay(_formData);
+            if (val == 'Not applicable') {
+                _formData.last_working_day = '';
+            }
         }
         setFormData(_formData);
-        updateErrors({ [field]: null })
+        updateErrors({
+            [field]: null,
+            ...(field == 'serving_notice_period' && val == 'Not applicable' && { last_working_day: null }),
+        })
     }
     const updateErrors = (newErrorObj) => {
         let oldErrors = { ...errors };
@@ -2057,14 +2075,20 @@ export default function JobAgentManagePreferences({
                                                             <RadioInput
                                                                 name={"serving_notice_period_yes"}
                                                                 label={'Yes'}
-                                                                checked={formData.serving_notice_period == "Yes"}
+                                                                checked={normalizeServingNoticePeriod(formData.serving_notice_period) == "Yes"}
                                                                 onChange={(e) => handleDropdownChange('serving_notice_period', 'Yes')}
                                                             />
                                                             <RadioInput
                                                                 name={"serving_notice_period_no"}
                                                                 label={'No'}
-                                                                checked={formData.serving_notice_period == "No"}
+                                                                checked={normalizeServingNoticePeriod(formData.serving_notice_period) == "No"}
                                                                 onChange={(e) => handleDropdownChange('serving_notice_period', 'No')}
+                                                            />
+                                                            <RadioInput
+                                                                name={"serving_notice_period_na"}
+                                                                label={'Not applicable'}
+                                                                checked={normalizeServingNoticePeriod(formData.serving_notice_period) == "Not applicable"}
+                                                                onChange={(e) => handleDropdownChange('serving_notice_period', 'Not applicable')}
                                                             />
                                                         </div>
                                                         {errors.serving_notice_period && <div className="error-msg serveNp">{errors.serving_notice_period}</div>}
@@ -2072,7 +2096,7 @@ export default function JobAgentManagePreferences({
                                                 </div>
                                             }
                                             {(convertNpToDays(formData.joining_period) == 0 ||
-                                                formData.serving_notice_period == "Yes") &&
+                                                isServingNoticePeriod(formData.serving_notice_period)) &&
                                                 <div>
                                                     <div className="lwd" id='last_working_day'>
                                                         <span className="required_label">Let us know your last working day</span>

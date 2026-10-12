@@ -22,8 +22,8 @@ export const HAPPY_HERO_BG_WEBP_SRCSET = [
 ].join(", ");
 export const HAPPY_HERO_BG_SIZES = "100vw";
 export const HAPPY_HERO_PRELOAD_ID = "happy-agent-hero-bg-preload";
-/** Figma 3523:2499 — full hero scene (single composite) */
-export const HAPPY_HERO_SCENE_BASE_SRC = `${HAPPY_HERO_ASSET_BASE}/hero-scene-base.jpg`;
+/** Full hero scene */
+export const HAPPY_HERO_SCENE_BASE_SRC = `${HAPPY_HERO_ASSET_BASE}/hero-sunrise-trek.png`;
 export const HAPPY_HERO_SCENE_SRC = HAPPY_HERO_SCENE_BASE_SRC;
 /** Figma 3746:2118 — sparkle aura + cursor beside hero CTA */
 export const HAPPY_HERO_CTA_SPARKLE_AURA_SRC = `${HAPPY_HERO_ASSET_BASE}/hero-cta-sparkle-aura.png`;
@@ -449,7 +449,7 @@ export const HAPPY_TRY_FREE_CTA_ARROW_SRC = `${HAPPY_TRY_FREE_ASSET_BASE}/cta-ar
 export const HAPPY_TRY_FREE_EYEBROW = "Start today";
 export const HAPPY_TRY_FREE_CTA_LABEL = "Get started now";
 export const HAPPY_TRY_FREE_TITLE_LINES = [
-    "Try Free Until You",
+    "Try Until You",
     'Hear "Yes"',
 ];
 export const HAPPY_TRY_FREE_SUBTITLE =
@@ -457,7 +457,7 @@ export const HAPPY_TRY_FREE_SUBTITLE =
 
 /** Public Happpy landing (`HappyJobAgentPublic`) — paid ₹99 trial (not “try free”). */
 export const HAPPY_PUBLIC_PAID_TRIAL_TITLE_LINES = [
-    "₹99 Until You",
+    "Try Until You",
     'Hear "Yes"',
 ];
 
@@ -467,7 +467,7 @@ export const HAPPY_PUBLIC_PAID_TRIAL_SUBTITLE =
 export const HAPPY_PUBLIC_PAID_TRIAL_HERO_NOTE =
     '₹99 until your first "yes" — upgrade only when someone replies';
 
-export const HAPPY_PUBLIC_PAID_TRIAL_CHIP_LABEL = '₹99 until your first "yes"';
+export const HAPPY_PUBLIC_PAID_TRIAL_CHIP_LABEL = 'Try until you hear "yes"';
 
 /* Section 13 — Footer */
 export const HAPPY_FOOTER_ASSET_BASE = `${OUTREACH_IMAGE_ROOT}/footer`;

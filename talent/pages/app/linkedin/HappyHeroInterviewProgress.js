@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
     HAPPY_HERO_PROGRESS_STATUS,
     HAPPY_HERO_PROGRESS_STEPS,
@@ -13,6 +13,7 @@ import {
 const STEP_MS = 1500;
 const STEP_PCT = 20;
 const STEP_COUNT = HAPPY_HERO_PROGRESS_STEPS.length;
+const DURATION_MS = STEP_COUNT * STEP_MS;
 
 function prefersReducedMotion() {
     if (typeof window === "undefined") return false;
@@ -43,26 +44,22 @@ export default function HappyHeroInterviewProgress({ active = false }) {
         }
 
         setProgress(0);
-        let id;
-        id = window.setInterval(() => {
-            setProgress((prev) => {
-                if (prev >= 100) {
-                    window.clearInterval(id);
-                    return 100;
-                }
-                const next = prev + STEP_PCT;
-                if (next >= 100) {
-                    window.clearInterval(id);
-                    return 100;
-                }
-                return next;
-            });
-        }, STEP_MS);
+        const start = performance.now();
+        let frame = 0;
 
-        return () => window.clearInterval(id);
+        const tick = (now) => {
+            const value = Math.min(100, ((now - start) / DURATION_MS) * 100);
+            setProgress(value);
+            if (value < 100) {
+                frame = window.requestAnimationFrame(tick);
+            }
+        };
+
+        frame = window.requestAnimationFrame(tick);
+        return () => window.cancelAnimationFrame(frame);
     }, [active]);
 
-    const progressLabel = useMemo(() => `${progress}%`, [progress]);
+    const progressShown = Math.round(progress);
 
     return (
         <div className="happy-hero-interview-progress" aria-labelledby="happy-hero-interview-progress-heading">
@@ -80,7 +77,7 @@ export default function HappyHeroInterviewProgress({ active = false }) {
                         role="progressbar"
                         aria-valuemin={0}
                         aria-valuemax={100}
-                        aria-valuenow={progress}
+                        aria-valuenow={progressShown}
                         aria-label="Journey completion"
                     >
                         <div
@@ -88,7 +85,7 @@ export default function HappyHeroInterviewProgress({ active = false }) {
                             style={{ width: `${progress}%` }}
                         />
                     </div>
-                    <span className="happy-hero-interview-progress__pct">{progressLabel}</span>
+                    <span className="happy-hero-interview-progress__pct">{progressShown}%</span>
                 </div>
 
                 <ol className="happy-hero-interview-progress__steps">
