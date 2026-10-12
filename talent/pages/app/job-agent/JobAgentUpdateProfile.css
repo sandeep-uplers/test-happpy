@@ -1806,6 +1806,15 @@
     color: var(--jad-pref-teal-cta);
 }
 
+.jad-update-profile-wrap .manage-preferences .resume-flex .menuBtn:disabled,
+.jad-update-profile-wrap .manage-preferences .resume-flex .menuBtn:disabled:hover {
+    opacity: 0.45;
+    cursor: not-allowed;
+    outline: none;
+    color: var(--jad-pref-teal);
+    background: var(--jad-pref-teal-light);
+}
+
 .jad-update-profile-wrap .manage-preferences .resume-btn .filewrap > label {
     color: var(--jad-pref-black);
 }
