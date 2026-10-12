@@ -592,8 +592,45 @@ const startOfDay = (date) => {
 
 const LWD_MAX_PAST_YEARS = 5;
 
-const isServingNoticePeriod = (serving_notice_period) =>
-    serving_notice_period === "Yes" || serving_notice_period === 1;
+const SERVING_NOTICE_LABELS = {
+    0: 'No',
+    1: 'Yes',
+    2: 'Not applicable',
+};
+
+const servingNoticeCode = (value) => {
+    if (value === null || value === undefined || value === '') return null;
+    if (typeof value === 'boolean') return value ? 1 : 0;
+
+    if (typeof value === 'number' && Number.isFinite(value)) {
+        return value === 0 || value === 1 || value === 2 ? value : null;
+    }
+
+    if (typeof value === 'string') {
+        const trimmed = value.trim();
+        if (trimmed !== '' && Number.isFinite(Number(trimmed))) {
+            const asNumber = Number(trimmed);
+            if (asNumber === 0 || asNumber === 1 || asNumber === 2) return asNumber;
+        }
+        const key = trimmed.toLowerCase();
+        if (key === 'yes') return 1;
+        if (key === 'no') return 0;
+        if (key === 'not applicable' || key === 'n/a' || key === 'na') return 2;
+    }
+
+    return null;
+};
+
+export const normalizeServingNoticePeriod = (value, numeric = false) => {
+    const code = servingNoticeCode(value);
+    if (code === null) return value;
+    return numeric ? code : SERVING_NOTICE_LABELS[code];
+};
+
+export const isValidServingNoticeAnswer = (value) => servingNoticeCode(value) !== null;
+
+export const isServingNoticePeriod = (serving_notice_period) =>
+    servingNoticeCode(serving_notice_period) === 1;
 
 export const getLastWorkingDayBounds = (joining_period, serving_notice_period) => {
     const today = startOfDay(new Date());

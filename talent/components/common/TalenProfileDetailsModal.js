@@ -9,7 +9,7 @@ import { createRequestCancelSource } from '../Helper';
 import { debounce } from 'lodash';
 import toast from 'react-hot-toast';
 import { checkIfFilePasswordProtected } from '../Helper';
-import { buildFormData, convertNpToDays, formatCTCBreakdown, getPlaceholderLWD, groupOptionsByCategory, isAllEmpty, isValidDate, sanitizePayload } from '../Helper';
+import { buildFormData, convertNpToDays, formatCTCBreakdown, getPlaceholderLWD, groupOptionsByCategory, isAllEmpty, isServingNoticePeriod, isValidDate, isValidServingNoticeAnswer, normalizeServingNoticePeriod, sanitizePayload } from '../Helper';
 import { getJobFunctionMaster, getProfilePercent, profileUpsert, generateAwsUploadUrl } from '../../store/actions/UserActions';
 import { validateContactNo, validateURL } from '../profile/formValidations';
 import { getTalentLocationMaster } from '../../store/actions/UserActions';
@@ -144,8 +144,16 @@ const TalentProfileDetailsModalContent = ({ isHRSignUp = false }) => {
             _formData[key] = value;
         }
 
+        if (key == 'serving_notice_period' && value == 'Not applicable') {
+            _formData.last_working_day = '';
+        }
+
         setFormData(_formData);
-        setErrors({ ...errors, [key]: null })
+        setErrors({
+            ...errors,
+            [key]: null,
+            ...(key == 'serving_notice_period' && value == 'Not applicable' && { last_working_day: null }),
+        })
     }
 
     const handleExpChange = (field, value) => {
@@ -275,12 +283,12 @@ const TalentProfileDetailsModalContent = ({ isHRSignUp = false }) => {
             newErrors.joining_period = "Please select your notice period";
         }
         if (formData.joining_period) {
-            if (convertNpToDays(formData.joining_period) != 0 && !["Yes", "No"].includes(formData.serving_notice_period)) {
+            if (convertNpToDays(formData.joining_period) != 0 && !isValidServingNoticeAnswer(formData.serving_notice_period)) {
                 isValid = false;
                 newErrors.serving_notice_period = "Please select your answer";
             }
             if ((convertNpToDays(formData.joining_period) == 0 ||
-                formData.serving_notice_period == "Yes") &&
+                isServingNoticePeriod(formData.serving_notice_period)) &&
                 !formData.last_working_day
             ) {
                 isValid = false;
@@ -657,7 +665,7 @@ const TalentProfileDetailsModalContent = ({ isHRSignUp = false }) => {
                                                 <div className='customRadioOption'>
                                                     <label className="customRadio">
                                                         <input type="radio" name='currentNoticePeriodoption'
-                                                            checked={formData['serving_notice_period'] == "Yes"}
+                                                            checked={normalizeServingNoticePeriod(formData['serving_notice_period']) == "Yes"}
                                                             value={"Yes"}
                                                             onChange={(e) => handleInputChange('serving_notice_period', e.target.value)}
                                                         />
@@ -665,16 +673,24 @@ const TalentProfileDetailsModalContent = ({ isHRSignUp = false }) => {
                                                     </label>
                                                     <label className="customRadio">
                                                         <input type="radio" name='currentNoticePeriodoption'
-                                                            checked={formData['serving_notice_period'] == "No"}
+                                                            checked={normalizeServingNoticePeriod(formData['serving_notice_period']) == "No"}
                                                             value={"No"}
                                                             onChange={(e) => handleInputChange('serving_notice_period', e.target.value)}
                                                         />
                                                         <span className="checkmarkIcon"></span>No
                                                     </label>
+                                                    <label className="customRadio">
+                                                        <input type="radio" name='currentNoticePeriodoption'
+                                                            checked={normalizeServingNoticePeriod(formData['serving_notice_period']) == "Not applicable"}
+                                                            value={"Not applicable"}
+                                                            onChange={(e) => handleInputChange('serving_notice_period', e.target.value)}
+                                                        />
+                                                        <span className="checkmarkIcon"></span>Not applicable
+                                                    </label>
                                                 </div>
                                             </div>}
                                         {(convertNpToDays(formData.joining_period) == 0 ||
-                                            formData.serving_notice_period == "Yes") &&
+                                            isServingNoticePeriod(formData.serving_notice_period)) &&
                                             <div className='lastWorkingDay'>
                                                 <span className='lwdQuestion required_label'>
                                                     Let us know your last working day
