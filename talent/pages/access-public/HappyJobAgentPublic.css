@@ -7820,7 +7820,7 @@ html.happy-job-agent-landing-active #app {
     .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-visual {
         position: absolute;
         z-index: 0;
-        bottom: 0;
+        bottom: -24px;
         right: 0;
         width: min(603px, 42vw);
         max-width: 603px;
@@ -7835,6 +7835,147 @@ html.happy-job-agent-landing-active #app {
         object-position: right center;
     }
 }
+
+.happy-job-agent-landing .happy-agent-manual-vs-figma__referral-art {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 603.620422 / 581.609985;
+        container-type: inline-size;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-art-board {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 603.620422px;
+        height: 581.609985px;
+        transform-origin: top left;
+        transform: scale(calc(100cqw / 603.620422px));
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-portrait {
+        position: absolute;
+        left: 22px;
+        top: 0;
+        display: block;
+        width: 581px;
+        height: 553px;
+        max-width: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-doodle {
+        position: absolute;
+        display: block;
+        max-width: none;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-doodle--sparkle {
+        left: 71.76px;
+        top: 151.87px;
+        width: 21.7786px;
+        height: 30.4935px;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-doodle--arrow {
+        left: 70.07px;
+        top: 336.02px;
+        width: 47.9405px;
+        height: 42.1631px;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-doodle--star {
+        left: 514.74px;
+        top: 93.22px;
+        width: 30.0942px;
+        height: 29.5177px;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-smile-eyes,
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-smile-curve {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-smile-eyes {
+        left: 550.74px;
+        top: 303.28px;
+        width: 18.491px;
+        height: 10.674px;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-smile-eyes img {
+        display: block;
+        width: 17.6989px;
+        height: 5.37479px;
+        max-width: none;
+        transform: rotate(18.35deg);
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-smile-curve {
+        left: 538.18px;
+        top: 299.69px;
+        width: 34.626px;
+        height: 35.278px;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-smile-curve img {
+        display: block;
+        width: 28.2964px;
+        height: 29.5028px;
+        max-width: none;
+        transform: rotate(-22.51deg);
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-pill {
+        position: absolute;
+        left: 0;
+        top: 462.88px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: flex-start;
+        gap: 11.078px;
+        width: 353.126px;
+        height: 76.466px;
+        margin: 0;
+        padding: 13.848px 27.696px;
+        border: 1.385px solid #059599;
+        border-radius: 138.48px;
+        background: #fff;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-pill-heart {
+        display: block;
+        width: 33.2355px;
+        height: 33.2355px;
+        max-width: none;
+        flex-shrink: 0;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-pill-text {
+        width: 250.651px;
+        margin: 0;
+        font-family: "Rubik", sans-serif;
+        font-size: 19.387px;
+        font-weight: 500;
+        line-height: 23px;
+        color: #231f20;
+        white-space: pre-wrap;
+    }
+
+    .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-mascot {
+        position: absolute;
+        left: 307.43px;
+        top: 433.15px;
+        display: block;
+        width: 47px;
+        height: 40px;
+        max-width: none;
+        transform: scale(1.41427);
+        transform-origin: top left;
+    }
+
 @media (min-width: 1300px) {
     .happy-job-agent-landing .happy-agent-manual-vs-figma__referral-card {
         max-width: 1170px;
@@ -8614,6 +8755,7 @@ html.happy-job-agent-landing-active #app {
         box-sizing: border-box;
         pointer-events: none;
         height: 357px;
+        margin-bottom: -20px;
 
         @media (max-width: 400px) {
             height: 324px;
@@ -8621,19 +8763,17 @@ html.happy-job-agent-landing-active #app {
         }
     }
 
-    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-visual picture {
-        display: block;
-        width: 370px;
-        height: 357px;
-        max-width: none;
-        margin: 0;
+    .happy-job-agent-landing .happy-agent-manual-vs-figma--referral-v2 .happy-agent-manual-vs-figma__referral-art {
         position: absolute;
         bottom: 0;
         right: 0;
+        width: 370px;
+        height: auto;
+        max-width: none;
+        margin: 0;
         @media (max-width: 400px) {
             height: 324px;
             width: auto;
-            aspect-ratio: 370 / 357;
         }
     }
 

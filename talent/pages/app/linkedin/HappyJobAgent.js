@@ -116,10 +116,17 @@ import {
     HAPPY_MANUAL_VS_MOBILE_TITLE_LEAD,
     HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_1,
     HAPPY_MANUAL_VS_REFERRAL_V2_BODY_MOBILE,
+    HAPPY_MANUAL_VS_REFERRAL_V2_CELEBRATE_MASCOT_SRC,
     HAPPY_MANUAL_VS_REFERRAL_V2_CTA_ARROW_SRC,
     HAPPY_MANUAL_VS_REFERRAL_V2_CTA_LABEL,
-    HAPPY_MANUAL_VS_REFERRAL_V2_SCENE_MOBILE_SRC,
-    HAPPY_MANUAL_VS_REFERRAL_V2_SCENE_SRC,
+    HAPPY_MANUAL_VS_REFERRAL_V2_DOODLE_ARROW_SRC,
+    HAPPY_MANUAL_VS_REFERRAL_V2_DOODLE_SMILE_CURVE_SRC,
+    HAPPY_MANUAL_VS_REFERRAL_V2_DOODLE_SMILE_EYES_SRC,
+    HAPPY_MANUAL_VS_REFERRAL_V2_DOODLE_SPARKLE_SRC,
+    HAPPY_MANUAL_VS_REFERRAL_V2_DOODLE_STAR_SRC,
+    HAPPY_MANUAL_VS_REFERRAL_V2_PORTRAIT_SRC,
+    HAPPY_MANUAL_VS_REFERRAL_V2_TESTIMONIAL,
+    HAPPY_MANUAL_VS_REFERRAL_V2_TESTIMONIAL_HEART_SRC,
     HAPPY_MANUAL_VS_STATS,
     HAPPY_PRICING_EYEBROW,
     HAPPY_PRICING_FOOTNOTE,
@@ -2493,21 +2500,88 @@ function HappyJobAgentContent({
                                         </button>
                                     </div>
                                 </div>
-                                <div className="happy-agent-manual-vs-figma__referral-visual" aria-hidden="true">
-                                    <picture>
-                                        <source
-                                            media="(max-width: 900px)"
-                                            srcSet={HAPPY_MANUAL_VS_REFERRAL_V2_SCENE_MOBILE_SRC}
-                                        />
-                                        <img
-                                            className="happy-agent-manual-vs-figma__referral-scene"
-                                            src={HAPPY_MANUAL_VS_REFERRAL_V2_SCENE_SRC}
-                                            alt=""
-                                            width={603}
-                                            height={553}
-                                            decoding="async"
-                                        />
-                                    </picture>
+                                <div className="happy-agent-manual-vs-figma__referral-visual">
+                                    <div className="happy-agent-manual-vs-figma__referral-art">
+                                        <div className="happy-agent-manual-vs-figma__referral-art-board">
+                                            <img
+                                                className="happy-agent-manual-vs-figma__referral-portrait"
+                                                src={HAPPY_MANUAL_VS_REFERRAL_V2_PORTRAIT_SRC}
+                                                alt=""
+                                                width={581}
+                                                height={553}
+                                                decoding="async"
+                                                fetchPriority="high"
+                                            />
+                                            <img
+                                                className="happy-agent-manual-vs-figma__referral-doodle happy-agent-manual-vs-figma__referral-doodle--sparkle"
+                                                src={HAPPY_MANUAL_VS_REFERRAL_V2_DOODLE_SPARKLE_SRC}
+                                                alt=""
+                                                width={21.7786}
+                                                height={30.4935}
+                                                decoding="async"
+                                                aria-hidden="true"
+                                            />
+                                            <img
+                                                className="happy-agent-manual-vs-figma__referral-doodle happy-agent-manual-vs-figma__referral-doodle--arrow"
+                                                src={HAPPY_MANUAL_VS_REFERRAL_V2_DOODLE_ARROW_SRC}
+                                                alt=""
+                                                width={47.9405}
+                                                height={42.1631}
+                                                decoding="async"
+                                                aria-hidden="true"
+                                            />
+                                            <img
+                                                className="happy-agent-manual-vs-figma__referral-doodle happy-agent-manual-vs-figma__referral-doodle--star"
+                                                src={HAPPY_MANUAL_VS_REFERRAL_V2_DOODLE_STAR_SRC}
+                                                alt=""
+                                                width={30.0942}
+                                                height={29.5177}
+                                                decoding="async"
+                                                aria-hidden="true"
+                                            />
+                                            <span className="happy-agent-manual-vs-figma__referral-smile-eyes" aria-hidden="true">
+                                                <img
+                                                    src={HAPPY_MANUAL_VS_REFERRAL_V2_DOODLE_SMILE_EYES_SRC}
+                                                    alt=""
+                                                    width={17.6989}
+                                                    height={5.37479}
+                                                    decoding="async"
+                                                />
+                                            </span>
+                                            <span className="happy-agent-manual-vs-figma__referral-smile-curve" aria-hidden="true">
+                                                <img
+                                                    src={HAPPY_MANUAL_VS_REFERRAL_V2_DOODLE_SMILE_CURVE_SRC}
+                                                    alt=""
+                                                    width={28.2964}
+                                                    height={29.5028}
+                                                    decoding="async"
+                                                />
+                                            </span>
+                                            <div className="happy-agent-manual-vs-figma__referral-pill">
+                                                <img
+                                                    className="happy-agent-manual-vs-figma__referral-pill-heart"
+                                                    src={HAPPY_MANUAL_VS_REFERRAL_V2_TESTIMONIAL_HEART_SRC}
+                                                    alt=""
+                                                    width={33.2355}
+                                                    height={33.2355}
+                                                    decoding="async"
+                                                    aria-hidden="true"
+                                                />
+                                                <p className="happy-agent-manual-vs-figma__referral-pill-text">
+                                                    {HAPPY_MANUAL_VS_REFERRAL_V2_TESTIMONIAL}
+                                                </p>
+                                            </div>
+                                            <img
+                                                className="happy-agent-manual-vs-figma__referral-mascot"
+                                                src={HAPPY_MANUAL_VS_REFERRAL_V2_CELEBRATE_MASCOT_SRC}
+                                                alt=""
+                                                width={47}
+                                                height={40}
+                                                decoding="async"
+                                                aria-hidden="true"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                         </div>
                         <div className="happy-agent-manual-vs-figma__legacy">
