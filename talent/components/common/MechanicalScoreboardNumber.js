@@ -75,8 +75,7 @@ export default function MechanicalScoreboardNumber({
     return (
         <span
             className={["mechanical-scoreboard", className].filter(Boolean).join(" ")}
-            aria-live="polite"
-            aria-atomic="true"
+            aria-label={`${Math.round(to)}${suffix}`}
         >
             <span
                 className={[
@@ -85,10 +84,11 @@ export default function MechanicalScoreboardNumber({
                 ]
                     .filter(Boolean)
                     .join(" ")}
+                aria-hidden="true"
             >
                 {displayValue}
             </span>
-            {suffix ? <span className="mechanical-scoreboard__suffix">{suffix}</span> : null}
+            {suffix ? <span className="mechanical-scoreboard__suffix" aria-hidden="true">{suffix}</span> : null}
         </span>
     );
 }

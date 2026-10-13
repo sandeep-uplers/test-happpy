@@ -1,6 +1,34 @@
 'use client';
 
+import { useEffect, useState } from "react";
 import { useInView } from "../../../components/common/useInView";
+
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+
+export function getHappyReducedMotionPreference() {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return false;
+    return window.matchMedia(REDUCED_MOTION_QUERY).matches;
+}
+
+/** Reactive reduced-motion preference shared by landing media and JS-driven motion. */
+export function useHappyReducedMotion() {
+    const [reducedMotion, setReducedMotion] = useState(getHappyReducedMotionPreference);
+
+    useEffect(() => {
+        if (typeof window === "undefined" || typeof window.matchMedia !== "function") return undefined;
+        const mediaQuery = window.matchMedia(REDUCED_MOTION_QUERY);
+        const syncPreference = () => setReducedMotion(mediaQuery.matches);
+        syncPreference();
+        mediaQuery.addEventListener("change", syncPreference);
+        return () => mediaQuery.removeEventListener("change", syncPreference);
+    }, []);
+
+    return reducedMotion;
+}
+
+export function happyScrollBehavior() {
+    return getHappyReducedMotionPreference() ? "auto" : "smooth";
+}
 
 /** Scroll-triggered reveal for landing sections — pairs with `.happy-landing-section--revealed` in CSS. */
 export function useHappySectionReveal(options = {}) {
@@ -28,6 +56,10 @@ export function happyEnterClass(variant) {
             return "happy-landing-enter happy-landing-enter--left";
         case "right":
             return "happy-landing-enter happy-landing-enter--right";
+        case "scale":
+            return "happy-landing-enter happy-landing-enter--scale";
+        case "soft":
+            return "happy-landing-enter happy-landing-enter--soft";
         case "manual-row":
             return "happy-landing-enter happy-landing-enter--manual-row";
         case "agent-row":

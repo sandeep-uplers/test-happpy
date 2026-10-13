@@ -310,6 +310,7 @@ const AgentOnboarding = ({ isOpen, onClose, onAccountsStepChange, onExit }) => {
             contentLabel="Agent onboarding"
             shouldCloseOnOverlayClick={false}
             shouldCloseOnEsc
+            closeTimeoutMS={300}
         >
             <button
                 type="button"

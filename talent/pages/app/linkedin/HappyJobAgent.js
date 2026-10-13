@@ -7,8 +7,6 @@ import Modal from "react-modal";
 import { useNavigate } from '@/talent/navigation/routerCompat';
 import { useLocation, useSearchParams } from '@/talent/navigation/routerCompat';
 import toast from "react-hot-toast";
-import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
 import {
     API_GET_OUTREACH_STEP,
     API_REFERRAL_AGENT_JOB_APPLY_BY_LINKS_BATCH,
@@ -26,8 +24,6 @@ import { SET_LOADER, UPDATE_CURRENT_USER } from "../../../store/actions/actionsT
 import TailorPaymentLoader from "../resume/payment/TailorPaymentLoader";
 import "../../access-public/HappyJobAgentPublic.css";
 import { getReferralCompaniesGrouped, REFERRAL_LOGO_BASE } from "../../access-public/referralCompaniesData";
-import "../../access-public/ReferralJobAgentLanding.css";
-import HappyAgentRunJourney from "./HappyAgentRunJourney";
 import "./OutreachAgent.css";
 import OutreachConfigureAccountsOnly from "./OutreachConfigureAccountsOnly";
 // import {
@@ -36,11 +32,6 @@ import OutreachConfigureAccountsOnly from "./OutreachConfigureAccountsOnly";
 //     landingPlanCardProps,
 //     planCardReferralProps,
 // } from "../happpy-agent/HappyPlanCards";
-import {
-    REFERRAL_AGENT_RA_TEAM,
-    ReferralAgentRaPersonCard,
-    ReferralAgentYourPitchCard,
-} from "./referralAgentRaTeam";
 import CandidateProofSection from "./CandidateProofSection";
 // import TestimonialsSlider from "./TestimonialsSlider";
 import HappyAgentLandingNavbar from "../../../components/HappyAgentLandingNavbar";
@@ -161,7 +152,14 @@ import {
     HAPPY_WORKS_ANYWHERE_SUBTITLE,
     HAPPY_WORKS_ANYWHERE_TITLE_BRACKET_SRC,
 } from "./happyAgentPageAssets";
-import { happyEnterClass, happyStaggerStyle, useHappySectionReveal } from "./happyLandingMotion";
+import {
+    getHappyReducedMotionPreference,
+    happyEnterClass,
+    happyScrollBehavior,
+    happyStaggerStyle,
+    useHappyReducedMotion,
+    useHappySectionReveal,
+} from "./happyLandingMotion";
 import { GmailIcon } from "../../../assets/IconSVG";
 import { ensureModalAppElement } from "../../../helpers/setModalAppElement";
 
@@ -519,7 +517,7 @@ function PricingCheckIcon({ className }) {
  * Loop distance is measured once in JS (px) — animation starts only after measure is stable
  * so `--happy-marquee-shift` never changes mid-keyframes (that caused visible stutter).
  */
-function HappyLiveResultsMarqueeRow({ items, reverse = false, onTrialCtaClick }) {
+function HappyLiveResultsMarqueeRow({ items, reverse = false, onTrialCtaClick, active = true }) {
     const halfLen = items.length / 2;
     const trackRef = useRef(null);
     const shiftPxRef = useRef(0);
@@ -578,7 +576,7 @@ function HappyLiveResultsMarqueeRow({ items, reverse = false, onTrialCtaClick })
             className={`happy-agent-live-results__marquee-row${reverse ? " happy-agent-live-results__marquee-row--reverse" : ""}`}
         >
             <div
-                className={`happy-agent-live-results__marquee-track${trackReady ? " happy-agent-live-results__marquee-track--ready" : ""}`}
+                className={`happy-agent-live-results__marquee-track${trackReady && active ? " happy-agent-live-results__marquee-track--ready" : ""}`}
                 ref={trackRef}
             >
                 {items.map((company, idx) => {
@@ -718,21 +716,21 @@ function HappyJobAgentContent({
         return fallback || "Software Engineer";
     }, [user, profileData?.designation]);
 
-    /** Syncs with HappyAgentRunJourney: 0 active target, 1 team grid only, 2 HM reply card */
-    const [agentRunStep, setAgentRunStep] = useState(0);
-
-    /** Right preview: stepped animation vs all blocks visible (steps 1–3) */
-    const [hiwShowFullWorkflow, setHiwShowFullWorkflow] = useState(false);
-
     /** Live results scoreboard — random start animates to 255 when hero reveals */
     const [liveResultsInterviewStart] = useState(() => randomScoreboardStart(1, 20));
+    const reducedMotion = useHappyReducedMotion();
+    const [heroProofActive, setHeroProofActive] = useState(reducedMotion);
+    const [heroResultsActive, setHeroResultsActive] = useState(reducedMotion);
+    const [heroMarqueeActive, setHeroMarqueeActive] = useState(reducedMotion);
 
     const { ref: hiwRevealRef, revealed: hiwRevealed } = useHappySectionReveal({ threshold: 0.12 });
     const { ref: worksAnywhereRevealRef, revealed: worksAnywhereRevealed } = useHappySectionReveal();
+    const { ref: jobsRevealRef, revealed: jobsRevealed } = useHappySectionReveal();
+    const { ref: setupRevealRef, revealed: setupRevealed } = useHappySectionReveal();
     const { ref: manualVsRevealRef, revealed: manualVsRevealed } = useHappySectionReveal({ threshold: 0.1 });
     const { ref: privacyRevealRef, revealed: privacyRevealed } = useHappySectionReveal();
-    const { ref: kineticRevealRef, revealed: kineticRevealed } = useHappySectionReveal();
-    const { ref: pricingRevealRef, revealed: pricingRevealed } = useHappySectionReveal({ threshold: 0.08 });
+    const { ref: faqRevealRef, revealed: faqRevealed } = useHappySectionReveal();
+    const { ref: tryFreeRevealRef, revealed: tryFreeRevealed } = useHappySectionReveal({ threshold: 0.12 });
 
     const referenceParamDecoded = useMemo(() => {
         let raw = null;
@@ -1093,7 +1091,7 @@ function HappyJobAgentContent({
             document.getElementById(target)
             || root?.querySelector(`[data-happy-landing-section="${target}"]`);
         if (el) {
-            el.scrollIntoView({ behavior: "smooth", block: "start" });
+            el.scrollIntoView({ behavior: happyScrollBehavior(), block: "start" });
         }
     }, []);
 
@@ -1362,12 +1360,7 @@ function HappyJobAgentContent({
 
     /** Hero entrance animation runs after the HTML #initial-loader hides (see talent/index.blade.php). */
     const [heroReveal, setHeroReveal] = useState(() => {
-        if (typeof window === "undefined") return false;
-        try {
-            return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        } catch {
-            return false;
-        }
+        return getHappyReducedMotionPreference();
     });
 
     useEffect(() => {
@@ -1404,6 +1397,25 @@ function HappyJobAgentContent({
             window.clearTimeout(fallbackId);
         };
     }, [heroReveal]);
+
+    useEffect(() => {
+        if (!heroReveal) return undefined;
+        if (reducedMotion) {
+            setHeroProofActive(true);
+            setHeroResultsActive(true);
+            setHeroMarqueeActive(true);
+            return undefined;
+        }
+
+        const proofTimer = window.setTimeout(() => setHeroProofActive(true), 550);
+        const resultsTimer = window.setTimeout(() => setHeroResultsActive(true), 1450);
+        const marqueeTimer = window.setTimeout(() => setHeroMarqueeActive(true), 2300);
+        return () => {
+            window.clearTimeout(proofTimer);
+            window.clearTimeout(resultsTimer);
+            window.clearTimeout(marqueeTimer);
+        };
+    }, [heroReveal, reducedMotion]);
 
     useEffect(() => {
         const groups = getReferralCompaniesGrouped();
@@ -1792,7 +1804,7 @@ function HappyJobAgentContent({
                             className="happy-agent-hero-mesh__inline-brand"
                             onClick={(event) => {
                                 event.preventDefault();
-                                window.scrollTo({ top: 0, behavior: "smooth" });
+                                window.scrollTo({ top: 0, behavior: happyScrollBehavior() });
                             }}
                             aria-label="Happpy Agent — top of page"
                         >
@@ -1974,7 +1986,7 @@ function HappyJobAgentContent({
                             loading="eager"
                             decoding="async"
                         />
-                        <HappyHeroInterviewProgress active={heroReveal} />
+                        <HappyHeroInterviewProgress active={heroProofActive} />
                     </div>
                 </div>
 
@@ -2005,8 +2017,8 @@ function HappyJobAgentContent({
                                         from={liveResultsInterviewStart}
                                         to={807}
                                         suffix="+"
-                                        active={heroReveal}
-                                        duration={3200}
+                                        active={heroResultsActive}
+                                        duration={2200}
                                     />
                                     &nbsp;
                                     <span className="happy-agent-live-results__eyebrow-copy happy-agent-live-results__eyebrow-copy--desktop">
@@ -2028,6 +2040,7 @@ function HappyJobAgentContent({
                             <HappyLiveResultsMarqueeRow
                                 items={liveResultsMarqueeHero}
                                 onTrialCtaClick={onTrialCtaClick}
+                                active={heroMarqueeActive}
                             />
                         </div>
                     </div>
@@ -2128,16 +2141,17 @@ function HappyJobAgentContent({
                         </ul>
                         */}
 
-                        <div className={`happy-agent-hiw-figma__demo ${happyEnterClass()}`}>
+                        <div className={`happy-agent-hiw-figma__demo ${happyEnterClass("scale")}`}>
                             <video
-                                key={isMobileViewport ? HAPPY_HIW_DEMO_VIDEO_MOBILE_SRC : HAPPY_HIW_DEMO_VIDEO_PC_SRC}
+                                key={`${isMobileViewport ? HAPPY_HIW_DEMO_VIDEO_MOBILE_SRC : HAPPY_HIW_DEMO_VIDEO_PC_SRC}-${reducedMotion ? "still" : "motion"}`}
                                 className="happy-agent-hiw-figma__demo-frame"
                                 src={isMobileViewport ? HAPPY_HIW_DEMO_VIDEO_MOBILE_SRC : HAPPY_HIW_DEMO_VIDEO_PC_SRC}
                                 aria-label="How Happpy Agent works"
-                                autoPlay
-                                loop
+                                autoPlay={!reducedMotion}
+                                loop={!reducedMotion}
                                 muted
                                 playsInline
+                                controls={reducedMotion}
                                 preload="metadata"
                             />
                         </div>
@@ -2226,23 +2240,30 @@ function HappyJobAgentContent({
                 </section>
 
 
-                <section className="happy-agent-jobs-listing" id="happy-agent-jobs-listing">
-                    <HappyLandingPasteJobSection
-                        jobUrl={landingPasteJobUrl}
-                        onJobUrlChange={handleLandingPasteJobUrlChange}
-                        onSubmit={handleLandingPasteJobSubmit}
-                        errorMessage={landingPasteJobError}
-                    />
+                <section
+                    ref={jobsRevealRef}
+                    className={`happy-agent-jobs-listing${jobsRevealed ? " happy-landing-section--revealed" : ""}`}
+                    id="happy-agent-jobs-listing"
+                >
+                    <div className={happyEnterClass("soft")}>
+                        <HappyLandingPasteJobSection
+                            jobUrl={landingPasteJobUrl}
+                            onJobUrlChange={handleLandingPasteJobUrlChange}
+                            onSubmit={handleLandingPasteJobSubmit}
+                            errorMessage={landingPasteJobError}
+                        />
+                    </div>
                 </section>
 
                 <section
-                    className="happy-agent-setup-figma"
+                    ref={setupRevealRef}
+                    className={`happy-agent-setup-figma${setupRevealed ? " happy-landing-section--revealed" : ""}`}
                     id="happy-agent-setup"
                     aria-labelledby="happy-agent-setup-heading"
                     data-happy-landing-section="setup"
                     data-trial-chip-label={trialChipLabel}
                 >
-                    <div className="happy-agent-setup-figma__inner">
+                    <div className={`happy-agent-setup-figma__inner ${happyEnterClass("soft")}`}>
                         <OutreachConfigureAccountsOnly
                             className="happy-agent-setup-figma__configure"
                             onAccountsStepChange={handleAccountsStepChange}
@@ -2795,13 +2816,14 @@ function HappyJobAgentContent({
             </section> */}
 
             <section
-                className="happy-agent-faq-figma"
+                ref={faqRevealRef}
+                className={`happy-agent-faq-figma${faqRevealed ? " happy-landing-section--revealed" : ""}`}
                 id="faq"
                 aria-labelledby="happy-agent-faq-heading"
                 data-happy-landing-section="faq"
             >
                 <div className="happy-agent-faq-figma__inner">
-                    <header className="happy-agent-faq-figma__header">
+                    <header className={`happy-agent-faq-figma__header ${happyEnterClass("soft")}`}>
                         <h2 id="happy-agent-faq-heading" className="happy-agent-faq-figma__title">
                             FAQ
                         </h2>
@@ -2809,10 +2831,11 @@ function HappyJobAgentContent({
                     </header>
 
                     <div className="happy-agent-faq-figma__grid">
-                        {HAPPY_FAQ_GROUPS.map((group) => (
+                        {HAPPY_FAQ_GROUPS.map((group, groupIndex) => (
                             <section
                                 key={group.heading}
-                                className="happy-agent-faq-figma__group"
+                                className={`happy-agent-faq-figma__group ${happyEnterClass("unfold")}`}
+                                style={happyStaggerStyle(groupIndex, 1)}
                                 aria-labelledby={`happy-agent-faq-group-${group.heading.replace(/\W+/g, "-").toLowerCase()}`}
                             >
                                 <h3
@@ -2883,17 +2906,18 @@ function HappyJobAgentContent({
             </section>
 
             <section
-                className="happy-agent-try-free-figma"
+                ref={tryFreeRevealRef}
+                className={`happy-agent-try-free-figma${tryFreeRevealed ? " happy-landing-section--revealed" : ""}`}
                 aria-labelledby="happy-agent-try-free-heading"
                 data-happy-landing-section="try_free_cta"
             >
-                <div className="happy-agent-try-free-figma__card">
+                <div className={`happy-agent-try-free-figma__card ${happyEnterClass("scale")}`}>
                     <div className="happy-agent-try-free-figma__bg" aria-hidden="true">
                         <img src={HAPPY_TRY_FREE_BG_SRC} alt="" />
                     </div>
                     <div className="happy-agent-try-free-figma__glow" aria-hidden="true" />
                     <div className="happy-agent-try-free-figma__inner">
-                        <header className="happy-agent-try-free-figma__header">
+                        <header className={`happy-agent-try-free-figma__header ${happyEnterClass("soft")}`} style={happyStaggerStyle(1)}>
                             <p className="happy-agent-try-free-figma__eyebrow">{HAPPY_TRY_FREE_EYEBROW}</p>
                             <h2 id="happy-agent-try-free-heading" className="happy-agent-try-free-figma__title">
                                 {tryFreeBandTitleLines.map((line, index) => (
@@ -2941,7 +2965,7 @@ function HappyJobAgentContent({
                                 </span>
                             </button>
                         </header>
-                        <div className="happy-agent-try-free-figma__portraits" aria-hidden="true">
+                        <div className={`happy-agent-try-free-figma__portraits ${happyEnterClass("right")}`} style={happyStaggerStyle(2)} aria-hidden="true">
                             <div className="happy-agent-try-free-figma__portrait">
                                 <img
                                     src={HAPPY_TRY_FREE_PORTRAIT_AGENT_SRC}
@@ -2975,7 +2999,7 @@ function HappyJobAgentContent({
                                 className="happy-agent-footer-figma__logo-link"
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    window.scrollTo({ top: 0, behavior: "smooth" });
+                                    window.scrollTo({ top: 0, behavior: happyScrollBehavior() });
                                 }}
                             >
                                 <HapppyAgentLogo
@@ -3079,6 +3103,7 @@ function HappyJobAgentContent({
                 contentLabel="Demo video"
                 shouldCloseOnOverlayClick={false}
                 shouldCloseOnEsc={true}
+                closeTimeoutMS={360}
             >
                 <div className="happy-agent-modal-shell">
                     <button

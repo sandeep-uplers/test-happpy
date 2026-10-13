@@ -6,6 +6,7 @@ import {
     HAPPY_CANDIDATE_PROOF_ITEMS,
     HAPPY_CANDIDATE_PROOF_UNDERLINE_SRC,
 } from "./happyAgentPageAssets";
+import { happyEnterClass, happyStaggerStyle, useHappySectionReveal } from "./happyLandingMotion";
 
 /** ~8s for one 290px card to pass, slow enough to read a quote. */
 const CANDIDATE_PROOF_PX_PER_SECOND = 36;
@@ -39,7 +40,9 @@ function CandidateProofQuote({ quote }) {
 
 export default function CandidateProofSection() {
     const trackRef = useRef(null);
-    const [held, setHeld] = useState(false);
+    const [pointerHeld, setPointerHeld] = useState(false);
+    const [paused, setPaused] = useState(false);
+    const { ref: revealRef, revealed } = useHappySectionReveal({ threshold: 0.12 });
     const halfLen = HAPPY_CANDIDATE_PROOF_ITEMS.length;
     const loopItems = [...HAPPY_CANDIDATE_PROOF_ITEMS, ...HAPPY_CANDIDATE_PROOF_ITEMS];
 
@@ -72,11 +75,12 @@ export default function CandidateProofSection() {
 
     return (
         <section
-            className="happy-agent-candidate-proof"
+            ref={revealRef}
+            className={`happy-agent-candidate-proof${revealed ? " happy-landing-section--revealed" : ""}`}
             aria-labelledby="happy-agent-candidate-proof-heading"
             data-happy-landing-section="candidate_proof"
         >
-            <header className="happy-agent-candidate-proof__header">
+            <header className={`happy-agent-candidate-proof__header ${happyEnterClass("soft")}`}>
                 <h2 id="happy-agent-candidate-proof-heading" className="happy-agent-candidate-proof__title">
                     <span className="happy-agent-candidate-proof__count">
                         {HAPPY_CANDIDATE_PROOF_HEADLINE.count}
@@ -95,12 +99,24 @@ export default function CandidateProofSection() {
                 </h2>
             </header>
 
+            <button
+                type="button"
+                className="happy-agent-candidate-proof__motion-toggle"
+                aria-pressed={paused}
+                onClick={() => setPaused((value) => !value)}
+            >
+                {paused ? "Play stories" : "Pause stories"}
+            </button>
+
             <div
-                className={`happy-agent-candidate-proof__scroller${held ? " is-held" : ""}`}
-                onPointerDown={() => setHeld(true)}
-                onPointerUp={() => setHeld(false)}
-                onPointerCancel={() => setHeld(false)}
-                onPointerLeave={() => setHeld(false)}
+                className={`happy-agent-candidate-proof__scroller ${happyEnterClass("soft")}${pointerHeld || paused ? " is-held" : ""}`}
+                style={happyStaggerStyle(1)}
+                onPointerDown={() => setPointerHeld(true)}
+                onPointerUp={() => setPointerHeld(false)}
+                onPointerCancel={() => setPointerHeld(false)}
+                onPointerLeave={() => setPointerHeld(false)}
+                tabIndex={0}
+                aria-label="Candidate stories. The animation pauses while this area is focused or pressed."
             >
                 <ul className="happy-agent-candidate-proof__track" ref={trackRef}>
                     {loopItems.map((item, index) => {
