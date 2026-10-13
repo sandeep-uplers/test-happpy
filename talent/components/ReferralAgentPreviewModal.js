@@ -1115,6 +1115,7 @@ export default function ReferralAgentPreviewModal({
     const downloadLoading = downloadTailorResume;
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const preferencesRequired = user?.name?.trim() === "Talent";
 
     const gmailResumeOutdated =
         !!outreachAgentPreviewConfig?.gmail_connected &&
@@ -1315,6 +1316,11 @@ export default function ReferralAgentPreviewModal({
     const infoMembers = 4;
 
     useEffect(() => {
+        if (preferencesRequired) {
+            setPreviewConfigLoading(false);
+            return undefined;
+        }
+
         let cancelled = false;
         setPreviewConfigLoading(true);
 
@@ -1363,7 +1369,7 @@ export default function ReferralAgentPreviewModal({
         return () => {
             cancelled = true;
         };
-    }, [HR_Number]);
+    }, [HR_Number, preferencesRequired]);
 
     useEffect(() => {
         if (isOpen) {
@@ -1389,7 +1395,11 @@ export default function ReferralAgentPreviewModal({
         setPreviewEditingProvider(null);
     }, [activeTab]);
 
-    const previewVisible = isOpen && showSubscribeModal !== true && !showRunSuccessModal;
+    const previewVisible =
+        isOpen &&
+        !preferencesRequired &&
+        showSubscribeModal !== true &&
+        !showRunSuccessModal;
     const showPreviewLoading = previewConfigLoading || !outreachAgentPreviewConfig || confirmLoading;
 
     useEffect(() => {
@@ -1775,7 +1785,11 @@ export default function ReferralAgentPreviewModal({
 
     return (
         <>
-            {isOpen && allProcessed && showSubscribeModal && (
+            <PreferencesRequiredModal
+                open={isOpen && preferencesRequired}
+                onClose={onClose}
+            />
+            {isOpen && !preferencesRequired && allProcessed && showSubscribeModal && (
                 <SubscribeModal
                     plan={outreachAgentPreviewConfig?.plan}
                     onClose={handleSubscribeModalClose}
@@ -2356,6 +2370,158 @@ export default function ReferralAgentPreviewModal({
 }
 
 export { SKIP_PREVIEW_KEY };
+
+const PREFERENCES_REQUIRED_STYLES = `
+.rap-preferences-required-overlay.ReactModal__Overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(25, 28, 30, 0.55) !important;
+    backdrop-filter: blur(4px);
+}
+.rap-preferences-required.modal {
+    position: relative;
+    inset: auto;
+    width: min(440px, 100%);
+    height: auto;
+    margin: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 16px;
+    background: #ffffff !important;
+    outline: none;
+    overflow: hidden;
+    font-family: "Rubik", "Montserrat", system-ui, sans-serif;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+}
+.rap-preferences-required__card {
+    position: relative;
+    padding: 2rem;
+    text-align: center;
+}
+.rap-preferences-required__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #6b6b6b;
+    font-size: 1.125rem;
+    line-height: 1;
+    cursor: pointer;
+}
+.rap-preferences-required__mascot {
+    display: block;
+    width: 88px;
+    height: 72px;
+    margin: 0 auto 1rem;
+    object-fit: contain;
+}
+.rap-preferences-required__title {
+    margin: 0 0 0.625rem;
+    color: #231f20;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+.rap-preferences-required__copy {
+    margin: 0 auto;
+    max-width: 340px;
+    color: #6b6b6b;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+.rap-preferences-required__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+.rap-preferences-required__primary,
+.rap-preferences-required__secondary {
+    min-height: 44px;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.rap-preferences-required__primary {
+    border: 1px solid #231f20;
+    background: #231f20;
+    color: #ffffff;
+}
+.rap-preferences-required__secondary {
+    border: 0;
+    background: transparent;
+    color: #6b6b6b;
+}
+`;
+
+function PreferencesRequiredModal({ open, onClose }) {
+    const navigate = useNavigate();
+
+    const goToPreferences = () => {
+        if (typeof onClose === "function") onClose();
+        navigate("/talent/job-agent/update-profile");
+    };
+
+    return (
+        <Modal
+            isOpen={open}
+            className="modal commonModal rap-preferences-required"
+            overlayClassName="rap-preferences-required-overlay"
+            contentLabel="Complete your profile"
+            onRequestClose={onClose}
+            shouldCloseOnOverlayClick={false}
+        >
+            <style>{PREFERENCES_REQUIRED_STYLES}</style>
+            <div className="rap-preferences-required__card">
+                <button
+                    type="button"
+                    className="rap-preferences-required__close"
+                    aria-label="Close"
+                    onClick={onClose}
+                >
+                    ✕
+                </button>
+                <img
+                    className="rap-preferences-required__mascot"
+                    src="/images/talent/outreach/mascot-exclaim.svg"
+                    alt=""
+                    aria-hidden="true"
+                />
+                <h2 className="rap-preferences-required__title">
+                    Complete your profile
+                </h2>
+                <p className="rap-preferences-required__copy">
+                    Your profile details and preferences are needed for Happpy Agent to run.
+                </p>
+                <div className="rap-preferences-required__actions">
+                    <button
+                        type="button"
+                        className="rap-preferences-required__primary"
+                        onClick={goToPreferences}
+                    >
+                        Complete Profile
+                    </button>
+                    <button
+                        type="button"
+                        className="rap-preferences-required__secondary"
+                        onClick={onClose}
+                    >
+                        Not Now
+                    </button>
+                </div>
+            </div>
+        </Modal>
+    );
+}
 
 
 const SUBSCRIPTION_URL = "/talent/job-agent/subscription";
