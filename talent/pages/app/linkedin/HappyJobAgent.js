@@ -124,7 +124,6 @@ import {
     HAPPY_MANUAL_VS_MOBILE_TITLE_HIGHLIGHT,
     HAPPY_MANUAL_VS_MOBILE_TITLE_LEAD,
     HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_1,
-    HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_2,
     HAPPY_MANUAL_VS_REFERRAL_V2_BODY_MOBILE,
     HAPPY_MANUAL_VS_REFERRAL_V2_CTA_ARROW_SRC,
     HAPPY_MANUAL_VS_REFERRAL_V2_CTA_LABEL,
@@ -1564,7 +1563,6 @@ function HappyJobAgentContent({
             { key: "greenhouse", label: "Greenhouse", Logo: PlatformLogoGreenhouse },
             { key: "glassdoor", label: "Glassdoor", Logo: PlatformLogoGlassdoor },
             { key: "lever", label: "Lever", Logo: PlatformLogoLever },
-            { key: "greenhouse-2", label: "Greenhouse", Logo: PlatformLogoGreenhouse },
             { key: "instahyre", label: "Instahyre", Logo: PlatformLogoInstahyre },
             { key: "career-page", label: "Any career page", Logo: PlatformLogoCareerPageDot },
         ],
@@ -2437,7 +2435,6 @@ function HappyJobAgentContent({
                                         </h2>
                                         <div className="happy-agent-manual-vs-figma__referral-body happy-agent-manual-vs-figma__referral-body--desktop">
                                             <p>{HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_1}</p>
-                                            <p>{HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_2}</p>
                                         </div>
                                         <p className="happy-agent-manual-vs-figma__referral-body-mobile">
                                             {HAPPY_MANUAL_VS_REFERRAL_V2_BODY_MOBILE}

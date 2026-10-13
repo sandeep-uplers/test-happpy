@@ -204,11 +204,10 @@ export const HAPPY_MANUAL_VS_REFERRAL_V2_CTA_ARROW_SRC = `${HAPPY_MANUAL_VS_REFE
 export const HAPPY_MANUAL_VS_REFERRAL_V2_CELEBRATE_MASCOT_SRC = `${OUTREACH_IMAGE_ROOT}/mascot-celebrate.svg`;
 export const HAPPY_MANUAL_VS_REFERRAL_V2_CTA_LABEL = HAPPY_HERO_MOBILE_CTA_LABEL_UPPER;
 export const HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_1 =
-    "Manual job hunting is slow, with hours of searching, ATS rejections and forgotten follow-ups. Happpy Agent replaces that with one-time setup, outreach in under ";
-export const HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_2 =
-    "60 seconds per job, automated follow-ups and 40,000+ contacts already mapped";
+    "Manual job hunting is slow, with hours of searching, ATS rejections and forgotten follow-ups. Happpy Agent replaces that with one-time setup, outreach in under 60 seconds per job, automated follow-ups and 40,000+ contacts already mapped";
+
 /** Figma 3715:38704 — single paragraph on mobile */
-export const HAPPY_MANUAL_VS_REFERRAL_V2_BODY_MOBILE = `${HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_1}${HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_2}`;
+export const HAPPY_MANUAL_VS_REFERRAL_V2_BODY_MOBILE = HAPPY_MANUAL_VS_REFERRAL_V2_BODY_LINE_1;
 export const HAPPY_MANUAL_VS_REFERRAL_V2_TESTIMONIAL = "Love it!  Recommended it to my friends";
 
 /* Section 4 — Works Anywhere */
