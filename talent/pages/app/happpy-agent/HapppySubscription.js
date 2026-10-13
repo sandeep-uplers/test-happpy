@@ -177,6 +177,13 @@ const HapppySubscription = () => {
                     });
 
                 if (!orderResp) return;
+                if (!orderResp.id || orderResp.amount == null) {
+                    toast.error(
+                        orderResp?.error?.description ||
+                        'Could not start payment. Please try again.',
+                    );
+                    return;
+                }
                 const { id: order_id, amount, currency } = orderResp;
 
                 const options = {
