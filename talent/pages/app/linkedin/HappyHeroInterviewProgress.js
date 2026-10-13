@@ -10,7 +10,7 @@ import {
     HappyHeroProgressStepCheckIcon,
 } from "./happyHeroInlineIcons";
 
-const STEP_MS = 1500;
+const STEP_MS = 900;
 const STEP_PCT = 20;
 const STEP_COUNT = HAPPY_HERO_PROGRESS_STEPS.length;
 const DURATION_MS = STEP_COUNT * STEP_MS;
