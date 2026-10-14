@@ -999,7 +999,7 @@ function LandingStep({
                                 onClick={onSubmit}
                                 disabled={submitting || !formData.resume}
                             >
-                                {submitting ? 'Starting…' : 'Review My Resume FOR FREE!'}
+                                {submitting ? 'Starting…' : 'Review My Resume'}
                             </button>
                         )}
                     </div>

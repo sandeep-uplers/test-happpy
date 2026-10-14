@@ -9,7 +9,7 @@ import { API_GET_LAST_HEALTH_CHECK } from "../../../components/Constant";
 import { GET_API } from "../../../components/Helper";
 import { getResumeHealthCheck } from "../../../store/actions/resumeActions";
 
-const POLL_INTERVAL_MS = 5000;
+const POLL_INTERVAL_MS = 10000;
 
 export default function HealthCheckPusher({ healthCheckId }) {
     const navigate = useNavigate();
